@@ -110,7 +110,7 @@
                     </div>
                     
                     <div class="mt-6 text-center text-xs text-gray-400">
-                        Disewakan oleh <span class="font-bold text-gray-600">{{ $kost->owner->name ?? 'Pemilik' }}</span>
+                        Disewakan oleh <span class="font-bold text-gray-600">{{ $kost->user->name ?? 'Pemilik' }}</span>
                     </div>
                 </div>
             </div>

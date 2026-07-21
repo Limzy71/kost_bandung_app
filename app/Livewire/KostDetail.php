@@ -12,7 +12,7 @@ class KostDetail extends Component
     public function mount(Kost $kost)
     {
         $this->kost = $kost;
-        $this->kost->load(['facilities', 'rules', 'images', 'owner']);
+        $this->kost->load(['facilities', 'rules', 'images', 'user']);
     }
 
     public function render()

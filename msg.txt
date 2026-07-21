@@ -1,12 +1,7 @@
-feat(kost): create detail view with modern editorial aesthetic
+fix(kost): correct owner relationship name in detail view
 
-Implemented the KostDetail Livewire component and its corresponding blade
-view to display property details elegantly. The UI features a clean,
-monochromatic layout with a bold typography approach, aligning with the
-'Modern Editorial Real Estate' style.
-
-Included a large main photo gallery, a comprehensive left-column
-information section (badges, facilities, rules), and a sticky right
-action card (which adapts to a floating bottom bar on mobile) equipped
-with prominent Call-To-Action buttons for WhatsApp and internal messaging.
-Configured direct Livewire Route Model Binding in web.php.
+Resolved a RelationNotFoundException triggered on the KostDetail component.
+The issue was caused by an eager load referencing the undefined 'owner'
+relationship instead of the correct 'user' relationship defined in the
+Kost model. Updated both the Livewire component logic and the blade view
+to accurately reference the user relation.

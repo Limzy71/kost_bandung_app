@@ -47,12 +47,22 @@ class KostSeeder extends Seeder
             $ruleModels[] = Rule::create($rule);
         }
 
-        // 3. Buat User Pemilik Kost
+        // 3. Buat User Pemilik Kost & User Biasa
         $owner = User::firstOrCreate(
-            ['email' => 'owner@kostbandung.com'],
+            ['email' => 'owner@kostbandung.id'],
             [
                 'name' => 'Ikhsan Pemilik Kost',
                 'password' => bcrypt('password'),
+                'role' => 'owner',
+            ]
+        );
+
+        User::firstOrCreate(
+            ['email' => 'user@kostbandung.id'],
+            [
+                'name' => 'Budi Pencari Kost',
+                'password' => bcrypt('password'),
+                'role' => 'user',
             ]
         );
 

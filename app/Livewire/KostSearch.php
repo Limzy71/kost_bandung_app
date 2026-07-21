@@ -27,7 +27,7 @@ class KostSearch extends Component
 
     public function render()
     {
-        $query = Kost::query()->where('is_available', true);
+        $query = Kost::query()->with(['primaryImage', 'facilities'])->where('is_available', true);
 
         if ($this->search) {
             $query->where(function ($q) {

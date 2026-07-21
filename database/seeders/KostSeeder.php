@@ -51,7 +51,7 @@ class KostSeeder extends Seeder
         $owner = User::firstOrCreate(
             ['email' => 'owner@kostbandung.id'],
             [
-                'name' => 'Ikhsan Pemilik Kost',
+                'name' => 'Owner Kost',
                 'password' => bcrypt('password'),
                 'role' => 'owner',
             ]
@@ -60,7 +60,7 @@ class KostSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'user@kostbandung.id'],
             [
-                'name' => 'Budi Pencari Kost',
+                'name' => 'Pencari Kost',
                 'password' => bcrypt('password'),
                 'role' => 'user',
             ]

@@ -1,8 +1,0 @@
-style(ui): polish detail view aesthetics with softer layout
-
-Refined the visual aesthetics of the Kost detail page to enhance the Soft
-UI styling. Updated the Sticky Action Card to remove its outer border and
-added a pronounced shadow-2xl for a clean, floating effect. Reduced grid
-gaps in the photo gallery from gap-4 to gap-3 and standardized image
-border radii to rounded-2xl for a more cohesive presentation. Increased
-the margin below the title section for better vertical rhythm.

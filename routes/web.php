@@ -7,6 +7,8 @@ use App\Livewire\Auth\Register;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+use App\Livewire\Dashboard\OwnerDashboard;
+
 Route::get('/', [KostController::class, 'index'])->name('home');
 Route::get('/kost/{kost:slug}', KostDetail::class)->name('kost.show');
 
@@ -15,11 +17,11 @@ Route::middleware('guest')->group(function () {
     Route::get('/register', Register::class)->name('register');
 });
 
-Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+Route::middleware(['auth', 'owner'])->group(function () {
+    Route::get('/dashboard', OwnerDashboard::class)->name('dashboard');
+});
 
+Route::middleware('auth')->group(function () {
     Route::post('/logout', function () {
         Auth::logout();
         session()->invalidate();

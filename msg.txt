@@ -1,8 +1,12 @@
-chore(database): add realistic dummy kost data via seeder
+feat(kost): create detail view with modern editorial aesthetic
 
-Updated KostSeeder to generate 26 diverse dummy kost records,
-ensuring all targeted districts in Bandung have representation.
-Implemented randomized logic for facilities, pricing, and rules.
-Modified the UI logic in the Livewire view to correctly parse and
-display external image URLs (via placehold.co) for the properties,
-enabling comprehensive testing of the search and filter functionalities.
+Implemented the KostDetail Livewire component and its corresponding blade
+view to display property details elegantly. The UI features a clean,
+monochromatic layout with a bold typography approach, aligning with the
+'Modern Editorial Real Estate' style.
+
+Included a large main photo gallery, a comprehensive left-column
+information section (badges, facilities, rules), and a sticky right
+action card (which adapts to a floating bottom bar on mobile) equipped
+with prominent Call-To-Action buttons for WhatsApp and internal messaging.
+Configured direct Livewire Route Model Binding in web.php.

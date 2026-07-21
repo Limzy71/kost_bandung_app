@@ -1,0 +1,6 @@
+refactor(ui): update hero copywriting for local context
+
+Updated the hero section text to align with the local Bandung context,
+replacing generic English phrases with clear, localized messaging.
+Removed the CTA button to simplify the layout, as the Livewire
+filter bar underneath already handles real-time filtering effectively.

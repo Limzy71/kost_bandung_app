@@ -10,7 +10,7 @@ Membangun platform direktori kost berbasis peta interaktif yang berfokus secara 
 
 ## **2. Arsitektur Sistem & Tech Stack** 
 
-Sistem dikembangkan menggunakan perpaduan teknologi yang mengutamakan kecepatan interaksi (layaknya _Single Page Application_ ) namun tetap mempertahankan keunggulan _Server-Side Rendering_ (SSR). 
+Sistem dikembangkan menggunakan perpaduan teknologi yang mengutamakan kecepatan interaksi (layaknya _Single Page Application_ ) namun tetap mempertahankan keunggulan _Server-Side Rendering_ (SSR).
 
 |**Lapisan Sistem**|**Teknologi**<br>**Pilihan**|**Peran & Fungsi Utama**|
 |---|---|---|
@@ -95,4 +95,3 @@ Sistem dikembangkan menggunakan perpaduan teknologi yang mengutamakan kecepatan 
 - **Fase 3 (Monetisasi Aktif):** Mengaktifkan modul pembelian Iklan Premium (“Sundul Iklan”) bagi pemilik kost setelah mendapatkan _traffic_ organik yang stabil. 
 
 4 
-

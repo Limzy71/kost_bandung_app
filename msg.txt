@@ -1,9 +1,8 @@
-fix(ui): correct flex and grid intrinsic height overflow in gallery
+style(ui): polish detail view aesthetics with softer layout
 
-Resolved a layout bug where the intrinsic height of the thumbnail images
-forced the parent flex and grid containers to expand beyond their set
-height of 500px. This overflow caused the gallery row to overlap and
-completely hide the property title, badges, and address below it.
-Added min-h-0 to the grid column, flex container, and flex items to
-allow CSS flexbox and grid engines to correctly shrink the items within
-the bounded 500px container.
+Refined the visual aesthetics of the Kost detail page to enhance the Soft
+UI styling. Updated the Sticky Action Card to remove its outer border and
+added a pronounced shadow-2xl for a clean, floating effect. Reduced grid
+gaps in the photo gallery from gap-4 to gap-3 and standardized image
+border radii to rounded-2xl for a more cohesive presentation. Increased
+the margin below the title section for better vertical rhythm.

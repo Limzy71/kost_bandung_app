@@ -8,8 +8,8 @@
         </div>
 
         <!-- Header Galeri -->
-        <div class="relative grid grid-cols-1 md:grid-cols-4 gap-4 mb-12 h-auto lg:h-[500px]">
-            <div class="md:col-span-3 h-64 md:h-full relative group rounded-3xl overflow-hidden min-h-0">
+        <div class="relative grid grid-cols-1 md:grid-cols-4 gap-3 mb-12 h-auto lg:h-[500px]">
+            <div class="md:col-span-3 h-64 md:h-full relative group rounded-2xl overflow-hidden min-h-0">
                 <img src="{{ Str::startsWith($kost->primaryImage?->image_path ?? '', 'http') ? $kost->primaryImage->image_path : Storage::url($kost->primaryImage?->image_path) }}" 
                      class="w-full h-full object-cover" alt="{{ $kost->name }}">
                 <button class="absolute bottom-6 right-6 px-6 py-2.5 bg-white/80 backdrop-blur-md rounded-full text-sm font-semibold text-gray-950 shadow-sm border border-white/50 hover:bg-white transition-colors flex items-center gap-2">
@@ -17,9 +17,9 @@
                     Lihat Semua Foto
                 </button>
             </div>
-            <div class="hidden md:flex flex-col gap-4 h-full min-h-0">
+            <div class="hidden md:flex flex-col gap-3 h-full min-h-0">
                 @foreach(range(1, 3) as $i)
-                <div class="flex-1 rounded-3xl overflow-hidden bg-gray-100 relative group min-h-0">
+                <div class="flex-1 rounded-2xl overflow-hidden bg-gray-100 relative group min-h-0">
                     <img src="https://placehold.co/400x300/eeeeee/31343c?text=Foto+{{ $i }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                 </div>
                 @endforeach
@@ -43,7 +43,7 @@
                     {{ $kost->name }}
                 </h1>
                 
-                <div class="flex items-start gap-2 text-gray-500 text-sm md:text-base font-medium mb-8">
+                <div class="flex items-start gap-2 text-gray-500 text-sm md:text-base font-medium mb-12">
                     <svg class="w-5 h-5 flex-shrink-0 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                     <span>{{ $kost->address }}</span>
                 </div>
@@ -93,7 +93,7 @@
             
             <!-- Sticky Action Card (Kanan) -->
             <div class="lg:col-span-1">
-                <div class="sticky top-24 bg-white border border-gray-200 rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hidden lg:block">
+                <div class="sticky top-24 bg-white rounded-3xl p-6 shadow-2xl shadow-gray-200/50 hidden lg:block">
                     <div class="flex items-end gap-1 mb-6">
                         <span class="text-3xl font-extrabold text-gray-950 tracking-tight">Rp {{ number_format($kost->price_monthly, 0, ',', '.') }}</span>
                         <span class="text-sm font-medium text-gray-500 mb-1">/ bulan</span>

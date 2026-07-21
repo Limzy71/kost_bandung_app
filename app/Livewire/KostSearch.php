@@ -27,6 +27,12 @@ class KostSearch extends Component
 
     public function render()
     {
+        if (is_numeric($this->price_min) && is_numeric($this->price_max)) {
+            if ((int)$this->price_min > (int)$this->price_max) {
+                $this->price_max = null;
+            }
+        }
+
         $query = Kost::query()->with(['primaryImage', 'facilities'])->where('is_available', true);
 
         if ($this->search) {

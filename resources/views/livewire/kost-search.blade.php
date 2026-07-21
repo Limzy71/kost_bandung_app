@@ -28,8 +28,25 @@
                     @endforeach
                 </select>
 
-                <input wire:model.live.debounce.500ms="price_min" type="number" placeholder="Min Harga" class="flex-1 min-w-[110px] h-11 py-2 px-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none">
-                <input wire:model.live.debounce.500ms="price_max" type="number" placeholder="Max Harga" class="flex-1 min-w-[110px] h-11 py-2 px-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none">
+                <select wire:model.live="price_min" class="flex-1 min-w-[110px] h-11 py-2 px-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none">
+                    <option value="">Min Harga</option>
+                    <option value="500000">Rp 500.000</option>
+                    <option value="1000000">Rp 1.000.000</option>
+                    <option value="1500000">Rp 1.500.000</option>
+                    <option value="2000000">Rp 2.000.000</option>
+                    <option value="3000000">Rp 3.000.000</option>
+                    <option value="5000000">Rp 5.000.000</option>
+                </select>
+
+                <select wire:model.live="price_max" class="flex-1 min-w-[110px] h-11 py-2 px-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none">
+                    <option value="">Max Harga</option>
+                    <option value="500000">Rp 500.000</option>
+                    <option value="1000000">Rp 1.000.000</option>
+                    <option value="1500000">Rp 1.500.000</option>
+                    <option value="2000000">Rp 2.000.000</option>
+                    <option value="3000000">Rp 3.000.000</option>
+                    <option value="5000000">Rp 5.000.000</option>
+                </select>
             </div>
         </div>
     </div>

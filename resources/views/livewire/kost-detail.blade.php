@@ -9,7 +9,7 @@
 
         <!-- Header Galeri -->
         <div class="relative grid grid-cols-1 md:grid-cols-4 gap-4 mb-12 h-auto lg:h-[500px]">
-            <div class="md:col-span-3 h-64 md:h-full relative group rounded-3xl overflow-hidden">
+            <div class="md:col-span-3 h-64 md:h-full relative group rounded-3xl overflow-hidden min-h-0">
                 <img src="{{ Str::startsWith($kost->primaryImage?->image_path ?? '', 'http') ? $kost->primaryImage->image_path : Storage::url($kost->primaryImage?->image_path) }}" 
                      class="w-full h-full object-cover" alt="{{ $kost->name }}">
                 <button class="absolute bottom-6 right-6 px-6 py-2.5 bg-white/80 backdrop-blur-md rounded-full text-sm font-semibold text-gray-950 shadow-sm border border-white/50 hover:bg-white transition-colors flex items-center gap-2">
@@ -17,9 +17,9 @@
                     Lihat Semua Foto
                 </button>
             </div>
-            <div class="hidden md:flex flex-col gap-4 h-full">
+            <div class="hidden md:flex flex-col gap-4 h-full min-h-0">
                 @foreach(range(1, 3) as $i)
-                <div class="flex-1 rounded-3xl overflow-hidden bg-gray-100 relative group">
+                <div class="flex-1 rounded-3xl overflow-hidden bg-gray-100 relative group min-h-0">
                     <img src="https://placehold.co/400x300/eeeeee/31343c?text=Foto+{{ $i }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                 </div>
                 @endforeach

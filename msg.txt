@@ -1,7 +1,9 @@
-fix(kost): correct owner relationship name in detail view
+fix(ui): correct flex and grid intrinsic height overflow in gallery
 
-Resolved a RelationNotFoundException triggered on the KostDetail component.
-The issue was caused by an eager load referencing the undefined 'owner'
-relationship instead of the correct 'user' relationship defined in the
-Kost model. Updated both the Livewire component logic and the blade view
-to accurately reference the user relation.
+Resolved a layout bug where the intrinsic height of the thumbnail images
+forced the parent flex and grid containers to expand beyond their set
+height of 500px. This overflow caused the gallery row to overlap and
+completely hide the property title, badges, and address below it.
+Added min-h-0 to the grid column, flex container, and flex items to
+allow CSS flexbox and grid engines to correctly shrink the items within
+the bounded 500px container.

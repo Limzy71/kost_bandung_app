@@ -248,11 +248,32 @@
 
                 <!-- Drag & Drop Upload Dropzone -->
                 <div 
-                    x-data="{ isUploading: false, progress: 0 }"
-                    x-on:livewire-upload-start="isUploading = true"
-                    x-on:livewire-upload-finish="isUploading = false"
-                    x-on:livewire-upload-error="isUploading = false"
-                    x-on:livewire-upload-progress="progress = $event.detail.progress"
+                    x-data="{
+                        isUploading: false,
+                        progress: 0,
+                        startUpload() {
+                            this.isUploading = true;
+                            this.progress = 0;
+                        },
+                        updateProgress(val) {
+                            this.progress = val;
+                        },
+                        finishUpload() {
+                            this.progress = 100;
+                            setTimeout(() => {
+                                this.isUploading = false;
+                                this.progress = 0;
+                            }, 400);
+                        },
+                        errorUpload() {
+                            this.isUploading = false;
+                            this.progress = 0;
+                        }
+                    }"
+                    x-on:livewire-upload-start="startUpload()"
+                    x-on:livewire-upload-finish="finishUpload()"
+                    x-on:livewire-upload-error="errorUpload()"
+                    x-on:livewire-upload-progress="updateProgress($event.detail.progress)"
                     class="space-y-4"
                 >
                     <div class="relative border-3 border-dashed border-black rounded-xl p-8 text-center bg-yellow-100/70 hover:bg-yellow-200/80 transition-all cursor-pointer group shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
@@ -288,6 +309,12 @@
                     <div 
                         x-show="isUploading" 
                         x-cloak 
+                        x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="opacity-0 scale-95"
+                        x-transition:enter-end="opacity-100 scale-100"
+                        x-transition:leave="transition ease-in duration-200"
+                        x-transition:leave-start="opacity-100 scale-100"
+                        x-transition:leave-end="opacity-0 scale-95"
                         class="bg-lime-100 border-3 border-black p-4 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] space-y-2.5 font-black text-black"
                     >
                         <div class="flex items-center justify-between text-xs uppercase">
@@ -296,7 +323,7 @@
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
-                                <span>Uploading...</span>
+                                <span x-text="progress < 100 ? 'Uploading...' : 'Selesai Mengunggah!'"></span>
                             </span>
                             <span x-text="progress + '%'" class="bg-yellow-300 border-2 border-black px-2.5 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] text-xs font-black">0%</span>
                         </div>
@@ -305,7 +332,7 @@
                         <div class="w-full bg-white border-2 border-black rounded-lg h-6 p-0.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden">
                             <!-- Progress Fill -->
                             <div 
-                                class="bg-lime-400 border-r-2 border-black h-full transition-all duration-150 rounded-sm" 
+                                class="bg-lime-400 border-r-2 border-black h-full transition-all duration-300 ease-out rounded-sm" 
                                 :style="'width: ' + progress + '%'"
                             ></div>
                         </div>

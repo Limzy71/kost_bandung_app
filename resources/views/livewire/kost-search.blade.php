@@ -87,6 +87,12 @@
                         x-ref="searchInput"
                         wire:model="search" 
                         wire:keydown.enter="applyFilters"
+                        @input="
+                            checkFilter();
+                            if ($refs.searchInput && $refs.searchInput.value.trim() === '' && $wire.search) {
+                                $wire.resetFilters();
+                            }
+                        "
                         type="text" 
                         placeholder="Contoh: Dago, Cisitu, Setiabudi..."
                         class="w-full bg-white border-3 border-black rounded-xl pl-10 pr-10 py-2.5 text-xs font-black uppercase text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
@@ -95,13 +101,14 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
 
-                    <!-- Clear Search Input ✕ Button (Clears search locally - NO server request) -->
+                    <!-- Clear Search Input ✕ Button (Triggers resetFilters to restore list) -->
                     <template x-if="query || ($refs.searchInput && $refs.searchInput.value)">
                         <button 
                             type="button" 
-                            @click="$refs.searchInput.value = ''; $wire.search = ''; checkFilter()"
+                            wire:click="resetFilters"
+                            @click="if($refs.searchInput) $refs.searchInput.value = ''; setTimeout(() => checkFilter(), 150)"
                             class="absolute right-2.5 w-6 h-6 bg-rose-400 hover:bg-rose-300 border-2 border-black rounded text-black font-black text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center cursor-pointer"
-                            title="Hapus kata kunci pencarian"
+                            title="Hapus kata kunci pencarian & reset"
                         >
                             ✕
                         </button>

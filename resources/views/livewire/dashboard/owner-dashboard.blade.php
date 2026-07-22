@@ -123,37 +123,99 @@
             </div>
         </div>
 
-        <!-- Section List Properti -->
+        <!-- Section List Properti & Filter Bar Neo-Brutalist -->
         <div id="property-list-section" class="space-y-6 scroll-mt-8">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white border-3 border-black p-5 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                <div>
-                    <h2 class="text-2xl font-black text-black uppercase tracking-tight">Daftar Properti Kost</h2>
-                    <p class="text-xs font-bold text-zinc-600">Kelola status ketersediaan & informasi properti kost Anda.</p>
+            <div 
+                x-data="{ 
+                    hasFilter: false,
+                    checkFilter() {
+                        this.hasFilter = Boolean(
+                            (this.$refs.searchInput && this.$refs.searchInput.value.trim() !== '') ||
+                            $wire.search
+                        );
+                    },
+                    resetFormLocally() {
+                        if (this.$refs.searchInput) this.$refs.searchInput.value = '';
+                        $wire.search = '';
+                        this.checkFilter();
+                    }
+                }"
+                x-init="checkFilter()"
+                @input="checkFilter()"
+                @change="checkFilter()"
+                class="bg-white border-4 border-black p-6 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-4"
+            >
+                <!-- Header Row (Title & Action Buttons Side by Side) -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b-3 border-black pb-3.5 gap-3">
+                    <!-- Header Title -->
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-black text-black uppercase tracking-tight flex items-center gap-2">
+                            <svg class="w-6 h-6 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0h4m-4 0H9m4 0V7m0 0h4m-4 0H9"/>
+                            </svg>
+                            <span>Daftar Properti Kost</span>
+                        </h2>
+                        <p class="text-xs font-bold text-zinc-600 mt-0.5">Kelola status ketersediaan & informasi properti kost Anda.</p>
+                    </div>
+
+                    <!-- Header Action Buttons (Aligned with Header Text) -->
+                    <div class="flex items-center gap-2.5 shrink-0 self-end sm:self-auto">
+                        <!-- Reset Filter Button (Local-only form reset - NO automatic server request) -->
+                        <button 
+                            x-show="hasFilter"
+                            x-cloak
+                            type="button" 
+                            @click="resetFormLocally()"
+                            class="bg-rose-400 hover:bg-rose-300 text-black border-2 border-black font-black text-xs uppercase px-3.5 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+                        >
+                            <svg class="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                            </svg>
+                            <span>Reset Filter</span>
+                        </button>
+
+                        <!-- Terapkan Filter Button (Submits deferred search criteria to server) -->
+                        <button 
+                            type="button" 
+                            wire:click="applyFilters" 
+                            class="bg-lime-400 hover:bg-lime-300 text-black border-2 border-black font-black text-xs uppercase px-4 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+                        >
+                            <svg class="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                            <span>Terapkan Filter</span>
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Search Filter Input -->
-                <div class="relative w-full sm:w-80" x-data>
-                    <input 
-                        type="text" 
-                        wire:model.live.debounce.300ms="search" 
-                        placeholder="Cari nama atau lokasi..." 
-                        class="w-full bg-white border-2 border-black rounded-lg pl-10 pr-10 py-2.5 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
-                    >
-                    <svg class="w-5 h-5 text-black absolute left-3 top-3 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
+                <!-- Search Input Row -->
+                <div class="relative w-full">
+                    <label class="block text-xs font-black uppercase text-black mb-1.5">Cari Nama Properti / Alamat / Kecamatan</label>
+                    <div class="relative flex items-center" x-data="{ query: @entangle('search') }">
+                        <input 
+                            x-ref="searchInput"
+                            wire:model="search" 
+                            wire:keydown.enter="applyFilters"
+                            type="text" 
+                            placeholder="Contoh: Kost Dago, Jl. Cisitu, Coblong..."
+                            class="w-full bg-white border-3 border-black rounded-xl pl-10 pr-10 py-2.5 text-xs font-black uppercase text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
+                        >
+                        <svg class="w-5 h-5 text-black absolute left-3 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
 
-                    <!-- Clear 'X' Button -->
-                    <button 
-                        type="button" 
-                        x-show="$wire.search && $wire.search.length > 0"
-                        x-cloak
-                        @click="$wire.resetSearch()"
-                        class="absolute right-2.5 top-2.5 w-6 h-6 bg-rose-400 hover:bg-rose-300 border-2 border-black rounded text-black font-black text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center cursor-pointer"
-                        title="Hapus Pencarian"
-                    >
-                        ✕
-                    </button>
+                        <!-- Clear Search Input ✕ Button (Clears input locally ONLY - NO auto server request) -->
+                        <template x-if="query || ($refs.searchInput && $refs.searchInput.value)">
+                            <button 
+                                type="button" 
+                                @click="$refs.searchInput.value = ''; $wire.search = ''; checkFilter()"
+                                class="absolute right-2.5 w-6 h-6 bg-rose-400 hover:bg-rose-300 border-2 border-black rounded text-black font-black text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center cursor-pointer"
+                                title="Hapus kata kunci pencarian"
+                            >
+                                ✕
+                            </button>
+                        </template>
+                    </div>
                 </div>
             </div>
 

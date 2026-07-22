@@ -24,12 +24,23 @@ class OwnerDashboard extends Component
         }
     }
 
+    public function applyFilters(): void
+    {
+        $this->resetPage();
+    }
+
     public function updatedSearch(): void
     {
         $this->resetPage();
     }
 
     public function resetSearch(): void
+    {
+        $this->search = '';
+        $this->resetPage();
+    }
+
+    public function resetFilters(): void
     {
         $this->search = '';
         $this->resetPage();

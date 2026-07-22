@@ -32,18 +32,26 @@
             </div>
         </div>
 
-        <!-- Flash Status Banner -->
-        @if (session()->has('status'))
-            <div class="p-4 bg-lime-300 border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-lg flex items-center justify-between text-black font-extrabold text-sm animate-fade-in">
-                <div class="flex items-center gap-3">
-                    <span class="w-6 h-6 rounded-full bg-black text-lime-300 flex items-center justify-center text-xs font-black">✓</span>
-                    <span>{{ session('status') }}</span>
-                </div>
-                <button type="button" onclick="this.parentElement.remove()" class="bg-black text-white hover:bg-zinc-800 p-1 border border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                    ✕
-                </button>
+        <!-- Floating Auto-Dismiss Toast Notification -->
+        <div 
+            x-data="{ show: false, message: '' }"
+            x-on:show-toast.window="message = $event.detail.message; show = true; setTimeout(() => show = false, 2500)"
+            x-show="show" 
+            x-cloak
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 translate-y-4 scale-95"
+            x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+            x-transition:leave-end="opacity-0 translate-y-4 scale-95"
+            class="fixed bottom-6 right-6 z-50 bg-lime-300 border-3 border-black p-4 rounded-xl shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] text-black font-black text-sm flex items-center gap-3 max-w-md"
+        >
+            <div class="w-7 h-7 rounded-full bg-black text-lime-300 flex items-center justify-center text-xs font-black">
+                ✓
             </div>
-        @endif
+            <span x-text="message"></span>
+            <button type="button" @click="show = false" class="ml-auto text-black hover:opacity-75 font-black text-xs cursor-pointer">✕</button>
+        </div>
 
         <!-- Quick Stats Overview Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -197,9 +205,19 @@
                                 <!-- Toggle Availability Button -->
                                 <button 
                                     wire:click="toggleAvailability({{ $kost->id }})" 
-                                    class="px-3.5 py-2 border-2 border-black text-xs font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded {{ $kost->is_available ? 'bg-rose-400 hover:bg-rose-300 text-black' : 'bg-lime-400 hover:bg-lime-300 text-black' }}"
+                                    wire:loading.attr="disabled"
+                                    class="px-3.5 py-2 border-2 border-black text-xs font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded cursor-pointer {{ $kost->is_available ? 'bg-rose-400 hover:bg-rose-300 text-black' : 'bg-lime-400 hover:bg-lime-300 text-black' }}"
                                 >
-                                    {{ $kost->is_available ? 'Tandai Penuh' : 'Tandai Tersedia' }}
+                                    <span wire:loading.remove wire:target="toggleAvailability({{ $kost->id }})">
+                                        {{ $kost->is_available ? 'Ubah ke Penuh 🔴' : 'Ubah ke Tersedia 🟢' }}
+                                    </span>
+                                    <span wire:loading wire:target="toggleAvailability({{ $kost->id }})" class="inline-flex items-center gap-1.5">
+                                        <svg class="animate-spin h-3.5 w-3.5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        <span>Memproses...</span>
+                                    </span>
                                 </button>
 
                                 <!-- Detail Link Button -->

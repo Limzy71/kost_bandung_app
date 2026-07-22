@@ -28,7 +28,9 @@ class OwnerDashboard extends Component
         if ($kost) {
             $kost->is_available = ! $kost->is_available;
             $kost->save();
-            session()->flash('status', 'Status ketersediaan "' . $kost->name . '" berhasil diperbarui.');
+
+            $statusText = $kost->is_available ? 'TERSEDIA' : 'PENUH';
+            $this->dispatch('show-toast', message: 'Status ketersediaan "' . $kost->name . '" diubah ke ' . $statusText);
         }
     }
 

@@ -102,11 +102,16 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
 
-                    <!-- Clear Search Input ✕ Button (Clears input text locally) -->
+                    <!-- Clear Search Input ✕ Button (auto-refreshes list if search was applied) -->
                     <template x-if="query || ($refs.searchInput && $refs.searchInput.value)">
                         <button 
                             type="button" 
-                            @click="$refs.searchInput.value = ''; $wire.search = ''; checkFilter()"
+                            @click="
+                                $refs.searchInput.value = '';
+                                $wire.search = '';
+                                checkFilter();
+                                if (wasApplied) { $wire.applyFilters(); }
+                            "
                             class="absolute right-2.5 w-6 h-6 bg-rose-400 hover:bg-rose-300 border-2 border-black rounded text-black font-black text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center cursor-pointer"
                             title="Hapus kata kunci pencarian"
                         >
@@ -318,8 +323,10 @@
                 <div>
                     <h3 class="text-3xl font-black text-black uppercase">Tidak Ada Hunian Ditemukan</h3>
                     <p class="text-sm font-bold text-zinc-700 max-w-md mx-auto mt-2">
-                        @if($search || $gender || $district || $price_min || $price_max)
-                            Tidak ada kost yang cocok dengan kriteria filter Anda. Coba reset filter atau ubah kata kunci pencarian.
+                        @if($search && !$gender && !$district && !$price_min && !$price_max)
+                            Tidak ada kost yang cocok dengan kata kunci "{{ $search }}". Coba hapus pencarian atau gunakan kata kunci lain.
+                        @elseif($search || $gender || $district || $price_min || $price_max)
+                            Tidak ada kost yang cocok dengan kriteria filter Anda. Coba ubah atau reset filter pencarian.
                         @else
                             Belum ada daftar kost yang terdaftar saat ini.
                         @endif
@@ -328,11 +335,15 @@
                 <button 
                     type="button"
                     wire:click="resetFilters" 
-                    @click="if($refs.searchInput) $refs.searchInput.value = ''; setTimeout(() => checkFilter(), 150)"
+                    @click="if($refs.searchInput) $refs.searchInput.value = ''; wasApplied = false; setTimeout(() => checkFilter(), 150)"
                     class="px-6 py-3 bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl inline-flex items-center gap-2 cursor-pointer"
                 >
                     <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-                    <span>Reset Semua Filter</span>
+                    @if($search && !$gender && !$district && !$price_min && !$price_max)
+                        <span>Hapus Pencarian</span>
+                    @else
+                        <span>Tampilkan Semua Kost</span>
+                    @endif
                 </button>
             </div>
         @endif

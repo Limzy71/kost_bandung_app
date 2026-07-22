@@ -85,7 +85,7 @@
                 <div class="relative flex items-center" x-data="{ query: @entangle('search') }">
                     <input 
                         x-ref="searchInput"
-                        wire:model="search" 
+                        wire:model.live.debounce.300ms="search" 
                         wire:keydown.enter="applyFilters"
                         type="text" 
                         placeholder="Contoh: Dago, Cisitu, Setiabudi..."

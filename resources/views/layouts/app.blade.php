@@ -19,9 +19,15 @@
             <div class="flex items-center gap-3 md:gap-4">
                 @auth
                     @if(auth()->user()->role === 'owner')
-                        <a href="{{ route('dashboard') }}" class="text-xs font-black uppercase text-black bg-yellow-300 hover:bg-yellow-200 px-3.5 py-2 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded">
-                            Dashboard
-                        </a>
+                        @if(request()->is('dashboard*'))
+                            <a href="{{ route('home') }}" class="text-xs font-black uppercase text-black bg-white hover:bg-zinc-100 px-3.5 py-2 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded">
+                                Beranda Kost
+                            </a>
+                        @else
+                            <a href="{{ route('dashboard') }}" class="text-xs font-black uppercase text-black bg-yellow-300 hover:bg-yellow-200 px-3.5 py-2 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded">
+                                Dashboard
+                            </a>
+                        @endif
                     @endif
                     <span class="text-xs font-black uppercase text-black bg-zinc-100 border-2 border-black px-3 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] rounded hidden sm:inline-block">
                         👤 {{ auth()->user()->name }}

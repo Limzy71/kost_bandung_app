@@ -17,6 +17,19 @@
                     (this.$refs.maxSelect && this.$refs.maxSelect.value !== '') ||
                     $wire.search || $wire.gender || $wire.district || $wire.price_min || $wire.price_max
                 );
+            },
+            resetFormLocally() {
+                if (this.$refs.searchInput) this.$refs.searchInput.value = '';
+                if (this.$refs.genderSelect) this.$refs.genderSelect.value = '';
+                if (this.$refs.districtSelect) this.$refs.districtSelect.value = '';
+                if (this.$refs.minSelect) this.$refs.minSelect.value = '';
+                if (this.$refs.maxSelect) this.$refs.maxSelect.value = '';
+                $wire.search = '';
+                $wire.gender = '';
+                $wire.district = '';
+                $wire.price_min = '';
+                $wire.price_max = '';
+                this.checkFilter();
             }
         }"
         x-init="checkFilter()"
@@ -36,13 +49,12 @@
 
             <!-- Header Action Buttons (Aligned with Header Text) -->
             <div class="flex items-center gap-2.5 shrink-0 self-end sm:self-auto">
-                <!-- Reset Filter Button (Explicit trigger: resets server filters) -->
+                <!-- Reset Filter Button (Local-only form reset - NO automatic server request) -->
                 <button 
                     x-show="hasFilter"
                     x-cloak
                     type="button" 
-                    wire:click="resetFilters" 
-                    @click="if($refs.searchInput) $refs.searchInput.value = ''; setTimeout(() => checkFilter(), 150)"
+                    @click="resetFormLocally()"
                     class="bg-rose-400 hover:bg-rose-300 text-black border-2 border-black font-black text-xs uppercase px-3.5 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
                 >
                     <svg class="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -51,7 +63,7 @@
                     <span>Reset Filter</span>
                 </button>
 
-                <!-- Terapkan Filter Button (Explicit trigger: submits deferred filters) -->
+                <!-- Terapkan Filter Button (Submits deferred filter criteria to server) -->
                 <button 
                     type="button" 
                     wire:click="applyFilters" 
@@ -83,7 +95,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
 
-                    <!-- Clear Search Input ✕ Button (Clears input locally ONLY - NO auto server request) -->
+                    <!-- Clear Search Input ✕ Button (Clears search locally - NO server request) -->
                     <template x-if="query || ($refs.searchInput && $refs.searchInput.value)">
                         <button 
                             type="button" 

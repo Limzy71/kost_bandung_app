@@ -1,7 +1,6 @@
 <div 
     x-data 
     x-init="window.scrollTo({ top: 0, behavior: 'auto' })"
-    wire:poll.10s
     @scroll-to-list.window="document.getElementById('property-list-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })"
     class="min-h-screen bg-[#f8f9fa] bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:24px_24px]"
 >

@@ -66,21 +66,32 @@
                         <label class="cursor-pointer">
                             <input type="radio" wire:model="gender_type" value="campur" class="peer sr-only">
                             <div class="px-4 py-3.5 rounded-lg border-2 border-black text-center font-black text-xs md:text-sm text-black bg-zinc-50 hover:bg-yellow-100 peer-checked:bg-yellow-400 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-center gap-2">
-                                <span>👫 Campur</span>
+                                <svg class="w-4 h-4 md:w-5 md:h-5 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                </svg>
+                                <span>Campur</span>
                             </div>
                         </label>
 
                         <label class="cursor-pointer">
                             <input type="radio" wire:model="gender_type" value="putri" class="peer sr-only">
                             <div class="px-4 py-3.5 rounded-lg border-2 border-black text-center font-black text-xs md:text-sm text-black bg-zinc-50 hover:bg-pink-100 peer-checked:bg-pink-400 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-center gap-2">
-                                <span>👩 Khusus Putri</span>
+                                <svg class="w-4 h-4 md:w-5 md:h-5 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5z"/>
+                                    <circle cx="12" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.5 9c.5.8 1.5 1.2 2.5 1.2s2-.4 2.5-1.2"/>
+                                </svg>
+                                <span>Khusus Putri</span>
                             </div>
                         </label>
 
                         <label class="cursor-pointer">
                             <input type="radio" wire:model="gender_type" value="putra" class="peer sr-only">
                             <div class="px-4 py-3.5 rounded-lg border-2 border-black text-center font-black text-xs md:text-sm text-black bg-zinc-50 hover:bg-cyan-100 peer-checked:bg-cyan-300 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-center gap-2">
-                                <span>👨 Khusus Putra</span>
+                                <svg class="w-4 h-4 md:w-5 md:h-5 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5z"/>
+                                </svg>
+                                <span>Khusus Putra</span>
                             </div>
                         </label>
                     </div>

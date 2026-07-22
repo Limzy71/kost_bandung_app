@@ -9,13 +9,18 @@
         x-data="{ 
             hasFilter: false,
             checkFilter() {
+                const searchVal = this.$refs.searchInput ? this.$refs.searchInput.value.trim() : '';
+                const genderVal = this.$refs.genderSelect ? this.$refs.genderSelect.value : '';
+                const districtVal = this.$refs.districtSelect ? this.$refs.districtSelect.value : '';
+                const minVal = this.$refs.minSelect ? this.$refs.minSelect.value : '';
+                const maxVal = this.$refs.maxSelect ? this.$refs.maxSelect.value : '';
+
                 this.hasFilter = Boolean(
-                    (this.$refs.searchInput && this.$refs.searchInput.value.trim() !== '') ||
-                    (this.$refs.genderSelect && this.$refs.genderSelect.value !== '') ||
-                    (this.$refs.districtSelect && this.$refs.districtSelect.value !== '') ||
-                    (this.$refs.minSelect && this.$refs.minSelect.value !== '') ||
-                    (this.$refs.maxSelect && this.$refs.maxSelect.value !== '') ||
-                    $wire.search || $wire.gender || $wire.district || $wire.price_min || $wire.price_max
+                    searchVal !== '' ||
+                    genderVal !== '' ||
+                    districtVal !== '' ||
+                    minVal !== '' ||
+                    maxVal !== ''
                 );
             },
             resetFormLocally() {
@@ -24,12 +29,8 @@
                 if (this.$refs.districtSelect) this.$refs.districtSelect.value = '';
                 if (this.$refs.minSelect) this.$refs.minSelect.value = '';
                 if (this.$refs.maxSelect) this.$refs.maxSelect.value = '';
-                $wire.search = '';
-                $wire.gender = '';
-                $wire.district = '';
-                $wire.price_min = '';
-                $wire.price_max = '';
                 this.checkFilter();
+                $wire.resetFilters();
             }
         }"
         x-init="checkFilter()"

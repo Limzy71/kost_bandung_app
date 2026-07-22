@@ -36,7 +36,7 @@
 
             <!-- Header Action Buttons (Aligned with Header Text) -->
             <div class="flex items-center gap-2.5 shrink-0 self-end sm:self-auto">
-                <!-- Reset Filter Button (Only shown when any filter has a value) -->
+                <!-- Reset Filter Button (Explicit trigger: resets server filters) -->
                 <button 
                     x-show="hasFilter"
                     x-cloak
@@ -51,7 +51,7 @@
                     <span>Reset Filter</span>
                 </button>
 
-                <!-- Terapkan Filter Button (Always visible on Header right) -->
+                <!-- Terapkan Filter Button (Explicit trigger: submits deferred filters) -->
                 <button 
                     type="button" 
                     wire:click="applyFilters" 
@@ -83,14 +83,13 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
 
-                    <!-- Clear Search Input ✕ Button (Clears search & resets server state so results refresh) -->
+                    <!-- Clear Search Input ✕ Button (Clears input locally ONLY - NO auto server request) -->
                     <template x-if="query || ($refs.searchInput && $refs.searchInput.value)">
                         <button 
                             type="button" 
-                            wire:click="resetFilters"
-                            @click="$refs.searchInput.value = ''; setTimeout(() => checkFilter(), 150)"
+                            @click="$refs.searchInput.value = ''; $wire.search = ''; checkFilter()"
                             class="absolute right-2.5 w-6 h-6 bg-rose-400 hover:bg-rose-300 border-2 border-black rounded text-black font-black text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center cursor-pointer"
-                            title="Hapus kata kunci pencarian & reset"
+                            title="Hapus kata kunci pencarian"
                         >
                             ✕
                         </button>

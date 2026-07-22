@@ -11,19 +11,19 @@ class KostSearch extends Component
 {
     use WithPagination;
 
-    #[Url(history: true)]
+    #[Url]
     public $search = '';
 
-    #[Url(history: true)]
+    #[Url]
     public $gender = '';
 
-    #[Url(history: true)]
+    #[Url]
     public $price_min = '';
 
-    #[Url(history: true)]
+    #[Url]
     public $price_max = '';
 
-    #[Url(history: true)]
+    #[Url]
     public $district = '';
 
     public function mount()

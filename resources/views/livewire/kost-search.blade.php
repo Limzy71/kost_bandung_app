@@ -27,11 +27,8 @@
                 if (this.$refs.districtSelect) this.$refs.districtSelect.value = '';
                 if (this.$refs.minSelect) this.$refs.minSelect.value = '';
                 if (this.$refs.maxSelect) this.$refs.maxSelect.value = '';
-                $wire.gender = '';
-                $wire.district = '';
-                $wire.price_min = '';
-                $wire.price_max = '';
                 this.checkFilter();
+                $wire.resetFilters();
             }
         }"
         x-init="checkFilter(); $nextTick(() => checkFilter())"

@@ -9,34 +9,34 @@
 <body class="h-full flex flex-col font-sans antialiased text-gray-950 bg-gray-50">
 
     <!-- Header / Navbar -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <header class="bg-white border-b-3 border-black sticky top-0 z-50 shadow-[0_4px_0_0_rgba(0,0,0,1)]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <a href="{{ route('home') }}" class="flex items-center gap-2">
-                <span class="text-xl font-extrabold text-gray-950 tracking-tight">
-                    KostBandung.id
+                <span class="text-xl font-black text-black uppercase tracking-tight flex items-center">
+                    KostBandung<span class="bg-yellow-300 border-2 border-black px-1.5 py-0.5 rounded text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ml-1 font-black text-black">.id</span>
                 </span>
             </a>
             <div class="flex items-center gap-3 md:gap-4">
                 @auth
                     @if(auth()->user()->role === 'owner')
-                        <a href="{{ route('dashboard') }}" class="text-xs font-semibold text-gray-700 hover:text-gray-950 px-3 py-2 rounded-full border border-gray-200 transition">
+                        <a href="{{ route('dashboard') }}" class="text-xs font-black uppercase text-black bg-yellow-300 hover:bg-yellow-200 px-3.5 py-2 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded">
                             Dashboard
                         </a>
                     @endif
-                    <span class="text-xs font-medium text-gray-500 hidden sm:inline">
-                        {{ auth()->user()->name }}
+                    <span class="text-xs font-black uppercase text-black bg-zinc-100 border-2 border-black px-3 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] rounded hidden sm:inline-block">
+                        👤 {{ auth()->user()->name }}
                     </span>
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
-                        <button type="submit" class="text-xs font-semibold text-gray-600 hover:text-gray-950 px-3 py-2 transition">
+                        <button type="submit" class="text-xs font-black uppercase text-black bg-rose-400 hover:bg-rose-300 px-3.5 py-2 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded cursor-pointer">
                             Keluar
                         </button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="text-xs md:text-sm font-semibold text-gray-700 hover:text-gray-950 px-3 py-2 transition">
+                    <a href="{{ route('login') }}" class="text-xs md:text-sm font-black uppercase text-black bg-white hover:bg-zinc-100 px-3.5 py-2 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded">
                         Masuk
                     </a>
-                    <a href="{{ route('register') }}" class="text-xs md:text-sm font-semibold bg-gray-950 hover:bg-gray-800 text-white px-4 py-2.5 rounded-full shadow-sm transition">
+                    <a href="{{ route('register') }}" class="text-xs md:text-sm font-black uppercase text-black bg-yellow-400 hover:bg-yellow-300 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded">
                         Pasang Iklan
                     </a>
                 @endauth
@@ -50,8 +50,8 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-gray-200 py-8">
-        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-gray-500 font-medium">
+    <footer class="bg-white border-t-3 border-black py-8 shadow-[0_-4px_0_0_rgba(0,0,0,1)]">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-black font-black uppercase tracking-wider">
             &copy; {{ date('Y') }} KostBandung.id — Direkayasa untuk kemudahan pencarian kost di area Bandung.
         </div>
     </footer>

@@ -24,10 +24,15 @@
                 );
             },
             resetFormLocally() {
-                if (this.$refs.genderSelect) this.$refs.genderSelect.value = '';
-                if (this.$refs.districtSelect) this.$refs.districtSelect.value = '';
-                if (this.$refs.minSelect) this.$refs.minSelect.value = '';
-                if (this.$refs.maxSelect) this.$refs.maxSelect.value = '';
+                const dropdownRefs = ['genderSelect', 'districtSelect', 'minSelect', 'maxSelect'];
+                dropdownRefs.forEach(ref => {
+                    if (this.$refs[ref]) {
+                        this.$refs[ref].value = '';
+                        // Dispatch a change event so Livewire's wire:model deferred state
+                        // picks up the new empty value (prevents stale filter on next apply)
+                        this.$refs[ref].dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                });
                 this.checkFilter();
                 // Only call server reset if user had previously applied the filters
                 if (this.wasApplied) {

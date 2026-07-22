@@ -24,11 +24,17 @@ class Kost extends Model
         'latitude',
         'longitude',
         'is_available',
+        'status',
+        'total_rooms',
+        'available_rooms',
+        'additional_rules_note',
         'boosted_at',
     ];
 
     protected $casts = [
         'is_available' => 'boolean',
+        'total_rooms' => 'integer',
+        'available_rooms' => 'integer',
         'price_monthly' => 'decimal:2',
         'latitude' => 'decimal:8',
         'longitude' => 'decimal:8',

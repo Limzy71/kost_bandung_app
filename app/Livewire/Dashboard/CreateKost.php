@@ -20,6 +20,8 @@ class CreateKost extends Component
     public string $district = 'Coblong';
     public string $address = '';
     public string $price_monthly = '';
+    public string $total_rooms = '1';
+    public string $available_rooms = '1';
     public array $selectedFacilities = [];
     public $photo;
 
@@ -30,6 +32,8 @@ class CreateKost extends Component
         'district' => 'required|string|max:100',
         'address' => 'required|string|max:500',
         'price_monthly' => 'required|numeric|min:100000',
+        'total_rooms' => 'required|integer|min:1',
+        'available_rooms' => 'required|integer|min:0',
         'selectedFacilities' => 'nullable|array',
         'selectedFacilities.*' => 'exists:facilities,id',
         'photo' => 'required|image|max:2048',
@@ -45,6 +49,11 @@ class CreateKost extends Component
         'price_monthly.required' => 'Harga per bulan wajib diisi.',
         'price_monthly.numeric' => 'Harga per bulan harus berupa angka.',
         'price_monthly.min' => 'Harga per bulan minimal Rp 100.000.',
+        'total_rooms.required' => 'Total jumlah kamar wajib diisi.',
+        'total_rooms.integer' => 'Total kamar harus berupa angka bulat.',
+        'total_rooms.min' => 'Total kamar minimal 1.',
+        'available_rooms.required' => 'Sisa kamar tersedia wajib diisi.',
+        'available_rooms.integer' => 'Sisa kamar harus berupa angka bulat.',
         'photo.required' => 'Foto utama kost wajib diunggah.',
         'photo.image' => 'File harus berupa gambar (JPG, PNG, WEBP).',
         'photo.max' => 'Ukuran foto tidak boleh melebihi 2MB.',
@@ -68,7 +77,7 @@ class CreateKost extends Component
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        // Create Kost record
+        // Create Kost record with pending status (requires Admin review before public listing)
         $kost = Kost::create([
             'user_id' => $user->id,
             'name' => $this->name,
@@ -80,7 +89,10 @@ class CreateKost extends Component
             'district' => $this->district,
             'latitude' => -6.917464, // Center of Bandung default
             'longitude' => 107.619123,
-            'is_available' => true,
+            'is_available' => ((int)$this->available_rooms > 0),
+            'status' => 'pending', // Draft / Pending Admin review
+            'total_rooms' => (int)$this->total_rooms,
+            'available_rooms' => (int)$this->available_rooms,
         ]);
 
         // Create KostImage primary record
@@ -95,7 +107,7 @@ class CreateKost extends Component
             $kost->facilities()->attach($this->selectedFacilities);
         }
 
-        session()->flash('status', 'Properti kost "' . $kost->name . '" berhasil ditambahkan!');
+        session()->flash('status', 'Properti kost "' . $kost->name . '" berhasil diajukan dan sedang dalam peninjauan Admin!');
 
         return redirect()->route('dashboard');
     }

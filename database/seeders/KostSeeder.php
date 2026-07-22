@@ -126,6 +126,9 @@ class KostSeeder extends Seeder
                 'latitude' => -6.917464 + (rand(-100, 100) / 10000), 
                 'longitude' => 107.619123 + (rand(-100, 100) / 10000),
                 'is_available' => true,
+                'status' => 'published',
+                'total_rooms' => 10,
+                'available_rooms' => rand(1, 5),
                 'boosted_at' => $data['boost'] ? now() : null,
             ]);
 

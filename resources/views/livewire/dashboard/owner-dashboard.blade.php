@@ -200,14 +200,28 @@
                                         @endif
                                     </div>
 
-                                    <!-- Top Right Status Badge -->
-                                    <div class="absolute top-3 right-3">
-                                        @if($kost->is_available)
-                                            <span class="px-3 py-1 bg-lime-400 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                                Tersedia
+                                    <!-- Top Right Status Badges -->
+                                    <div class="absolute top-3 right-3 flex flex-col items-end gap-1.5">
+                                        @if($kost->status === 'pending')
+                                            <span class="px-3 py-1 bg-amber-300 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                ⏳ Menunggu Review
+                                            </span>
+                                        @elseif($kost->status === 'rejected')
+                                            <span class="px-3 py-1 bg-rose-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                ✕ Ditolak Admin
                                             </span>
                                         @else
-                                            <span class="px-3 py-1 bg-rose-400 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                            <span class="px-3 py-1 bg-emerald-300 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                ✓ Tayang Publik
+                                            </span>
+                                        @endif
+
+                                        @if($kost->is_available)
+                                            <span class="px-2.5 py-0.5 bg-lime-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                Sisa {{ $kost->available_rooms ?? 1 }} Kamar
+                                            </span>
+                                        @else
+                                            <span class="px-2.5 py-0.5 bg-rose-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                                                 Penuh
                                             </span>
                                         @endif

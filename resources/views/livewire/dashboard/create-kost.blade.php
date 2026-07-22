@@ -181,29 +181,68 @@
                     </div>
                 </div>
 
-                <!-- Harga Sewa per Bulan -->
-                <div class="space-y-2 max-w-md">
-                    <label for="price_monthly" class="block text-xs font-black uppercase tracking-wider text-black">
-                        Harga Sewa Per Bulan (IDR) <span class="text-rose-600">*</span>
-                    </label>
-                    <div class="relative rounded-lg overflow-hidden flex border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                        <div class="bg-yellow-300 border-r-2 border-black px-4 flex items-center font-black text-sm text-black">
-                            Rp
+                <!-- Harga & Jumlah Kamar Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Harga Sewa per Bulan -->
+                    <div class="space-y-2">
+                        <label for="price_monthly" class="block text-xs font-black uppercase tracking-wider text-black">
+                            Harga Sewa Per Bulan (IDR) <span class="text-rose-600">*</span>
+                        </label>
+                        <div class="relative rounded-lg overflow-hidden flex border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                            <div class="bg-yellow-300 border-r-2 border-black px-4 flex items-center font-black text-sm text-black">
+                                Rp
+                            </div>
+                            <input 
+                                type="number" 
+                                id="price_monthly" 
+                                wire:model="price_monthly" 
+                                placeholder="1500000" 
+                                class="w-full bg-white px-4 py-3 text-sm font-black text-black focus:outline-none focus:bg-yellow-50"
+                            >
+                            <div class="bg-zinc-100 border-l-2 border-black px-4 flex items-center text-xs font-black text-black uppercase">
+                                / Bln
+                            </div>
                         </div>
+                        @error('price_monthly')
+                            <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Total Kamar -->
+                    <div class="space-y-2">
+                        <label for="total_rooms" class="block text-xs font-black uppercase tracking-wider text-black">
+                            Total Jumlah Kamar <span class="text-rose-600">*</span>
+                        </label>
                         <input 
                             type="number" 
-                            id="price_monthly" 
-                            wire:model="price_monthly" 
-                            placeholder="1500000" 
-                            class="w-full bg-white px-4 py-3 text-sm font-black text-black focus:outline-none focus:bg-yellow-50"
+                            id="total_rooms" 
+                            wire:model="total_rooms" 
+                            placeholder="10" 
+                            min="1"
+                            class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-black text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
                         >
-                        <div class="bg-zinc-100 border-l-2 border-black px-4 flex items-center text-xs font-black text-black uppercase">
-                            / Bln
-                        </div>
+                        @error('total_rooms')
+                            <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
+                        @enderror
                     </div>
-                    @error('price_monthly')
-                        <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
-                    @enderror
+
+                    <!-- Kamar Tersedia -->
+                    <div class="space-y-2">
+                        <label for="available_rooms" class="block text-xs font-black uppercase tracking-wider text-black">
+                            Sisa Kamar Kosong <span class="text-rose-600">*</span>
+                        </label>
+                        <input 
+                            type="number" 
+                            id="available_rooms" 
+                            wire:model="available_rooms" 
+                            placeholder="2" 
+                            min="0"
+                            class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-black text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+                        >
+                        @error('available_rooms')
+                            <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
                 <!-- Checkbox Fasilitas Kost -->

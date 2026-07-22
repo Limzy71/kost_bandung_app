@@ -26,6 +26,17 @@ class KostSearch extends Component
     #[Url(history: true)]
     public $district = '';
 
+    #[Url(history: true)]
+    public int $page = 1;
+
+    public function mount(): void
+    {
+        $page = request()->integer('page', 1);
+        if ($page > 1) {
+            $this->setPage($page);
+        }
+    }
+
     public function updating($key)
     {
         if (in_array($key, ['search', 'gender', 'price_min', 'price_max', 'district'])) {

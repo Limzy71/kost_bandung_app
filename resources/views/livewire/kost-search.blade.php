@@ -149,22 +149,29 @@
                                     </div>
                                 @endif
 
-                                <!-- Top Left Badges -->
+                                <!-- Top Left Badges with SVG Icons -->
                                 <div class="absolute top-3 left-3 flex flex-col gap-1.5 pointer-events-none">
                                     <span class="px-2.5 py-1 bg-pink-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider">
                                         {{ $kost->gender_type }}
                                     </span>
                                     @if ($kost->boosted_at)
                                         <span class="px-2.5 py-1 bg-yellow-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider flex items-center gap-1">
-                                            ⚡ Super Boost
+                                            <svg class="w-3.5 h-3.5 fill-black text-black shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z" clip-rule="evenodd" />
+                                            </svg>
+                                            <span>Super Boost</span>
                                         </span>
                                     @endif
                                 </div>
 
-                                <!-- Top Right District Badge -->
+                                <!-- Top Right District Badge with SVG Location Pin -->
                                 <div class="absolute top-3 right-3">
-                                    <span class="px-3 py-1 bg-cyan-300 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                        📍 {{ $kost->district }}
+                                    <span class="px-2.5 py-1 bg-cyan-300 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider inline-flex items-center gap-1">
+                                        <svg class="w-3 h-3 text-black shrink-0 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        </svg>
+                                        <span>{{ $kost->district }}</span>
                                     </span>
                                 </div>
                             </div>

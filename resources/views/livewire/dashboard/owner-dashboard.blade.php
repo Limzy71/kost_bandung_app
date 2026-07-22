@@ -180,7 +180,10 @@
                                         </span>
                                         @if($kost->boosted_at)
                                             <span class="px-2.5 py-1 bg-yellow-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider flex items-center gap-1">
-                                                ⚡ Sundul
+                                                <svg class="w-3.5 h-3.5 fill-black text-black shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z" clip-rule="evenodd" />
+                                                </svg>
+                                                <span>Sundul</span>
                                             </span>
                                         @endif
                                     </div>
@@ -207,8 +210,12 @@
                                                 {{ $kost->name }}
                                             </a>
                                         </h3>
-                                        <p class="text-xs font-bold text-zinc-600 mt-1 line-clamp-1">
-                                            📍 {{ $kost->address }}, {{ $kost->district }}
+                                        <p class="text-xs font-bold text-zinc-600 mt-1 line-clamp-1 inline-flex items-center gap-1">
+                                            <svg class="w-3.5 h-3.5 text-zinc-700 shrink-0 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            </svg>
+                                            <span>{{ $kost->address }}, {{ $kost->district }}</span>
                                         </p>
                                     </div>
 

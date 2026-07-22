@@ -79,16 +79,22 @@
                         Platform Direktori Kost Hyper-Local Kota Bandung. Temukan kost mahasiswa & karyawan di area Coblong, Dipatiukur, Dago, dan sekitarnya dengan cepat & akurat.
                     </p>
                     <div class="flex flex-wrap items-center gap-2 pt-1">
-                        <span class="px-2.5 py-1 bg-lime-300 border-2 border-black text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                            ⚡ Hyper-Local Bandung
+                        <span class="px-2.5 py-1 bg-lime-300 border-2 border-black text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1">
+                            <svg class="w-3 h-3 fill-black text-black shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z" clip-rule="evenodd" />
+                            </svg>
+                            <span>Hyper-Local Bandung</span>
                         </span>
-                        <span class="px-2.5 py-1 bg-cyan-300 border-2 border-black text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                            🏢 100% Terverifikasi
+                        <span class="px-2.5 py-1 bg-cyan-300 border-2 border-black text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1">
+                            <svg class="w-3 h-3 text-black shrink-0 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0h4m-4 0H9m4 0V7m0 0h4m-4 0H9"/>
+                            </svg>
+                            <span>100% Terverifikasi</span>
                         </span>
                     </div>
                 </div>
 
-                <!-- Col 2: Navigation Links (With High Quality Vector SVG Icons) -->
+                <!-- Col 2: Navigation Links -->
                 <div class="space-y-3">
                     <h4 class="text-xs font-black uppercase tracking-wider text-black bg-yellow-300 border-2 border-black px-2.5 py-1 inline-block shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                         Navigasi Cepat

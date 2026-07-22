@@ -10,11 +10,17 @@
             <div class="bg-white border-4 border-black p-8 md:p-12 rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-8">
                 <div class="space-y-4 max-w-2xl">
                     <div class="flex flex-wrap items-center justify-center md:justify-start gap-2">
-                        <span class="px-3.5 py-1 bg-yellow-300 text-black border-2 border-black font-extrabold text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                            ⚡ Hyper-Local Bandung
+                        <span class="px-3.5 py-1 bg-yellow-300 text-black border-2 border-black font-extrabold text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5 fill-black text-black shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z" clip-rule="evenodd" />
+                            </svg>
+                            <span>Hyper-Local Bandung</span>
                         </span>
-                        <span class="px-3.5 py-1 bg-cyan-300 text-black border-2 border-black font-extrabold text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                            Direktori Terverifikasi
+                        <span class="px-3.5 py-1 bg-cyan-300 text-black border-2 border-black font-extrabold text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-black shrink-0 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                            <span>Direktori Terverifikasi</span>
                         </span>
                     </div>
                     <h1 class="text-4xl sm:text-6xl md:text-7xl font-black text-black tracking-tight uppercase leading-none">
@@ -25,10 +31,10 @@
                     </p>
                 </div>
 
-                <!-- Professional Neo-Brutalist Building Icon -->
+                <!-- Professional Neo-Brutalist Architectural Building Icon -->
                 <div class="shrink-0 hidden md:block">
                     <div class="w-28 h-28 bg-pink-300 border-4 border-black rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center -rotate-3 hover:rotate-0 transition-transform">
-                        <svg class="w-14 h-14 text-black" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <svg class="w-14 h-14 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0h4m-4 0H9m4 0V7m0 0h4m-4 0H9"/>
                         </svg>
                     </div>

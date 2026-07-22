@@ -8,11 +8,12 @@
     <div 
         x-data="{ 
             hasFilter: false,
+            wasApplied: false,
             checkFilter() {
-                const genderVal = (this.$refs.genderSelect && this.$refs.genderSelect.value) || $wire.gender || '';
-                const districtVal = (this.$refs.districtSelect && this.$refs.districtSelect.value) || $wire.district || '';
-                const minVal = (this.$refs.minSelect && this.$refs.minSelect.value) || $wire.price_min || '';
-                const maxVal = (this.$refs.maxSelect && this.$refs.maxSelect.value) || $wire.price_max || '';
+                const genderVal = this.$refs.genderSelect ? this.$refs.genderSelect.value : '';
+                const districtVal = this.$refs.districtSelect ? this.$refs.districtSelect.value : '';
+                const minVal = this.$refs.minSelect ? this.$refs.minSelect.value : '';
+                const maxVal = this.$refs.maxSelect ? this.$refs.maxSelect.value : '';
 
                 // Header RESET FILTER button ONLY appears when at least one select dropdown is chosen
                 this.hasFilter = Boolean(
@@ -28,10 +29,14 @@
                 if (this.$refs.minSelect) this.$refs.minSelect.value = '';
                 if (this.$refs.maxSelect) this.$refs.maxSelect.value = '';
                 this.checkFilter();
-                $wire.resetFilters();
+                // Only call server reset if user had previously applied the filters
+                if (this.wasApplied) {
+                    $wire.resetFilters();
+                    this.wasApplied = false;
+                }
             }
         }"
-        x-init="checkFilter(); $nextTick(() => checkFilter())"
+        x-init="checkFilter()"
         @input="checkFilter()"
         @change="checkFilter()"
         class="bg-white border-4 border-black p-6 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-4"
@@ -66,6 +71,7 @@
                 <button 
                     type="button" 
                     wire:click="applyFilters" 
+                    @click="wasApplied = true"
                     class="bg-lime-400 hover:bg-lime-300 text-black border-2 border-black font-black text-xs uppercase px-4 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
                 >
                     <svg class="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -86,6 +92,7 @@
                         x-ref="searchInput"
                         wire:model="search" 
                         wire:keydown.enter="applyFilters"
+                        @keydown.enter="wasApplied = true"
                         @input="checkFilter()"
                         type="text" 
                         placeholder="Contoh: Dago, Cisitu, Setiabudi..."

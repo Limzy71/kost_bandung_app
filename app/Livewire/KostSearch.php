@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Kost;
@@ -11,19 +10,14 @@ class KostSearch extends Component
 {
     use WithPagination;
 
-    #[Url]
     public $search = '';
 
-    #[Url]
     public $gender = '';
 
-    #[Url]
     public $price_min = '';
 
-    #[Url]
     public $price_max = '';
 
-    #[Url]
     public $district = '';
 
     public function mount()

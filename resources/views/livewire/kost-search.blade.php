@@ -1,30 +1,8 @@
 <div 
     x-data 
-    x-init="
-        const urlParams = new URLSearchParams(window.location.search);
-        const page = urlParams.get('page');
-        if (page && parseInt(page) > 1) {
-            setTimeout(() => {
-                const el = document.getElementById('home-list-section');
-                if (el) {
-                    const targetY = el.getBoundingClientRect().top + window.pageYOffset - 100;
-                    window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
-                }
-            }, 100);
-        } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    "
+    x-init="window.scrollTo({ top: 0, behavior: 'auto' })"
     wire:poll.10s
-    @scroll-to-home-list.window="
-        setTimeout(() => {
-            const el = document.getElementById('home-list-section');
-            if (el) {
-                const targetY = el.getBoundingClientRect().top + window.pageYOffset - 100;
-                window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
-            }
-        }, 50);
-    "
+    @scroll-to-home-list.window="document.getElementById('home-list-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })"
 >
     <!-- Floating Filter Pill -->
     <div class="relative z-20 bg-white shadow-sm rounded-2xl md:rounded-full border border-gray-200 mb-16 p-2">

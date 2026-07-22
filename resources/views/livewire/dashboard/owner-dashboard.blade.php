@@ -1,30 +1,8 @@
 <div 
     x-data 
-    x-init="
-        const urlParams = new URLSearchParams(window.location.search);
-        const page = urlParams.get('page');
-        if (page && parseInt(page) > 1) {
-            setTimeout(() => {
-                const el = document.getElementById('property-list-section');
-                if (el) {
-                    const targetY = el.getBoundingClientRect().top + window.pageYOffset - 32;
-                    window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
-                }
-            }, 100);
-        } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    "
+    x-init="window.scrollTo({ top: 0, behavior: 'auto' })"
     wire:poll.10s
-    @scroll-to-list.window="
-        setTimeout(() => {
-            const el = document.getElementById('property-list-section');
-            if (el) {
-                const targetY = el.getBoundingClientRect().top + window.pageYOffset - 32;
-                window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
-            }
-        }, 50);
-    "
+    @scroll-to-list.window="document.getElementById('property-list-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })"
     class="min-h-screen bg-[#f8f9fa] bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:24px_24px]"
 >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-8">

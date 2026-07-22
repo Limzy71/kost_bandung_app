@@ -16,27 +16,21 @@ class OwnerDashboard extends Component
     #[Url(history: true)]
     public string $search = '';
 
-    #[Url(history: true)]
-    public int $page = 1;
-
-    public function mount(): void
+    public function mount()
     {
-        $page = request()->integer('page', 1);
-        if ($page > 1) {
-            $this->setPage($page);
+        if (request()->has('page')) {
+            return redirect(request()->url());
         }
     }
 
     public function updatedSearch(): void
     {
-        $this->page = 1;
         $this->resetPage();
     }
 
     public function resetSearch(): void
     {
         $this->search = '';
-        $this->page = 1;
         $this->resetPage();
     }
 

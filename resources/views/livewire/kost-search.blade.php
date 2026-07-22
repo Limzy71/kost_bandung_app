@@ -3,25 +3,63 @@
     x-init="window.scrollTo({ top: 0, behavior: 'auto' })"
     wire:poll.10s
     @scroll-to-home-list.window="document.getElementById('home-list-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })"
+    class="space-y-8"
 >
-    <!-- Floating Filter Pill -->
-    <div class="relative z-20 bg-white shadow-sm rounded-2xl md:rounded-full border border-gray-200 mb-16 p-2">
-        <div class="flex flex-col md:flex-row items-center divide-y md:divide-y-0 md:divide-x divide-gray-100 w-full">
-            <!-- Search Input -->
-            <div class="w-full md:w-1/3 relative flex items-center px-4 py-2">
-                <svg class="h-5 w-5 text-gray-400 flex-shrink-0" viewBox="0 0 20 20" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="9" cy="9" r="6"></circle>
-                    <path d="M15 15l4 4"></path>
+    <!-- Filter Bar Neo-Brutalist -->
+    <div class="bg-white border-4 border-black p-6 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-4">
+        <div class="flex items-center justify-between border-b-3 border-black pb-3">
+            <h2 class="text-lg font-black text-black uppercase tracking-tight flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
                 </svg>
-                <input wire:model.live.debounce.300ms="search" type="text" placeholder="Cari nama atau jalan..."
-                    class="w-full h-10 pl-3 pr-2 bg-transparent border-none focus:ring-0 text-gray-950 placeholder-gray-400 outline-none">
+                <span>Filter Pencarian Kost</span>
+            </h2>
+
+            @if($search || $gender || $district || $price_min || $price_max)
+                <button 
+                    wire:click="resetFilters" 
+                    class="bg-rose-400 hover:bg-rose-300 text-black border-2 border-black font-black text-xs uppercase px-3.5 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg flex items-center gap-1"
+                >
+                    <span>Reset Filter</span>
+                    <span class="font-bold">✕</span>
+                </button>
+            @endif
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            <!-- Search Input -->
+            <div class="lg:col-span-2 relative">
+                <label class="block text-xs font-black uppercase text-black mb-1">Cari Nama / Jalan</label>
+                <div class="relative">
+                    <input 
+                        wire:model.live.debounce.300ms="search" 
+                        type="text" 
+                        placeholder="Contoh: Dago, Cisitu, Setiabudi..."
+                        class="w-full bg-white border-3 border-black rounded-xl pl-10 pr-10 py-2.5 text-sm font-bold text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+                    >
+                    <svg class="w-5 h-5 text-black absolute left-3 top-3 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+
+                    @if($search)
+                        <button 
+                            type="button" 
+                            wire:click="$set('search', '')"
+                            class="absolute right-2.5 top-2.5 w-6 h-6 bg-rose-400 hover:bg-rose-300 border-2 border-black rounded text-black font-black text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center cursor-pointer"
+                        >
+                            ✕
+                        </button>
+                    @endif
+                </div>
             </div>
 
-            <!-- Gender -->
-            <div class="w-full md:w-auto flex-1 px-4 py-2">
-                <select wire:model.live="gender"
-                    class="w-full h-10 bg-transparent border-none focus:ring-0 text-gray-950 font-medium outline-none cursor-pointer appearance-none md:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%239CA3AF%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-no-repeat bg-right">
+            <!-- Gender Select -->
+            <div>
+                <label class="block text-xs font-black uppercase text-black mb-1">Tipe Penghuni</label>
+                <select 
+                    wire:model.live="gender"
+                    class="w-full bg-white border-3 border-black rounded-xl px-3 py-2.5 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all"
+                >
                     <option value="">Semua Tipe</option>
                     <option value="putra">Putra</option>
                     <option value="putri">Putri</option>
@@ -29,144 +67,192 @@
                 </select>
             </div>
 
-            <!-- District -->
-            <div class="w-full md:w-auto flex-1 px-4 py-2">
-                <select wire:model.live="district"
-                    class="w-full h-10 bg-transparent border-none focus:ring-0 text-gray-950 font-medium outline-none cursor-pointer appearance-none md:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%239CA3AF%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-no-repeat bg-right">
-                    <option value="">Kecamatan</option>
+            <!-- District Select -->
+            <div>
+                <label class="block text-xs font-black uppercase text-black mb-1">Kecamatan</label>
+                <select 
+                    wire:model.live="district"
+                    class="w-full bg-white border-3 border-black rounded-xl px-3 py-2.5 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all"
+                >
+                    <option value="">Semua Kecamatan</option>
                     @foreach ($districts as $dist)
                         <option value="{{ $dist }}">{{ $dist }}</option>
                     @endforeach
                 </select>
             </div>
 
-            <!-- Min Price -->
-            <div class="w-full md:w-auto flex-1 px-4 py-2">
-                <select wire:model.live="price_min"
-                    class="w-full h-10 bg-transparent border-none focus:ring-0 text-gray-950 font-medium outline-none cursor-pointer appearance-none md:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%239CA3AF%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-no-repeat bg-right">
-                    <option value="">Min Harga</option>
-                    <option value="500000">Rp 500.000</option>
-                    <option value="1000000">Rp 1.000.000</option>
-                    <option value="1500000">Rp 1.500.000</option>
-                    <option value="2000000">Rp 2.000.000</option>
-                    <option value="3000000">Rp 3.000.000</option>
-                    <option value="5000000">Rp 5.000.000</option>
-                </select>
-            </div>
+            <!-- Price Min & Max Select -->
+            <div>
+                <label class="block text-xs font-black uppercase text-black mb-1">Batas Harga</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <select 
+                        wire:model.live="price_min"
+                        class="w-full bg-white border-3 border-black rounded-xl px-2 py-2.5 text-xs font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all"
+                    >
+                        <option value="">Min</option>
+                        <option value="500000">500rb</option>
+                        <option value="1000000">1 Jt</option>
+                        <option value="1500000">1,5 Jt</option>
+                        <option value="2000000">2 Jt</option>
+                        <option value="3000000">3 Jt</option>
+                    </select>
 
-            <!-- Max Price -->
-            <div class="w-full md:w-auto flex-1 px-4 py-2">
-                <select wire:model.live="price_max"
-                    class="w-full h-10 bg-transparent border-none focus:ring-0 text-gray-950 font-medium outline-none cursor-pointer appearance-none md:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%239CA3AF%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-no-repeat bg-right">
-                    <option value="">Max Harga</option>
-                    <option value="500000">Rp 500.000</option>
-                    <option value="1000000">Rp 1.000.000</option>
-                    <option value="1500000">Rp 1.500.000</option>
-                    <option value="2000000">Rp 2.000.000</option>
-                    <option value="3000000">Rp 3.000.000</option>
-                    <option value="5000000">Rp 5.000.000</option>
-                </select>
+                    <select 
+                        wire:model.live="price_max"
+                        class="w-full bg-white border-3 border-black rounded-xl px-2 py-2.5 text-xs font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all"
+                    >
+                        <option value="">Max</option>
+                        <option value="1000000">1 Jt</option>
+                        <option value="1500000">1,5 Jt</option>
+                        <option value="2000000">2 Jt</option>
+                        <option value="3000000">3 Jt</option>
+                        <option value="5000000">5 Jt</option>
+                    </select>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Grid List Kost -->
-    <div id="home-list-section" class="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
-        <div wire:loading class="absolute inset-0 bg-white/50 backdrop-blur-sm z-20 rounded-2xl"></div>
-
-        @forelse($kosts as $kost)
-            <div class="group flex flex-col">
-                <!-- Image Container -->
-                <div class="aspect-[4/3] bg-gray-100 relative overflow-hidden rounded-2xl flex-shrink-0 cursor-pointer"
-                    onclick="window.location.href='{{ route('kost.show', $kost->slug) }}'">
-                    @if ($kost->primaryImage)
-                        <img src="{{ Str::startsWith($kost->primaryImage->image_path, 'http') ? $kost->primaryImage->image_path : Storage::url($kost->primaryImage->image_path) }}"
-                            alt="{{ $kost->name }}"
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
-                    @else
-                        <div class="w-full h-full flex items-center justify-center bg-gray-100">
-                            <svg class="w-10 h-10 text-gray-300 animate-pulse" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                </path>
-                            </svg>
-                        </div>
-                    @endif
-
-                    <!-- Badges Top Left -->
-                    <div class="absolute top-4 left-4 flex flex-col gap-2 pointer-events-none">
-                        @if ($kost->boosted_at)
-                            <span
-                                class="px-3 py-1 bg-gray-950 text-white rounded-full text-[10px] font-bold flex items-center gap-1.5 shadow-sm uppercase tracking-wider">
-                                <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                    <path
-                                        d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z" />
-                                </svg>
-                                Super
-                            </span>
-                        @endif
-                    </div>
-                </div>
-
-                <!-- Content -->
-                <div class="mt-4 flex-1 flex flex-col justify-between">
-                    <div>
-                        <h2
-                            class="text-lg font-bold text-gray-900 leading-tight group-hover:text-gray-600 transition-colors line-clamp-1">
-                            <a href="{{ route('kost.show', $kost->slug) }}" class="focus:outline-none">
-                                {{ $kost->name }}
-                            </a>
-                        </h2>
-
-                        <p class="text-sm text-gray-500 mt-1 line-clamp-1">
-                            {{ $kost->address }}
-                        </p>
-
-                        <!-- Badges Info -->
-                        <div class="mt-3 flex flex-wrap items-center gap-2 relative z-10">
-                            <!-- Format price as Rp 1,5 Juta or Rp 1.500.000 -> "Rp 1.5Jt" -->
-                            <span
-                                class="rounded-full border border-gray-200 text-xs text-gray-700 px-3 py-1 font-semibold">
-                                Rp {{ number_format($kost->price_monthly, 0, ',', '.') }}
-                            </span>
-
-                            <span
-                                class="rounded-full border border-gray-200 text-xs text-gray-700 px-3 py-1 uppercase font-semibold">
-                                {{ $kost->gender_type }}
-                            </span>
-
-                            @if ($kost->facilities && $kost->facilities->count() > 0)
-                                @foreach ($kost->facilities->take(2) as $facility)
-                                    <span class="rounded-full border border-gray-200 text-xs text-gray-700 px-3 py-1">
-                                        {{ $facility->name }}
-                                    </span>
-                                @endforeach
-                            @endif
-                        </div>
-                    </div>
-                </div>
+    <!-- Grid List Kost Neo-Brutalist -->
+    <div id="home-list-section" class="relative scroll-mt-8">
+        <!-- Loading Overlay -->
+        <div wire:loading class="absolute inset-0 bg-white/70 backdrop-blur-xs z-30 flex items-center justify-center rounded-2xl border-4 border-black">
+            <div class="bg-yellow-300 border-3 border-black px-6 py-4 rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex items-center gap-3">
+                <svg class="animate-spin h-6 w-6 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span class="font-black text-black text-sm uppercase tracking-wide">Memuat Hunian...</span>
             </div>
-        @empty
-            <div class="col-span-full py-20 flex flex-col items-center justify-center text-center">
-                <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-5">
-                    <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </div>
+
+        @if($kosts->count() > 0)
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach($kosts as $kost)
+                    <div class="bg-white border-3 border-black rounded-xl overflow-hidden shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:shadow-[7px_7px_0px_0px_rgba(0,0,0,1)] transition-all flex flex-col justify-between group">
+                        <div>
+                            <!-- Image Header -->
+                            <div 
+                                class="aspect-[4/3] bg-zinc-200 relative overflow-hidden border-b-3 border-black cursor-pointer"
+                                onclick="window.location.href='{{ route('kost.show', $kost->slug) }}'"
+                            >
+                                @if ($kost->primaryImage)
+                                    <img 
+                                        src="{{ Str::startsWith($kost->primaryImage->image_path, 'http') ? $kost->primaryImage->image_path : Storage::url($kost->primaryImage->image_path) }}"
+                                        alt="{{ $kost->name }}"
+                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    >
+                                @else
+                                    <div class="w-full h-full flex items-center justify-center bg-yellow-100 text-black">
+                                        <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                        </svg>
+                                    </div>
+                                @endif
+
+                                <!-- Top Left Badges -->
+                                <div class="absolute top-3 left-3 flex flex-col gap-1.5 pointer-events-none">
+                                    <span class="px-2.5 py-1 bg-pink-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider">
+                                        {{ $kost->gender_type }}
+                                    </span>
+                                    @if ($kost->boosted_at)
+                                        <span class="px-2.5 py-1 bg-yellow-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider flex items-center gap-1">
+                                            ⚡ Super Boost
+                                        </span>
+                                    @endif
+                                </div>
+
+                                <!-- Top Right District Badge -->
+                                <div class="absolute top-3 right-3">
+                                    <span class="px-3 py-1 bg-cyan-300 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                        📍 {{ $kost->district }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Card Content -->
+                            <div class="p-5 space-y-4">
+                                <div>
+                                    <h3 class="text-lg font-black text-black leading-snug line-clamp-1 hover:underline">
+                                        <a href="{{ route('kost.show', $kost->slug) }}">
+                                            {{ $kost->name }}
+                                        </a>
+                                    </h3>
+                                    <p class="text-xs font-bold text-zinc-600 mt-1 line-clamp-1">
+                                        {{ $kost->address }}
+                                    </p>
+                                </div>
+
+                                <!-- Price & Facilities -->
+                                <div class="pt-3 border-t-2 border-black flex items-center justify-between gap-2">
+                                    <div>
+                                        <p class="text-[10px] font-black uppercase text-zinc-500">Harga Sewa</p>
+                                        <span class="bg-yellow-300 border-2 border-black font-black text-black px-2.5 py-0.5 rounded text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-block mt-0.5">
+                                            Rp {{ number_format($kost->price_monthly, 0, ',', '.') }}<span class="text-[10px] font-bold">/bln</span>
+                                        </span>
+                                    </div>
+
+                                    <div class="flex flex-wrap justify-end gap-1">
+                                        @if ($kost->facilities && $kost->facilities->count() > 0)
+                                            @foreach ($kost->facilities->take(2) as $facility)
+                                                <span class="bg-zinc-100 border-2 border-black text-[10px] font-bold text-black px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                                                    {{ $facility->name }}
+                                                </span>
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card Footer -->
+                        <div class="px-5 py-4 bg-zinc-100 border-t-3 border-black flex items-center justify-between">
+                            <span class="text-xs font-extrabold text-lime-700 bg-lime-200 border-2 border-black px-2.5 py-1 rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] uppercase">
+                                ✓ Siap Huni
+                            </span>
+
+                            <a 
+                                href="{{ route('kost.show', $kost->slug) }}" 
+                                class="px-4 py-2 bg-orange-400 hover:bg-orange-300 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1"
+                            >
+                                <span>Lihat Detail</span>
+                                <svg class="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- Pagination -->
+            <div class="mt-10">
+                {{ $kosts->links() }}
+            </div>
+        @else
+            <!-- Empty State Neo-Brutalist -->
+            <div class="bg-yellow-100 border-4 border-black rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] space-y-4">
+                <div class="w-20 h-20 bg-white border-3 border-black rounded-2xl flex items-center justify-center mx-auto text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -rotate-3">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
                 </div>
-                <h3 class="text-xl font-bold text-gray-950">Tidak ada hunian ditemukan</h3>
-                <p class="text-gray-500 mt-2 max-w-md font-light">Coba ubah filter atau kata kunci pencarian Anda untuk
-                    menemukan hunian yang sesuai.</p>
-                <button
-                    wire:click="resetFilters"
-                    class="mt-6 px-6 py-2.5 bg-gray-950 text-white font-medium rounded-full hover:bg-gray-800 transition-colors shadow-md relative z-10">Reset
-                    Filter</button>
+                <div>
+                    <h3 class="text-3xl font-black text-black uppercase">Tidak Ada Hunian Ditemukan</h3>
+                    <p class="text-sm font-bold text-zinc-700 max-w-md mx-auto mt-2">
+                        @if($search || $gender || $district || $price_min || $price_max)
+                            Tidak ada kost yang cocok dengan kriteria filter Anda. Coba reset filter atau ubah kata kunci pencarian.
+                        @else
+                            Belum ada daftar kost yang terdaftar saat ini.
+                        @endif
+                    </p>
+                </div>
+                <button 
+                    wire:click="resetFilters" 
+                    class="px-6 py-3 bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl inline-flex items-center gap-2"
+                >
+                    <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    <span>Reset Semua Filter</span>
+                </button>
             </div>
-        @endforelse
-    </div>
-
-    <div class="mt-12 relative z-10">
-        {{ $kosts->links() }}
+        @endif
     </div>
 </div>

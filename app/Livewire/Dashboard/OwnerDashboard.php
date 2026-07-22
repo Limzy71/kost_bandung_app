@@ -5,6 +5,7 @@ namespace App\Livewire\Dashboard;
 use App\Models\Inquiry;
 use App\Models\Kost;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -12,6 +13,7 @@ class OwnerDashboard extends Component
 {
     use WithPagination;
 
+    #[Url(history: true)]
     public string $search = '';
 
     public function updatingSearch(): void

@@ -13,7 +13,7 @@ class OwnerDashboard extends Component
 {
     use WithPagination;
 
-    #[Url(history: true)]
+    #[Url]
     public string $search = '';
 
     public function mount()

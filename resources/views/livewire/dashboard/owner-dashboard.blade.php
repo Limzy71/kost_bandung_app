@@ -171,7 +171,7 @@
                         type="button" 
                         x-show="$wire.search && $wire.search.length > 0"
                         x-cloak
-                        @click="$wire.set('search', '')"
+                        @click="$wire.resetSearch()"
                         class="absolute right-2.5 top-2.5 w-6 h-6 bg-rose-400 hover:bg-rose-300 border-2 border-black rounded text-black font-black text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center cursor-pointer"
                         title="Hapus Pencarian"
                     >

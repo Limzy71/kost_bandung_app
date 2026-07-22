@@ -181,7 +181,7 @@
                 <p class="text-gray-500 mt-2 max-w-md font-light">Coba ubah filter atau kata kunci pencarian Anda untuk
                     menemukan hunian yang sesuai.</p>
                 <button
-                    wire:click="$set('search', ''); $set('gender', ''); $set('district', ''); $set('price_min', ''); $set('price_max', '');"
+                    wire:click="resetFilters"
                     class="mt-6 px-6 py-2.5 bg-gray-950 text-white font-medium rounded-full hover:bg-gray-800 transition-colors shadow-md relative z-10">Reset
                     Filter</button>
             </div>

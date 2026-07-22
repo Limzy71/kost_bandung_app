@@ -27,8 +27,16 @@ class OwnerDashboard extends Component
         }
     }
 
-    public function updatingSearch(): void
+    public function updatedSearch(): void
     {
+        $this->page = 1;
+        $this->resetPage();
+    }
+
+    public function resetSearch(): void
+    {
+        $this->search = '';
+        $this->page = 1;
         $this->resetPage();
     }
 

@@ -40,8 +40,20 @@ class KostSearch extends Component
     public function updating($key)
     {
         if (in_array($key, ['search', 'gender', 'price_min', 'price_max', 'district'])) {
+            $this->page = 1;
             $this->resetPage();
         }
+    }
+
+    public function resetFilters(): void
+    {
+        $this->search = '';
+        $this->gender = '';
+        $this->district = '';
+        $this->price_min = '';
+        $this->price_max = '';
+        $this->page = 1;
+        $this->resetPage();
     }
 
     public function updatedPage(): void

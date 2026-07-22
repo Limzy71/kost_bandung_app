@@ -9,10 +9,10 @@
         x-data="{ 
             hasFilter: false,
             checkFilter() {
-                const genderVal = this.$refs.genderSelect ? this.$refs.genderSelect.value : '';
-                const districtVal = this.$refs.districtSelect ? this.$refs.districtSelect.value : '';
-                const minVal = this.$refs.minSelect ? this.$refs.minSelect.value : '';
-                const maxVal = this.$refs.maxSelect ? this.$refs.maxSelect.value : '';
+                const genderVal = (this.$refs.genderSelect && this.$refs.genderSelect.value) || $wire.gender || '';
+                const districtVal = (this.$refs.districtSelect && this.$refs.districtSelect.value) || $wire.district || '';
+                const minVal = (this.$refs.minSelect && this.$refs.minSelect.value) || $wire.price_min || '';
+                const maxVal = (this.$refs.maxSelect && this.$refs.maxSelect.value) || $wire.price_max || '';
 
                 // Header RESET FILTER button ONLY appears when at least one select dropdown is chosen
                 this.hasFilter = Boolean(
@@ -34,7 +34,7 @@
                 this.checkFilter();
             }
         }"
-        x-init="checkFilter()"
+        x-init="checkFilter(); $nextTick(() => checkFilter())"
         @input="checkFilter()"
         @change="checkFilter()"
         class="bg-white border-4 border-black p-6 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-4"

@@ -9,7 +9,7 @@
 <body class="h-full flex flex-col font-sans antialiased text-gray-950 bg-gray-50">
 
     <!-- Header / Navbar -->
-    <header class="bg-white border-b-3 border-black sticky top-0 z-50 shadow-[0_4px_0_0_rgba(0,0,0,1)]">
+    <header class="bg-white border-b-3 border-black relative z-50 shadow-[0_4px_0_0_rgba(0,0,0,1)]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <a href="{{ route('home') }}" class="flex items-center gap-2">
                 <span class="text-xl font-black text-black uppercase tracking-tight flex items-center">

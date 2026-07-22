@@ -42,7 +42,7 @@
                     x-cloak
                     type="button" 
                     wire:click="resetFilters" 
-                    @click="setTimeout(() => checkFilter(), 150)"
+                    @click="if($refs.searchInput) $refs.searchInput.value = ''; setTimeout(() => checkFilter(), 150)"
                     class="bg-rose-400 hover:bg-rose-300 text-black border-2 border-black font-black text-xs uppercase px-3.5 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
                 >
                     <svg class="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -83,13 +83,14 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
 
-                    <!-- Clear Search Input ✕ Button (Clears input without auto-submitting) -->
+                    <!-- Clear Search Input ✕ Button (Clears search & resets server state so results refresh) -->
                     <template x-if="query || ($refs.searchInput && $refs.searchInput.value)">
                         <button 
                             type="button" 
-                            @click="$refs.searchInput.value = ''; $wire.search = ''; checkFilter()"
+                            wire:click="resetFilters"
+                            @click="$refs.searchInput.value = ''; setTimeout(() => checkFilter(), 150)"
                             class="absolute right-2.5 w-6 h-6 bg-rose-400 hover:bg-rose-300 border-2 border-black rounded text-black font-black text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center cursor-pointer"
-                            title="Hapus kata kunci pencarian"
+                            title="Hapus kata kunci pencarian & reset"
                         >
                             ✕
                         </button>
@@ -307,7 +308,9 @@
                     </p>
                 </div>
                 <button 
+                    type="button"
                     wire:click="resetFilters" 
+                    @click="if($refs.searchInput) $refs.searchInput.value = ''; setTimeout(() => checkFilter(), 150)"
                     class="px-6 py-3 bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl inline-flex items-center gap-2 cursor-pointer"
                 >
                     <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>

@@ -1,5 +1,6 @@
 <div 
     x-data 
+    x-init="window.scrollTo({ top: 0, behavior: 'smooth' })"
     wire:poll.10s
     @scroll-to-list.window="
         setTimeout(() => {

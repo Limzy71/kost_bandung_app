@@ -174,7 +174,7 @@
     </div>
 
     <!-- Grid List Kost Neo-Brutalist -->
-    <div id="home-list-section" class="relative scroll-mt-8">
+    <div id="home-list-section" class="relative scroll-mt-20">
         <!-- Loading Overlay Targeted -->
         <div wire:loading.delay wire:target="applyFilters, resetFilters" class="absolute inset-0 bg-white/70 backdrop-blur-xs z-30 flex items-center justify-center rounded-2xl border-4 border-black">
             <div class="bg-yellow-300 border-3 border-black px-6 py-4 rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex items-center gap-3">

@@ -124,7 +124,7 @@
         </div>
 
         <!-- Section List Properti -->
-        <div id="property-list-section" class="space-y-6 scroll-mt-8">
+        <div id="property-list-section" class="space-y-6 scroll-mt-20">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border-4 border-black p-5 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
                 <div>
                     <h2 class="text-xl sm:text-2xl font-black text-black uppercase tracking-tight flex items-center gap-2">

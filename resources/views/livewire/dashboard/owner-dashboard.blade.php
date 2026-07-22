@@ -1,6 +1,20 @@
 <div 
     x-data 
-    x-init="window.scrollTo({ top: 0, behavior: 'smooth' })"
+    x-init="
+        const urlParams = new URLSearchParams(window.location.search);
+        const page = urlParams.get('page');
+        if (page && parseInt(page) > 1) {
+            setTimeout(() => {
+                const el = document.getElementById('property-list-section');
+                if (el) {
+                    const targetY = el.getBoundingClientRect().top + window.pageYOffset - 32;
+                    window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+                }
+            }, 100);
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    "
     wire:poll.10s
     @scroll-to-list.window="
         setTimeout(() => {

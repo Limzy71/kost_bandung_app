@@ -33,6 +33,11 @@ class KostSearch extends Component
         }
     }
 
+    public function updatedPage(): void
+    {
+        $this->dispatch('scroll-to-home-list');
+    }
+
     public function render()
     {
         if (is_numeric($this->price_min) && is_numeric($this->price_max)) {

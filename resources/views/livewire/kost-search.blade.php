@@ -1,7 +1,30 @@
 <div 
     x-data 
-    x-init="window.scrollTo({ top: 0, behavior: 'smooth' })"
+    x-init="
+        const urlParams = new URLSearchParams(window.location.search);
+        const page = urlParams.get('page');
+        if (page && parseInt(page) > 1) {
+            setTimeout(() => {
+                const el = document.getElementById('home-list-section');
+                if (el) {
+                    const targetY = el.getBoundingClientRect().top + window.pageYOffset - 100;
+                    window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+                }
+            }, 100);
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    "
     wire:poll.10s
+    @scroll-to-home-list.window="
+        setTimeout(() => {
+            const el = document.getElementById('home-list-section');
+            if (el) {
+                const targetY = el.getBoundingClientRect().top + window.pageYOffset - 100;
+                window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+            }
+        }, 50);
+    "
 >
     <!-- Floating Filter Pill -->
     <div class="relative z-20 bg-white shadow-sm rounded-2xl md:rounded-full border border-gray-200 mb-16 p-2">
@@ -70,7 +93,7 @@
     </div>
 
     <!-- Grid List Kost -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+    <div id="home-list-section" class="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
         <div wire:loading class="absolute inset-0 bg-white/50 backdrop-blur-sm z-20 rounded-2xl"></div>
 
         @forelse($kosts as $kost)

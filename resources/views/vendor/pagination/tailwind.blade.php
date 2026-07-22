@@ -33,16 +33,15 @@
             <!-- Results Counter Badge -->
             <div class="bg-white border-2 border-black px-4 py-2 rounded-lg shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] text-xs font-black uppercase text-black">
                 Menampilkan 
-                @if ($paginator->firstItem())
-                    <span class="bg-yellow-300 border border-black px-1.5 py-0.5 rounded ml-0.5">{{ $paginator->firstItem() }}</span>
-                    sampai
-                    <span class="bg-yellow-300 border border-black px-1.5 py-0.5 rounded">{{ $paginator->lastItem() }}</span>
-                @else
-                    {{ $paginator->count() }}
-                @endif
+                <span class="bg-yellow-300 border border-black px-1.5 py-0.5 rounded mx-0.5">{{ $paginator->count() }}</span>
                 dari
-                <span class="bg-cyan-300 border border-black px-1.5 py-0.5 rounded">{{ $paginator->total() }}</span>
+                <span class="bg-cyan-300 border border-black px-1.5 py-0.5 rounded mx-0.5">{{ $paginator->total() }}</span>
                 Properti Kost
+                @if ($paginator->firstItem())
+                    <span class="text-zinc-600 font-bold tracking-normal lowercase ml-1">
+                        (no. {{ $paginator->firstItem() }} – {{ $paginator->lastItem() }})
+                    </span>
+                @endif
             </div>
 
             <!-- Page Number Links -->

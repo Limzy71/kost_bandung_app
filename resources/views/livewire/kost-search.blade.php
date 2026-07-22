@@ -18,7 +18,7 @@
             @if($search || $gender || $district || $price_min || $price_max)
                 <button 
                     wire:click="resetFilters" 
-                    class="bg-rose-400 hover:bg-rose-300 text-black border-2 border-black font-black text-xs uppercase px-3.5 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg flex items-center gap-1"
+                    class="bg-rose-400 hover:bg-rose-300 text-black border-2 border-black font-black text-xs uppercase px-3.5 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg flex items-center gap-1 cursor-pointer"
                 >
                     <span>Reset Filter</span>
                     <span class="font-bold">✕</span>
@@ -29,15 +29,15 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             <!-- Search Input -->
             <div class="lg:col-span-2 relative">
-                <label class="block text-xs font-black uppercase text-black mb-1">Cari Nama / Jalan</label>
+                <label class="block text-xs font-black uppercase text-black mb-1.5">Cari Nama / Jalan</label>
                 <div class="relative">
                     <input 
                         wire:model.live.debounce.300ms="search" 
                         type="text" 
                         placeholder="Contoh: Dago, Cisitu, Setiabudi..."
-                        class="w-full bg-white border-3 border-black rounded-xl pl-10 pr-10 py-2.5 text-sm font-bold text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+                        class="w-full bg-white border-3 border-black rounded-xl pl-10 pr-10 py-2.5 text-xs font-black uppercase text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
                     >
-                    <svg class="w-5 h-5 text-black absolute left-3 top-3 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-black absolute left-3 top-2.5 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
 
@@ -53,60 +53,60 @@
                 </div>
             </div>
 
-            <!-- Gender Select -->
+            <!-- Gender Select Neo-Brutalist -->
             <div>
-                <label class="block text-xs font-black uppercase text-black mb-1">Tipe Penghuni</label>
+                <label class="block text-xs font-black uppercase text-black mb-1.5">Tipe Penghuni</label>
                 <select 
                     wire:model.live="gender"
-                    class="w-full bg-white border-3 border-black rounded-xl px-3 py-2.5 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all"
+                    class="w-full bg-white border-3 border-black rounded-xl px-3 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px_16px] bg-no-repeat bg-[right_12px_center] pr-9"
                 >
-                    <option value="">Semua Tipe</option>
-                    <option value="putra">Putra</option>
-                    <option value="putri">Putri</option>
-                    <option value="campur">Campur</option>
+                    <option value="" class="font-black uppercase text-black">Semua Tipe</option>
+                    <option value="putra" class="font-black uppercase text-black">Putra</option>
+                    <option value="putri" class="font-black uppercase text-black">Putri</option>
+                    <option value="campur" class="font-black uppercase text-black">Campur</option>
                 </select>
             </div>
 
-            <!-- District Select -->
+            <!-- District Select Neo-Brutalist -->
             <div>
-                <label class="block text-xs font-black uppercase text-black mb-1">Kecamatan</label>
+                <label class="block text-xs font-black uppercase text-black mb-1.5">Kecamatan</label>
                 <select 
                     wire:model.live="district"
-                    class="w-full bg-white border-3 border-black rounded-xl px-3 py-2.5 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all"
+                    class="w-full bg-white border-3 border-black rounded-xl px-3 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px_16px] bg-no-repeat bg-[right_12px_center] pr-9"
                 >
-                    <option value="">Semua Kecamatan</option>
+                    <option value="" class="font-black uppercase text-black">Semua Kecamatan</option>
                     @foreach ($districts as $dist)
-                        <option value="{{ $dist }}">{{ $dist }}</option>
+                        <option value="{{ $dist }}" class="font-black uppercase text-black">{{ $dist }}</option>
                     @endforeach
                 </select>
             </div>
 
-            <!-- Price Min & Max Select -->
+            <!-- Price Min & Max Select Neo-Brutalist -->
             <div>
-                <label class="block text-xs font-black uppercase text-black mb-1">Batas Harga</label>
+                <label class="block text-xs font-black uppercase text-black mb-1.5">Batas Harga</label>
                 <div class="grid grid-cols-2 gap-2">
                     <select 
                         wire:model.live="price_min"
-                        class="w-full bg-white border-3 border-black rounded-xl px-2 py-2.5 text-xs font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all"
+                        class="w-full bg-white border-3 border-black rounded-xl px-2 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_6px_center] pr-6"
                     >
-                        <option value="">Min</option>
-                        <option value="500000">500rb</option>
-                        <option value="1000000">1 Jt</option>
-                        <option value="1500000">1,5 Jt</option>
-                        <option value="2000000">2 Jt</option>
-                        <option value="3000000">3 Jt</option>
+                        <option value="" class="font-black uppercase text-black">Min</option>
+                        <option value="500000" class="font-black uppercase text-black">500rb</option>
+                        <option value="1000000" class="font-black uppercase text-black">1 Jt</option>
+                        <option value="1500000" class="font-black uppercase text-black">1,5 Jt</option>
+                        <option value="2000000" class="font-black uppercase text-black">2 Jt</option>
+                        <option value="3000000" class="font-black uppercase text-black">3 Jt</option>
                     </select>
 
                     <select 
                         wire:model.live="price_max"
-                        class="w-full bg-white border-3 border-black rounded-xl px-2 py-2.5 text-xs font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all"
+                        class="w-full bg-white border-3 border-black rounded-xl px-2 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_6px_center] pr-6"
                     >
-                        <option value="">Max</option>
-                        <option value="1000000">1 Jt</option>
-                        <option value="1500000">1,5 Jt</option>
-                        <option value="2000000">2 Jt</option>
-                        <option value="3000000">3 Jt</option>
-                        <option value="5000000">5 Jt</option>
+                        <option value="" class="font-black uppercase text-black">Max</option>
+                        <option value="1000000" class="font-black uppercase text-black">1 Jt</option>
+                        <option value="1500000" class="font-black uppercase text-black">1,5 Jt</option>
+                        <option value="2000000" class="font-black uppercase text-black">2 Jt</option>
+                        <option value="3000000" class="font-black uppercase text-black">3 Jt</option>
+                        <option value="5000000" class="font-black uppercase text-black">5 Jt</option>
                     </select>
                 </div>
             </div>
@@ -183,19 +183,19 @@
                                     </p>
                                 </div>
 
-                                <!-- Price & Facilities -->
-                                <div class="pt-3 border-t-2 border-black flex items-center justify-between gap-2">
-                                    <div>
+                                <!-- Price & Facilities (Single-line Price Fix) -->
+                                <div class="pt-3 border-t-2 border-black flex items-center justify-between gap-2 overflow-hidden">
+                                    <div class="shrink-0">
                                         <p class="text-[10px] font-black uppercase text-zinc-500">Harga Sewa</p>
-                                        <span class="bg-yellow-300 border-2 border-black font-black text-black px-2.5 py-0.5 rounded text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-block mt-0.5">
-                                            Rp {{ number_format($kost->price_monthly, 0, ',', '.') }}<span class="text-[10px] font-bold">/bln</span>
+                                        <span class="bg-yellow-300 border-2 border-black font-black text-black px-2.5 py-1 rounded text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center whitespace-nowrap mt-0.5">
+                                            Rp {{ number_format($kost->price_monthly, 0, ',', '.') }}<span class="text-[10px] font-bold ml-0.5">/bln</span>
                                         </span>
                                     </div>
 
-                                    <div class="flex flex-wrap justify-end gap-1">
+                                    <div class="flex flex-wrap justify-end gap-1 overflow-hidden shrink min-w-0">
                                         @if ($kost->facilities && $kost->facilities->count() > 0)
                                             @foreach ($kost->facilities->take(2) as $facility)
-                                                <span class="bg-zinc-100 border-2 border-black text-[10px] font-bold text-black px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                                                <span class="bg-zinc-100 border-2 border-black text-[10px] font-bold text-black px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] truncate max-w-[110px]">
                                                     {{ $facility->name }}
                                                 </span>
                                             @endforeach
@@ -247,7 +247,7 @@
                 </div>
                 <button 
                     wire:click="resetFilters" 
-                    class="px-6 py-3 bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl inline-flex items-center gap-2"
+                    class="px-6 py-3 bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl inline-flex items-center gap-2 cursor-pointer"
                 >
                     <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                     <span>Reset Semua Filter</span>

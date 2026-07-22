@@ -1,5 +1,9 @@
 <x-app-layout>
-    <div class="min-h-screen bg-[#f8f9fa] bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:24px_24px] pt-8 pb-20">
+    <div 
+        x-data 
+        x-init="window.scrollTo({ top: 0, behavior: 'auto' })"
+        class="min-h-screen bg-[#f8f9fa] bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:24px_24px] pt-8 pb-20"
+    >
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
             
             <!-- Hero Banner Neo-Brutalist -->
@@ -21,9 +25,12 @@
                     </p>
                 </div>
 
+                <!-- Professional Neo-Brutalist Building Icon -->
                 <div class="shrink-0 hidden md:block">
                     <div class="w-28 h-28 bg-pink-300 border-4 border-black rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center -rotate-3 hover:rotate-0 transition-transform">
-                        <span class="text-5xl">🏠</span>
+                        <svg class="w-14 h-14 text-black" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0h4m-4 0H9m4 0V7m0 0h4m-4 0H9"/>
+                        </svg>
                     </div>
                 </div>
             </div>

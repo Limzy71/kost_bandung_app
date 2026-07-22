@@ -20,6 +20,8 @@ class CreateKost extends Component
     public string $district = 'Coblong';
     public string $address = '';
     public string $price_monthly = '';
+    public string $latitude = '-6.917464';
+    public string $longitude = '107.619123';
     public string $total_rooms = '1';
     public string $available_rooms = '1';
     public array $selectedFacilities = [];
@@ -32,6 +34,8 @@ class CreateKost extends Component
         'district' => 'required|string|max:100',
         'address' => 'required|string|max:500',
         'price_monthly' => 'required|numeric|min:100000',
+        'latitude' => 'required|numeric|min:-6.9800|max:-6.8300',
+        'longitude' => 'required|numeric|min:107.5400|max:107.7500',
         'total_rooms' => 'required|integer|min:1',
         'available_rooms' => 'required|integer|min:0',
         'selectedFacilities' => 'nullable|array',
@@ -49,6 +53,12 @@ class CreateKost extends Component
         'price_monthly.required' => 'Harga per bulan wajib diisi.',
         'price_monthly.numeric' => 'Harga per bulan harus berupa angka.',
         'price_monthly.min' => 'Harga per bulan minimal Rp 100.000.',
+        'latitude.required' => 'Titik lokasi peta wajib ditentukan.',
+        'latitude.min' => 'Lokasi kost harus berada di dalam area administratif Kota Bandung.',
+        'latitude.max' => 'Lokasi kost harus berada di dalam area administratif Kota Bandung.',
+        'longitude.required' => 'Titik lokasi peta wajib ditentukan.',
+        'longitude.min' => 'Lokasi kost harus berada di dalam area administratif Kota Bandung.',
+        'longitude.max' => 'Lokasi kost harus berada di dalam area administratif Kota Bandung.',
         'total_rooms.required' => 'Total jumlah kamar wajib diisi.',
         'total_rooms.integer' => 'Total kamar harus berupa angka bulat.',
         'total_rooms.min' => 'Total kamar minimal 1.',
@@ -62,6 +72,13 @@ class CreateKost extends Component
     public function save()
     {
         $this->validate();
+
+        $lat = (float) $this->latitude;
+        $lng = (float) $this->longitude;
+        if ($lat < -6.9800 || $lat > -6.8300 || $lng < 107.5400 || $lng > 107.7500) {
+            $this->addError('latitude', 'Lokasi kost harus berada di dalam area administratif Kota Bandung.');
+            return;
+        }
 
         $slug = Str::slug($this->name);
         $originalSlug = $slug;
@@ -77,7 +94,7 @@ class CreateKost extends Component
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        // Create Kost record with pending status (requires Admin review before public listing)
+        // Create Kost record with dynamically selected coordinates
         $kost = Kost::create([
             'user_id' => $user->id,
             'name' => $this->name,
@@ -87,8 +104,8 @@ class CreateKost extends Component
             'price_monthly' => $this->price_monthly,
             'address' => $this->address,
             'district' => $this->district,
-            'latitude' => -6.917464, // Center of Bandung default
-            'longitude' => 107.619123,
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
             'is_available' => ((int)$this->available_rooms > 0),
             'status' => 'pending', // Draft / Pending Admin review
             'total_rooms' => (int)$this->total_rooms,

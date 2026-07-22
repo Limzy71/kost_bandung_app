@@ -1,4 +1,8 @@
 <div class="min-h-screen bg-[#f8f9fa] bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:24px_24px]">
+    <!-- Leaflet JS & CSS for Interactive Map Pin Picker -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-8">
 
         <!-- Top Header & Back Button -->
@@ -118,15 +122,15 @@
                 </div>
             </div>
 
-            <!-- Seksi 2: Lokasi -->
+            <!-- Seksi 2: Lokasi & Geofencing -->
             <div class="bg-white rounded-xl p-6 md:p-8 border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6">
                 <div class="flex items-center gap-3 border-b-3 border-black pb-4">
                     <div class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                         2
                     </div>
                     <div>
-                        <h2 class="text-xl font-black text-black uppercase tracking-tight">Lokasi Kost</h2>
-                        <p class="text-xs font-bold text-zinc-600">Area kecamatan dan alamat fisik properti di Bandung</p>
+                        <h2 class="text-xl font-black text-black uppercase tracking-tight">Lokasi Kost & Geofencing Bandung</h2>
+                        <p class="text-xs font-bold text-zinc-600">Area kecamatan, alamat fisik, dan penentuan titik presisi lokasi pada peta</p>
                     </div>
                 </div>
 
@@ -166,6 +170,91 @@
                             <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
                         @enderror
                     </div>
+                </div>
+
+                <!-- Peta Interaktif & Pin Picker (Geofencing Bandung) -->
+                <div 
+                    x-data="{
+                        lat: @entangle('latitude'),
+                        lng: @entangle('longitude'),
+                        map: null,
+                        marker: null,
+                        initMap() {
+                            if (typeof L === 'undefined') {
+                                setTimeout(() => this.initMap(), 200);
+                                return;
+                            }
+                            if (this.map) return;
+
+                            const curLat = parseFloat(this.lat) || -6.917464;
+                            const curLng = parseFloat(this.lng) || 107.619123;
+
+                            this.map = L.map(this.$refs.mapElement).setView([curLat, curLng], 14);
+
+                            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                maxZoom: 19,
+                                attribution: '&copy; OpenStreetMap'
+                            }).addTo(this.map);
+
+                            this.marker = L.marker([curLat, curLng], { draggable: true }).addTo(this.map);
+
+                            const setCoords = (newLat, newLng) => {
+                                const formattedLat = newLat.toFixed(6);
+                                const formattedLng = newLng.toFixed(6);
+                                this.lat = formattedLat;
+                                this.lng = formattedLng;
+                                $wire.set('latitude', formattedLat);
+                                $wire.set('longitude', formattedLng);
+                            };
+
+                            this.marker.on('dragend', (e) => {
+                                const pos = e.target.getLatLng();
+                                setCoords(pos.lat, pos.lng);
+                            });
+
+                            this.map.on('click', (e) => {
+                                this.marker.setLatLng(e.latlng);
+                                setCoords(e.latlng.lat, e.latlng.lng);
+                            });
+                        }
+                    }"
+                    x-init="initMap()"
+                    class="space-y-3 pt-2"
+                >
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <label class="block text-xs font-black uppercase tracking-wider text-black">
+                            Tentukan Titik Presisi Lokasi (Peta Interaktif Bandung) <span class="text-rose-600">*</span>
+                        </label>
+                        <div class="inline-flex items-center gap-1.5 bg-yellow-300 border-2 border-black px-3 py-1 rounded text-xs font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                            <span>📍 Lat: <span x-text="lat"></span> | Lng: <span x-text="lng"></span></span>
+                        </div>
+                    </div>
+
+                    <p class="text-xs font-bold text-zinc-600">
+                        Geser marker/pin merah atau klik di mana saja pada peta untuk menandai titik fisik kost Anda. Titik harus berada di dalam batas administratif Kota Bandung.
+                    </p>
+
+                    <!-- Leaflet Map Canvas -->
+                    <div class="relative">
+                        <div x-ref="mapElement" class="w-full h-80 rounded-xl border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] z-0 bg-zinc-100"></div>
+                    </div>
+
+                    @error('latitude')
+                        <div class="p-3 bg-rose-100 border-3 border-black rounded-xl text-rose-700 font-black text-xs shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] flex items-center gap-2">
+                            <svg class="w-5 h-5 text-rose-600 shrink-0 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                            </svg>
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
+                    @error('longitude')
+                        <div class="p-3 bg-rose-100 border-3 border-black rounded-xl text-rose-700 font-black text-xs shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] flex items-center gap-2">
+                            <svg class="w-5 h-5 text-rose-600 shrink-0 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                            </svg>
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
                 </div>
             </div>
 

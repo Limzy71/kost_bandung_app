@@ -5,19 +5,68 @@
     class="space-y-8"
 >
     <!-- Filter Bar Neo-Brutalist -->
-    <div class="bg-white border-4 border-black p-6 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-5">
-        <!-- Header -->
-        <div class="flex items-center justify-between border-b-3 border-black pb-3">
+    <div 
+        x-data="{ 
+            hasFilter: false,
+            checkFilter() {
+                this.hasFilter = Boolean(
+                    (this.$refs.searchInput && this.$refs.searchInput.value.trim() !== '') ||
+                    (this.$refs.genderSelect && this.$refs.genderSelect.value !== '') ||
+                    (this.$refs.districtSelect && this.$refs.districtSelect.value !== '') ||
+                    (this.$refs.minSelect && this.$refs.minSelect.value !== '') ||
+                    (this.$refs.maxSelect && this.$refs.maxSelect.value !== '') ||
+                    $wire.search || $wire.gender || $wire.district || $wire.price_min || $wire.price_max
+                );
+            }
+        }"
+        x-init="checkFilter()"
+        @input="checkFilter()"
+        @change="checkFilter()"
+        class="bg-white border-4 border-black p-6 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-4"
+    >
+        <!-- Header Row (Title & Action Buttons Side by Side) -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b-3 border-black pb-3.5 gap-3">
+            <!-- Header Title -->
             <h2 class="text-base sm:text-lg font-black text-black uppercase tracking-tight flex items-center gap-2">
                 <svg class="w-5 h-5 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
                 </svg>
                 <span>Filter Pencarian Kost</span>
             </h2>
+
+            <!-- Header Action Buttons (Aligned with Header Text) -->
+            <div class="flex items-center gap-2.5 shrink-0 self-end sm:self-auto">
+                <!-- Reset Filter Button (Only shown when any filter has a value) -->
+                <button 
+                    x-show="hasFilter"
+                    x-cloak
+                    type="button" 
+                    wire:click="resetFilters" 
+                    @click="setTimeout(() => checkFilter(), 150)"
+                    class="bg-rose-400 hover:bg-rose-300 text-black border-2 border-black font-black text-xs uppercase px-3.5 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+                >
+                    <svg class="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                    <span>Reset Filter</span>
+                </button>
+
+                <!-- Terapkan Filter Button (Always visible on Header right) -->
+                <button 
+                    type="button" 
+                    wire:click="applyFilters" 
+                    class="bg-lime-400 hover:bg-lime-300 text-black border-2 border-black font-black text-xs uppercase px-4 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+                >
+                    <svg class="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    <span>Terapkan Filter</span>
+                </button>
+            </div>
         </div>
 
-        <!-- Inputs Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Filter Inputs Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             <!-- Search Input -->
             <div class="lg:col-span-2 relative">
                 <label class="block text-xs font-black uppercase text-black mb-1.5">Cari Nama / Jalan</label>
@@ -34,11 +83,11 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
 
-                    <!-- Reset Search Input Button (Clear ✕ inside search input) -->
-                    <template x-if="query">
+                    <!-- Clear Search Input ✕ Button (Clears input without auto-submitting) -->
+                    <template x-if="query || ($refs.searchInput && $refs.searchInput.value)">
                         <button 
                             type="button" 
-                            @click="$refs.searchInput.value = ''; $wire.search = ''; $wire.applyFilters()"
+                            @click="$refs.searchInput.value = ''; $wire.search = ''; checkFilter()"
                             class="absolute right-2.5 w-6 h-6 bg-rose-400 hover:bg-rose-300 border-2 border-black rounded text-black font-black text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center cursor-pointer"
                             title="Hapus kata kunci pencarian"
                         >
@@ -52,6 +101,7 @@
             <div>
                 <label class="block text-xs font-black uppercase text-black mb-1.5">Tipe Penghuni</label>
                 <select 
+                    x-ref="genderSelect"
                     wire:model="gender"
                     class="w-full bg-white border-3 border-black rounded-xl px-3 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px_16px] bg-no-repeat bg-[right_12px_center] pr-9"
                 >
@@ -66,6 +116,7 @@
             <div>
                 <label class="block text-xs font-black uppercase text-black mb-1.5">Kecamatan</label>
                 <select 
+                    x-ref="districtSelect"
                     wire:model="district"
                     class="w-full bg-white border-3 border-black rounded-xl px-3 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px_16px] bg-no-repeat bg-[right_12px_center] pr-9"
                 >
@@ -75,19 +126,17 @@
                     @endforeach
                 </select>
             </div>
-        </div>
 
-        <!-- Action Bar Row (Price Range + Action Buttons) -->
-        <div class="pt-4 border-t-3 border-black flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-            <!-- Price Range Dropdowns -->
-            <div class="w-full sm:w-72">
+            <!-- Price Min & Max Select -->
+            <div>
                 <label class="block text-xs font-black uppercase text-black mb-1.5">Batas Harga Sewa</label>
                 <div class="grid grid-cols-2 gap-2">
                     <select 
+                        x-ref="minSelect"
                         wire:model="price_min"
-                        class="w-full bg-white border-3 border-black rounded-xl px-2.5 py-2 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_6px_center] pr-6"
+                        class="w-full bg-white border-3 border-black rounded-xl px-2 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_6px_center] pr-6"
                     >
-                        <option value="" class="font-black uppercase text-black">Min (Semua)</option>
+                        <option value="" class="font-black uppercase text-black">Min</option>
                         <option value="500000" class="font-black uppercase text-black">500rb</option>
                         <option value="1000000" class="font-black uppercase text-black">1 Jt</option>
                         <option value="1500000" class="font-black uppercase text-black">1,5 Jt</option>
@@ -96,10 +145,11 @@
                     </select>
 
                     <select 
+                        x-ref="maxSelect"
                         wire:model="price_max"
-                        class="w-full bg-white border-3 border-black rounded-xl px-2.5 py-2 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_6px_center] pr-6"
+                        class="w-full bg-white border-3 border-black rounded-xl px-2 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_6px_center] pr-6"
                     >
-                        <option value="" class="font-black uppercase text-black">Max (Semua)</option>
+                        <option value="" class="font-black uppercase text-black">Max</option>
                         <option value="1000000" class="font-black uppercase text-black">1 Jt</option>
                         <option value="1500000" class="font-black uppercase text-black">1,5 Jt</option>
                         <option value="2000000" class="font-black uppercase text-black">2 Jt</option>
@@ -107,33 +157,6 @@
                         <option value="5000000" class="font-black uppercase text-black">5 Jt</option>
                     </select>
                 </div>
-            </div>
-
-            <!-- Action Buttons: Reset Filter + Terapkan Filter -->
-            <div class="flex items-center justify-end gap-3 w-full sm:w-auto pt-2 sm:pt-0">
-                <!-- Reset Filter Button (Always Accessible) -->
-                <button 
-                    type="button" 
-                    wire:click="resetFilters" 
-                    class="flex-1 sm:flex-none bg-rose-400 hover:bg-rose-300 text-black border-3 border-black font-black uppercase text-xs shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all px-4 py-2.5 rounded-xl inline-flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap"
-                >
-                    <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                    </svg>
-                    <span>Reset Filter</span>
-                </button>
-
-                <!-- Terapkan Filter Button (Single-line, Sleek, whitespace-nowrap) -->
-                <button 
-                    type="button" 
-                    wire:click="applyFilters" 
-                    class="flex-1 sm:flex-none bg-lime-400 hover:bg-lime-300 text-black border-3 border-black font-black uppercase text-xs shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all px-5 py-2.5 rounded-xl inline-flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
-                >
-                    <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
-                    <span>Terapkan Filter</span>
-                </button>
             </div>
         </div>
     </div>

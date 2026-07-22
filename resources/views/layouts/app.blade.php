@@ -35,8 +35,11 @@
                             </a>
                         @endif
                     @endif
-                    <span class="text-xs font-black uppercase text-black bg-zinc-100 border-2 border-black px-3 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] rounded hidden sm:inline-block">
-                        👤 {{ auth()->user()->name }}
+                    <span class="text-xs font-black uppercase text-black bg-zinc-100 border-2 border-black px-3 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] rounded hidden sm:inline-flex items-center gap-1.5">
+                        <svg class="w-4 h-4 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        <span>{{ auth()->user()->name }}</span>
                     </span>
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf

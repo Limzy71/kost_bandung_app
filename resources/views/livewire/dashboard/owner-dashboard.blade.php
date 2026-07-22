@@ -119,7 +119,7 @@
                     <div>
                         <p class="text-xs font-black uppercase tracking-wider text-black">Pesan Masuk</p>
                         <h3 class="text-4xl font-black text-black mt-2 tracking-tighter">{{ $pesanMasuk }}</h3>
-                        <p class="text-xs font-bold text-black/80 mt-1">Inquiry dari calon penyewa</p>
+                        <p class="text-xs font-bold text-black/80 mt-1">Pertanyaan dari calon penyewa</p>
                     </div>
                     <div class="w-14 h-14 rounded-lg bg-white border-2 border-black flex items-center justify-center text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                         <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -217,7 +217,7 @@
                                         </div>
 
                                         <div class="text-right">
-                                            <p class="text-[10px] font-black uppercase text-zinc-500">Inquiry</p>
+                                            <p class="text-[10px] font-black uppercase text-zinc-500">Pesan Masuk</p>
                                             <span class="bg-cyan-300 border-2 border-black font-black text-black px-2.5 py-0.5 rounded text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-block mt-0.5">
                                                 {{ $kost->inquiries->count() }} Pesan
                                             </span>

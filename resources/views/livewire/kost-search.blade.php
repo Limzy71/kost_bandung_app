@@ -5,55 +5,50 @@
     class="space-y-8"
 >
     <!-- Filter Bar Neo-Brutalist -->
-    <div class="bg-white border-4 border-black p-6 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-4">
+    <div class="bg-white border-4 border-black p-6 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-5">
+        <!-- Header -->
         <div class="flex items-center justify-between border-b-3 border-black pb-3">
-            <h2 class="text-lg font-black text-black uppercase tracking-tight flex items-center gap-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <h2 class="text-base sm:text-lg font-black text-black uppercase tracking-tight flex items-center gap-2">
+                <svg class="w-5 h-5 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
                 </svg>
                 <span>Filter Pencarian Kost</span>
             </h2>
-
-            @if($search || $gender || $district || $price_min || $price_max)
-                <button 
-                    wire:click="resetFilters" 
-                    class="bg-rose-400 hover:bg-rose-300 text-black border-2 border-black font-black text-xs uppercase px-3.5 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg flex items-center gap-1 cursor-pointer"
-                >
-                    <span>Reset Filter</span>
-                    <span class="font-bold">✕</span>
-                </button>
-            @endif
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
-            <!-- Search Input (Deferred wire:model with Enter key refresh) -->
+        <!-- Inputs Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Search Input -->
             <div class="lg:col-span-2 relative">
                 <label class="block text-xs font-black uppercase text-black mb-1.5">Cari Nama / Jalan</label>
-                <div class="relative">
+                <div class="relative flex items-center" x-data="{ query: @entangle('search') }">
                     <input 
+                        x-ref="searchInput"
                         wire:model="search" 
-                        wire:keydown.enter="$refresh"
+                        wire:keydown.enter="applyFilters"
                         type="text" 
                         placeholder="Contoh: Dago, Cisitu, Setiabudi..."
                         class="w-full bg-white border-3 border-black rounded-xl pl-10 pr-10 py-2.5 text-xs font-black uppercase text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
                     >
-                    <svg class="w-5 h-5 text-black absolute left-3 top-2.5 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-black absolute left-3 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
 
-                    @if($search)
+                    <!-- Reset Search Input Button (Clear ✕ inside search input) -->
+                    <template x-if="query">
                         <button 
                             type="button" 
-                            wire:click="$set('search', '')"
-                            class="absolute right-2.5 top-2.5 w-6 h-6 bg-rose-400 hover:bg-rose-300 border-2 border-black rounded text-black font-black text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center cursor-pointer"
+                            @click="$refs.searchInput.value = ''; $wire.search = ''; $wire.applyFilters()"
+                            class="absolute right-2.5 w-6 h-6 bg-rose-400 hover:bg-rose-300 border-2 border-black rounded text-black font-black text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center cursor-pointer"
+                            title="Hapus kata kunci pencarian"
                         >
                             ✕
                         </button>
-                    @endif
+                    </template>
                 </div>
             </div>
 
-            <!-- Gender Select (Deferred wire:model) -->
+            <!-- Gender Select -->
             <div>
                 <label class="block text-xs font-black uppercase text-black mb-1.5">Tipe Penghuni</label>
                 <select 
@@ -67,7 +62,7 @@
                 </select>
             </div>
 
-            <!-- District Select (Deferred wire:model) -->
+            <!-- District Select -->
             <div>
                 <label class="block text-xs font-black uppercase text-black mb-1.5">Kecamatan</label>
                 <select 
@@ -80,16 +75,19 @@
                     @endforeach
                 </select>
             </div>
+        </div>
 
-            <!-- Price Min & Max Select (Deferred wire:model) -->
-            <div>
-                <label class="block text-xs font-black uppercase text-black mb-1.5">Batas Harga</label>
+        <!-- Action Bar Row (Price Range + Action Buttons) -->
+        <div class="pt-4 border-t-3 border-black flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <!-- Price Range Dropdowns -->
+            <div class="w-full sm:w-72">
+                <label class="block text-xs font-black uppercase text-black mb-1.5">Batas Harga Sewa</label>
                 <div class="grid grid-cols-2 gap-2">
                     <select 
                         wire:model="price_min"
-                        class="w-full bg-white border-3 border-black rounded-xl px-2 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_6px_center] pr-6"
+                        class="w-full bg-white border-3 border-black rounded-xl px-2.5 py-2 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_6px_center] pr-6"
                     >
-                        <option value="" class="font-black uppercase text-black">Min</option>
+                        <option value="" class="font-black uppercase text-black">Min (Semua)</option>
                         <option value="500000" class="font-black uppercase text-black">500rb</option>
                         <option value="1000000" class="font-black uppercase text-black">1 Jt</option>
                         <option value="1500000" class="font-black uppercase text-black">1,5 Jt</option>
@@ -99,9 +97,9 @@
 
                     <select 
                         wire:model="price_max"
-                        class="w-full bg-white border-3 border-black rounded-xl px-2 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_6px_center] pr-6"
+                        class="w-full bg-white border-3 border-black rounded-xl px-2.5 py-2 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_6px_center] pr-6"
                     >
-                        <option value="" class="font-black uppercase text-black">Max</option>
+                        <option value="" class="font-black uppercase text-black">Max (Semua)</option>
                         <option value="1000000" class="font-black uppercase text-black">1 Jt</option>
                         <option value="1500000" class="font-black uppercase text-black">1,5 Jt</option>
                         <option value="2000000" class="font-black uppercase text-black">2 Jt</option>
@@ -111,12 +109,25 @@
                 </div>
             </div>
 
-            <!-- Apply Filters Trigger Action Button -->
-            <div class="flex items-end">
+            <!-- Action Buttons: Reset Filter + Terapkan Filter -->
+            <div class="flex items-center justify-end gap-3 w-full sm:w-auto pt-2 sm:pt-0">
+                <!-- Reset Filter Button (Always Accessible) -->
                 <button 
                     type="button" 
-                    wire:click="$refresh" 
-                    class="w-full bg-lime-400 hover:bg-lime-300 text-black border-3 border-black font-black uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all px-6 py-2.5 rounded-xl flex items-center justify-center gap-2 cursor-pointer text-xs"
+                    wire:click="resetFilters" 
+                    class="flex-1 sm:flex-none bg-rose-400 hover:bg-rose-300 text-black border-3 border-black font-black uppercase text-xs shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all px-4 py-2.5 rounded-xl inline-flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap"
+                >
+                    <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                    <span>Reset Filter</span>
+                </button>
+
+                <!-- Terapkan Filter Button (Single-line, Sleek, whitespace-nowrap) -->
+                <button 
+                    type="button" 
+                    wire:click="applyFilters" 
+                    class="flex-1 sm:flex-none bg-lime-400 hover:bg-lime-300 text-black border-3 border-black font-black uppercase text-xs shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all px-5 py-2.5 rounded-xl inline-flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
                 >
                     <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -130,7 +141,7 @@
     <!-- Grid List Kost Neo-Brutalist -->
     <div id="home-list-section" class="relative scroll-mt-8">
         <!-- Loading Overlay Targeted -->
-        <div wire:loading.delay wire:target="$refresh, resetFilters" class="absolute inset-0 bg-white/70 backdrop-blur-xs z-30 flex items-center justify-center rounded-2xl border-4 border-black">
+        <div wire:loading.delay wire:target="applyFilters, resetFilters" class="absolute inset-0 bg-white/70 backdrop-blur-xs z-30 flex items-center justify-center rounded-2xl border-4 border-black">
             <div class="bg-yellow-300 border-3 border-black px-6 py-4 rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex items-center gap-3">
                 <svg class="animate-spin h-6 w-6 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

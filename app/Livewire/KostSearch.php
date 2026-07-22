@@ -41,6 +41,11 @@ class KostSearch extends Component
         }
     }
 
+    public function applyFilters(): void
+    {
+        $this->resetPage();
+    }
+
     public function resetFilters(): void
     {
         $this->search = '';

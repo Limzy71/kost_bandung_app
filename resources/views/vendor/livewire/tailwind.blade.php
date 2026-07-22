@@ -50,11 +50,6 @@ $scrollIntoViewJsSnippet = ($scrollTo !== false)
                     dari
                     <span class="bg-cyan-300 border border-black px-1.5 py-0.5 rounded mx-0.5">{{ $paginator->total() }}</span>
                     Properti Kost
-                    @if ($paginator->firstItem())
-                        <span class="text-zinc-600 font-bold tracking-normal lowercase ml-1">
-                            (no. {{ $paginator->firstItem() }} – {{ $paginator->lastItem() }})
-                        </span>
-                    @endif
                 </div>
 
                 <!-- Page Number Links -->

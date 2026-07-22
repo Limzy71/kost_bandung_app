@@ -19,6 +19,11 @@ class OwnerDashboard extends Component
         $this->resetPage();
     }
 
+    public function updatedPage(): void
+    {
+        $this->dispatch('scroll-to-list');
+    }
+
     public function toggleAvailability(int $kostId): void
     {
         /** @var \App\Models\User $user */

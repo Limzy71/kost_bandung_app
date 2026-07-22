@@ -34,23 +34,37 @@
 
         <!-- Floating Auto-Dismiss Toast Notification -->
         <div 
-            x-data="{ show: false, message: '' }"
-            x-on:show-toast.window="message = $event.detail.message; show = true; setTimeout(() => show = false, 2500)"
+            x-data="{
+                show: false,
+                message: '',
+                timer: null,
+                trigger(msg) {
+                    this.message = msg;
+                    this.show = true;
+                    if (this.timer) clearTimeout(this.timer);
+                    this.timer = setTimeout(() => {
+                        this.show = false;
+                    }, 3000);
+                }
+            }"
+            x-on:show-toast.window="trigger($event.detail.message)"
             x-show="show" 
             x-cloak
-            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter="transition ease-out duration-300 transform"
             x-transition:enter-start="opacity-0 translate-y-4 scale-95"
             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave="transition ease-in duration-200 transform"
             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
             x-transition:leave-end="opacity-0 translate-y-4 scale-95"
-            class="fixed bottom-6 right-6 z-50 bg-lime-300 border-3 border-black p-4 rounded-xl shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] text-black font-black text-sm flex items-center gap-3 max-w-md"
+            class="fixed bottom-6 right-6 z-50 bg-lime-300 border-3 border-black p-4 rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] text-black flex items-center gap-3 max-w-md"
         >
-            <div class="w-7 h-7 rounded-full bg-black text-lime-300 flex items-center justify-center text-xs font-black">
+            <div class="w-7 h-7 rounded-full bg-black text-lime-300 flex items-center justify-center text-xs font-black shrink-0">
                 ✓
             </div>
-            <span x-text="message"></span>
-            <button type="button" @click="show = false" class="ml-auto text-black hover:opacity-75 font-black text-xs cursor-pointer">✕</button>
+            <p class="text-xs font-bold text-black leading-relaxed">
+                <span x-text="message"></span>
+            </p>
+            <button type="button" @click="show = false" class="ml-auto text-black hover:bg-black/10 p-1 rounded font-black text-xs cursor-pointer transition-colors">✕</button>
         </div>
 
         <!-- Quick Stats Overview Cards -->
@@ -206,10 +220,20 @@
                                 <button 
                                     wire:click="toggleAvailability({{ $kost->id }})" 
                                     wire:loading.attr="disabled"
-                                    class="px-3.5 py-2 border-2 border-black text-xs font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded cursor-pointer {{ $kost->is_available ? 'bg-rose-400 hover:bg-rose-300 text-black' : 'bg-lime-400 hover:bg-lime-300 text-black' }}"
+                                    class="px-3.5 py-2 border-2 border-black text-xs font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer flex items-center gap-1.5 {{ $kost->is_available ? 'bg-rose-400 hover:bg-rose-300 text-black' : 'bg-lime-400 hover:bg-lime-300 text-black' }}"
                                 >
-                                    <span wire:loading.remove wire:target="toggleAvailability({{ $kost->id }})">
-                                        {{ $kost->is_available ? 'Ubah ke Penuh 🔴' : 'Ubah ke Tersedia 🟢' }}
+                                    <span wire:loading.remove wire:target="toggleAvailability({{ $kost->id }})" class="inline-flex items-center gap-1.5">
+                                        @if($kost->is_available)
+                                            <svg class="w-3.5 h-3.5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
+                                            </svg>
+                                            <span>Set Status Penuh</span>
+                                        @else
+                                            <svg class="w-3.5 h-3.5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            </svg>
+                                            <span>Set Status Tersedia</span>
+                                        @endif
                                     </span>
                                     <span wire:loading wire:target="toggleAvailability({{ $kost->id }})" class="inline-flex items-center gap-1.5">
                                         <svg class="animate-spin h-3.5 w-3.5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

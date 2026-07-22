@@ -344,7 +344,14 @@
 
                     <!-- Preview Photo -->
                     @if ($photo)
-                        <div class="mt-4 p-4 bg-lime-100 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-xl flex flex-col md:flex-row items-center gap-4">
+                        <div 
+                            x-show="!isUploading" 
+                            x-cloak 
+                            x-transition:enter="transition ease-out duration-300"
+                            x-transition:enter-start="opacity-0 scale-95"
+                            x-transition:enter-end="opacity-100 scale-100"
+                            class="mt-4 p-4 bg-lime-100 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-xl flex flex-col md:flex-row items-center gap-4"
+                        >
                             <img src="{{ $photo->temporaryUrl() }}" alt="Preview Foto" class="w-32 h-24 object-cover rounded border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                             <div class="flex-1 text-center md:text-left">
                                 <p class="text-xs font-black text-black uppercase">Preview Foto Utama</p>

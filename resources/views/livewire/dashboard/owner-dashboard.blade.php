@@ -1,5 +1,6 @@
 <div 
     x-data 
+    wire:poll.10s
     @scroll-to-list.window="
         setTimeout(() => {
             const el = document.getElementById('property-list-section');

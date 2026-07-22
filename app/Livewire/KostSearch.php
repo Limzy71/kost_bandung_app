@@ -26,13 +26,6 @@ class KostSearch extends Component
     #[Url(history: true)]
     public $district = '';
 
-    public function mount()
-    {
-        if (request()->has('page')) {
-            return redirect(request()->url());
-        }
-    }
-
     public function updating($key)
     {
         if (in_array($key, ['search', 'gender', 'price_min', 'price_max', 'district'])) {

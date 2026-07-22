@@ -61,10 +61,102 @@
         {{ $slot ?? $content }}
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t-3 border-black py-8 shadow-[0_-4px_0_0_rgba(0,0,0,1)]">
-        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-black font-black uppercase tracking-wider">
-            &copy; {{ date('Y') }} KostBandung.id — Direkayasa untuk kemudahan pencarian kost di area Bandung.
+    <!-- Neo-Brutalist Footer -->
+    <footer class="bg-white border-t-4 border-black mt-auto shadow-[0_-6px_0_0_rgba(0,0,0,1)]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-8 border-b-3 border-black">
+                <!-- Col 1: Brand & Tagline -->
+                <div class="md:col-span-2 space-y-3">
+                    <a href="{{ route('home') }}" class="inline-flex items-center gap-1.5">
+                        <span class="text-2xl font-black text-black uppercase tracking-tight flex items-center">
+                            KostBandung<span class="bg-yellow-300 border-2 border-black px-2 py-0.5 rounded text-base shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ml-1 font-black text-black">.id</span>
+                        </span>
+                    </a>
+                    <p class="text-xs font-bold text-zinc-700 max-w-sm leading-relaxed">
+                        Platform Direktori Kost Hyper-Local Kota Bandung. Temukan kost mahasiswa & karyawan di area Coblong, Dipatiukur, Dago, dan sekitarnya dengan cepat & akurat.
+                    </p>
+                    <div class="flex flex-wrap items-center gap-2 pt-1">
+                        <span class="px-2.5 py-1 bg-lime-300 border-2 border-black text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                            ⚡ Hyper-Local Bandung
+                        </span>
+                        <span class="px-2.5 py-1 bg-cyan-300 border-2 border-black text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                            🏢 100% Terverifikasi
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Col 2: Navigation Links -->
+                <div class="space-y-3">
+                    <h4 class="text-xs font-black uppercase tracking-wider text-black bg-yellow-300 border-2 border-black px-2 py-1 inline-block shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                        Navigasi Cepat
+                    </h4>
+                    <ul class="space-y-2 text-xs font-black uppercase">
+                        <li>
+                            <a href="{{ route('home') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-block">
+                                🏠 Beranda Utama
+                            </a>
+                        </li>
+                        @auth
+                            @if(auth()->user()->role === 'owner')
+                                <li>
+                                    <a href="{{ route('dashboard') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-block">
+                                        📊 Dashboard Pemilik
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('dashboard.kost.create') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-block">
+                                        ➕ Pasang Iklan Kost
+                                    </a>
+                                </li>
+                            @endif
+                        @else
+                            <li>
+                                <a href="{{ route('login') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-block">
+                                    🔑 Masuk Akun
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('register') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-block">
+                                    📝 Daftar Pemilik Kost
+                                </a>
+                            </li>
+                        @endauth
+                    </ul>
+                </div>
+
+                <!-- Col 3: Tech Stack & System Info -->
+                <div class="space-y-3">
+                    <h4 class="text-xs font-black uppercase tracking-wider text-black bg-pink-300 border-2 border-black px-2 py-1 inline-block shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                        Teknologi Platform
+                    </h4>
+                    <ul class="space-y-2 text-xs font-bold text-zinc-700">
+                        <li class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-rose-500 rounded-full border border-black shrink-0"></span>
+                            <span>Laravel 12 Framework</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-sky-500 rounded-full border border-black shrink-0"></span>
+                            <span>Livewire 3 & Alpine.js</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-teal-500 rounded-full border border-black shrink-0"></span>
+                            <span>Tailwind CSS v4.1 (Neo-Brutalist)</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Bottom Copyright Line -->
+            <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-black text-black uppercase tracking-wider text-center sm:text-left">
+                <p>
+                    &copy; 2026 KostBandung.id — Dikembangkan dengan ❤️ oleh Mahasiswa Teknik Informatika '23.
+                </p>
+                <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-1 bg-zinc-100 border-2 border-black text-[10px] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-black">
+                        v2.0.0 Stable
+                    </span>
+                </div>
+            </div>
         </div>
     </footer>
 

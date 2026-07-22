@@ -16,7 +16,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Akun Owner
+        // 1. Akun Admin
+        User::firstOrCreate(
+            ['email' => 'admin@kostbandung.id'],
+            [
+                'name' => 'Administrator',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+            ]
+        );
+
+        // 2. Akun Owner
         User::firstOrCreate(
             ['email' => 'owner@kostbandung.id'],
             [
@@ -26,7 +36,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // 2. Akun User Biasa
+        // 3. Akun User Biasa
         User::firstOrCreate(
             ['email' => 'user@kostbandung.id'],
             [

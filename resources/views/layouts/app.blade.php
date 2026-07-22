@@ -18,6 +18,15 @@
             </a>
             <div class="flex items-center gap-3 md:gap-4">
                 @auth
+                    @if(in_array(auth()->user()->role, ['admin', 'owner']))
+                        <a href="{{ route('admin.moderation') }}" class="text-xs font-black uppercase text-black bg-lime-300 hover:bg-lime-200 px-3.5 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
+                            <svg class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <span>Moderasi Admin</span>
+                        </a>
+                    @endif
+
                     @if(auth()->user()->role === 'owner')
                         @if(request()->routeIs('dashboard'))
                             <a href="{{ route('home') }}" class="text-xs font-black uppercase text-black bg-cyan-300 hover:bg-cyan-200 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">

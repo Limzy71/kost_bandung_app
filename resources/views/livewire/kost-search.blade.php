@@ -1,4 +1,4 @@
-<div>
+<div wire:poll.10s>
     <!-- Floating Filter Pill -->
     <div class="relative z-20 bg-white shadow-sm rounded-2xl md:rounded-full border border-gray-200 mb-16 p-2">
         <div class="flex flex-col md:flex-row items-center divide-y md:divide-y-0 md:divide-x divide-gray-100 w-full">

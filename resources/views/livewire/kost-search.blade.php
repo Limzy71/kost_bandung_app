@@ -9,14 +9,13 @@
         x-data="{ 
             hasFilter: false,
             checkFilter() {
-                const searchVal = this.$refs.searchInput ? this.$refs.searchInput.value.trim() : '';
                 const genderVal = this.$refs.genderSelect ? this.$refs.genderSelect.value : '';
                 const districtVal = this.$refs.districtSelect ? this.$refs.districtSelect.value : '';
                 const minVal = this.$refs.minSelect ? this.$refs.minSelect.value : '';
                 const maxVal = this.$refs.maxSelect ? this.$refs.maxSelect.value : '';
 
+                // Header RESET FILTER button ONLY appears when at least one select dropdown is chosen
                 this.hasFilter = Boolean(
-                    searchVal !== '' ||
                     genderVal !== '' ||
                     districtVal !== '' ||
                     minVal !== '' ||
@@ -29,8 +28,12 @@
                 if (this.$refs.districtSelect) this.$refs.districtSelect.value = '';
                 if (this.$refs.minSelect) this.$refs.minSelect.value = '';
                 if (this.$refs.maxSelect) this.$refs.maxSelect.value = '';
+                $wire.search = '';
+                $wire.gender = '';
+                $wire.district = '';
+                $wire.price_min = '';
+                $wire.price_max = '';
                 this.checkFilter();
-                $wire.resetFilters();
             }
         }"
         x-init="checkFilter()"
@@ -50,7 +53,7 @@
 
             <!-- Header Action Buttons (Aligned with Header Text) -->
             <div class="flex items-center gap-2.5 shrink-0 self-end sm:self-auto">
-                <!-- Reset Filter Button (Local-only form reset - NO automatic server request) -->
+                <!-- Reset Filter Button (Only appears for dropdown selections - Local form reset ONLY, NO server request) -->
                 <button 
                     x-show="hasFilter"
                     x-cloak
@@ -64,7 +67,7 @@
                     <span>Reset Filter</span>
                 </button>
 
-                <!-- Terapkan Filter Button (Submits deferred filter criteria to server) -->
+                <!-- Terapkan Filter Button (Explicit trigger: submits deferred filter criteria to server) -->
                 <button 
                     type="button" 
                     wire:click="applyFilters" 
@@ -88,12 +91,7 @@
                         x-ref="searchInput"
                         wire:model="search" 
                         wire:keydown.enter="applyFilters"
-                        @input="
-                            checkFilter();
-                            if ($refs.searchInput && $refs.searchInput.value.trim() === '' && $wire.search) {
-                                $wire.resetFilters();
-                            }
-                        "
+                        @input="checkFilter()"
                         type="text" 
                         placeholder="Contoh: Dago, Cisitu, Setiabudi..."
                         class="w-full bg-white border-3 border-black rounded-xl pl-10 pr-10 py-2.5 text-xs font-black uppercase text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
@@ -102,14 +100,13 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
 
-                    <!-- Clear Search Input ✕ Button (Triggers resetFilters to restore list) -->
+                    <!-- Clear Search Input ✕ Button (Clears input text locally) -->
                     <template x-if="query || ($refs.searchInput && $refs.searchInput.value)">
                         <button 
                             type="button" 
-                            wire:click="resetFilters"
-                            @click="if($refs.searchInput) $refs.searchInput.value = ''; setTimeout(() => checkFilter(), 150)"
+                            @click="$refs.searchInput.value = ''; $wire.search = ''; checkFilter()"
                             class="absolute right-2.5 w-6 h-6 bg-rose-400 hover:bg-rose-300 border-2 border-black rounded text-black font-black text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center cursor-pointer"
-                            title="Hapus kata kunci pencarian & reset"
+                            title="Hapus kata kunci pencarian"
                         >
                             ✕
                         </button>

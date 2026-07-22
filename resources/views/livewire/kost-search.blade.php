@@ -149,15 +149,21 @@
                                     </div>
                                 @endif
 
-                                <!-- Top Left Badges with SVG Icons -->
+                                <!-- Top Left Badges with Gold-Orange Gradient SVG Icon & Black Stroke -->
                                 <div class="absolute top-3 left-3 flex flex-col gap-1.5 pointer-events-none">
                                     <span class="px-2.5 py-1 bg-pink-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider">
                                         {{ $kost->gender_type }}
                                     </span>
                                     @if ($kost->boosted_at)
                                         <span class="px-2.5 py-1 bg-yellow-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider flex items-center gap-1">
-                                            <svg class="w-3.5 h-3.5 fill-black text-black shrink-0" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z" clip-rule="evenodd" />
+                                            <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 20 20">
+                                                <defs>
+                                                    <linearGradient id="bolt-grad-card-{{ $kost->id }}" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                        <stop offset="0%" stop-color="#FBBF24" />
+                                                        <stop offset="100%" stop-color="#F97316" />
+                                                    </linearGradient>
+                                                </defs>
+                                                <path fill="url(#bolt-grad-card-{{ $kost->id }})" stroke="#000000" stroke-width="0.8" fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z" clip-rule="evenodd" />
                                             </svg>
                                             <span>Super Boost</span>
                                         </span>

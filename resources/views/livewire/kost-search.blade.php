@@ -25,13 +25,14 @@
             @endif
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            <!-- Search Input -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+            <!-- Search Input (Deferred wire:model with Enter key refresh) -->
             <div class="lg:col-span-2 relative">
                 <label class="block text-xs font-black uppercase text-black mb-1.5">Cari Nama / Jalan</label>
                 <div class="relative">
                     <input 
-                        wire:model.live.debounce.300ms="search" 
+                        wire:model="search" 
+                        wire:keydown.enter="$refresh"
                         type="text" 
                         placeholder="Contoh: Dago, Cisitu, Setiabudi..."
                         class="w-full bg-white border-3 border-black rounded-xl pl-10 pr-10 py-2.5 text-xs font-black uppercase text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
@@ -52,11 +53,11 @@
                 </div>
             </div>
 
-            <!-- Gender Select Neo-Brutalist -->
+            <!-- Gender Select (Deferred wire:model) -->
             <div>
                 <label class="block text-xs font-black uppercase text-black mb-1.5">Tipe Penghuni</label>
                 <select 
-                    wire:model.live="gender"
+                    wire:model="gender"
                     class="w-full bg-white border-3 border-black rounded-xl px-3 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px_16px] bg-no-repeat bg-[right_12px_center] pr-9"
                 >
                     <option value="" class="font-black uppercase text-black">Semua Tipe</option>
@@ -66,11 +67,11 @@
                 </select>
             </div>
 
-            <!-- District Select Neo-Brutalist -->
+            <!-- District Select (Deferred wire:model) -->
             <div>
                 <label class="block text-xs font-black uppercase text-black mb-1.5">Kecamatan</label>
                 <select 
-                    wire:model.live="district"
+                    wire:model="district"
                     class="w-full bg-white border-3 border-black rounded-xl px-3 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px_16px] bg-no-repeat bg-[right_12px_center] pr-9"
                 >
                     <option value="" class="font-black uppercase text-black">Semua Kecamatan</option>
@@ -80,12 +81,12 @@
                 </select>
             </div>
 
-            <!-- Price Min & Max Select Neo-Brutalist -->
+            <!-- Price Min & Max Select (Deferred wire:model) -->
             <div>
                 <label class="block text-xs font-black uppercase text-black mb-1.5">Batas Harga</label>
                 <div class="grid grid-cols-2 gap-2">
                     <select 
-                        wire:model.live="price_min"
+                        wire:model="price_min"
                         class="w-full bg-white border-3 border-black rounded-xl px-2 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_6px_center] pr-6"
                     >
                         <option value="" class="font-black uppercase text-black">Min</option>
@@ -97,7 +98,7 @@
                     </select>
 
                     <select 
-                        wire:model.live="price_max"
+                        wire:model="price_max"
                         class="w-full bg-white border-3 border-black rounded-xl px-2 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_6px_center] pr-6"
                     >
                         <option value="" class="font-black uppercase text-black">Max</option>
@@ -109,13 +110,27 @@
                     </select>
                 </div>
             </div>
+
+            <!-- Apply Filters Trigger Action Button -->
+            <div class="flex items-end">
+                <button 
+                    type="button" 
+                    wire:click="$refresh" 
+                    class="w-full bg-lime-400 hover:bg-lime-300 text-black border-3 border-black font-black uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all px-6 py-2.5 rounded-xl flex items-center justify-center gap-2 cursor-pointer text-xs"
+                >
+                    <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    <span>Terapkan Filter</span>
+                </button>
+            </div>
         </div>
     </div>
 
     <!-- Grid List Kost Neo-Brutalist -->
     <div id="home-list-section" class="relative scroll-mt-8">
         <!-- Loading Overlay Targeted -->
-        <div wire:loading.delay wire:target="search, gender, district, price_min, price_max, resetFilters" class="absolute inset-0 bg-white/70 backdrop-blur-xs z-30 flex items-center justify-center rounded-2xl border-4 border-black">
+        <div wire:loading.delay wire:target="$refresh, resetFilters" class="absolute inset-0 bg-white/70 backdrop-blur-xs z-30 flex items-center justify-center rounded-2xl border-4 border-black">
             <div class="bg-yellow-300 border-3 border-black px-6 py-4 rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex items-center gap-3">
                 <svg class="animate-spin h-6 w-6 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

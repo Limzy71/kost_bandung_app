@@ -26,6 +26,14 @@ class KostSearch extends Component
     #[Url(history: true)]
     public $district = '';
 
+    public function mount()
+    {
+        // If user does a hard refresh with '?page=' in the URL, redirect to clean URL to force reset.
+        if (request()->has('page')) {
+            return redirect()->to(request()->url());
+        }
+    }
+
     public function updating($key)
     {
         if (in_array($key, ['search', 'gender', 'price_min', 'price_max', 'district'])) {

@@ -58,8 +58,8 @@ class OwnerDashboard extends Component
             ->with(['primaryImage', 'facilities', 'inquiries'])
             ->when($this->search, function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%')
-                      ->orWhere('district', 'like', '%' . $this->search . '%')
-                      ->orWhere('address', 'like', '%' . $this->search . '%');
+                    ->orWhere('district', 'like', '%' . $this->search . '%')
+                    ->orWhere('address', 'like', '%' . $this->search . '%');
             })
             ->latest();
 

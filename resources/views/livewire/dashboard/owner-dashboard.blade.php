@@ -139,16 +139,28 @@
                 </div>
 
                 <!-- Search Filter Input -->
-                <div class="relative w-full sm:w-80">
+                <div class="relative w-full sm:w-80" x-data>
                     <input 
                         type="text" 
                         wire:model.live.debounce.300ms="search" 
                         placeholder="Cari nama atau lokasi..." 
-                        class="w-full bg-white border-2 border-black rounded-lg pl-10 pr-4 py-2.5 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+                        class="w-full bg-white border-2 border-black rounded-lg pl-10 pr-10 py-2.5 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
                     >
-                    <svg class="w-5 h-5 text-black absolute left-3 top-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-black absolute left-3 top-3 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
+
+                    <!-- Clear 'X' Button -->
+                    <button 
+                        type="button" 
+                        x-show="$wire.search && $wire.search.length > 0"
+                        x-cloak
+                        @click="$wire.set('search', '')"
+                        class="absolute right-2.5 top-2.5 w-6 h-6 bg-rose-400 hover:bg-rose-300 border-2 border-black rounded text-black font-black text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center cursor-pointer"
+                        title="Hapus Pencarian"
+                    >
+                        ✕
+                    </button>
                 </div>
             </div>
 

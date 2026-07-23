@@ -5,6 +5,8 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Kost;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class KostSearch extends Component
 {
@@ -68,7 +70,7 @@ class KostSearch extends Component
         if ($this->search) {
             $query->where(function ($q) {
                 $q->where('name', 'like', '%' . $this->search . '%')
-                  ->orWhere('address', 'like', '%' . $this->search . '%');
+                    ->orWhere('address', 'like', '%' . $this->search . '%');
             });
         }
 
@@ -89,13 +91,43 @@ class KostSearch extends Component
         }
 
         $query->orderByRaw('boosted_at IS NULL, boosted_at DESC')
-              ->orderByDesc('created_at');
+                ->orderByDesc('created_at');
 
         $districts = Kost::select('district')->whereNotNull('district')->distinct()->orderBy('district')->pluck('district');
+        $kosts = $query->paginate(12);
+
+        $mapItems = $kosts->map(function ($k) {
+            $priceFormatted = $k->price_monthly >= 1000000 
+                ? round($k->price_monthly / 1000000, 1) . 'Jt'
+                : round($k->price_monthly / 1000) . 'K';
+                
+            $priceFull = 'Rp ' . number_format($k->price_monthly, 0, ',', '.');
+            $img = $k->primaryImage 
+                ? (Str::startsWith($k->primaryImage->image_path, 'http') ? $k->primaryImage->image_path : Storage::url($k->primaryImage->image_path))
+                : 'https://placehold.co/400x300/eeeeee/31343c?text=' . urlencode($k->name);
+
+            return [
+                'id' => $k->id,
+                'name' => $k->name,
+                'slug' => $k->slug,
+                'district' => $k->district,
+                'address' => $k->address,
+                'gender' => $k->gender_type,
+                'price_short' => $priceFormatted,
+                'price_full' => $priceFull,
+                'lat' => (float) $k->latitude,
+                'lng' => (float) $k->longitude,
+                'image' => $img,
+                'url' => route('kost.show', $k->slug),
+                'is_boosted' => (bool) $k->boosted_at,
+            ];
+        })->values()->toArray();
 
         return view('livewire.kost-search', [
-            'kosts' => $query->paginate(12),
+            'kosts' => $kosts,
             'districts' => $districts,
+            'mapItems' => $mapItems,
+            'googleMapsApiKey' => config('services.google.maps_api_key') ?: env('GOOGLE_MAPS_API_KEY'),
         ]);
     }
 }

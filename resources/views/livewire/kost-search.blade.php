@@ -275,21 +275,6 @@
                     {{ $kosts->links() }}
                 </div>
             </div>
-
-            <!-- Full-Width Immersive Map View Mode -->
-            <div wire:key="map-view" x-show="viewMode === 'map'" x-cloak class="w-full">
-                <div class="w-full rounded-2xl border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden bg-white">
-                    <div class="p-4 bg-yellow-300 border-b-3 border-black flex items-center justify-between">
-                        <span class="font-black text-sm uppercase text-black flex items-center gap-2 tracking-tight">
-                            &#128205; Peta Interaktif Kost Bandung
-                        </span>
-                        <span class="text-xs font-black text-black bg-white border-2 border-black px-3 py-1 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] uppercase">
-                            <span x-text="items.length"></span> Kost Tampil Pada Peta
-                        </span>
-                    </div>
-                    <div x-ref="catalogMapElement" class="w-full h-[450px] lg:h-[500px] bg-zinc-100 z-0"></div>
-                </div>
-            </div>
         @else
             <!-- Empty State: Reset viewMode to list so stale Alpine state doesn't cause overlap on next search -->
             <div wire:key="empty-state" x-init="viewMode = 'list'" class="bg-yellow-100 border-4 border-black rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] space-y-4">
@@ -322,5 +307,20 @@
                 </button>
             </div>
         @endif
+
+        <!-- Full-Width Immersive Map View Mode (Always in DOM to preserve Map instance) -->
+        <div wire:key="map-view" wire:ignore x-show="viewMode === 'map' && items.length > 0" x-cloak class="w-full">
+            <div class="w-full rounded-2xl border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden bg-white">
+                <div class="p-4 bg-yellow-300 border-b-3 border-black flex items-center justify-between">
+                    <span class="font-black text-sm uppercase text-black flex items-center gap-2 tracking-tight">
+                        &#128205; Peta Interaktif Kost Bandung
+                    </span>
+                    <span class="text-xs font-black text-black bg-white border-2 border-black px-3 py-1 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] uppercase">
+                        <span x-text="items.length"></span> Kost Tampil Pada Peta
+                    </span>
+                </div>
+                <div x-ref="catalogMapElement" class="w-full h-[450px] lg:h-[500px] bg-zinc-100 z-0"></div>
+            </div>
+        </div>
     </div>
 </div>

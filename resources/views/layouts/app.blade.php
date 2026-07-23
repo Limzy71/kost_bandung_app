@@ -35,7 +35,6 @@
                                 </svg>
                                 <span>Beranda Utama</span>
                             </a>
-                        @else
                             <a href="{{ route('dashboard') }}" class="text-xs font-black uppercase text-black bg-yellow-300 hover:bg-yellow-200 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
                                 <svg class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
@@ -43,6 +42,18 @@
                                 <span>Dashboard Pemilik</span>
                             </a>
                         @endif
+                        @php
+                            $unreadInquiriesCount = \App\Models\Inquiry::where('status', 'unread')->whereHas('kost', function($q) {
+                                $q->where('user_id', auth()->id());
+                            })->count();
+                        @endphp
+                        <a href="{{ route('dashboard.inquiries') }}" class="text-xs font-black uppercase text-black bg-white hover:bg-zinc-100 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
+                            <svg class="w-4 h-4 text-black group-hover:scale-110 transition-transform stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                            <span>Inbox Pesan</span>
+                            @if($unreadInquiriesCount > 0)
+                                <span class="bg-rose-500 text-white border-2 border-black rounded-full px-1.5 py-0.5 text-[9px] min-w-[20px] text-center ml-1">{{ $unreadInquiriesCount }}</span>
+                            @endif
+                        </a>
                     @endif
                     <span class="text-xs font-black uppercase text-black bg-zinc-100 border-2 border-black px-3 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] rounded hidden sm:inline-flex items-center gap-1.5">
                         <svg class="w-4 h-4 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -139,6 +150,20 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
                                         </svg>
                                         <span>Pasang Iklan Kost</span>
+                                    </a>
+                                </li>
+                                @php
+                                    $unreadInquiriesCountMobile = \App\Models\Inquiry::where('status', 'unread')->whereHas('kost', function($q) {
+                                        $q->where('user_id', auth()->id());
+                                    })->count();
+                                @endphp
+                                <li>
+                                    <a href="{{ route('dashboard.inquiries') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
+                                        <svg class="w-4 h-4 text-black group-hover:scale-110 transition-transform stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                        <span>Inbox Pesan</span>
+                                        @if($unreadInquiriesCountMobile > 0)
+                                            <span class="bg-rose-500 text-white rounded-full px-1.5 py-0.5 text-[9px] font-black min-w-[20px] text-center ml-1 border-2 border-black">{{ $unreadInquiriesCountMobile }}</span>
+                                        @endif
                                     </a>
                                 </li>
                             @endif

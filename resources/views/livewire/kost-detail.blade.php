@@ -196,6 +196,7 @@
 
                         <button 
                             type="button" 
+                            @click="showModal = true"
                             class="w-full py-4 bg-cyan-300 hover:bg-cyan-200 text-black border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2"
                         >
                             <svg class="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -225,7 +226,7 @@
     <!-- Floating Mobile Bar Neo-Brutalist -->
     <div class="fixed bottom-0 left-0 right-0 bg-white border-t-4 border-black p-4 shadow-[0_-6px_0px_0px_rgba(0,0,0,1)] lg:hidden z-50">
         <div class="flex items-center justify-between gap-4 max-w-7xl mx-auto">
-            <div>
+            <div x-data="{ showModal: false }" @inquiry-sent.window="showModal = false">
                 <p class="text-[10px] font-black uppercase text-zinc-500">Harga Sewa</p>
                 <div class="flex items-baseline gap-1">
                     <span class="text-lg font-black text-black">Rp {{ number_format($kost->price_monthly, 0, ',', '.') }}</span>
@@ -248,4 +249,72 @@
             </a>
         </div>
     </div>
+
+    <!-- Neo-Brutalist Inquiry Modal -->
+    <div x-show="showModal" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-0">
+        <!-- Backdrop -->
+        <div x-show="showModal" x-transition.opacity class="fixed inset-0 bg-black/60 backdrop-blur-sm" @click="showModal = false"></div>
+        
+        <!-- Modal Content -->
+        <div x-show="showModal" 
+             x-transition:enter="transition ease-out duration-200" 
+             x-transition:enter-start="opacity-0 translate-y-4" 
+             x-transition:enter-end="opacity-100 translate-y-0"
+             class="bg-white border-4 border-black rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] w-full max-w-lg relative z-10 flex flex-col max-h-[90vh]">
+            
+            <div class="p-5 border-b-4 border-black flex items-center justify-between bg-yellow-300 rounded-t-xl shrink-0">
+                <h3 class="text-xl font-black text-black uppercase tracking-tight">Kirim Pesan ke Pemilik</h3>
+                <button type="button" @click="showModal = false" class="w-8 h-8 bg-white border-2 border-black rounded flex items-center justify-center text-black hover:bg-rose-400 active:translate-y-0.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none transition-all">
+                    <svg class="w-5 h-5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto">
+                <form wire:submit.prevent="sendInquiry" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-black uppercase text-black mb-1.5">Nama Lengkap</label>
+                        <input type="text" wire:model="inquiry_name" class="w-full bg-zinc-100 border-3 border-black rounded-xl px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:bg-white focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all" placeholder="Masukkan nama Anda">
+                        @error('inquiry_name') <span class="text-xs font-bold text-rose-500 mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+                    <div>
+                        <label class="block text-sm font-black uppercase text-black mb-1.5">Nomor WhatsApp</label>
+                        <input type="text" wire:model="inquiry_phone" class="w-full bg-zinc-100 border-3 border-black rounded-xl px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:bg-white focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all" placeholder="Contoh: 081234567890">
+                        @error('inquiry_phone') <span class="text-xs font-bold text-rose-500 mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+                    <div>
+                        <label class="block text-sm font-black uppercase text-black mb-1.5">Pesan Anda</label>
+                        <textarea wire:model="inquiry_message" rows="4" class="w-full bg-zinc-100 border-3 border-black rounded-xl px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:bg-white focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all resize-none" placeholder="Tuliskan pertanyaan Anda mengenai ketersediaan kamar, fasilitas, dll..."></textarea>
+                        @error('inquiry_message') <span class="text-xs font-bold text-rose-500 mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+                    
+                    <button type="submit" class="w-full mt-4 py-3.5 bg-cyan-400 hover:bg-cyan-300 text-black border-3 border-black font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2">
+                        <span wire:loading.remove wire:target="sendInquiry">Kirim Sekarang</span>
+                        <span wire:loading wire:target="sendInquiry" class="flex items-center gap-2">
+                            <svg class="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                            Mengirim...
+                        </span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Toast Notification Neo-Brutalist -->
+    @if (session()->has('success'))
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show" x-transition class="fixed bottom-24 lg:bottom-10 right-4 lg:right-10 z-[110]">
+            <div class="bg-lime-400 border-4 border-black p-4 rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex items-center gap-4 max-w-sm">
+                <div class="w-10 h-10 bg-white border-2 border-black rounded-lg flex items-center justify-center shrink-0">
+                    <svg class="w-6 h-6 text-black stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                </div>
+                <div>
+                    <h4 class="text-sm font-black text-black uppercase">Berhasil!</h4>
+                    <p class="text-xs font-bold text-black mt-0.5">{{ session('success') }}</p>
+                </div>
+                <button @click="show = false" class="text-black hover:text-rose-500 transition-colors ml-auto">
+                    <svg class="w-5 h-5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+    @endif
+
 </div>

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Livewire\Dashboard\OwnerDashboard;
 use App\Livewire\Dashboard\CreateKost;
+use App\Livewire\Dashboard\InquiryIndex;
 use App\Livewire\Admin\ModerationDashboard;
 
 Route::get('/', [KostController::class, 'index'])->name('home');
@@ -22,6 +23,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware(['auth', 'owner'])->group(function () {
     Route::get('/dashboard', OwnerDashboard::class)->name('dashboard');
     Route::get('/dashboard/kost/create', CreateKost::class)->name('dashboard.kost.create');
+    Route::get('/dashboard/inquiries', InquiryIndex::class)->name('dashboard.inquiries');
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {

@@ -33,7 +33,7 @@
             <!-- Results Counter Badge -->
             <div class="bg-white border-2 border-black px-4 py-2 rounded-lg shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] text-xs font-black uppercase text-black">
                 Menampilkan 
-                <span class="bg-yellow-300 border border-black px-1.5 py-0.5 rounded mx-0.5">{{ $paginator->count() }}</span>
+                <span class="bg-yellow-300 border border-black px-1.5 py-0.5 rounded mx-0.5">{{ $paginator->lastItem() }}</span>
                 dari
                 <span class="bg-cyan-300 border border-black px-1.5 py-0.5 rounded mx-0.5">{{ $paginator->total() }}</span>
                 Properti Kost

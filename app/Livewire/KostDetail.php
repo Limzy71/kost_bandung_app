@@ -45,6 +45,16 @@ class KostDetail extends Component
     {
         $this->validate();
 
+        $key = 'inquiry_' . request()->ip();
+
+        if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($key, 3)) {
+            $seconds = \Illuminate\Support\Facades\RateLimiter::availableIn($key);
+            $this->addError('inquiry_message', 'TERLALU BANYAK MENGIRIM PESAN. TUNGGU ' . $seconds . ' DETIK.');
+            return;
+        }
+
+        \Illuminate\Support\Facades\RateLimiter::hit($key, 60);
+
         Inquiry::create([
             'kost_id' => $this->kost->id,
             'user_id' => Auth::id(),

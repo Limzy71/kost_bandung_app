@@ -110,6 +110,7 @@ window.catalogMap = function () {
                 script.id = 'leaflet-js';
                 script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
                 script.onload = () => this.setupLeafletMap();
+                script.onerror = () => window.dispatchEvent(new Event('map-load-error'));
                 document.head.appendChild(script);
             } else {
                 setTimeout(() => this.loadLeafletAndInit(), 200);
@@ -118,7 +119,10 @@ window.catalogMap = function () {
 
         setupGoogleMap() {
             if (!this.$refs.catalogMapElement) return false;
-            if (!window.google || !window.google.maps) return false;
+            if (!window.google || !window.google.maps) {
+                window.dispatchEvent(new Event('map-load-error'));
+                return false;
+            }
             try {
                 if (!this.map) {
                     this.map = new google.maps.Map(this.$refs.catalogMapElement, {
@@ -134,6 +138,7 @@ window.catalogMap = function () {
                 return true;
             } catch (e) {
                 console.warn('Google Map Catalog init error:', e);
+                window.dispatchEvent(new Event('map-load-error'));
                 return false;
             }
         },

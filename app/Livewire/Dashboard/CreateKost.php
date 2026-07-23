@@ -86,6 +86,16 @@ class CreateKost extends Component
     {
         $this->validate();
 
+        $key = 'create_kost_' . request()->ip() . '_' . Auth::id();
+
+        if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($key, 5)) {
+            $seconds = \Illuminate\Support\Facades\RateLimiter::availableIn($key);
+            $this->addError('name', 'TERLALU BANYAK MENAMBAH PROPERTI. TUNGGU ' . ceil($seconds/60) . ' MENIT.');
+            return;
+        }
+
+        \Illuminate\Support\Facades\RateLimiter::hit($key, 3600);
+
         $lat = (float) $this->latitude;
         $lng = (float) $this->longitude;
         if ($lat < -6.9800 || $lat > -6.8300 || $lng < 107.5400 || $lng > 107.7500) {
@@ -132,6 +142,7 @@ class CreateKost extends Component
                 'is_primary' => $index === 0,
             ]);
         }
+        $this->photos = [];
 
         // Attach facilities if selected
         if (! empty($this->selectedFacilities)) {

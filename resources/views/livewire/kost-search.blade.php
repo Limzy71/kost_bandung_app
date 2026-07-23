@@ -300,8 +300,9 @@
         @endif
 
         <!-- Full-Width Immersive Map View Mode (Always in DOM to preserve Map instance) -->
-        <div wire:key="map-view" wire:ignore x-show="viewMode === 'map' && items.length > 0" x-cloak class="w-full">
-            <div class="w-full rounded-2xl border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden bg-white">
+        <div wire:key="map-view" wire:ignore x-show="viewMode === 'map' && items.length > 0" x-cloak class="w-full" x-data="{ mapFailed: false }" @map-load-error.window="mapFailed = true">
+            <!-- Map Container -->
+            <div x-show="!mapFailed" class="w-full rounded-2xl border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden bg-white">
                 <div class="p-4 bg-yellow-300 border-b-3 border-black flex items-center justify-between">
                     <span class="font-black text-sm uppercase text-black flex items-center gap-2 tracking-tight">
                         &#128205; Peta Interaktif Kost Bandung
@@ -311,6 +312,18 @@
                     </span>
                 </div>
                 <div x-ref="catalogMapElement" class="w-full h-[450px] lg:h-[500px] bg-zinc-100 z-0"></div>
+            </div>
+
+            <!-- Fallback Neo-Brutalist Error Card -->
+            <div x-show="mapFailed" x-cloak class="bg-rose-400 border-4 border-black rounded-2xl p-10 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center justify-center space-y-4">
+                <div class="w-16 h-16 bg-white border-3 border-black rounded-full flex items-center justify-center text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                    <svg class="w-8 h-8 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                </div>
+                <h3 class="text-2xl font-black text-black uppercase">⚠️ Gagal Memuat Peta Interaktif</h3>
+                <p class="text-sm font-bold text-black max-w-md mx-auto">Koneksi ke layanan peta gagal atau terputus. Silakan gunakan mode daftar untuk melihat properti kost.</p>
+                <button type="button" @click="viewMode = 'list'" class="mt-2 px-6 py-3 bg-white hover:bg-zinc-100 text-black border-3 border-black font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl inline-flex items-center gap-2 cursor-pointer">
+                    &#128203; Kembali ke Mode Daftar
+                </button>
             </div>
         </div>
     </div>

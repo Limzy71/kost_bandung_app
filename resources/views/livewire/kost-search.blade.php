@@ -285,7 +285,7 @@
                             <span x-text="items.length"></span> Kost Tampil Pada Peta
                         </span>
                     </div>
-                    <div x-ref="catalogMapElement" class="w-full h-[650px] lg:h-[700px] bg-zinc-100 z-0"></div>
+                    <div x-ref="catalogMapElement" class="w-full h-[450px] lg:h-[500px] bg-zinc-100 z-0"></div>
                 </div>
             </div>
         @else

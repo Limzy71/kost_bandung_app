@@ -90,49 +90,49 @@
 
             <!-- Gender -->
             <div>
-                <label class="block text-xs font-black uppercase text-black mb-1.5">Tipe Penghuni</label>
+                <label class="block text-xs font-black uppercase text-black mb-1.5 tracking-wide">Tipe Penghuni</label>
                 <select x-ref="genderSelect" wire:model="gender"
-                    class="w-full bg-white border-3 border-black rounded-xl px-3 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px_16px] bg-no-repeat bg-[right_12px_center] pr-9">
-                    <option value="">Semua Tipe</option>
-                    <option value="putra">Putra</option>
-                    <option value="putri">Putri</option>
-                    <option value="campur">Campur</option>
+                    class="w-full bg-white border-3 border-black rounded-xl px-3 py-2.5 text-xs font-black uppercase tracking-wide text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px_16px] bg-no-repeat bg-[right_12px_center] pr-9">
+                    <option value="" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Semua Tipe</option>
+                    <option value="putra" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Putra</option>
+                    <option value="putri" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Putri</option>
+                    <option value="campur" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Campur</option>
                 </select>
             </div>
 
             <!-- District -->
             <div>
-                <label class="block text-xs font-black uppercase text-black mb-1.5">Kecamatan</label>
+                <label class="block text-xs font-black uppercase text-black mb-1.5 tracking-wide">Kecamatan</label>
                 <select x-ref="districtSelect" wire:model="district"
-                    class="w-full bg-white border-3 border-black rounded-xl px-3 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px_16px] bg-no-repeat bg-[right_12px_center] pr-9">
-                    <option value="">Semua Kecamatan</option>
+                    class="w-full bg-white border-3 border-black rounded-xl px-3 py-2.5 text-xs font-black uppercase tracking-wide text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px_16px] bg-no-repeat bg-[right_12px_center] pr-9">
+                    <option value="" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Semua Kecamatan</option>
                     @foreach ($districts as $dist)
-                        <option value="{{ $dist }}">{{ $dist }}</option>
+                        <option value="{{ $dist }}" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">{{ $dist }}</option>
                     @endforeach
                 </select>
             </div>
 
             <!-- Price Range -->
             <div>
-                <label class="block text-xs font-black uppercase text-black mb-1.5">Batas Harga Sewa</label>
+                <label class="block text-xs font-black uppercase text-black mb-1.5 tracking-wide">Batas Harga Sewa</label>
                 <div class="grid grid-cols-2 gap-2">
                     <select x-ref="minSelect" wire:model="price_min"
-                        class="w-full bg-white border-3 border-black rounded-xl px-2 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_6px_center] pr-6">
-                        <option value="">Min</option>
-                        <option value="500000">500rb</option>
-                        <option value="1000000">1 Jt</option>
-                        <option value="1500000">1,5 Jt</option>
-                        <option value="2000000">2 Jt</option>
-                        <option value="3000000">3 Jt</option>
+                        class="w-full bg-white border-3 border-black rounded-xl px-2 py-2.5 text-xs font-black uppercase tracking-wide text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_6px_center] pr-6">
+                        <option value="" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Min (Semua)</option>
+                        <option value="500000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 500rb</option>
+                        <option value="1000000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 1 Jt</option>
+                        <option value="1500000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 1.5 Jt</option>
+                        <option value="2000000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 2 Jt</option>
+                        <option value="3000000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 3 Jt</option>
                     </select>
                     <select x-ref="maxSelect" wire:model="price_max"
-                        class="w-full bg-white border-3 border-black rounded-xl px-2 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_6px_center] pr-6">
-                        <option value="">Max</option>
-                        <option value="1000000">1 Jt</option>
-                        <option value="1500000">1,5 Jt</option>
-                        <option value="2000000">2 Jt</option>
-                        <option value="3000000">3 Jt</option>
-                        <option value="5000000">5 Jt</option>
+                        class="w-full bg-white border-3 border-black rounded-xl px-2 py-2.5 text-xs font-black uppercase tracking-wide text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_6px_center] pr-6">
+                        <option value="" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Max (Semua)</option>
+                        <option value="1000000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 1 Jt</option>
+                        <option value="1500000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 1.5 Jt</option>
+                        <option value="2000000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 2 Jt</option>
+                        <option value="3000000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 3 Jt</option>
+                        <option value="5000000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 5 Jt</option>
                     </select>
                 </div>
             </div>

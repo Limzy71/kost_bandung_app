@@ -1,7 +1,20 @@
+@php
+    $googleMapsApiKey = config('services.google.maps_api_key') ?: env('GOOGLE_MAPS_API_KEY');
+@endphp
+
 <div class="min-h-screen bg-[#f8f9fa] bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:24px_24px]">
-    <!-- Leaflet JS & CSS for Interactive Map Pin Picker -->
+    <!-- Leaflet JS & CSS Fallback -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    @if($googleMapsApiKey)
+        <script>
+            window.initGoogleMapPicker = function() {
+                window.dispatchEvent(new CustomEvent('google-maps-picker-loaded'));
+            };
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&callback=initGoogleMapPicker" async defer></script>
+    @endif
 
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-8">
 
@@ -39,8 +52,8 @@
                         1
                     </div>
                     <div>
-                        <h2 class="text-xl font-black text-black uppercase tracking-tight">Informasi Dasar Kost</h2>
-                        <p class="text-xs font-bold text-zinc-600">Nama, tipe kategori, dan deskripsi umum properti</p>
+                        <h2 class="text-xl font-black text-black uppercase tracking-tight">Informasi Dasar</h2>
+                        <p class="text-xs font-bold text-zinc-600">Nama kost, jenis penghuni, dan deskripsi singkat</p>
                     </div>
                 </div>
 
@@ -61,10 +74,10 @@
                     @enderror
                 </div>
 
-                <!-- Tipe Kost (Pill Radio Buttons) -->
+                <!-- Tipe Penghuni -->
                 <div class="space-y-2">
                     <label class="block text-xs font-black uppercase tracking-wider text-black">
-                        Tipe Kategori Penghuni <span class="text-rose-600">*</span>
+                        Tipe Penghuni Kost <span class="text-rose-600">*</span>
                     </label>
                     <div class="grid grid-cols-3 gap-3">
                         <label class="cursor-pointer">
@@ -177,26 +190,12 @@
                     x-data="{
                         lat: @entangle('latitude'),
                         lng: @entangle('longitude'),
+                        hasGoogleKey: {{ $googleMapsApiKey ? 'true' : 'false' }},
                         map: null,
                         marker: null,
                         initMap() {
-                            if (typeof L === 'undefined') {
-                                setTimeout(() => this.initMap(), 200);
-                                return;
-                            }
-                            if (this.map) return;
-
                             const curLat = parseFloat(this.lat) || -6.917464;
                             const curLng = parseFloat(this.lng) || 107.619123;
-
-                            this.map = L.map(this.$refs.mapElement).setView([curLat, curLng], 14);
-
-                            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                                maxZoom: 19,
-                                attribution: '&copy; OpenStreetMap'
-                            }).addTo(this.map);
-
-                            this.marker = L.marker([curLat, curLng], { draggable: true }).addTo(this.map);
 
                             const setCoords = (newLat, newLng) => {
                                 const formattedLat = newLat.toFixed(6);
@@ -207,15 +206,75 @@
                                 $wire.set('longitude', formattedLng);
                             };
 
-                            this.marker.on('dragend', (e) => {
-                                const pos = e.target.getLatLng();
-                                setCoords(pos.lat, pos.lng);
-                            });
+                            const setupGoogleMap = () => {
+                                if (this.map || !window.google || !window.google.maps) return false;
+                                try {
+                                    this.map = new google.maps.Map(this.$refs.mapElement, {
+                                        center: { lat: curLat, lng: curLng },
+                                        zoom: 13,
+                                        mapTypeControl: false,
+                                        streetViewControl: false,
+                                        fullscreenControl: false,
+                                    });
 
-                            this.map.on('click', (e) => {
-                                this.marker.setLatLng(e.latlng);
-                                setCoords(e.latlng.lat, e.latlng.lng);
-                            });
+                                    this.marker = new google.maps.Marker({
+                                        position: { lat: curLat, lng: curLng },
+                                        map: this.map,
+                                        draggable: true,
+                                        title: 'Lokasi Kost Anda'
+                                    });
+
+                                    this.marker.addListener('dragend', (e) => {
+                                        setCoords(e.latLng.lat(), e.latLng.lng());
+                                    });
+
+                                    this.map.addListener('click', (e) => {
+                                        this.marker.setPosition(e.latLng);
+                                        setCoords(e.latLng.lat(), e.latLng.lng());
+                                    });
+                                    return true;
+                                } catch (e) {
+                                    console.warn('Google Maps load error, falling back to Leaflet:', e);
+                                    return false;
+                                }
+                            };
+
+                            const setupLeafletMap = () => {
+                                if (this.map || typeof L === 'undefined') return;
+                                this.map = L.map(this.$refs.mapElement).setView([curLat, curLng], 13);
+
+                                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                    maxZoom: 19,
+                                    attribution: '&copy; OpenStreetMap'
+                                }).addTo(this.map);
+
+                                this.marker = L.marker([curLat, curLng], { draggable: true }).addTo(this.map);
+
+                                this.marker.on('dragend', (e) => {
+                                    const pos = e.target.getLatLng();
+                                    setCoords(pos.lat, pos.lng);
+                                });
+
+                                this.map.on('click', (e) => {
+                                    this.marker.setLatLng(e.latlng);
+                                    setCoords(e.latlng.lat, e.latlng.lng);
+                                });
+                            };
+
+                            if (this.hasGoogleKey) {
+                                if (window.google && window.google.maps) {
+                                    setupGoogleMap();
+                                } else {
+                                    window.addEventListener('google-maps-picker-loaded', () => {
+                                        if (!setupGoogleMap()) setupLeafletMap();
+                                    });
+                                    setTimeout(() => {
+                                        if (!this.map) setupLeafletMap();
+                                    }, 3000);
+                                }
+                            } else {
+                                setupLeafletMap();
+                            }
                         }
                     }"
                     x-init="initMap()"
@@ -234,9 +293,9 @@
                         Geser marker/pin merah atau klik di mana saja pada peta untuk menandai titik fisik kost Anda. Titik harus berada di dalam batas administratif Kota Bandung.
                     </p>
 
-                    <!-- Leaflet Map Canvas -->
+                    <!-- Google Maps / Leaflet Canvas -->
                     <div class="relative">
-                        <div x-ref="mapElement" class="w-full h-80 rounded-xl border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] z-0 bg-zinc-100"></div>
+                        <div x-ref="mapElement" class="w-full h-80 rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] z-0 bg-zinc-100"></div>
                     </div>
 
                     @error('latitude')

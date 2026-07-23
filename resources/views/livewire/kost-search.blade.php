@@ -150,7 +150,7 @@
 
         @if($kosts->count() > 0)
         <!-- 2-Mode View Switcher — only shown when there are results -->
-        <div class="flex items-center gap-1.5 bg-white border-3 border-black p-1 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-full sm:w-auto">
+        <div wire:key="view-switcher" class="flex items-center gap-1.5 bg-white border-3 border-black p-1 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-full sm:w-auto">
             <button type="button"
                 @click="viewMode = 'list'"
                 :class="viewMode === 'list' ? 'bg-yellow-400 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-600 hover:text-black'"
@@ -183,7 +183,7 @@
 
         @if($kosts->count() > 0)
             <!-- List View (Default Mode: Balanced 3-column grid at 100% container width) -->
-            <div x-show="viewMode === 'list'" x-cloak class="space-y-6">
+            <div wire:key="list-view" x-show="viewMode === 'list'" x-cloak class="space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($kosts as $kost)
                         <div class="bg-white border-3 border-black rounded-xl overflow-hidden shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:shadow-[7px_7px_0px_0px_rgba(0,0,0,1)] transition-all flex flex-col justify-between group">
@@ -277,7 +277,7 @@
             </div>
 
             <!-- Full-Width Immersive Map View Mode -->
-            <div x-show="viewMode === 'map'" x-cloak class="w-full">
+            <div wire:key="map-view" x-show="viewMode === 'map'" x-cloak class="w-full">
                 <div class="w-full rounded-2xl border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden bg-white">
                     <div class="p-4 bg-yellow-300 border-b-3 border-black flex items-center justify-between">
                         <span class="font-black text-sm uppercase text-black flex items-center gap-2 tracking-tight">
@@ -292,7 +292,7 @@
             </div>
         @else
             <!-- Empty State: Reset viewMode to list so stale Alpine state doesn't cause overlap on next search -->
-            <div x-init="viewMode = 'list'" class="bg-yellow-100 border-4 border-black rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] space-y-4">
+            <div wire:key="empty-state" x-init="viewMode = 'list'" class="bg-yellow-100 border-4 border-black rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] space-y-4">
                 <div class="w-20 h-20 bg-white border-3 border-black rounded-2xl flex items-center justify-center mx-auto text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -rotate-3">
                     <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>

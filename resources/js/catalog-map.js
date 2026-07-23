@@ -5,7 +5,7 @@
  */
 window.catalogMap = function () {
     return {
-        viewMode: 'split',
+        viewMode: 'list',
         mobileMode: 'list',
         hasGoogleKey: '',
         map: null,

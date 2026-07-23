@@ -33,6 +33,11 @@ class KostDetail extends Component
     public function mount(Kost $kost)
     {
         $this->kost = $kost;
+        
+        if ($this->kost->status !== 'published') {
+            abort_if(!auth()->check() || (auth()->user()->role !== 'admin' && auth()->id() !== $this->kost->user_id), 404);
+        }
+
         $this->kost->load(['facilities', 'rules', 'images', 'user']);
     }
 

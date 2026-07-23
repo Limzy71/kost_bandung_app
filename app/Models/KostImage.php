@@ -13,6 +13,15 @@ class KostImage extends Model
         'is_primary' => 'boolean',
     ];
 
+    protected static function booted()
+    {
+        static::deleting(function ($image) {
+            if ($image->image_path) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($image->image_path);
+            }
+        });
+    }
+
     public function kost(): BelongsTo
     {
         return $this->belongsTo(Kost::class);

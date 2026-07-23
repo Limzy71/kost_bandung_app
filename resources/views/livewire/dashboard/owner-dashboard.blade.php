@@ -257,7 +257,7 @@
                                         <div class="text-right">
                                             <p class="text-[10px] font-black uppercase text-zinc-500">Pesan Masuk</p>
                                             <span class="bg-cyan-300 border-2 border-black font-black text-black px-2.5 py-0.5 rounded text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-block mt-0.5">
-                                                {{ $kost->inquiries->count() }} Pesan
+                                                {{ $kost->inquiries_count }} Pesan
                                             </span>
                                         </div>
                                     </div>

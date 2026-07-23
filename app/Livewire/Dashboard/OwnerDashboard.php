@@ -80,7 +80,8 @@ class OwnerDashboard extends Component
         $pesanMasuk = Inquiry::whereIn('kost_id', $ownerKostIds)->count();
 
         $kostsQuery = $user->kosts()
-            ->with(['primaryImage', 'facilities', 'inquiries'])
+            ->with(['primaryImage', 'facilities'])
+            ->withCount('inquiries')
             ->when($this->search, function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%')
                     ->orWhere('district', 'like', '%' . $this->search . '%')

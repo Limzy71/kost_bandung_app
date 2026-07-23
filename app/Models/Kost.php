@@ -12,6 +12,17 @@ class Kost extends Model
 {
     use SoftDeletes;
 
+    protected static function booted()
+    {
+        static::forceDeleting(function ($kost) {
+            foreach ($kost->images as $image) {
+                if ($image->image_path) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($image->image_path);
+                }
+            }
+        });
+    }
+
     protected $fillable = [
         'user_id',
         'name',

@@ -16,7 +16,7 @@ class EnsureAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (! Auth::check() || ! in_array(Auth::user()->role, ['admin', 'owner'])) {
+        if (! Auth::check() || Auth::user()->role !== 'admin') {
             abort(403, 'Akses ditolak. Halaman ini khusus Administrator.');
         }
 

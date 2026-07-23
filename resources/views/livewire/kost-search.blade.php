@@ -29,19 +29,6 @@
     })->values()->toArray();
 @endphp
 
-<!-- Leaflet JS & CSS Fallback for Catalog Map -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
-@if($googleMapsApiKey)
-    <script>
-        window.initGoogleCatalogMap = function() {
-            window.dispatchEvent(new CustomEvent('google-catalog-map-loaded'));
-        };
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&callback=initGoogleCatalogMap" async defer></script>
-@endif
-
 <div 
     x-data="{
         viewMode: 'split',
@@ -245,6 +232,19 @@
     @scroll-to-home-list.window="document.getElementById('home-list-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })"
     class="space-y-8"
 >
+    <!-- Leaflet JS & CSS Fallback for Catalog Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    @if($googleMapsApiKey)
+        <script>
+            window.initGoogleCatalogMap = function() {
+                window.dispatchEvent(new CustomEvent('google-catalog-map-loaded'));
+            };
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&callback=initGoogleCatalogMap" async defer></script>
+    @endif
+
     <!-- Filter Bar Neo-Brutalist -->
     <div 
         x-data="{ 

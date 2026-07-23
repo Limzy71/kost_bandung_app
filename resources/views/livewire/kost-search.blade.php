@@ -158,7 +158,7 @@
                 <span>&#128203; Lihat Daftar</span>
             </button>
             <button type="button"
-                @click="viewMode = 'map'; setTimeout(() => { if(map && map.invalidateSize) map.invalidateSize(); if(window.google && window.google.maps && map) google.maps.event.trigger(map, 'resize'); }, 150)"
+                @click="viewMode = 'map'"
                 :class="viewMode === 'map' ? 'bg-yellow-400 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-600 hover:text-black'"
                 class="flex-1 sm:flex-initial px-4 py-2 rounded-lg font-black text-xs uppercase transition-all cursor-pointer flex items-center justify-center gap-2">
                 <span>&#128506; Lihat Peta</span>
@@ -311,7 +311,7 @@
                     </p>
                 </div>
                 <button type="button" wire:click="resetFilters"
-                    @click="if($refs.searchInput) $refs.searchInput.value=''; wasApplied=false; setTimeout(()=>checkFilter(),150)"
+                    @click="viewMode = 'list'; if($refs.searchInput) $refs.searchInput.value=''; wasApplied=false; setTimeout(()=>checkFilter(),150)"
                     class="px-6 py-3 bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl inline-flex items-center gap-2 cursor-pointer">
                     <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                     @if($search && !$gender && !$district && !$price_min && !$price_max)

@@ -2,28 +2,48 @@
  * Catalog Map Alpine.js Component
  * Handles Google Maps / Leaflet rendering for the public kost search page.
  * Registered as window.catalogMap() so Alpine can call x-data="catalogMap()".
+ *
+ * KEY DESIGN: Map is LAZY-INITIALIZED — only when user first switches to map
+ * mode and the container div is actually visible in the DOM. This prevents
+ * "blank map" issues caused by initializing Google Maps inside a hidden div.
  */
 window.catalogMap = function () {
     return {
         viewMode: 'list',
-        mobileMode: 'list',
         hasGoogleKey: '',
         map: null,
+        mapReady: false,   // true once the map library has been loaded
         markers: [],
         infoWindow: null,
 
-        /** Called from x-init after $wire is available */
+        /** Called from x-init — sets up watchers but does NOT touch the map yet */
         init() {
-            // Read the API key passed via the root element's data attribute
             this.hasGoogleKey = this.$el.dataset.mapsKey || '';
-            this.initCatalogMap();
 
-            // Re-render markers whenever Livewire pushes new mapItems
+            // LAZY MAP INIT: only initialize map when user switches to map view
+            this.$watch('viewMode', (newMode) => {
+                if (newMode === 'map') {
+                    // Wait one tick for Alpine to un-hide the container via x-show
+                    this.$nextTick(() => {
+                        if (!this.map) {
+                            // First time — load library and create map instance
+                            this.initCatalogMap();
+                        } else {
+                            // Map already exists — just force resize & re-fit bounds
+                            this.resizeMap();
+                        }
+                    });
+                }
+            });
+
+            // Re-render markers whenever Livewire pushes updated mapItems
             this.$wire.$on('map-items-updated', () => {
-                if (this.map && window.google && window.google.maps) {
-                    this.renderGoogleMarkers();
-                } else if (this.map && typeof L !== 'undefined') {
-                    this.renderLeafletMarkers();
+                if (this.viewMode === 'map' && this.map) {
+                    if (window.google && window.google.maps) {
+                        this.renderGoogleMarkers();
+                    } else if (typeof L !== 'undefined') {
+                        this.renderLeafletMarkers();
+                    }
                 }
             });
         },
@@ -32,6 +52,19 @@ window.catalogMap = function () {
             return (this.$wire && this.$wire.mapItems) ? this.$wire.mapItems : [];
         },
 
+        /** Force resize on already-created map instance */
+        resizeMap() {
+            if (!this.map) return;
+            if (window.google && window.google.maps) {
+                google.maps.event.trigger(this.map, 'resize');
+                this.renderGoogleMarkers(); // re-fit bounds after resize
+            } else if (typeof L !== 'undefined' && this.map.invalidateSize) {
+                this.map.invalidateSize();
+                this.renderLeafletMarkers();
+            }
+        },
+
+        /** Load the appropriate map library then set up the map */
         initCatalogMap() {
             if (this.hasGoogleKey) {
                 if (window.google && window.google.maps) {
@@ -52,7 +85,8 @@ window.catalogMap = function () {
                     window.addEventListener('google-catalog-map-loaded', () => {
                         if (!this.setupGoogleMap()) this.loadLeafletAndInit();
                     });
-                    setTimeout(() => { if (!this.map) this.loadLeafletAndInit(); }, 3000);
+                    // Fallback to Leaflet after 5s if Google Maps script hasn't loaded
+                    setTimeout(() => { if (!this.map) this.loadLeafletAndInit(); }, 5000);
                 }
             } else {
                 this.loadLeafletAndInit();
@@ -110,7 +144,11 @@ window.catalogMap = function () {
             this.markers = [];
 
             const currentItems = this.items;
-            if (!currentItems || currentItems.length === 0) return;
+            if (!currentItems || currentItems.length === 0) {
+                this.map.setCenter({ lat: -6.917464, lng: 107.619123 });
+                this.map.setZoom(13);
+                return;
+            }
 
             const bounds = new google.maps.LatLngBounds();
             let validCount = 0;

@@ -480,7 +480,8 @@
                     <div class="relative border-3 border-dashed border-black rounded-xl p-8 text-center bg-yellow-100/70 hover:bg-yellow-200/80 transition-all cursor-pointer group shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                         <input 
                             type="file" 
-                            wire:model="photo" 
+                            wire:model="photos" 
+                            multiple
                             accept="image/*" 
                             class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                         >
@@ -497,7 +498,7 @@
                                     Klik atau seret file foto ke area ini
                                 </p>
                                 <p class="text-xs font-bold text-zinc-600 mt-1">
-                                    Format: JPG, PNG, WEBP — Maksimal file: 2MB
+                                    Format: JPG, PNG, WEBP — Maksimal 8 file, 2MB/file
                                 </p>
                                 <span class="inline-block mt-3 bg-yellow-400 text-black font-black text-xs uppercase px-4 py-2 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] group-hover:bg-yellow-300 transition-all rounded">
                                     Pilih File Foto
@@ -508,7 +509,7 @@
 
                     <!-- Neo-Brutalist Upload Status & Preview Container (Unified No-Shift Card) -->
                     <div 
-                        x-show="isUploading || {{ $photo ? 'true' : 'false' }}" 
+                        x-show="isUploading || {{ count($photos) > 0 ? 'true' : 'false' }}" 
                         x-cloak 
                         class="bg-lime-100 border-3 border-black p-4 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200"
                     >
@@ -536,13 +537,41 @@
                         </div>
 
                         <!-- State 2: Upload Complete & Photo Preview -->
-                        @if ($photo)
-                            <div x-show="!isUploading" class="flex flex-col md:flex-row items-center gap-4">
-                                <img src="{{ $photo->temporaryUrl() }}" alt="Preview Foto" class="w-32 h-24 object-cover rounded border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                <div class="flex-1 text-center md:text-left">
-                                    <p class="text-xs font-black text-black uppercase">Preview Foto Utama</p>
-                                    <p class="text-xs font-bold text-zinc-700 mt-0.5">Foto berhasil diunggah & siap disimpan sebagai tampilan utama iklan kost Anda.</p>
+                        @if (count($photos) > 0)
+                            <div x-show="!isUploading" class="space-y-4">
+                                <div class="flex items-center justify-between border-b-2 border-black pb-2">
+                                    <div class="text-xs font-black text-black uppercase">
+                                        Preview Foto ({{ count($photos) }}/8)
+                                    </div>
+                                    @error('photos') <span class="text-xs font-bold text-rose-500 bg-rose-100 border-2 border-black px-2 py-0.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">{{ $message }}</span> @enderror
                                 </div>
+                                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                                    @foreach ($photos as $index => $photo)
+                                        <div class="relative group aspect-[4/3] rounded-lg border-3 border-black overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-zinc-200">
+                                            <img src="{{ $photo->temporaryUrl() }}" alt="Preview Foto {{ $index + 1 }}" class="w-full h-full object-cover">
+                                            
+                                            <!-- Remove Button -->
+                                            <button 
+                                                type="button"
+                                                wire:click="removePhoto({{ $index }})"
+                                                class="absolute top-2 right-2 w-7 h-7 bg-rose-400 hover:bg-rose-300 border-2 border-black rounded text-black font-black text-[10px] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none z-20"
+                                                title="Hapus Foto"
+                                            >
+                                                &#x2715;
+                                            </button>
+
+                                            <!-- Primary Badge -->
+                                            @if($index === 0)
+                                                <div class="absolute bottom-2 left-2 bg-yellow-400 text-black text-[9px] font-black uppercase px-2 py-0.5 border-2 border-black rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] pointer-events-none">
+                                                    Foto Utama
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                </div>
+                                @foreach($photos as $index => $photo)
+                                    @error("photos.{$index}") <span class="block text-[10px] font-bold text-rose-500 bg-rose-100 border-2 border-black px-2 py-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] mt-1">Foto ke-{{ $index + 1 }}: {{ $message }}</span> @enderror
+                                @endforeach
                             </div>
                         @endif
                     </div>

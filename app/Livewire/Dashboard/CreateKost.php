@@ -25,7 +25,7 @@ class CreateKost extends Component
     public string $total_rooms = '1';
     public string $available_rooms = '1';
     public array $selectedFacilities = [];
-    public $photo;
+    public array $photos = [];
 
     protected array $rules = [
         'name' => 'required|string|max:255',
@@ -40,7 +40,8 @@ class CreateKost extends Component
         'available_rooms' => 'required|integer|min:0',
         'selectedFacilities' => 'nullable|array',
         'selectedFacilities.*' => 'exists:facilities,id',
-        'photo' => 'required|image|max:2048',
+        'photos' => 'required|array|min:1|max:8',
+        'photos.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
     ];
 
     protected array $messages = [
@@ -64,10 +65,22 @@ class CreateKost extends Component
         'total_rooms.min' => 'Total kamar minimal 1.',
         'available_rooms.required' => 'Sisa kamar tersedia wajib diisi.',
         'available_rooms.integer' => 'Sisa kamar harus berupa angka bulat.',
-        'photo.required' => 'Foto utama kost wajib diunggah.',
-        'photo.image' => 'File harus berupa gambar (JPG, PNG, WEBP).',
-        'photo.max' => 'Ukuran foto tidak boleh melebihi 2MB.',
+        'photos.required' => 'Minimal 1 foto kost wajib diunggah.',
+        'photos.min' => 'Minimal 1 foto kost wajib diunggah.',
+        'photos.max' => 'Maksimal 8 foto kost dapat diunggah.',
+        'photos.*.image' => 'File harus berupa gambar (JPG, PNG, WEBP).',
+        'photos.*.mimes' => 'File harus berupa gambar dengan format JPG, PNG, atau WEBP.',
+        'photos.*.max' => 'Ukuran setiap foto tidak boleh melebihi 2MB.',
     ];
+
+    public function removePhoto($index)
+    {
+        if (isset($this->photos[$index])) {
+            unset($this->photos[$index]);
+            // Re-index array so it stays contiguous
+            $this->photos = array_values($this->photos);
+        }
+    }
 
     public function save()
     {
@@ -87,9 +100,6 @@ class CreateKost extends Component
             $slug = "{$originalSlug}-{$count}";
             $count++;
         }
-
-        // Store photo in public storage
-        $path = $this->photo->store('kosts', 'public');
 
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -112,12 +122,16 @@ class CreateKost extends Component
             'available_rooms' => (int)$this->available_rooms,
         ]);
 
-        // Create KostImage primary record
-        KostImage::create([
-            'kost_id' => $kost->id,
-            'image_path' => $path,
-            'is_primary' => true,
-        ]);
+        // Store photos in public storage and create KostImage records
+        foreach ($this->photos as $index => $photo) {
+            $path = $photo->store('kosts', 'public');
+            
+            KostImage::create([
+                'kost_id' => $kost->id,
+                'image_path' => $path,
+                'is_primary' => $index === 0,
+            ]);
+        }
 
         // Attach facilities if selected
         if (! empty($this->selectedFacilities)) {

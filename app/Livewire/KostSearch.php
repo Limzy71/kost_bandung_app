@@ -23,12 +23,11 @@ class KostSearch extends Component
     public array $mapItems = [];
 
 
-    public function updating($key): void
-    {
-        if (in_array($key, ['search', 'gender', 'price_min', 'price_max', 'district'])) {
-            $this->resetPage();
-        }
-    }
+    public function updatedSearch(): void { $this->resetPage(); }
+    public function updatedGender(): void { $this->resetPage(); }
+    public function updatedDistrict(): void { $this->resetPage(); }
+    public function updatedPriceMin(): void { $this->resetPage(); }
+    public function updatedPriceMax(): void { $this->resetPage(); }
 
     public function applyFilters(): void
     {

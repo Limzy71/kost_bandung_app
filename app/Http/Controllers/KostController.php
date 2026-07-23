@@ -8,14 +8,15 @@ use Illuminate\Http\Request;
 class KostController extends Controller
 {
     // Halaman Utama (Daftar Kost)
-    public function index()
+    public function index(Request $request)
     {
-        $kosts = Kost::with(['facilities', 'images'])
-            ->where('is_available', true)
-            ->latest('boosted_at')
-            ->paginate(9);
+        // Redirect hard-refresh with ?page= param to clean URL so Livewire
+        // WithPagination handles paging state instead of query strings.
+        if ($request->has('page')) {
+            return redirect()->to(url('/'));
+        }
 
-        return view('kosts.index', compact('kosts'));
+        return view('kosts.index');
     }
 
     // Halaman Detail Kost

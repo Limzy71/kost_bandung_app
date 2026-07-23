@@ -1,13 +1,16 @@
-<div 
+<div
     x-data="{
         viewMode: 'split',
         mobileMode: 'list',
-        items: {{ json_encode($mapItems) }},
         hasGoogleKey: '{{ $googleMapsApiKey }}',
         map: null,
         markers: [],
         infoWindow: null,
-        
+
+        get items() {
+            return this.$wire.mapItems || [];
+        },
+
         initCatalogMap() {
             if (this.hasGoogleKey) {
                 if (window.google && window.google.maps) {
@@ -17,7 +20,7 @@
                         window.initGoogleCatalogMap = () => window.dispatchEvent(new CustomEvent('google-catalog-map-loaded'));
                         const s = document.createElement('script');
                         s.id = 'google-catalog-map-script';
-                        s.src = `https://maps.googleapis.com/maps/api/js?key=${this.hasGoogleKey}&callback=initGoogleCatalogMap`;
+                        s.src = 'https://maps.googleapis.com/maps/api/js?key=' + this.hasGoogleKey + '&callback=initGoogleCatalogMap';
                         s.async = true;
                         s.defer = true;
                         s.onerror = () => this.loadLeafletAndInit();
@@ -83,12 +86,13 @@
             this.markers.forEach(m => m.setMap(null));
             this.markers = [];
 
-            if (!this.items || this.items.length === 0) return;
+            const currentItems = this.items;
+            if (!currentItems || currentItems.length === 0) return;
 
             const bounds = new google.maps.LatLngBounds();
             let validCount = 0;
 
-            this.items.forEach(item => {
+            currentItems.forEach(item => {
                 if (!item.lat || !item.lng) return;
                 const pos = { lat: item.lat, lng: item.lng };
                 bounds.extend(pos);
@@ -114,25 +118,18 @@
                     }
                 });
 
-                const popupHtml = `
-                    <div style="font-family: inherit; width: 220px; padding: 4px;" class="neo-popup">
-                        <div style="aspect-ratio: 16/9; overflow: hidden; border: 2px solid #000; border-radius: 8px; margin-bottom: 8px; background: #eee;">
-                            <img src="${item.image}" style="width: 100%; height: 100%; object-fit: cover;" />
-                        </div>
-                        <div style="display: flex; gap: 4px; margin-bottom: 4px;">
-                            <span style="background: #F472B6; color: #000; font-size: 9px; font-weight: 900; text-transform: uppercase; padding: 2px 6px; border: 1.5px solid #000; border-radius: 4px;">${item.gender}</span>
-                            <span style="background: #67E8F9; color: #000; font-size: 9px; font-weight: 900; text-transform: uppercase; padding: 2px 6px; border: 1.5px solid #000; border-radius: 4px;">${item.district}</span>
-                        </div>
-                        <h4 style="font-size: 13px; font-weight: 900; color: #000; text-transform: uppercase; margin: 4px 0 2px; line-height: 1.2;">${item.name}</h4>
-                        <p style="font-size: 10px; font-weight: 700; color: #555; margin-bottom: 6px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">${item.address}</p>
-                        <div style="background: #FACC15; border: 1.5px solid #000; padding: 4px 8px; border-radius: 6px; font-weight: 900; font-size: 12px; margin-bottom: 8px; box-shadow: 2px 2px 0px #000;">
-                            ${item.price_full}<span style="font-size: 9px;">/bln</span>
-                        </div>
-                        <a href="${item.url}" style="display: block; text-align: center; background: #FB923C; color: #000; border: 1.5px solid #000; padding: 6px; border-radius: 6px; font-weight: 900; font-size: 11px; text-decoration: none; text-transform: uppercase; box-shadow: 2px 2px 0px #000;">
-                            Lihat Detail →
-                        </a>
-                    </div>
-                `;
+                const popupHtml = '<div style=\"font-family:sans-serif;width:220px;padding:4px\">'
+                    + '<div style=\"aspect-ratio:16/9;overflow:hidden;border:2px solid #000;border-radius:8px;margin-bottom:8px;background:#eee\">'
+                    + '<img src=\"' + item.image + '\" style=\"width:100%;height:100%;object-fit:cover\" /></div>'
+                    + '<div style=\"display:flex;gap:4px;margin-bottom:4px\">'
+                    + '<span style=\"background:#F472B6;color:#000;font-size:9px;font-weight:900;text-transform:uppercase;padding:2px 6px;border:1.5px solid #000;border-radius:4px\">' + item.gender + '</span>'
+                    + '<span style=\"background:#67E8F9;color:#000;font-size:9px;font-weight:900;text-transform:uppercase;padding:2px 6px;border:1.5px solid #000;border-radius:4px\">' + item.district + '</span>'
+                    + '</div>'
+                    + '<h4 style=\"font-size:13px;font-weight:900;color:#000;text-transform:uppercase;margin:4px 0 2px;line-height:1.2\">' + item.name + '</h4>'
+                    + '<p style=\"font-size:10px;font-weight:700;color:#555;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis\">' + item.address + '</p>'
+                    + '<div style=\"background:#FACC15;border:1.5px solid #000;padding:4px 8px;border-radius:6px;font-weight:900;font-size:12px;margin-bottom:8px;box-shadow:2px 2px 0px #000\">' + item.price_full + '<span style=\"font-size:9px\">/bln</span></div>'
+                    + '<a href=\"' + item.url + '\" style=\"display:block;text-align:center;background:#FB923C;color:#000;border:1.5px solid #000;padding:6px;border-radius:6px;font-weight:900;font-size:11px;text-decoration:none;text-transform:uppercase;box-shadow:2px 2px 0px #000\">Lihat Detail \u2192</a>'
+                    + '</div>';
 
                 marker.addListener('click', () => {
                     this.infoWindow.setContent(popupHtml);
@@ -144,9 +141,7 @@
 
             if (validCount > 0) {
                 this.map.fitBounds(bounds);
-                if (validCount === 1) {
-                    this.map.setZoom(14);
-                }
+                if (validCount === 1) this.map.setZoom(14);
             } else {
                 this.map.setCenter({ lat: -6.917464, lng: 107.619123 });
                 this.map.setZoom(13);
@@ -170,61 +165,46 @@
             this.markers.forEach(m => this.map.removeLayer(m));
             this.markers = [];
 
-            if (!this.items || this.items.length === 0) return;
+            const currentItems = this.items;
+            if (!currentItems || currentItems.length === 0) return;
 
-            const bounds = L.latLngBounds();
+            const group = [];
             let validCount = 0;
 
-            this.items.forEach(item => {
+            currentItems.forEach(item => {
                 if (!item.lat || !item.lng) return;
-                bounds.extend([item.lat, item.lng]);
                 validCount++;
 
-                const iconHtml = `
-                    <div class="px-2 py-1 border-2 border-black font-black text-[11px] rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] uppercase ${item.is_boosted ? 'bg-yellow-300' : 'bg-white'} text-black">
-                        ${item.price_short}
-                    </div>
-                `;
-                const customIcon = L.divIcon({
-                    html: iconHtml,
-                    className: '',
-                    iconSize: [54, 26],
-                    iconAnchor: [27, 13]
-                });
+                const iconHtml = '<div style=\"padding:2px 6px;border:2px solid #000;font-weight:900;font-size:11px;border-radius:4px;box-shadow:2px 2px 0 #000;background:' + (item.is_boosted ? '#FDE047' : '#fff') + ';color:#000;white-space:nowrap\">' + item.price_short + '</div>';
+                const customIcon = L.divIcon({ html: iconHtml, className: '', iconSize: [54, 26], iconAnchor: [27, 13] });
 
-                const popupHtml = `
-                    <div class="p-1 font-sans w-52">
-                        <img src="${item.image}" class="w-full h-24 object-cover rounded-lg border-2 border-black mb-2" />
-                        <span class="px-2 py-0.5 bg-pink-400 border border-black font-black text-[9px] uppercase rounded text-black">${item.gender}</span>
-                        <span class="px-2 py-0.5 bg-cyan-300 border border-black font-black text-[9px] uppercase rounded ml-1 text-black">${item.district}</span>
-                        <h4 class="font-black text-xs uppercase text-black mt-1 line-clamp-1">${item.name}</h4>
-                        <p class="font-bold text-[10px] text-zinc-600 line-clamp-1 mb-2">${item.address}</p>
-                        <div class="bg-yellow-300 border-1.5 border-black p-1 rounded font-black text-xs mb-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-black">${item.price_full}/bln</div>
-                        <a href="${item.url}" class="block text-center bg-orange-400 border-1.5 border-black p-1.5 rounded font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-black">Lihat Detail →</a>
-                    </div>
-                `;
+                const popupHtml = '<div style=\"font-family:sans-serif;width:200px\">'
+                    + '<img src=\"' + item.image + '\" style=\"width:100%;height:96px;object-fit:cover;border-radius:6px;border:2px solid #000;margin-bottom:6px\" />'
+                    + '<span style=\"background:#F472B6;border:1px solid #000;font-weight:900;font-size:9px;text-transform:uppercase;padding:1px 6px;border-radius:3px\">' + item.gender + '</span>'
+                    + '<span style=\"background:#67E8F9;border:1px solid #000;font-weight:900;font-size:9px;text-transform:uppercase;padding:1px 6px;border-radius:3px;margin-left:3px\">' + item.district + '</span>'
+                    + '<h4 style=\"font-weight:900;font-size:12px;text-transform:uppercase;margin:5px 0 2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis\">' + item.name + '</h4>'
+                    + '<p style=\"font-size:10px;color:#555;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin-bottom:5px\">' + item.address + '</p>'
+                    + '<div style=\"background:#FDE047;border:1.5px solid #000;padding:3px 8px;border-radius:5px;font-weight:900;font-size:11px;margin-bottom:6px;box-shadow:2px 2px 0 #000\">' + item.price_full + '/bln</div>'
+                    + '<a href=\"' + item.url + '\" style=\"display:block;text-align:center;background:#FB923C;border:1.5px solid #000;padding:5px;border-radius:5px;font-weight:900;font-size:11px;text-decoration:none;color:#000;text-transform:uppercase;box-shadow:2px 2px 0 #000\">Lihat Detail \u2192</a>'
+                    + '</div>';
 
                 const marker = L.marker([item.lat, item.lng], { icon: customIcon }).addTo(this.map).bindPopup(popupHtml);
+                group.push([item.lat, item.lng]);
                 this.markers.push(marker);
             });
 
-            if (validCount > 0) {
-                this.map.fitBounds(bounds);
+            if (validCount > 0 && group.length > 0) {
+                this.map.fitBounds(group);
             }
         }
     }"
-    x-init="
-        initCatalogMap();
-        $watch('items', () => {
-            if (hasGoogleKey && window.google && window.google.maps) {
-                renderGoogleMarkers();
-            } else {
-                renderLeafletMarkers();
-            }
-        });
-    "
-    x-effect="
-        items = {{ json_encode($mapItems) }};
+    x-init="initCatalogMap()"
+    @map-items-updated.window="
+        if (map && window.google && window.google.maps) {
+            renderGoogleMarkers();
+        } else if (map && typeof L !== 'undefined') {
+            renderLeafletMarkers();
+        }
     "
     @scroll-to-home-list.window="document.getElementById('home-list-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })"
     class="space-y-8"
@@ -235,31 +215,20 @@
             hasFilter: false,
             wasApplied: false,
             checkFilter() {
-                const genderVal = this.$refs.genderSelect ? this.$refs.genderSelect.value : '';
-                const districtVal = this.$refs.districtSelect ? this.$refs.districtSelect.value : '';
-                const minVal = this.$refs.minSelect ? this.$refs.minSelect.value : '';
-                const maxVal = this.$refs.maxSelect ? this.$refs.maxSelect.value : '';
-
-                // Header RESET FILTER button ONLY appears when at least one select dropdown is chosen
-                this.hasFilter = Boolean(
-                    genderVal !== '' ||
-                    districtVal !== '' ||
-                    minVal !== '' ||
-                    maxVal !== ''
-                );
+                const genderVal    = this.$refs.genderSelect   ? this.$refs.genderSelect.value   : '';
+                const districtVal  = this.$refs.districtSelect ? this.$refs.districtSelect.value : '';
+                const minVal       = this.$refs.minSelect      ? this.$refs.minSelect.value      : '';
+                const maxVal       = this.$refs.maxSelect      ? this.$refs.maxSelect.value      : '';
+                this.hasFilter = Boolean(genderVal !== '' || districtVal !== '' || minVal !== '' || maxVal !== '');
             },
             resetFormLocally() {
-                const dropdownRefs = ['genderSelect', 'districtSelect', 'minSelect', 'maxSelect'];
-                dropdownRefs.forEach(ref => {
+                ['genderSelect', 'districtSelect', 'minSelect', 'maxSelect'].forEach(ref => {
                     if (this.$refs[ref]) {
                         this.$refs[ref].value = '';
-                        // Dispatch a change event so Livewire's wire:model deferred state
-                        // picks up the new empty value (prevents stale filter on next apply)
                         this.$refs[ref].dispatchEvent(new Event('change', { bubbles: true }));
                     }
                 });
                 this.checkFilter();
-                // Only call server reset if user had previously applied the filters
                 if (this.wasApplied) {
                     $wire.resetFilters();
                     this.wasApplied = false;
@@ -271,19 +240,15 @@
         @change="checkFilter()"
         class="bg-white border-4 border-black p-6 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-4"
     >
-        <!-- Header Row (Title & Action Buttons Side by Side) -->
+        <!-- Header Row -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b-3 border-black pb-3.5 gap-3">
-            <!-- Header Title -->
             <h2 class="text-base sm:text-lg font-black text-black uppercase tracking-tight flex items-center gap-2">
                 <svg class="w-5 h-5 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
                 </svg>
                 <span>Filter Pencarian Kost</span>
             </h2>
-
-            <!-- Header Action Buttons (Aligned with Header Text) -->
             <div class="flex items-center gap-2.5 shrink-0 self-end sm:self-auto">
-                <!-- Reset Filter Button -->
                 <button 
                     x-show="hasFilter"
                     x-cloak
@@ -296,8 +261,6 @@
                     </svg>
                     <span>Reset Filter</span>
                 </button>
-
-                <!-- Terapkan Filter Button -->
                 <button 
                     type="button" 
                     wire:click="applyFilters" 
@@ -331,8 +294,6 @@
                     <svg class="w-5 h-5 text-black absolute left-3 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
-
-                    <!-- Clear Search Input ✕ Button -->
                     <template x-if="query || ($refs.searchInput && $refs.searchInput.value)">
                         <button 
                             type="button" 
@@ -344,9 +305,7 @@
                             "
                             class="absolute right-2.5 w-6 h-6 bg-rose-400 hover:bg-rose-300 border-2 border-black rounded text-black font-black text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center cursor-pointer"
                             title="Hapus kata kunci pencarian"
-                        >
-                            ✕
-                        </button>
+                        >✕</button>
                     </template>
                 </div>
             </div>
@@ -357,12 +316,12 @@
                 <select 
                     x-ref="genderSelect"
                     wire:model="gender"
-                    class="w-full bg-white border-3 border-black rounded-xl px-3 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px_16px] bg-no-repeat bg-[right_12px_center] pr-9"
+                    class="w-full bg-white border-3 border-black rounded-xl px-3 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px_16px] bg-no-repeat bg-[right_12px_center] pr-9"
                 >
-                    <option value="" class="font-black uppercase text-black">Semua Tipe</option>
-                    <option value="putra" class="font-black uppercase text-black">Putra</option>
-                    <option value="putri" class="font-black uppercase text-black">Putri</option>
-                    <option value="campur" class="font-black uppercase text-black">Campur</option>
+                    <option value="">Semua Tipe</option>
+                    <option value="putra">Putra</option>
+                    <option value="putri">Putri</option>
+                    <option value="campur">Campur</option>
                 </select>
             </div>
 
@@ -372,50 +331,49 @@
                 <select 
                     x-ref="districtSelect"
                     wire:model="district"
-                    class="w-full bg-white border-3 border-black rounded-xl px-3 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px_16px] bg-no-repeat bg-[right_12px_center] pr-9"
+                    class="w-full bg-white border-3 border-black rounded-xl px-3 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px_16px] bg-no-repeat bg-[right_12px_center] pr-9"
                 >
-                    <option value="" class="font-black uppercase text-black">Semua Kecamatan</option>
+                    <option value="">Semua Kecamatan</option>
                     @foreach ($districts as $dist)
-                        <option value="{{ $dist }}" class="font-black uppercase text-black">{{ $dist }}</option>
+                        <option value="{{ $dist }}">{{ $dist }}</option>
                     @endforeach
                 </select>
             </div>
 
-            <!-- Price Min & Max Select -->
+            <!-- Price Min & Max -->
             <div>
                 <label class="block text-xs font-black uppercase text-black mb-1.5">Batas Harga Sewa</label>
                 <div class="grid grid-cols-2 gap-2">
                     <select 
                         x-ref="minSelect"
                         wire:model="price_min"
-                        class="w-full bg-white border-3 border-black rounded-xl px-2 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_6px_center] pr-6"
+                        class="w-full bg-white border-3 border-black rounded-xl px-2 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_6px_center] pr-6"
                     >
-                        <option value="" class="font-black uppercase text-black">Min</option>
-                        <option value="500000" class="font-black uppercase text-black">500rb</option>
-                        <option value="1000000" class="font-black uppercase text-black">1 Jt</option>
-                        <option value="1500000" class="font-black uppercase text-black">1,5 Jt</option>
-                        <option value="2000000" class="font-black uppercase text-black">2 Jt</option>
-                        <option value="3000000" class="font-black uppercase text-black">3 Jt</option>
+                        <option value="">Min</option>
+                        <option value="500000">500rb</option>
+                        <option value="1000000">1 Jt</option>
+                        <option value="1500000">1,5 Jt</option>
+                        <option value="2000000">2 Jt</option>
+                        <option value="3000000">3 Jt</option>
                     </select>
-
                     <select 
                         x-ref="maxSelect"
                         wire:model="price_max"
-                        class="w-full bg-white border-3 border-black rounded-xl px-2 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_6px_center] pr-6"
+                        class="w-full bg-white border-3 border-black rounded-xl px-2 py-2.5 text-xs font-black uppercase text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_6px_center] pr-6"
                     >
-                        <option value="" class="font-black uppercase text-black">Max</option>
-                        <option value="1000000" class="font-black uppercase text-black">1 Jt</option>
-                        <option value="1500000" class="font-black uppercase text-black">1,5 Jt</option>
-                        <option value="2000000" class="font-black uppercase text-black">2 Jt</option>
-                        <option value="3000000" class="font-black uppercase text-black">3 Jt</option>
-                        <option value="5000000" class="font-black uppercase text-black">5 Jt</option>
+                        <option value="">Max</option>
+                        <option value="1000000">1 Jt</option>
+                        <option value="1500000">1,5 Jt</option>
+                        <option value="2000000">2 Jt</option>
+                        <option value="3000000">3 Jt</option>
+                        <option value="5000000">5 Jt</option>
                     </select>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Section Title & Layout Switcher Controls (Desktop & Mobile) -->
+    <!-- Section Title & Layout Switcher -->
     <div id="home-list-section" class="scroll-mt-20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="flex items-center gap-3">
             <h3 class="text-xl font-black text-black uppercase tracking-tight">Daftar Properti Kost</h3>
@@ -423,65 +381,47 @@
                 {{ $kosts->total() }} Ditemukan
             </span>
         </div>
-
-        <!-- Layout Controls -->
         <div class="flex items-center gap-2">
-            <!-- Desktop Layout Buttons (lg screens) -->
+            <!-- Desktop Layout Buttons -->
             <div class="hidden lg:flex items-center gap-1.5 bg-white border-3 border-black p-1 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                <button 
-                    type="button" 
-                    @click="viewMode = 'split'; setTimeout(() => { if(map && map.invalidateSize) map.invalidateSize(); }, 150)" 
+                <button type="button" @click="viewMode = 'split'; setTimeout(() => { if(map && map.invalidateSize) map.invalidateSize(); }, 150)"
                     class="px-3 py-1.5 rounded-lg font-black text-xs uppercase transition-all cursor-pointer flex items-center gap-1.5"
-                    :class="viewMode === 'split' ? 'bg-yellow-400 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-600 hover:text-black'"
-                >
+                    :class="viewMode === 'split' ? 'bg-yellow-400 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-600 hover:text-black'">
                     <svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
                     <span>Daftar + Peta</span>
                 </button>
-                <button 
-                    type="button" 
-                    @click="viewMode = 'list'" 
+                <button type="button" @click="viewMode = 'list'"
                     class="px-3 py-1.5 rounded-lg font-black text-xs uppercase transition-all cursor-pointer flex items-center gap-1.5"
-                    :class="viewMode === 'list' ? 'bg-yellow-400 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-600 hover:text-black'"
-                >
+                    :class="viewMode === 'list' ? 'bg-yellow-400 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-600 hover:text-black'">
                     <svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
                     <span>Hanya Daftar</span>
                 </button>
-                <button 
-                    type="button" 
-                    @click="viewMode = 'map'; setTimeout(() => { if(map && map.invalidateSize) map.invalidateSize(); }, 150)" 
+                <button type="button" @click="viewMode = 'map'; setTimeout(() => { if(map && map.invalidateSize) map.invalidateSize(); }, 150)"
                     class="px-3 py-1.5 rounded-lg font-black text-xs uppercase transition-all cursor-pointer flex items-center gap-1.5"
-                    :class="viewMode === 'map' ? 'bg-yellow-400 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-600 hover:text-black'"
-                >
+                    :class="viewMode === 'map' ? 'bg-yellow-400 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-600 hover:text-black'">
                     <svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 18.818V8.044a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
                     <span>Hanya Peta</span>
                 </button>
             </div>
-
-            <!-- Mobile Layout Buttons (< lg screens) -->
+            <!-- Mobile Layout Buttons -->
             <div class="flex lg:hidden items-center gap-1.5 bg-white border-3 border-black p-1 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-full">
-                <button 
-                    type="button" 
-                    @click="mobileMode = 'list'" 
+                <button type="button" @click="mobileMode = 'list'"
                     class="flex-1 py-2 rounded-lg font-black text-xs uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5"
-                    :class="mobileMode === 'list' ? 'bg-yellow-400 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-600 hover:text-black'"
-                >
+                    :class="mobileMode === 'list' ? 'bg-yellow-400 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-600 hover:text-black'">
                     <span>📋 Lihat Daftar</span>
                 </button>
-                <button 
-                    type="button" 
-                    @click="mobileMode = 'map'; setTimeout(() => { if(map && map.invalidateSize) map.invalidateSize(); }, 150)" 
+                <button type="button" @click="mobileMode = 'map'; setTimeout(() => { if(map && map.invalidateSize) map.invalidateSize(); }, 150)"
                     class="flex-1 py-2 rounded-lg font-black text-xs uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5"
-                    :class="mobileMode === 'map' ? 'bg-yellow-400 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-600 hover:text-black'"
-                >
+                    :class="mobileMode === 'map' ? 'bg-yellow-400 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-600 hover:text-black'">
                     <span>🗺️ Lihat Peta</span>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Main Listing & Map Layout Container -->
+    <!-- Main Listing & Map Container -->
     <div class="relative">
-        <!-- Loading Overlay Targeted -->
+        <!-- Loading Overlay -->
         <div wire:loading.delay wire:target="applyFilters, resetFilters" class="absolute inset-0 bg-white/70 backdrop-blur-xs z-30 flex items-center justify-center rounded-2xl border-4 border-black">
             <div class="bg-yellow-300 border-3 border-black px-6 py-4 rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex items-center gap-3">
                 <svg class="animate-spin h-6 w-6 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -500,26 +440,19 @@
                     'lg:grid-cols-1': viewMode === 'list' || viewMode === 'map'
                 }"
             >
-                <!-- Cards List Column -->
+                <!-- Cards Column -->
                 <div 
                     x-show="(viewMode === 'split' || viewMode === 'list') && (mobileMode === 'list')"
                     class="space-y-6"
-                    :class="{
-                        'lg:col-span-7': viewMode === 'split',
-                        'lg:col-span-12': viewMode === 'list'
-                    }"
+                    :class="{ 'lg:col-span-7': viewMode === 'split', 'lg:col-span-12': viewMode === 'list' }"
                 >
                     <div 
                         class="grid grid-cols-1 md:grid-cols-2 gap-6"
-                        :class="{
-                            'lg:grid-cols-2': viewMode === 'split',
-                            'lg:grid-cols-3': viewMode === 'list'
-                        }"
+                        :class="{ 'lg:grid-cols-2': viewMode === 'split', 'lg:grid-cols-3': viewMode === 'list' }"
                     >
                         @foreach($kosts as $kost)
                             <div class="bg-white border-3 border-black rounded-xl overflow-hidden shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:shadow-[7px_7px_0px_0px_rgba(0,0,0,1)] transition-all flex flex-col justify-between group">
                                 <div>
-                                    <!-- Image Header -->
                                     <div 
                                         class="aspect-[4/3] bg-zinc-200 relative overflow-hidden border-b-3 border-black cursor-pointer"
                                         onclick="window.location.href='{{ route('kost.show', $kost->slug) }}'"
@@ -537,8 +470,6 @@
                                                 </svg>
                                             </div>
                                         @endif
-
-                                        <!-- Top Left Badges -->
                                         <div class="absolute top-3 left-3 flex flex-col gap-1.5 pointer-events-none">
                                             <span class="px-2.5 py-1 bg-pink-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider">
                                                 {{ $kost->gender_type }}
@@ -547,22 +478,20 @@
                                                 <span class="px-2.5 py-1 bg-yellow-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider flex items-center gap-1">
                                                     <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 20 20">
                                                         <defs>
-                                                            <linearGradient id="bolt-grad-card-{{ $kost->id }}" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                            <linearGradient id="bolt-grad-{{ $kost->id }}" x1="0%" y1="0%" x2="100%" y2="100%">
                                                                 <stop offset="0%" stop-color="#FBBF24" />
                                                                 <stop offset="100%" stop-color="#F97316" />
                                                             </linearGradient>
                                                         </defs>
-                                                        <path fill="url(#bolt-grad-card-{{ $kost->id }})" stroke="#000000" stroke-width="0.8" fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z" clip-rule="evenodd" />
+                                                        <path fill="url(#bolt-grad-{{ $kost->id }})" stroke="#000" stroke-width="0.8" fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z" clip-rule="evenodd" />
                                                     </svg>
                                                     <span>Super Boost</span>
                                                 </span>
                                             @endif
                                         </div>
-
-                                        <!-- Top Right District Badge -->
                                         <div class="absolute top-3 right-3">
                                             <span class="px-2.5 py-1 bg-cyan-300 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider inline-flex items-center gap-1">
-                                                <svg class="w-3 h-3 text-black shrink-0 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <svg class="w-3 h-3 shrink-0 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                                                 </svg>
@@ -570,21 +499,13 @@
                                             </span>
                                         </div>
                                     </div>
-
-                                    <!-- Card Content -->
                                     <div class="p-5 space-y-4">
                                         <div>
                                             <h3 class="text-lg font-black text-black leading-snug line-clamp-1 hover:underline">
-                                                <a href="{{ route('kost.show', $kost->slug) }}">
-                                                    {{ $kost->name }}
-                                                </a>
+                                                <a href="{{ route('kost.show', $kost->slug) }}">{{ $kost->name }}</a>
                                             </h3>
-                                            <p class="text-xs font-bold text-zinc-600 mt-1 line-clamp-1">
-                                                {{ $kost->address }}
-                                            </p>
+                                            <p class="text-xs font-bold text-zinc-600 mt-1 line-clamp-1">{{ $kost->address }}</p>
                                         </div>
-
-                                        <!-- Price & Facilities -->
                                         <div class="pt-3 border-t-2 border-black flex items-center justify-between gap-2 overflow-hidden">
                                             <div class="shrink-0">
                                                 <p class="text-[10px] font-black uppercase text-zinc-500">Harga Sewa</p>
@@ -592,7 +513,6 @@
                                                     Rp {{ number_format($kost->price_monthly, 0, ',', '.') }}<span class="text-[10px] font-bold ml-0.5">/bln</span>
                                                 </span>
                                             </div>
-
                                             <div class="flex flex-wrap justify-end gap-1 overflow-hidden shrink min-w-0">
                                                 @if ($kost->facilities && $kost->facilities->count() > 0)
                                                     @foreach ($kost->facilities->take(2) as $facility)
@@ -605,17 +525,9 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <!-- Card Footer -->
                                 <div class="px-5 py-4 bg-zinc-100 border-t-3 border-black flex items-center justify-between">
-                                    <span class="text-xs font-extrabold text-lime-700 bg-lime-200 border-2 border-black px-2.5 py-1 rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] uppercase">
-                                        ✓ Siap Huni
-                                    </span>
-
-                                    <a 
-                                        href="{{ route('kost.show', $kost->slug) }}" 
-                                        class="px-4 py-2 bg-orange-400 hover:bg-orange-300 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1"
-                                    >
+                                    <span class="text-xs font-extrabold text-lime-700 bg-lime-200 border-2 border-black px-2.5 py-1 rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] uppercase">✓ Siap Huni</span>
+                                    <a href="{{ route('kost.show', $kost->slug) }}" class="px-4 py-2 bg-orange-400 hover:bg-orange-300 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1">
                                         <span>Lihat Detail</span>
                                         <svg class="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                                     </a>
@@ -630,14 +542,11 @@
                     </div>
                 </div>
 
-                <!-- Sticky Map Column -->
+                <!-- Map Column -->
                 <div 
                     x-show="(viewMode === 'split' || viewMode === 'map') || (mobileMode === 'map')"
                     class="space-y-4"
-                    :class="{
-                        'lg:col-span-5': viewMode === 'split',
-                        'lg:col-span-12': viewMode === 'map'
-                    }"
+                    :class="{ 'lg:col-span-5': viewMode === 'split', 'lg:col-span-12': viewMode === 'map' }"
                 >
                     <div class="sticky top-24 rounded-2xl border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden bg-white">
                         <div class="p-3.5 bg-yellow-300 border-b-3 border-black flex items-center justify-between">
@@ -648,14 +557,12 @@
                                 <span x-text="items.length"></span> Kost Tampil
                             </span>
                         </div>
-
-                        <!-- Map Canvas Container -->
                         <div x-ref="catalogMapElement" class="w-full h-[520px] lg:h-[620px] bg-zinc-100 z-0"></div>
                     </div>
                 </div>
             </div>
         @else
-            <!-- Empty State Neo-Brutalist -->
+            <!-- Empty State -->
             <div class="bg-yellow-100 border-4 border-black rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] space-y-4">
                 <div class="w-20 h-20 bg-white border-3 border-black rounded-2xl flex items-center justify-center mx-auto text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -rotate-3">
                     <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">

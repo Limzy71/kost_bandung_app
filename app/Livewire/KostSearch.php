@@ -13,24 +13,17 @@ class KostSearch extends Component
     use WithPagination;
 
     public $search = '';
-
     public $gender = '';
-
     public $price_min = '';
-
     public $price_max = '';
-
     public $district = '';
 
-    public function mount()
-    {
-        // If user does a hard refresh with '?page=' in the URL, redirect to clean URL to force reset.
-        if (request()->has('page')) {
-            return redirect()->to(request()->url());
-        }
-    }
+    // Stored as a Livewire public property so Alpine can read it via $wire.mapItems
+    // without needing x-effect or inline JSON in HTML attributes.
+    public array $mapItems = [];
 
-    public function updating($key)
+
+    public function updating($key): void
     {
         if (in_array($key, ['search', 'gender', 'price_min', 'price_max', 'district'])) {
             $this->resetPage();
@@ -44,8 +37,8 @@ class KostSearch extends Component
 
     public function resetFilters(): void
     {
-        $this->search = '';
-        $this->gender = '';
+        $this->search   = '';
+        $this->gender   = '';
         $this->district = '';
         $this->price_min = '';
         $this->price_max = '';
@@ -60,12 +53,15 @@ class KostSearch extends Component
     public function render()
     {
         if (is_numeric($this->price_min) && is_numeric($this->price_max)) {
-            if ((int)$this->price_min > (int)$this->price_max) {
+            if ((int) $this->price_min > (int) $this->price_max) {
                 $this->price_max = null;
             }
         }
 
-        $query = Kost::query()->with(['primaryImage', 'facilities'])->where('status', 'published')->where('is_available', true);
+        $query = Kost::query()
+            ->with(['primaryImage', 'facilities'])
+            ->where('status', 'published')
+            ->where('is_available', true);
 
         if ($this->search) {
             $query->where(function ($q) {
@@ -91,42 +87,53 @@ class KostSearch extends Component
         }
 
         $query->orderByRaw('boosted_at IS NULL, boosted_at DESC')
-                ->orderByDesc('created_at');
+              ->orderByDesc('created_at');
 
-        $districts = Kost::select('district')->whereNotNull('district')->distinct()->orderBy('district')->pluck('district');
+        $districts = Kost::select('district')
+            ->whereNotNull('district')
+            ->distinct()
+            ->orderBy('district')
+            ->pluck('district');
+
         $kosts = $query->paginate(12);
 
-        $mapItems = $kosts->map(function ($k) {
-            $priceFormatted = $k->price_monthly >= 1000000 
+        // Build mapItems and store as public property so $wire.mapItems is
+        // reactive in Alpine without needing inline JSON in HTML attributes.
+        $this->mapItems = $kosts->getCollection()->map(function ($k) {
+            $priceFormatted = $k->price_monthly >= 1000000
                 ? round($k->price_monthly / 1000000, 1) . 'Jt'
                 : round($k->price_monthly / 1000) . 'K';
-                
+
             $priceFull = 'Rp ' . number_format($k->price_monthly, 0, ',', '.');
-            $img = $k->primaryImage 
-                ? (Str::startsWith($k->primaryImage->image_path, 'http') ? $k->primaryImage->image_path : Storage::url($k->primaryImage->image_path))
+            $img = $k->primaryImage
+                ? (Str::startsWith($k->primaryImage->image_path, 'http')
+                    ? $k->primaryImage->image_path
+                    : Storage::url($k->primaryImage->image_path))
                 : 'https://placehold.co/400x300/eeeeee/31343c?text=' . urlencode($k->name);
 
             return [
-                'id' => $k->id,
-                'name' => $k->name,
-                'slug' => $k->slug,
-                'district' => $k->district,
-                'address' => $k->address,
-                'gender' => $k->gender_type,
+                'id'         => $k->id,
+                'name'       => $k->name,
+                'slug'       => $k->slug,
+                'district'   => $k->district,
+                'address'    => $k->address,
+                'gender'     => $k->gender_type,
                 'price_short' => $priceFormatted,
-                'price_full' => $priceFull,
-                'lat' => (float) $k->latitude,
-                'lng' => (float) $k->longitude,
-                'image' => $img,
-                'url' => route('kost.show', $k->slug),
+                'price_full'  => $priceFull,
+                'lat'        => (float) $k->latitude,
+                'lng'        => (float) $k->longitude,
+                'image'      => $img,
+                'url'        => route('kost.show', $k->slug),
                 'is_boosted' => (bool) $k->boosted_at,
             ];
         })->values()->toArray();
 
+        // Notify Alpine map component that markers need to be refreshed
+        $this->dispatch('map-items-updated');
+
         return view('livewire.kost-search', [
-            'kosts' => $kosts,
-            'districts' => $districts,
-            'mapItems' => $mapItems,
+            'kosts'           => $kosts,
+            'districts'       => $districts,
             'googleMapsApiKey' => config('services.google.maps_api_key') ?: env('GOOGLE_MAPS_API_KEY'),
         ]);
     }

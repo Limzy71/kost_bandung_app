@@ -166,6 +166,7 @@ class CreateKost extends Component
         return view('livewire.dashboard.create-kost', [
             'facilities' => $facilities,
             'districts' => $districts,
+            'googleMapsApiKey' => config('services.google.maps_api_key') ?: env('GOOGLE_MAPS_API_KEY'),
         ])->layout('layouts.app', [
             'title' => 'Tambah Kost Baru — KostBandung.id',
         ]);

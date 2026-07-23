@@ -3,28 +3,56 @@
         viewMode: 'split',
         mobileMode: 'list',
         items: {{ json_encode($mapItems) }},
-        hasGoogleKey: {{ $googleMapsApiKey ? 'true' : 'false' }},
+        hasGoogleKey: '{{ $googleMapsApiKey }}',
         map: null,
         markers: [],
         infoWindow: null,
         
         initCatalogMap() {
-            const setMapData = () => {
-                if (this.hasGoogleKey && window.google && window.google.maps) {
-                    return this.setupGoogleMap();
-                }
-                return this.setupLeafletMap();
-            };
-
             if (this.hasGoogleKey) {
                 if (window.google && window.google.maps) {
-                    setMapData();
+                    this.setupGoogleMap();
                 } else {
-                    window.addEventListener('google-catalog-map-loaded', () => setMapData());
-                    setTimeout(() => { if (!this.map) setMapData(); }, 3000);
+                    if (!document.getElementById('google-catalog-map-script')) {
+                        window.initGoogleCatalogMap = () => window.dispatchEvent(new CustomEvent('google-catalog-map-loaded'));
+                        const s = document.createElement('script');
+                        s.id = 'google-catalog-map-script';
+                        s.src = `https://maps.googleapis.com/maps/api/js?key=${this.hasGoogleKey}&callback=initGoogleCatalogMap`;
+                        s.async = true;
+                        s.defer = true;
+                        s.onerror = () => this.loadLeafletAndInit();
+                        document.head.appendChild(s);
+                    }
+                    window.addEventListener('google-catalog-map-loaded', () => {
+                        if (!this.setupGoogleMap()) this.loadLeafletAndInit();
+                    });
+                    setTimeout(() => { if (!this.map) this.loadLeafletAndInit(); }, 3000);
                 }
             } else {
-                setMapData();
+                this.loadLeafletAndInit();
+            }
+        },
+
+        loadLeafletAndInit() {
+            if (typeof L !== 'undefined') {
+                this.setupLeafletMap();
+                return;
+            }
+            if (!document.getElementById('leaflet-css')) {
+                const link = document.createElement('link');
+                link.id = 'leaflet-css';
+                link.rel = 'stylesheet';
+                link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+                document.head.appendChild(link);
+            }
+            if (!document.getElementById('leaflet-js')) {
+                const script = document.createElement('script');
+                script.id = 'leaflet-js';
+                script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+                script.onload = () => this.setupLeafletMap();
+                document.head.appendChild(script);
+            } else {
+                setTimeout(() => this.loadLeafletAndInit(), 200);
             }
         },
 
@@ -201,19 +229,6 @@
     @scroll-to-home-list.window="document.getElementById('home-list-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })"
     class="space-y-8"
 >
-    <!-- Leaflet JS & CSS Fallback for Catalog Map -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
-    @if($googleMapsApiKey)
-        <script>
-            window.initGoogleCatalogMap = function() {
-                window.dispatchEvent(new CustomEvent('google-catalog-map-loaded'));
-            };
-        </script>
-        <script src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&callback=initGoogleCatalogMap" async defer></script>
-    @endif
-
     <!-- Filter Bar Neo-Brutalist -->
     <div 
         x-data="{ 

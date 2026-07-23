@@ -1,21 +1,4 @@
-@php
-    $googleMapsApiKey = config('services.google.maps_api_key') ?: env('GOOGLE_MAPS_API_KEY');
-@endphp
-
 <div class="min-h-screen bg-[#f8f9fa] bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:24px_24px]">
-    <!-- Leaflet JS & CSS Fallback -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
-    @if($googleMapsApiKey)
-        <script>
-            window.initGoogleMapPicker = function() {
-                window.dispatchEvent(new CustomEvent('google-maps-picker-loaded'));
-            };
-        </script>
-        <script src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&callback=initGoogleMapPicker" async defer></script>
-    @endif
-
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-8">
 
         <!-- Top Header & Back Button -->
@@ -190,7 +173,7 @@
                     x-data="{
                         lat: @entangle('latitude'),
                         lng: @entangle('longitude'),
-                        hasGoogleKey: {{ $googleMapsApiKey ? 'true' : 'false' }},
+                        hasGoogleKey: '{{ $googleMapsApiKey }}',
                         map: null,
                         marker: null,
                         initMap() {
@@ -261,19 +244,50 @@
                                 });
                             };
 
+                            const loadLeafletAndInit = () => {
+                                if (typeof L !== 'undefined') {
+                                    setupLeafletMap();
+                                    return;
+                                }
+                                if (!document.getElementById('leaflet-css')) {
+                                    const link = document.createElement('link');
+                                    link.id = 'leaflet-css';
+                                    link.rel = 'stylesheet';
+                                    link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+                                    document.head.appendChild(link);
+                                }
+                                if (!document.getElementById('leaflet-js')) {
+                                    const script = document.createElement('script');
+                                    script.id = 'leaflet-js';
+                                    script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+                                    script.onload = () => setupLeafletMap();
+                                    document.head.appendChild(script);
+                                } else {
+                                    setTimeout(() => loadLeafletAndInit(), 200);
+                                }
+                            };
+
                             if (this.hasGoogleKey) {
                                 if (window.google && window.google.maps) {
                                     setupGoogleMap();
                                 } else {
-                                    window.addEventListener('google-maps-picker-loaded', () => {
-                                        if (!setupGoogleMap()) setupLeafletMap();
+                                    if (!document.getElementById('google-create-map-script')) {
+                                        window.initGoogleCreateMap = () => window.dispatchEvent(new CustomEvent('google-create-map-loaded'));
+                                        const s = document.createElement('script');
+                                        s.id = 'google-create-map-script';
+                                        s.src = `https://maps.googleapis.com/maps/api/js?key=${this.hasGoogleKey}&callback=initGoogleCreateMap`;
+                                        s.async = true;
+                                        s.defer = true;
+                                        s.onerror = () => loadLeafletAndInit();
+                                        document.head.appendChild(s);
+                                    }
+                                    window.addEventListener('google-create-map-loaded', () => {
+                                        if (!setupGoogleMap()) loadLeafletAndInit();
                                     });
-                                    setTimeout(() => {
-                                        if (!this.map) setupLeafletMap();
-                                    }, 3000);
+                                    setTimeout(() => { if (!this.map) loadLeafletAndInit(); }, 3000);
                                 }
                             } else {
-                                setupLeafletMap();
+                                loadLeafletAndInit();
                             }
                         }
                     }"

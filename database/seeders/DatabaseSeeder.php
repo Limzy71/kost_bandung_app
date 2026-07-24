@@ -47,7 +47,7 @@ class DatabaseSeeder extends Seeder
         );
 
         $this->call([
-            KostSeeder::class,
+            DemoKostSeeder::class,
         ]);
     }
 }

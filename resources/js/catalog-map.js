@@ -7,7 +7,7 @@
  * mode and the container div is actually visible in the DOM. This prevents
  * "blank map" issues caused by initializing Google Maps inside a hidden div.
  */
-window.catalogMap = function () {
+window.catalogMap = function (config) {
     return {
         viewMode: 'list',
         hasGoogleKey: '',
@@ -15,23 +15,26 @@ window.catalogMap = function () {
         mapReady: false,   // true once the map library has been loaded
         markers: [],
         infoWindow: null,
+        mapFailed: false,
 
-        /** Called from x-init — sets up watchers but does NOT touch the map yet */
+        /** Called from x-init — sets up watchers and eagerly loads map in background */
         init() {
             this.hasGoogleKey = this.$el.dataset.mapsKey || '';
 
-            // LAZY MAP INIT: only initialize map when user switches to map view
+            // EAGER MAP INIT: Load scripts and initialize map in background immediately.
+            // This prevents network delay when the user clicks 'Lihat Peta'.
+            // Use setTimeout to yield to the main thread so page rendering isn't blocked.
+            setTimeout(() => {
+                this.initCatalogMap();
+            }, 100);
+
+            // Watch for viewMode switch to trigger a resize, because the map was
+            // initialized inside a hidden (display: none) container.
             this.$watch('viewMode', (newMode) => {
                 if (newMode === 'map') {
                     // Wait one tick for Alpine to un-hide the container via x-show
                     this.$nextTick(() => {
-                        if (!this.map) {
-                            // First time — load library and create map instance
-                            this.initCatalogMap();
-                        } else {
-                            // Map already exists — just force resize & re-fit bounds
-                            this.resizeMap();
-                        }
+                        this.resizeMap();
                     });
                 }
             });
@@ -135,6 +138,15 @@ window.catalogMap = function () {
                     this.infoWindow = new google.maps.InfoWindow();
                 }
                 this.renderGoogleMarkers();
+                
+                // Critical Resilience: Force Google Maps to recalculate size
+                setTimeout(() => {
+                    if (this.map && window.google) {
+                        google.maps.event.trigger(this.map, 'resize');
+                        this.renderGoogleMarkers(); // re-fit bounds after resize
+                    }
+                }, 500);
+                
                 return true;
             } catch (e) {
                 console.warn('Google Map Catalog init error:', e);
@@ -212,6 +224,17 @@ window.catalogMap = function () {
                 }).addTo(this.map);
             }
             this.renderLeafletMarkers();
+            
+            // Critical Resilience: Force Leaflet to recalculate size after DOM is fully painted
+            setTimeout(() => {
+                if (this.map && this.map.invalidateSize) {
+                    this.map.invalidateSize();
+                    if (this.markers && this.markers.length > 0) {
+                        const group = new L.featureGroup(this.markers);
+                        this.map.fitBounds(group.getBounds());
+                    }
+                }
+            }, 500);
         },
 
         renderLeafletMarkers() {

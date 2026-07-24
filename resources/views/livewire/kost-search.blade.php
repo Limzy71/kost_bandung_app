@@ -63,7 +63,7 @@
                         @keydown.enter="wasApplied = true"
                         @input="checkFilter()"
                         type="text"
-                        placeholder="Contoh: Dago, Cisitu, Setiabudi..."
+                        placeholder="Contoh: Dago, Tamansari, Setiabudi..."
                         class="w-full bg-white border-3 border-black rounded-xl pl-10 pr-10 py-2.5 text-xs font-black uppercase text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
                     >
                     <svg class="w-5 h-5 text-black absolute left-3 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -300,7 +300,7 @@
         @endif
 
         <!-- Full-Width Immersive Map View Mode (Always in DOM to preserve Map instance) -->
-        <div wire:key="map-view" wire:ignore x-show="viewMode === 'map' && items.length > 0" x-cloak class="w-full" x-data="{ mapFailed: false }" @map-load-error.window="mapFailed = true">
+        <div wire:key="map-view" wire:ignore x-show="viewMode === 'map' && items.length > 0" x-cloak class="w-full" @map-load-error.window="mapFailed = true">
             <!-- Map Container -->
             <div x-show="!mapFailed" class="w-full rounded-2xl border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden bg-white">
                 <div class="p-4 bg-yellow-300 border-b-3 border-black flex items-center justify-between">

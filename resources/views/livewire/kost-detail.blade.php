@@ -521,6 +521,8 @@
                 </button>
             </div>
         </div>
+    @endif
+
     <!-- Neo-Brutalist Photo Lightbox Modal -->
     <div x-show="showGalleryModal" x-cloak x-transition.opacity
         class="fixed inset-0 z-[120] bg-black/90 flex flex-col justify-between items-center p-4 md:p-8"

@@ -220,9 +220,84 @@
                 </div>
                 <!-- END MAIN CONTENT CARD -->
 
+
+            </div>
+            <!-- END LEFT COLUMN -->
+
+            <!-- ============================================================
+                 RIGHT COLUMN — Sticky Price Card with Smooth Hover Animations
+                 ============================================================ -->
+            <div class="lg:col-span-1 h-full">
+                <div
+                    class="sticky top-24 w-full bg-white border-4 border-black rounded-2xl p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:translate-x-0.5 hover:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 ease-out hidden lg:block space-y-6">
+
+                    <!-- Display Harga -->
+                    <div
+                        class="bg-yellow-300 border-3 border-black p-4 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] space-y-1">
+                        <p class="text-xs font-black uppercase tracking-wider text-black">Harga Sewa Bulanan</p>
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-3xl font-black text-black tracking-tight">
+                                Rp {{ number_format($kost->price_monthly, 0, ',', '.') }}
+                            </span>
+                            <span class="text-xs font-black text-black">/ bulan</span>
+                        </div>
+                    </div>
+
+                    <!-- CTA Buttons -->
+                    <div class="space-y-3">
+                        @php
+                            $waMessage = rawurlencode(
+                                "Halo, saya tertarik dengan kost \"" .
+                                    $kost->name .
+                                    "\" di " .
+                                    $kost->district .
+                                    '. Apakah kamar masih tersedia?',
+                            );
+                        @endphp
+
+                        <a href="https://wa.me/6281234567890?text={{ $waMessage }}" target="_blank"
+                            class="w-full py-4 bg-emerald-400 hover:bg-emerald-300 text-black border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 group cursor-pointer">
+                            <svg class="w-5 h-5 text-black stroke-[2.5] group-hover:scale-110 transition-transform"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                            </svg>
+                            <span>Tanya via WhatsApp</span>
+                        </a>
+
+                        <button type="button" @click="showModal = true"
+                            class="w-full py-4 bg-cyan-300 hover:bg-cyan-200 text-black border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 cursor-pointer">
+                            <svg class="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            <span>Kirim Pesan Internal</span>
+                        </button>
+                    </div>
+
+                    <!-- Owner Info Card -->
+                    <div class="pt-4 border-t-3 border-black text-center space-y-1">
+                        <p class="text-xs font-black uppercase text-zinc-500">Disewakan Oleh</p>
+                        <p
+                            class="text-sm font-black text-black bg-zinc-100 border-2 border-black py-1.5 px-3 rounded-lg inline-flex items-center gap-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                            <svg class="w-4 h-4 text-black stroke-[2.5]" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            <span>{{ $kost->user->name ?? 'Pemilik Kost' }}</span>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+            <!-- END RIGHT COLUMN -->
+            <!-- FULL WIDTH MAP -->
+            <div class="lg:col-span-3 mt-4">
                 <!-- ============================================================
-                     LOKASI KOST — Clean Interactive Map with Layer Controls
-                     ============================================================ -->
+                    LOKASI KOST — Clean Interactive Map with Layer Controls
+                    ============================================================ -->
                 <div
                     class="border-4 border-black bg-white rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
 
@@ -308,79 +383,7 @@
                     </div>
                 </div>
                 <!-- END LOKASI KOST -->
-
             </div>
-            <!-- END LEFT COLUMN -->
-
-            <!-- ============================================================
-                 RIGHT COLUMN — Sticky Price Card with Smooth Hover Animations
-                 ============================================================ -->
-            <div class="lg:col-span-1 h-full">
-                <div
-                    class="sticky top-24 w-full bg-white border-4 border-black rounded-2xl p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:translate-x-0.5 hover:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 ease-out hidden lg:block space-y-6">
-
-                    <!-- Display Harga -->
-                    <div
-                        class="bg-yellow-300 border-3 border-black p-4 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] space-y-1">
-                        <p class="text-xs font-black uppercase tracking-wider text-black">Harga Sewa Bulanan</p>
-                        <div class="flex items-baseline gap-1">
-                            <span class="text-3xl font-black text-black tracking-tight">
-                                Rp {{ number_format($kost->price_monthly, 0, ',', '.') }}
-                            </span>
-                            <span class="text-xs font-black text-black">/ bulan</span>
-                        </div>
-                    </div>
-
-                    <!-- CTA Buttons -->
-                    <div class="space-y-3">
-                        @php
-                            $waMessage = rawurlencode(
-                                "Halo, saya tertarik dengan kost \"" .
-                                    $kost->name .
-                                    "\" di " .
-                                    $kost->district .
-                                    '. Apakah kamar masih tersedia?',
-                            );
-                        @endphp
-
-                        <a href="https://wa.me/6281234567890?text={{ $waMessage }}" target="_blank"
-                            class="w-full py-4 bg-emerald-400 hover:bg-emerald-300 text-black border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 group cursor-pointer">
-                            <svg class="w-5 h-5 text-black stroke-[2.5] group-hover:scale-110 transition-transform"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                            </svg>
-                            <span>Tanya via WhatsApp</span>
-                        </a>
-
-                        <button type="button" @click="showModal = true"
-                            class="w-full py-4 bg-cyan-300 hover:bg-cyan-200 text-black border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 cursor-pointer">
-                            <svg class="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
-                            <span>Kirim Pesan Internal</span>
-                        </button>
-                    </div>
-
-                    <!-- Owner Info Card -->
-                    <div class="pt-4 border-t-3 border-black text-center space-y-1">
-                        <p class="text-xs font-black uppercase text-zinc-500">Disewakan Oleh</p>
-                        <p
-                            class="text-sm font-black text-black bg-zinc-100 border-2 border-black py-1.5 px-3 rounded-lg inline-flex items-center gap-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                            <svg class="w-4 h-4 text-black stroke-[2.5]" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
-                            <span>{{ $kost->user->name ?? 'Pemilik Kost' }}</span>
-                        </p>
-                    </div>
-
-                </div>
-            </div>
-            <!-- END RIGHT COLUMN -->
 
         </div>
         <!-- END MAIN TWO-COLUMN LAYOUT -->

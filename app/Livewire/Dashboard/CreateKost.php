@@ -102,12 +102,6 @@ class CreateKost extends Component
         $lat = (float) $this->latitude;
         $lng = (float) $this->longitude;
         
-        $validDistricts = array_keys(config('bandung.districts', []));
-        if (!in_array($this->district, $validDistricts)) {
-            $this->addError('district', 'Kecamatan tidak valid.');
-            return;
-        }
-
         $districts = config('bandung.districts', []);
         $bounds = $districts[$this->district]['bounds'] ?? null;
         if ($bounds) {

@@ -1,5 +1,5 @@
 <div
-    x-data="catalogMap()"
+    x-data="catalogMap({ districtBounds: @js($districtBounds) })"
     x-init="init()"
     data-maps-key="{{ $googleMapsApiKey }}"
     @scroll-to-home-list.window="document.getElementById('home-list-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })"
@@ -97,8 +97,8 @@
                 <select x-ref="districtSelect" wire:model="district"
                     class="w-full bg-white border-3 border-black rounded-xl px-2.5 py-2.5 text-xs font-black uppercase tracking-wide text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_8px_center] pr-7">
                     <option value="" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Semua Kecamatan</option>
-                    @foreach ($districts as $dist)
-                        <option value="{{ $dist }}" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">{{ $dist }}</option>
+                    @foreach ($districts as $val => $label)
+                        <option value="{{ $val }}" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">{{ $label }}</option>
                     @endforeach
                 </select>
             </div>
@@ -139,7 +139,7 @@
             </span>
         </div>
 
-        @if($kosts->count() > 0)
+        @if($kosts->count() > 0 || $district)
         <!-- 2-Mode View Switcher — only shown when there are results -->
         <div wire:key="view-switcher" class="flex items-center gap-1.5 bg-white border-3 border-black p-1 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-full sm:w-auto">
             <button type="button"
@@ -267,8 +267,8 @@
                 </div>
             </div>
         @else
-            <!-- Empty State: Reset viewMode to list so stale Alpine state doesn't cause overlap on next search -->
-            <div wire:key="empty-state" x-init="viewMode = 'list'" class="bg-yellow-100 border-4 border-black rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] space-y-4">
+            <!-- Empty State: Show only when viewMode is list, no x-init override -->
+            <div wire:key="empty-state" x-show="viewMode === 'list'" x-cloak class="bg-yellow-100 border-4 border-black rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] space-y-4">
                 <div class="w-20 h-20 bg-white border-3 border-black rounded-2xl flex items-center justify-center mx-auto text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -rotate-3">
                     <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -300,9 +300,9 @@
         @endif
 
         <!-- Full-Width Immersive Map View Mode (Always in DOM to preserve Map instance) -->
-        <div wire:key="map-view" wire:ignore x-show="viewMode === 'map' && items.length > 0" x-cloak class="w-full" @map-load-error.window="mapFailed = true">
+        <div wire:key="map-view" wire:ignore x-show="viewMode === 'map' && (items.length > 0 || districtBounds[$wire.district])" x-cloak class="w-full" @map-load-error.window="mapFailed = true">
             <!-- Map Container -->
-            <div x-show="!mapFailed" class="w-full rounded-2xl border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden bg-white">
+            <div x-show="!mapFailed" class="relative w-full rounded-2xl border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden bg-white">
                 <div class="p-4 bg-yellow-300 border-b-3 border-black flex items-center justify-between">
                     <span class="font-black text-sm uppercase text-black flex items-center gap-2 tracking-tight">
                         &#128205; Peta Interaktif Kost Bandung
@@ -312,6 +312,15 @@
                     </span>
                 </div>
                 <div x-ref="catalogMapElement" class="w-full h-[450px] lg:h-[500px] bg-zinc-100 z-0"></div>
+                
+                <!-- Overlay Pesan Kecamatan Kosong -->
+                <div x-show="items.length === 0" x-cloak class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-yellow-300 border-4 border-black p-4 sm:p-6 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] z-[400] text-center w-11/12 max-w-sm pointer-events-none">
+                    <div class="w-12 h-12 bg-white border-3 border-black rounded-full flex items-center justify-center mx-auto mb-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                        <svg class="w-6 h-6 text-black stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <h4 class="text-lg font-black text-black uppercase mb-1">Kecamatan Kosong</h4>
+                    <p class="text-sm font-bold text-zinc-800">Belum ada kost terdaftar di kecamatan ini.</p>
+                </div>
             </div>
 
             <!-- Fallback Neo-Brutalist Error Card -->

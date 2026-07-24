@@ -16,6 +16,7 @@ window.catalogMap = function (config) {
         markers: [],
         infoWindow: null,
         mapFailed: false,
+        districtBounds: config.districtBounds || {},
 
         /** Called from x-init — sets up watchers and eagerly loads map in background */
         init() {
@@ -161,6 +162,17 @@ window.catalogMap = function (config) {
             this.markers = [];
 
             const currentItems = this.items;
+            const activeDistrict = this.$wire ? this.$wire.district : '';
+            const hasActiveDistrict = activeDistrict && this.districtBounds[activeDistrict];
+
+            // Case B: 0 Listings but has active district
+            if ((!currentItems || currentItems.length === 0) && hasActiveDistrict) {
+                const dist = this.districtBounds[activeDistrict];
+                this.map.setCenter({ lat: dist.center.lat, lng: dist.center.lng });
+                this.map.setZoom(dist.zoom || 14);
+                return;
+            }
+
             if (!currentItems || currentItems.length === 0) {
                 this.map.setCenter({ lat: -6.917464, lng: 107.619123 });
                 this.map.setZoom(13);
@@ -204,9 +216,12 @@ window.catalogMap = function (config) {
                 this.markers.push(marker);
             });
 
+            // Case A: Listings exist in district, use fitBounds of markers
             if (validCount > 0) {
                 this.map.fitBounds(bounds);
-                if (validCount === 1) this.map.setZoom(14);
+                if (validCount === 1) {
+                    this.map.setZoom(14);
+                }
             } else {
                 this.map.setCenter({ lat: -6.917464, lng: 107.619123 });
                 this.map.setZoom(13);
@@ -243,6 +258,16 @@ window.catalogMap = function (config) {
             this.markers = [];
 
             const currentItems = this.items;
+            const activeDistrict = this.$wire ? this.$wire.district : '';
+            const hasActiveDistrict = activeDistrict && this.districtBounds[activeDistrict];
+
+            // Case B: 0 Listings but has active district
+            if ((!currentItems || currentItems.length === 0) && hasActiveDistrict) {
+                const dist = this.districtBounds[activeDistrict];
+                this.map.setView([dist.center.lat, dist.center.lng], dist.zoom || 14);
+                return;
+            }
+
             if (!currentItems || currentItems.length === 0) return;
 
             const boundsArr = [];
@@ -274,6 +299,7 @@ window.catalogMap = function (config) {
                 this.markers.push(marker);
             });
 
+            // Case A: Listings exist, fitBounds to them
             if (validCount > 0 && boundsArr.length > 0) {
                 this.map.fitBounds(boundsArr);
             }

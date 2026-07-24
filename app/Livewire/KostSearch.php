@@ -81,6 +81,13 @@ class KostSearch extends Component
             $query->where('price_monthly', '<=', $this->price_max);
         }
 
+        // Compute district counts before applying the district filter
+        $districtCounts = (clone $query)
+            ->selectRaw('district, count(*) as total')
+            ->groupBy('district')
+            ->pluck('total', 'district')
+            ->toArray();
+
         if ($this->district) {
             $query->where('district', $this->district);
         }
@@ -88,11 +95,11 @@ class KostSearch extends Component
         $query->orderByRaw('boosted_at IS NULL, boosted_at DESC')
               ->orderByDesc('created_at');
 
-        $districts = Kost::select('district')
-            ->whereNotNull('district')
-            ->distinct()
-            ->orderBy('district')
-            ->pluck('district');
+        $districts = [];
+        foreach (config('bandung.districts', []) as $key => $data) {
+            $count = $districtCounts[$key] ?? 0;
+            $districts[$key] = "$key ($count)";
+        }
 
         $kosts = $query->paginate(12);
 
@@ -133,6 +140,7 @@ class KostSearch extends Component
         return view('livewire.kost-search', [
             'kosts'           => $kosts,
             'districts'       => $districts,
+            'districtBounds'  => config('bandung.districts', []),
             'googleMapsApiKey' => config('services.google.maps_api_key') ?: env('GOOGLE_MAPS_API_KEY'),
         ]);
     }

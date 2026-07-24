@@ -135,7 +135,7 @@ class DemoKostSeeder extends Seeder
             'price_monthly' => 2500000,
             'address' => 'Jl. Ciumbuleuwit Atas No. 88',
             'district' => 'Cidadap',
-            'latitude' => -6.8780,
+            'latitude' => -6.8450,
             'longitude' => 107.6050,
             'is_available' => true,
             'status' => 'pending',

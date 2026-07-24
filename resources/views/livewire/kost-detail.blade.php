@@ -1,5 +1,17 @@
+@php
+    $allImages = $kost->images->map(function ($img) {
+        return Str::startsWith($img->image_path ?? '', 'http')
+            ? $img->image_path
+            : Storage::url($img->image_path);
+    })->values();
+
+    if ($allImages->isEmpty()) {
+        $allImages = collect(['https://placehold.co/800x500/eeeeee/31343c?text=Foto+Utama']);
+    }
+@endphp
+
 <div class="min-h-screen bg-[#f8f9fa] bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:24px_24px] pb-28 lg:pb-16 pt-8"
-    x-data="{ showModal: false }" @inquiry-sent.window="showModal = false">
+    x-data="{ showModal: false, showGalleryModal: false, activeIndex: 0, totalImages: {{ $allImages->count() }}, images: {{ Js::from($allImages) }} }" @inquiry-sent.window="showModal = false">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
         <!-- Navigation Back Button -->
@@ -23,13 +35,13 @@
             <!-- ============================================================
                  LEFT COLUMN — Photo Gallery + All Content Sections
                  ============================================================ -->
-            <div class="lg:col-span-2 space-y-8">
+            <div class="lg:col-span-2 space-y-6">
 
                 <!-- PHOTO GALLERY — Clean sub-grid, no bleed into content below -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <!-- Primary / Hero Image — spans 2 columns on md+ -->
-                    <div
-                        class="md:col-span-2 relative group rounded-2xl overflow-hidden border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-zinc-200 aspect-video md:aspect-auto md:h-80">
+                    <div @click="showGalleryModal = true; activeIndex = 0"
+                        class="md:col-span-2 relative group rounded-2xl overflow-hidden border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-zinc-200 aspect-video md:aspect-auto md:h-80 cursor-pointer">
                         @php
                             $primaryImg = $kost->primaryImage;
                             $primarySrc = $primaryImg
@@ -41,8 +53,8 @@
                         <img src="{{ $primarySrc }}"
                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             alt="{{ $kost->name }}">
-                        <button type="button"
-                            class="absolute bottom-4 right-4 px-4 py-2 bg-yellow-300 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg flex items-center gap-2 cursor-pointer">
+                        <button type="button" @click.stop="showGalleryModal = true; activeIndex = 0"
+                            class="absolute bottom-4 right-4 px-4 py-2 bg-yellow-300 hover:bg-yellow-400 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg flex items-center gap-2 cursor-pointer z-10">
                             <svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M4 6h16M4 10h16M4 14h16M4 18h16" />
@@ -52,7 +64,7 @@
                     </div>
 
                     <!-- Thumbnail Stack — 3rd column, stacks vertically -->
-                    <div class="flex flex-col gap-4 h-80 md:h-auto">
+                    <div class="flex flex-col gap-4 h-80">
                         @php
                             $thumbnails = $kost->images->where('is_primary', false)->take(3)->values();
                         @endphp
@@ -64,9 +76,13 @@
                                         ? $thumb->image_path
                                         : Storage::url($thumb->image_path))
                                     : 'https://placehold.co/400x300/e5e7eb/31343c?text=Foto+' . ($i + 2);
+                                $imgIdx = $thumb ? $allImages->search($thumbSrc) : ($i + 1 < $allImages->count() ? $i + 1 : 0);
+                                if ($imgIdx === false) {
+                                    $imgIdx = 0;
+                                }
                             @endphp
-                            <div
-                                class="flex-1 min-h-0 rounded-xl overflow-hidden border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-zinc-200 relative group">
+                            <div @click="showGalleryModal = true; activeIndex = {{ $imgIdx }}"
+                                class="flex-1 min-h-0 rounded-xl overflow-hidden border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-zinc-200 relative group cursor-pointer">
                                 <img src="{{ $thumbSrc }}"
                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                     alt="Foto {{ $i + 2 }}">
@@ -302,30 +318,32 @@
                     class="border-4 border-black bg-white rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
 
                     <!-- Section Header -->
-                    <div class="bg-yellow-300 border-b-4 border-black px-6 py-4 flex items-center gap-3">
-                        <div class="w-9 h-9 bg-black rounded flex items-center justify-center shrink-0">
-                            <svg class="w-5 h-5 text-yellow-300 stroke-[2.5]" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <h2 class="text-xl font-black text-black uppercase tracking-tight">Lokasi Kost</h2>
-                            <p class="text-xs font-bold text-black/70">{{ $kost->address }}, Kec.
-                                {{ $kost->district }}, Kota Bandung</p>
+                    <div class="bg-yellow-300 border-b-4 border-black px-6 py-4 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-9 h-9 bg-black rounded flex items-center justify-center shrink-0">
+                                <svg class="w-5 h-5 text-yellow-300 stroke-[2.5]" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </div>
+                            <div class="truncate">
+                                <h2 class="text-xl font-black text-black uppercase tracking-tight truncate">Lokasi Kost</h2>
+                                <p class="text-xs font-bold text-black/70 truncate">{{ $kost->address }}, Kec.
+                                    {{ $kost->district }}, Kota Bandung</p>
+                            </div>
                         </div>
                         <a href="https://www.google.com/maps/search/?api=1&query={{ $kost->latitude }},{{ $kost->longitude }}"
                             target="_blank" rel="noopener noreferrer"
-                            class="ml-auto inline-flex items-center gap-1.5 bg-black text-yellow-300 border-2 border-black font-black text-xs uppercase px-3 py-2 rounded shadow-[3px_3px_0px_0px_rgba(255,255,255,0.4)] hover:bg-zinc-800 transition-all shrink-0">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5"
+                            class="ml-auto inline-flex items-center gap-1.5 bg-black text-yellow-300 hover:bg-zinc-800 border-2 border-black font-black text-xs uppercase px-3.5 py-2.5 rounded-xl shadow-[3px_3px_0px_0px_rgba(255,255,255,0.4)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all shrink-0 cursor-pointer">
+                            <svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                             </svg>
-                            Google Maps
+                            <span>↗ BUKA DI GOOGLE MAPS</span>
                         </a>
                     </div>
 
@@ -356,24 +374,6 @@
 
                         <!-- Map Canvas -->
                         <div x-ref="detailMap" class="w-full h-[400px] z-0 bg-zinc-100"></div>
-                    </div>
-
-                    <!-- Map Footer -->
-                    <div class="border-t-3 border-black px-6 py-3 bg-zinc-50 flex items-center justify-between">
-                        <p class="text-xs font-bold text-zinc-500">
-                            📍 {{ number_format((float) $kost->latitude, 6) }},
-                            {{ number_format((float) $kost->longitude, 6) }}
-                        </p>
-                        <a href="https://www.google.com/maps/search/?api=1&query={{ $kost->latitude }},{{ $kost->longitude }}"
-                            target="_blank" rel="noopener noreferrer"
-                            class="inline-flex items-center gap-1.5 text-xs font-black uppercase text-black hover:text-rose-600 transition-colors">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
-                            Buka di Google Maps
-                        </a>
                     </div>
                 </div>
                 <!-- END LOKASI KOST -->
@@ -521,7 +521,61 @@
                 </button>
             </div>
         </div>
-    @endif
+    <!-- Neo-Brutalist Photo Lightbox Modal -->
+    <div x-show="showGalleryModal" x-cloak x-transition.opacity
+        class="fixed inset-0 z-[120] bg-black/90 flex flex-col justify-between items-center p-4 md:p-8"
+        @keydown.escape.window="showGalleryModal = false">
+
+        <!-- Top Header Bar -->
+        <div class="w-full max-w-6xl flex items-center justify-between z-10">
+            <div class="bg-yellow-300 border-2 border-black px-4 py-1.5 rounded-lg shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] text-xs font-black uppercase text-black">
+                Foto <span x-text="activeIndex + 1"></span> dari <span x-text="totalImages"></span>
+            </div>
+
+            <button type="button" @click="showGalleryModal = false"
+                class="px-4 py-2 bg-yellow-300 hover:bg-yellow-400 text-black border-3 border-black font-black text-xs uppercase shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center gap-2 cursor-pointer">
+                <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                <span>✕ TUTUP GALERI</span>
+            </button>
+        </div>
+
+        <!-- Main Display Container with Prev/Next -->
+        <div class="relative w-full max-w-5xl flex-1 flex items-center justify-center my-4">
+            <!-- Prev Button -->
+            <button type="button" @click="activeIndex = (activeIndex === 0) ? totalImages - 1 : activeIndex - 1"
+                class="absolute left-2 md:left-4 z-20 p-3 bg-yellow-300 hover:bg-yellow-400 text-black border-3 border-black rounded-xl shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer">
+                <svg class="w-6 h-6 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+
+            <!-- Active Image Box -->
+            <div class="max-h-[75vh] max-w-full rounded-2xl overflow-hidden border-4 border-white shadow-[10px_10px_0px_0px_rgba(250,204,21,1)] bg-zinc-900 flex items-center justify-center p-1">
+                <img :src="images[activeIndex]" class="max-h-[70vh] max-w-full object-contain rounded-xl" :alt="'Foto Kost ' + (activeIndex + 1)">
+            </div>
+
+            <!-- Next Button -->
+            <button type="button" @click="activeIndex = (activeIndex === totalImages - 1) ? 0 : activeIndex + 1"
+                class="absolute right-2 md:right-4 z-20 p-3 bg-yellow-300 hover:bg-yellow-400 text-black border-3 border-black rounded-xl shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer">
+                <svg class="w-6 h-6 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Thumbnails Strip -->
+        <div class="w-full max-w-4xl flex items-center justify-center gap-2 overflow-x-auto py-2">
+            <template x-for="(img, idx) in images" :key="idx">
+                <button type="button" @click="activeIndex = idx"
+                    :class="activeIndex === idx ? 'border-yellow-300 scale-105 shadow-[2px_2px_0px_0px_rgba(250,204,21,1)]' : 'border-zinc-700 opacity-60 hover:opacity-100'"
+                    class="w-16 h-12 rounded-lg overflow-hidden border-2 transition-all cursor-pointer shrink-0 bg-zinc-800">
+                    <img :src="img" class="w-full h-full object-cover">
+                </button>
+            </template>
+        </div>
+    </div>
 
 </div>
 

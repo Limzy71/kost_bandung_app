@@ -40,7 +40,7 @@ window.catalogMap = function (config) {
             });
 
             // Re-render markers whenever Livewire pushes updated mapItems
-            this.$wire.$on('map-items-updated', () => {
+            window.addEventListener('map-items-updated', () => {
                 if (this.viewMode === 'map' && this.map) {
                     if (window.google && window.google.maps) {
                         this.renderGoogleMarkers();

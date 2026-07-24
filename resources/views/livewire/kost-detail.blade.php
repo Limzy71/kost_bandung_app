@@ -524,18 +524,26 @@
     @endif
 
     <!-- Neo-Brutalist Photo Lightbox Modal -->
-    <div x-show="showGalleryModal" x-cloak x-transition.opacity
-        class="fixed inset-0 z-[120] bg-black/90 flex flex-col justify-between items-center p-4 md:p-8"
+    <div x-show="showGalleryModal" x-cloak
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 z-[100] bg-zinc-950/98 backdrop-blur-md flex flex-col justify-between select-none"
         @keydown.escape.window="showGalleryModal = false">
 
-        <!-- Top Header Bar -->
-        <div class="w-full max-w-6xl flex items-center justify-between z-10">
-            <div class="bg-yellow-300 border-2 border-black px-4 py-1.5 rounded-lg shadow-[3px_3px_0px_0px_rgba(255,255,255,1)] text-xs font-black uppercase text-black">
-                Foto <span x-text="activeIndex + 1"></span> dari <span x-text="totalImages"></span>
+        <!-- Top Bar -->
+        <div class="w-full h-16 px-6 bg-zinc-900 border-b-2 border-zinc-800 flex items-center justify-between z-50 shrink-0">
+            <!-- Left: Badge Counter -->
+            <div class="bg-[#FFE500] text-black px-3 py-1 font-black border-2 border-black text-sm uppercase rounded shadow-[2px_2px_0px_0px_rgba(255,255,255,1)]">
+                FOTO <span x-text="activeIndex + 1"></span> DARI <span x-text="totalImages"></span>
             </div>
 
+            <!-- Right: Close Button -->
             <button type="button" @click="showGalleryModal = false"
-                class="px-4 py-2 bg-yellow-300 hover:bg-yellow-400 text-black border-3 border-black font-black text-xs uppercase shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center gap-2 cursor-pointer">
+                class="px-4 py-2 bg-[#FFE500] hover:bg-yellow-400 text-black border-3 border-black font-black text-xs uppercase shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center gap-2 cursor-pointer">
                 <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -543,36 +551,36 @@
             </button>
         </div>
 
-        <!-- Main Display Container with Prev/Next -->
-        <div class="relative w-full max-w-5xl flex-1 flex items-center justify-center my-4">
-            <!-- Prev Button -->
+        <!-- Main Image Container -->
+        <div class="flex-1 flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
+            <!-- Left Arrow -->
             <button type="button" @click="activeIndex = (activeIndex === 0) ? totalImages - 1 : activeIndex - 1"
-                class="absolute left-2 md:left-4 z-20 p-3 bg-yellow-300 hover:bg-yellow-400 text-black border-3 border-black rounded-xl shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer">
+                class="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 p-4 bg-white hover:bg-[#FFE500] text-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer z-50 rounded-xl">
                 <svg class="w-6 h-6 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                 </svg>
             </button>
 
-            <!-- Active Image Box -->
-            <div class="max-h-[75vh] max-w-full rounded-2xl overflow-hidden border-4 border-white shadow-[10px_10px_0px_0px_rgba(250,204,21,1)] bg-zinc-900 flex items-center justify-center p-1">
-                <img :src="images[activeIndex]" class="max-h-[70vh] max-w-full object-contain rounded-xl" :alt="'Foto Kost ' + (activeIndex + 1)">
-            </div>
+            <!-- Active Heroic Image -->
+            <img :src="images[activeIndex]"
+                class="max-h-[70vh] max-w-[85vw] object-contain border-4 border-black bg-zinc-900 shadow-[8px_8px_0px_0px_#FFE500] transition-all duration-300 rounded-xl"
+                :alt="'Foto Kost ' + (activeIndex + 1)">
 
-            <!-- Next Button -->
+            <!-- Right Arrow -->
             <button type="button" @click="activeIndex = (activeIndex === totalImages - 1) ? 0 : activeIndex + 1"
-                class="absolute right-2 md:right-4 z-20 p-3 bg-yellow-300 hover:bg-yellow-400 text-black border-3 border-black rounded-xl shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer">
+                class="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 p-4 bg-white hover:bg-[#FFE500] text-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer z-50 rounded-xl">
                 <svg class="w-6 h-6 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
             </button>
         </div>
 
-        <!-- Thumbnails Strip -->
-        <div class="w-full max-w-4xl flex items-center justify-center gap-2 overflow-x-auto py-2">
+        <!-- Dedicated Bottom Thumbnail Dock -->
+        <div class="w-full h-24 bg-zinc-900 border-t-2 border-zinc-800 flex items-center justify-center gap-3 px-6 overflow-x-auto shrink-0 z-50">
             <template x-for="(img, idx) in images" :key="idx">
                 <button type="button" @click="activeIndex = idx"
-                    :class="activeIndex === idx ? 'border-yellow-300 scale-105 shadow-[2px_2px_0px_0px_rgba(250,204,21,1)]' : 'border-zinc-700 opacity-60 hover:opacity-100'"
-                    class="w-16 h-12 rounded-lg overflow-hidden border-2 transition-all cursor-pointer shrink-0 bg-zinc-800">
+                    :class="activeIndex === idx ? 'border-[#FFE500] border-4 scale-105 shadow-[4px_4px_0px_0px_#FFE500] opacity-100' : 'border-zinc-700 opacity-50 hover:opacity-80'"
+                    class="h-16 w-24 shrink-0 cursor-pointer overflow-hidden border-2 transition-all duration-200 rounded-lg bg-zinc-800">
                     <img :src="img" class="w-full h-full object-cover">
                 </button>
             </template>

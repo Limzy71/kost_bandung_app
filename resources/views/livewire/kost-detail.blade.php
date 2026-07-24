@@ -338,26 +338,20 @@
                         googleMapsApiKey: @js($googleMapsApiKey ?? '')
                     })" class="relative">
                         <!-- Map Type Switcher Buttons -->
-                        <div class="absolute top-3 left-3 z-[400] flex gap-1.5"
+                        <div class="absolute top-3 left-3 z-[400] flex gap-2"
                             x-show="(map !== null || googleMap !== null)" x-cloak>
                             <button type="button" @click="switchLayer('street')"
                                 :class="currentLayer === 'street' ?
-                                    'bg-yellow-400 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' :
-                                    'bg-white border-black'"
-                                class="px-2.5 py-1 text-[10px] font-black uppercase border-2 rounded text-black transition-all cursor-pointer"
-                                title="Peta Jalan">🗺 Jalan</button>
+                                    'bg-yellow-400 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]' :
+                                    'bg-white border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-zinc-100'"
+                                class="px-3.5 py-1.5 text-xs font-black uppercase border-2 rounded-lg text-black transition-all cursor-pointer"
+                                title="Peta Standard">Peta</button>
                             <button type="button" @click="switchLayer('satellite')"
                                 :class="currentLayer === 'satellite' ?
-                                    'bg-yellow-400 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' :
-                                    'bg-white border-black'"
-                                class="px-2.5 py-1 text-[10px] font-black uppercase border-2 rounded text-black transition-all cursor-pointer"
-                                title="Tampilan Satelit">🛰 Satelit</button>
-                            <button type="button" @click="switchLayer('terrain')"
-                                :class="currentLayer === 'terrain' ?
-                                    'bg-yellow-400 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' :
-                                    'bg-white border-black'"
-                                class="px-2.5 py-1 text-[10px] font-black uppercase border-2 rounded text-black transition-all cursor-pointer"
-                                title="Topografi">⛰ Topografi</button>
+                                    'bg-yellow-400 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]' :
+                                    'bg-white border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-zinc-100'"
+                                class="px-3.5 py-1.5 text-xs font-black uppercase border-2 rounded-lg text-black transition-all cursor-pointer"
+                                title="Tampilan Satelit">Satelit</button>
                         </div>
 
                         <!-- Map Canvas -->

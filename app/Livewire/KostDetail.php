@@ -72,6 +72,8 @@ class KostDetail extends Component
 
     public function render()
     {
-        return view('livewire.kost-detail')->layout('layouts.app');
+        return view('livewire.kost-detail', [
+            'googleMapsApiKey' => config('services.google.maps_api_key') ?: env('GOOGLE_MAPS_API_KEY'),
+        ])->layout('layouts.app');
     }
 }

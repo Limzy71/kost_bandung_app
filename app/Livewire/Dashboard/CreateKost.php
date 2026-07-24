@@ -27,51 +27,54 @@ class CreateKost extends Component
     public array $selectedFacilities = [];
     public array $photos = [];
 
-    protected array $rules = [
-        'name' => 'required|string|max:255',
-        'gender_type' => 'required|in:putra,putri,campur',
-        'description' => 'required|string|min:10',
-        'district' => 'required|string|max:100',
-        'address' => 'required|string|max:500',
-        'price_monthly' => 'required|numeric|min:100000',
-        'latitude' => 'required|numeric|min:-6.9800|max:-6.8300',
-        'longitude' => 'required|numeric|min:107.5400|max:107.7500',
-        'total_rooms' => 'required|integer|min:1',
-        'available_rooms' => 'required|integer|min:0',
-        'selectedFacilities' => 'nullable|array',
-        'selectedFacilities.*' => 'exists:facilities,id',
-        'photos' => 'required|array|min:1|max:8',
-        'photos.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
-    ];
+    protected function rules(): array
+    {
+        return [
+            'name' => 'required|string|max:255',
+            'gender_type' => 'required|in:putra,putri,campur',
+            'description' => 'required|string|min:10',
+            'district' => ['required', 'string', \Illuminate\Validation\Rule::in(array_keys(config('bandung.districts', [])))],
+            'address' => 'required|string|max:500',
+            'price_monthly' => 'required|numeric|min:100000',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'total_rooms' => 'required|integer|min:1',
+            'available_rooms' => 'required|integer|min:0',
+            'selectedFacilities' => 'nullable|array',
+            'selectedFacilities.*' => 'exists:facilities,id',
+            'photos' => 'required|array|min:3|max:10',
+            'photos.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+        ];
+    }
 
-    protected array $messages = [
-        'name.required' => 'Nama kost wajib diisi.',
-        'gender_type.required' => 'Tipe kost wajib dipilih.',
-        'description.required' => 'Deskripsi kost wajib diisi.',
-        'description.min' => 'Deskripsi kost minimal 10 karakter.',
-        'district.required' => 'Kecamatan wajib dipilih.',
-        'address.required' => 'Alamat lengkap wajib diisi.',
-        'price_monthly.required' => 'Harga per bulan wajib diisi.',
-        'price_monthly.numeric' => 'Harga per bulan harus berupa angka.',
-        'price_monthly.min' => 'Harga per bulan minimal Rp 100.000.',
-        'latitude.required' => 'Titik lokasi peta wajib ditentukan.',
-        'latitude.min' => 'Lokasi kost harus berada di dalam area administratif Kota Bandung.',
-        'latitude.max' => 'Lokasi kost harus berada di dalam area administratif Kota Bandung.',
-        'longitude.required' => 'Titik lokasi peta wajib ditentukan.',
-        'longitude.min' => 'Lokasi kost harus berada di dalam area administratif Kota Bandung.',
-        'longitude.max' => 'Lokasi kost harus berada di dalam area administratif Kota Bandung.',
-        'total_rooms.required' => 'Total jumlah kamar wajib diisi.',
-        'total_rooms.integer' => 'Total kamar harus berupa angka bulat.',
-        'total_rooms.min' => 'Total kamar minimal 1.',
-        'available_rooms.required' => 'Sisa kamar tersedia wajib diisi.',
-        'available_rooms.integer' => 'Sisa kamar harus berupa angka bulat.',
-        'photos.required' => 'Minimal 1 foto kost wajib diunggah.',
-        'photos.min' => 'Minimal 1 foto kost wajib diunggah.',
-        'photos.max' => 'Maksimal 8 foto kost dapat diunggah.',
-        'photos.*.image' => 'File harus berupa gambar (JPG, PNG, WEBP).',
-        'photos.*.mimes' => 'File harus berupa gambar dengan format JPG, PNG, atau WEBP.',
-        'photos.*.max' => 'Ukuran setiap foto tidak boleh melebihi 2MB.',
-    ];
+    protected function messages(): array
+    {
+        return [
+            'name.required' => 'Nama kost wajib diisi.',
+            'gender_type.required' => 'Tipe kost wajib dipilih.',
+            'description.required' => 'Deskripsi kost wajib diisi.',
+            'description.min' => 'Deskripsi kost minimal 10 karakter.',
+            'district.required' => 'Kecamatan wajib dipilih.',
+            'district.in' => 'Kecamatan tidak valid.',
+            'address.required' => 'Alamat lengkap wajib diisi.',
+            'price_monthly.required' => 'Harga per bulan wajib diisi.',
+            'price_monthly.numeric' => 'Harga per bulan harus berupa angka.',
+            'price_monthly.min' => 'Harga per bulan minimal Rp 100.000.',
+            'latitude.required' => 'Titik lokasi peta wajib ditentukan.',
+            'longitude.required' => 'Titik lokasi peta wajib ditentukan.',
+            'total_rooms.required' => 'Total jumlah kamar wajib diisi.',
+            'total_rooms.integer' => 'Total kamar harus berupa angka bulat.',
+            'total_rooms.min' => 'Total kamar minimal 1.',
+            'available_rooms.required' => 'Sisa kamar tersedia wajib diisi.',
+            'available_rooms.integer' => 'Sisa kamar harus berupa angka bulat.',
+            'photos.required' => 'MINIMAL 3 FOTO KOST WAJIB DIUNGGAH.',
+            'photos.min' => 'MINIMAL 3 FOTO KOST WAJIB DIUNGGAH.',
+            'photos.max' => 'MAKSIMAL 10 FOTO KOST DAPAT DIUNGGAH.',
+            'photos.*.image' => 'File harus berupa gambar (JPG, PNG, WEBP).',
+            'photos.*.mimes' => 'File harus berupa gambar dengan format JPG, PNG, atau WEBP.',
+            'photos.*.max' => 'Ukuran setiap foto tidak boleh melebihi 2MB.',
+        ];
+    }
 
     public function removePhoto($index)
     {
@@ -98,9 +101,23 @@ class CreateKost extends Component
 
         $lat = (float) $this->latitude;
         $lng = (float) $this->longitude;
-        if ($lat < -6.9800 || $lat > -6.8300 || $lng < 107.5400 || $lng > 107.7500) {
-            $this->addError('latitude', 'Lokasi kost harus berada di dalam area administratif Kota Bandung.');
+        
+        $validDistricts = array_keys(config('bandung.districts', []));
+        if (!in_array($this->district, $validDistricts)) {
+            $this->addError('district', 'Kecamatan tidak valid.');
             return;
+        }
+
+        $districts = config('bandung.districts', []);
+        $bounds = $districts[$this->district]['bounds'] ?? null;
+        if ($bounds) {
+            if (
+                $lat < $bounds['lat_min'] || $lat > $bounds['lat_max'] ||
+                $lng < $bounds['lng_min'] || $lng > $bounds['lng_max']
+            ) {
+                $this->addError('latitude', 'Koordinat peta tidak berada di dalam wilayah Kecamatan yang dipilih.');
+                return;
+            }
         }
 
         $slug = Str::slug($this->name);
@@ -158,35 +175,7 @@ class CreateKost extends Component
     {
         $facilities = Facility::orderBy('name')->get();
 
-        $districts = [
-            'Coblong',
-            'Lengkong',
-            'Kiaracondong',
-            'Sukasari',
-            'Buahbatu',
-            'Sumur Bandung',
-            'Antapani',
-            'Cibiru',
-            'Cidadap',
-            'Bandung Wetan',
-            'Cicendo',
-            'Regol',
-            'Astanajanyar',
-            'Bojongloa Kaler',
-            'Bojongloa Kidul',
-            'Babakan Ciparay',
-            'Bandung Kulon',
-            'Andir',
-            'Sukajadi',
-            'Batununggal',
-            'Rancasari',
-            'Arcamanik',
-            'Ujungberung',
-            'Gedebage',
-            'Panyileukan',
-            'Mandalajati',
-            'Cinambo',
-        ];
+        $districts = array_keys(config('bandung.districts', []));
 
         return view('livewire.dashboard.create-kost', [
             'facilities' => $facilities,

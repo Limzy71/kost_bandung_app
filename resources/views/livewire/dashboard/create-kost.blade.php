@@ -497,9 +497,10 @@
                                 <p class="text-sm font-black text-black uppercase">
                                     Klik atau seret file foto ke area ini
                                 </p>
-                                <p class="text-xs font-bold text-zinc-600 mt-1">
-                                    Format: JPG, PNG, WEBP — Maksimal 8 file, 2MB/file
+                                <p class="text-xs font-black text-black mt-2 bg-black text-yellow-300 inline-block px-3 py-1 rounded border border-black">
+                                    WAJIB UNGGAH MINIMAL 3 FOTO, MAKSIMAL 10 FOTO (MAKS 2MB/FOTO)
                                 </p>
+                                <p class="text-xs font-bold text-zinc-600 mt-1.5">Format: JPG, PNG, WEBP</p>
                                 <span class="inline-block mt-3 bg-yellow-400 text-black font-black text-xs uppercase px-4 py-2 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] group-hover:bg-yellow-300 transition-all rounded">
                                     Pilih File Foto
                                 </span>
@@ -540,8 +541,18 @@
                         @if (count($photos) > 0)
                             <div x-show="!isUploading" class="space-y-4">
                                 <div class="flex items-center justify-between border-b-2 border-black pb-2">
-                                    <div class="text-xs font-black text-black uppercase">
-                                        Preview Foto ({{ count($photos) }}/8)
+                                    <div class="text-xs font-black text-black uppercase flex items-center gap-2">
+                                        Preview Foto
+                                        <span class="px-2 py-0.5 rounded border-2 border-black text-xs font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] {{ count($photos) < 3 ? 'bg-rose-300 text-black' : (count($photos) > 10 ? 'bg-rose-400 text-black' : 'bg-lime-300 text-black') }}">
+                                            {{ count($photos) }}/10
+                                        </span>
+                                        @if(count($photos) < 3)
+                                            <span class="text-[10px] font-black text-rose-600 bg-rose-100 border border-rose-400 px-1.5 py-0.5 rounded uppercase">Kurang {{ 3 - count($photos) }} foto lagi</span>
+                                        @elseif(count($photos) > 10)
+                                            <span class="text-[10px] font-black text-rose-600 bg-rose-100 border border-rose-400 px-1.5 py-0.5 rounded uppercase">Melebihi batas maksimum!</span>
+                                        @else
+                                            <span class="text-[10px] font-black text-lime-700 bg-lime-100 border border-lime-500 px-1.5 py-0.5 rounded uppercase">✓ Jumlah valid</span>
+                                        @endif
                                     </div>
                                     @error('photos') <span class="text-xs font-bold text-rose-500 bg-rose-100 border-2 border-black px-2 py-0.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">{{ $message }}</span> @enderror
                                 </div>

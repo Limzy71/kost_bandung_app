@@ -337,9 +337,9 @@
                         address: @js($kost->address . ', Kec. ' . $kost->district . ', Kota Bandung'),
                         googleMapsApiKey: @js($googleMapsApiKey ?? '')
                     })" class="relative">
-                        <!-- Map Type Switcher Buttons (Leaflet-only) -->
+                        <!-- Map Type Switcher Buttons -->
                         <div class="absolute top-3 left-3 z-[400] flex gap-1.5"
-                            x-show="map !== null && Object.keys(layers).length > 0" x-cloak>
+                            x-show="(map !== null || googleMap !== null)" x-cloak>
                             <button type="button" @click="switchLayer('street')"
                                 :class="currentLayer === 'street' ?
                                     'bg-yellow-400 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' :
@@ -536,6 +536,7 @@
     function kostDetailMap(config) {
         return {
             map: null,
+            googleMap: null,
             currentLayer: 'street',
             layers: {},
 
@@ -629,15 +630,11 @@
                                     lng
                                 },
                                 zoom: 16.5,
-                                mapTypeControl: true,
-                                mapTypeControlOptions: {
-                                    style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-                                    mapTypeIds: ['roadmap', 'satellite', 'terrain'],
-                                    position: google.maps.ControlPosition.TOP_LEFT,
-                                },
+                                mapTypeControl: false,
                                 streetViewControl: false,
                                 fullscreenControl: false,
                             });
+                            this.googleMap = gmap;
                             const marker = new google.maps.Marker({
                                 position: {
                                     lat,
@@ -668,9 +665,17 @@
             },
 
             switchLayer(type) {
-                if (!this.map || !this.layers[type] || this.currentLayer === type) return;
-                this.map.removeLayer(this.layers[this.currentLayer]);
-                this.layers[type].addTo(this.map);
+                if (this.currentLayer === type) return;
+
+                if (this.googleMap) {
+                    if (type === 'street') this.googleMap.setMapTypeId('roadmap');
+                    if (type === 'satellite') this.googleMap.setMapTypeId('satellite');
+                    if (type === 'terrain') this.googleMap.setMapTypeId('terrain');
+                } else if (this.map && this.layers[this.currentLayer] && this.layers[type]) {
+                    this.map.removeLayer(this.layers[this.currentLayer]);
+                    this.layers[type].addTo(this.map);
+                }
+                
                 this.currentLayer = type;
             }
         };

@@ -11,7 +11,21 @@
 @endphp
 
 <div class="min-h-screen bg-[#f8f9fa] bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:24px_24px] pb-28 lg:pb-16 pt-8"
-    x-data="{ showModal: false, showGalleryModal: false, activeIndex: 0, totalImages: {{ $allImages->count() }}, images: {{ Js::from($allImages) }} }" @inquiry-sent.window="showModal = false">
+    x-data="{ 
+        showModal: false, 
+        showGalleryModal: false, 
+        activeIndex: 0, 
+        totalImages: {{ $allImages->count() }}, 
+        images: {{ Js::from($allImages) }},
+        nextImage() {
+            this.activeIndex = (Number(this.activeIndex) + 1) % this.totalImages;
+        },
+        prevImage() {
+            this.activeIndex = (Number(this.activeIndex) - 1 + this.totalImages) % this.totalImages;
+        }
+    }" 
+    x-effect="document.body.style.overflow = (showGalleryModal || showModal) ? 'hidden' : ''"
+    @inquiry-sent.window="showModal = false">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
         <!-- Navigation Back Button -->
@@ -26,15 +40,15 @@
         </div>
 
         <!-- ================================================================
-             MAIN TWO-COLUMN LAYOUT — Grid structure stretched for sticky right sidebar
-             Left (lg:col-span-2): Gallery + Content + Map
-             Right (lg:col-span-1): Sticky Price Card
-             ================================================================ -->
+            MAIN TWO-COLUMN LAYOUT — Grid structure stretched for sticky right sidebar
+            Left (lg:col-span-2): Gallery + Content + Map
+            Right (lg:col-span-1): Sticky Price Card
+            ================================================================ -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
             <!-- ============================================================
-                 LEFT COLUMN — Photo Gallery + All Content Sections
-                 ============================================================ -->
+                LEFT COLUMN — Photo Gallery + All Content Sections
+                ============================================================ -->
             <div class="lg:col-span-2 space-y-6">
 
                 <!-- PHOTO GALLERY — Clean sub-grid, no bleed into content below -->
@@ -241,8 +255,8 @@
             <!-- END LEFT COLUMN -->
 
             <!-- ============================================================
-                 RIGHT COLUMN — Sticky Price Card with Smooth Hover Animations
-                 ============================================================ -->
+                RIGHT COLUMN — Sticky Price Card with Smooth Hover Animations
+                ============================================================ -->
             <div class="lg:col-span-1 h-full">
                 <div
                     class="sticky top-24 w-full bg-white border-4 border-black rounded-2xl p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:translate-x-0.5 hover:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 ease-out hidden lg:block space-y-6">
@@ -343,7 +357,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                             </svg>
-                            <span>↗ BUKA DI GOOGLE MAPS</span>
+                            <span>BUKA DI GOOGLE MAPS</span>
                         </a>
                     </div>
 
@@ -532,13 +546,15 @@
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
         class="fixed inset-0 z-[100] bg-zinc-950/98 backdrop-blur-md flex flex-col justify-between select-none"
-        @keydown.escape.window="showGalleryModal = false">
+        @keydown.escape.window="showGalleryModal = false"
+        @keydown.left.window="if(showGalleryModal) prevImage()"
+        @keydown.right.window="if(showGalleryModal) nextImage()">
 
         <!-- Top Bar -->
         <div class="w-full h-16 px-6 bg-zinc-900 border-b-2 border-zinc-800 flex items-center justify-between z-50 shrink-0">
             <!-- Left: Badge Counter -->
             <div class="bg-[#FFE500] text-black px-3 py-1 font-black border-2 border-black text-sm uppercase rounded shadow-[2px_2px_0px_0px_rgba(255,255,255,1)]">
-                FOTO <span x-text="activeIndex + 1"></span> DARI <span x-text="totalImages"></span>
+                FOTO <span x-text="Number(activeIndex) + 1"></span> DARI <span x-text="totalImages"></span>
             </div>
 
             <!-- Right: Close Button -->
@@ -547,15 +563,16 @@
                 <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
-                <span>✕ TUTUP GALERI</span>
+                <span>TUTUP GALERI</span>
             </button>
         </div>
 
         <!-- Main Image Container -->
         <div class="flex-1 flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
             <!-- Left Arrow -->
-            <button type="button" @click="activeIndex = (activeIndex === 0) ? totalImages - 1 : activeIndex - 1"
-                class="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 p-4 bg-white hover:bg-[#FFE500] text-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer z-50 rounded-xl">
+            <button type="button" @click="prevImage()"
+                class="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 p-4 bg-white hover:bg-[#FFE500] text-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer z-50 rounded-xl"
+                title="Foto Sebelumnya (Panah Kiri)">
                 <svg class="w-6 h-6 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                 </svg>
@@ -563,12 +580,14 @@
 
             <!-- Active Heroic Image -->
             <img :src="images[activeIndex]"
-                class="max-h-[70vh] max-w-[85vw] object-contain border-4 border-black bg-zinc-900 shadow-[8px_8px_0px_0px_#FFE500] transition-all duration-300 rounded-xl"
-                :alt="'Foto Kost ' + (activeIndex + 1)">
+                class="max-h-[72vh] max-w-[85vw] w-auto h-auto object-contain border-4 border-black bg-zinc-900 shadow-[8px_8px_0px_0px_#FFE500] transition-all duration-300 rounded-xl"
+                style="image-rendering: -webkit-optimize-contrast;"
+                :alt="'Foto Kost ' + (Number(activeIndex) + 1)">
 
             <!-- Right Arrow -->
-            <button type="button" @click="activeIndex = (activeIndex === totalImages - 1) ? 0 : activeIndex + 1"
-                class="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 p-4 bg-white hover:bg-[#FFE500] text-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer z-50 rounded-xl">
+            <button type="button" @click="nextImage()"
+                class="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 p-4 bg-white hover:bg-[#FFE500] text-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer z-50 rounded-xl"
+                title="Foto Selanjutnya (Panah Kanan)">
                 <svg class="w-6 h-6 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
@@ -578,8 +597,8 @@
         <!-- Dedicated Bottom Thumbnail Dock -->
         <div class="w-full h-24 bg-zinc-900 border-t-2 border-zinc-800 flex items-center justify-center gap-3 px-6 overflow-x-auto shrink-0 z-50">
             <template x-for="(img, idx) in images" :key="idx">
-                <button type="button" @click="activeIndex = idx"
-                    :class="activeIndex === idx ? 'border-[#FFE500] border-4 scale-105 shadow-[4px_4px_0px_0px_#FFE500] opacity-100' : 'border-zinc-700 opacity-50 hover:opacity-80'"
+                <button type="button" @click="activeIndex = Number(idx)"
+                    :class="Number(activeIndex) === Number(idx) ? 'border-[#FFE500] border-4 scale-105 shadow-[4px_4px_0px_0px_#FFE500] opacity-100' : 'border-zinc-700 opacity-50 hover:opacity-80'"
                     class="h-16 w-24 shrink-0 cursor-pointer overflow-hidden border-2 transition-all duration-200 rounded-lg bg-zinc-800">
                     <img :src="img" class="w-full h-full object-cover">
                 </button>

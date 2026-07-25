@@ -18,10 +18,10 @@
         totalImages: {{ $allImages->count() }}, 
         images: {{ Js::from($allImages) }},
         nextImage() {
-            this.activeIndex = (Number(this.activeIndex) + 1) % this.totalImages;
+            this.activeIndex = (parseInt(this.activeIndex, 10) + 1) % this.totalImages;
         },
         prevImage() {
-            this.activeIndex = (Number(this.activeIndex) - 1 + this.totalImages) % this.totalImages;
+            this.activeIndex = (parseInt(this.activeIndex, 10) - 1 + this.totalImages) % this.totalImages;
         }
     }" 
     x-effect="document.body.style.overflow = (showGalleryModal || showModal) ? 'hidden' : ''"
@@ -52,10 +52,10 @@
             <div class="lg:col-span-2 space-y-6">
 
                 <!-- PHOTO GALLERY — Clean sub-grid, no bleed into content below -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:h-[400px]">
                     <!-- Primary / Hero Image — spans 2 columns on md+ -->
                     <div @click="showGalleryModal = true; activeIndex = 0"
-                        class="md:col-span-2 relative group rounded-2xl overflow-hidden border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-zinc-200 aspect-video md:aspect-auto md:h-80 cursor-pointer">
+                        class="md:col-span-2 relative group rounded-2xl overflow-hidden border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-zinc-200 aspect-video md:aspect-auto md:h-full cursor-pointer">
                         @php
                             $primaryImg = $kost->primaryImage;
                             $primarySrc = $primaryImg
@@ -78,7 +78,7 @@
                     </div>
 
                     <!-- Thumbnail Stack — 3rd column, stacks vertically -->
-                    <div class="flex flex-col gap-4 h-80">
+                    <div class="hidden md:flex flex-col gap-4 h-full">
                         @php
                             $thumbnails = $kost->images->where('is_primary', false)->take(3)->values();
                         @endphp
@@ -570,7 +570,7 @@
         <!-- Main Image Container -->
         <div class="flex-1 flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
             <!-- Left Arrow -->
-            <button type="button" @click="prevImage()"
+            <button type="button" @click.stop="prevImage()"
                 class="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 p-4 bg-white hover:bg-[#FFE500] text-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer z-50 rounded-xl"
                 title="Foto Sebelumnya (Panah Kiri)">
                 <svg class="w-6 h-6 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -581,11 +581,10 @@
             <!-- Active Heroic Image -->
             <img :src="images[activeIndex]"
                 class="max-h-[72vh] max-w-[85vw] w-auto h-auto object-contain border-4 border-black bg-zinc-900 shadow-[8px_8px_0px_0px_#FFE500] transition-all duration-300 rounded-xl"
-                style="image-rendering: -webkit-optimize-contrast;"
                 :alt="'Foto Kost ' + (Number(activeIndex) + 1)">
 
             <!-- Right Arrow -->
-            <button type="button" @click="nextImage()"
+            <button type="button" @click.stop="nextImage()"
                 class="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 p-4 bg-white hover:bg-[#FFE500] text-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer z-50 rounded-xl"
                 title="Foto Selanjutnya (Panah Kanan)">
                 <svg class="w-6 h-6 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">

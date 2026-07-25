@@ -56,10 +56,10 @@
             <div class="lg:col-span-2 space-y-6">
 
                 <!-- PHOTO GALLERY — Clean sub-grid, no bleed into content below -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:h-[400px] isolate pb-2">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <!-- Primary / Hero Image — spans 2 columns on md+ -->
                     <div @click="showGalleryModal = true; activeIndex = 0"
-                        class="md:col-span-2 relative group rounded-2xl overflow-hidden border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-zinc-200 aspect-video md:aspect-auto md:h-full cursor-pointer">
+                        class="md:col-span-2 relative group rounded-2xl overflow-hidden border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-zinc-200 aspect-video md:aspect-auto md:h-96 cursor-pointer">
                         @php
                             $primaryImg = $kost->primaryImage;
                             $primarySrc = $primaryImg
@@ -82,7 +82,7 @@
                     </div>
 
                     <!-- Thumbnail Stack — 3rd column, stacks vertically -->
-                    <div class="hidden md:flex flex-col gap-4 h-full">
+                    <div class="hidden md:flex flex-col gap-4 md:h-96">
                         @php
                             $thumbnails = $kost->images->where('is_primary', false)->take(3)->values();
                         @endphp

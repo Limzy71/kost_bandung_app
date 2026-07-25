@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Kost Bandung - Cari Kost Hyper-Local' }}</title>
+    @fonts
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/catalog-map.js'])
 </head>
 <body class="h-full flex flex-col font-sans antialiased text-gray-950 bg-gray-50">

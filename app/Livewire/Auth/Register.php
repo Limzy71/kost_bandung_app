@@ -5,44 +5,81 @@ namespace App\Livewire\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Password;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 class Register extends Component
 {
-    public string $name = '';
-    public string $email = '';
-    public string $password = '';
+    public string $name                  = '';
+    public string $email                 = '';
+    public string $password              = '';
     public string $password_confirmation = '';
-    public string $role = 'user';
+    public string $role                  = 'seeker';
+    public string $phone_number          = '';
+    public string $business_name         = '';
 
-    protected array $rules = [
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|max:255|unique:users,email',
-        'password' => 'required|string|min:8|confirmed',
-        'role' => 'required|in:user,owner',
-    ];
+    protected function rules(): array
+    {
+        $rules = [
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|max:255|unique:users,email',
+            'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()],
+            'role'     => ['required', Rule::in(['seeker', 'owner'])],
+        ];
+
+        if ($this->role === 'owner') {
+            $rules['phone_number']  = 'required|string|min:10|max:15';
+            $rules['business_name'] = 'required|string|max:255';
+        }
+
+        return $rules;
+    }
 
     protected array $messages = [
-        'name.required' => 'Nama lengkap wajib diisi.',
-        'email.required' => 'Email wajib diisi.',
-        'email.email' => 'Format email tidak valid.',
-        'email.unique' => 'Email sudah terdaftar.',
-        'password.required' => 'Kata sandi wajib diisi.',
-        'password.min' => 'Kata sandi minimal 8 karakter.',
-        'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
-        'role.required' => 'Tipe akun wajib dipilih.',
+        'name.required'          => 'Nama lengkap wajib diisi.',
+        'email.required'         => 'Email wajib diisi.',
+        'email.email'            => 'Format email tidak valid.',
+        'email.unique'           => 'Email sudah terdaftar.',
+        'password.required'      => 'Kata sandi wajib diisi.',
+        'password.min'           => 'Kata sandi minimal 8 karakter.',
+        'password.letters'       => 'Kata sandi harus mengandung huruf.',
+        'password.numbers'       => 'Kata sandi harus mengandung angka.',
+        'password.confirmed'     => 'Konfirmasi kata sandi tidak cocok.',
+        'role.required'          => 'Tipe akun wajib dipilih.',
+        'role.in'                => 'Tipe akun tidak valid.',
+        'phone_number.required'  => 'Nomor WhatsApp wajib diisi untuk Pemilik Kost.',
+        'phone_number.min'       => 'Nomor WhatsApp minimal 10 digit.',
+        'phone_number.max'       => 'Nomor WhatsApp maksimal 15 digit.',
+        'business_name.required' => 'Nama properti/usaha kost wajib diisi untuk Pemilik Kost.',
     ];
+
+    // Reset owner-only fields when role switches back to seeker
+    public function updatedRole(): void
+    {
+        if ($this->role !== 'owner') {
+            $this->phone_number  = '';
+            $this->business_name = '';
+        }
+    }
 
     public function register()
     {
         $this->validate();
 
-        $user = User::create([
-            'name' => $this->name,
-            'email' => $this->email,
+        $userData = [
+            'name'     => $this->name,
+            'email'    => $this->email,
             'password' => Hash::make($this->password),
-            'role' => $this->role,
-        ]);
+            'role'     => $this->role,
+        ];
+
+        if ($this->role === 'owner') {
+            $userData['phone_number']  = $this->phone_number;
+            $userData['business_name'] = $this->business_name;
+        }
+
+        $user = User::create($userData);
 
         Auth::login($user);
 
@@ -55,6 +92,6 @@ class Register extends Component
 
     public function render()
     {
-        return view('livewire.auth.register')->layout('layouts.app');
+        return view('livewire.auth.register')->layout('layouts.auth');
     }
 }

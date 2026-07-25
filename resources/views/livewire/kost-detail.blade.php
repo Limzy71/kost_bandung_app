@@ -18,10 +18,14 @@
         totalImages: {{ $allImages->count() }}, 
         images: {{ Js::from($allImages) }},
         nextImage() {
-            this.activeIndex = (parseInt(this.activeIndex, 10) + 1) % this.totalImages;
+            let current = parseInt(this.activeIndex, 10);
+            let total   = parseInt(this.totalImages, 10);
+            this.activeIndex = (current >= total - 1) ? 0 : (current + 1);
         },
         prevImage() {
-            this.activeIndex = (parseInt(this.activeIndex, 10) - 1 + this.totalImages) % this.totalImages;
+            let current = parseInt(this.activeIndex, 10);
+            let total   = parseInt(this.totalImages, 10);
+            this.activeIndex = (current <= 0) ? (total - 1) : (current - 1);
         }
     }" 
     x-effect="document.body.style.overflow = (showGalleryModal || showModal) ? 'hidden' : ''"
@@ -52,7 +56,7 @@
             <div class="lg:col-span-2 space-y-6">
 
                 <!-- PHOTO GALLERY — Clean sub-grid, no bleed into content below -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:h-[400px]">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:h-[400px] isolate pb-2">
                     <!-- Primary / Hero Image — spans 2 columns on md+ -->
                     <div @click="showGalleryModal = true; activeIndex = 0"
                         class="md:col-span-2 relative group rounded-2xl overflow-hidden border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-zinc-200 aspect-video md:aspect-auto md:h-full cursor-pointer">

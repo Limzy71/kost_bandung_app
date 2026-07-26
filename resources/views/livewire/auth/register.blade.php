@@ -161,7 +161,7 @@
                 class="w-full py-4 px-6 bg-[#FFE500] hover:bg-yellow-400 text-black border-4 border-black font-black text-sm uppercase shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg flex items-center justify-center gap-2 cursor-pointer mt-2"
                 wire:loading.attr="disabled"
                 wire:loading.class="opacity-60 cursor-not-allowed">
-                <span wire:loading.remove wire:target="register">Daftar Sekarang →</span>
+                <span wire:loading.remove wire:target="register">Daftar Sekarang</span>
                 <span wire:loading wire:target="register" class="flex items-center gap-2">
                     <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

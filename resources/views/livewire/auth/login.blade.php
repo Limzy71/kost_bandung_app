@@ -28,7 +28,7 @@
             </div>
         @endif
 
-        <form wire:submit.prevent="login" class="space-y-5">
+        <form wire:submit="login" class="space-y-5">
             {{-- Email --}}
             <div>
                 <label for="email" class="block text-xs font-black uppercase tracking-wider text-black mb-2">
@@ -81,9 +81,10 @@
             <button type="submit"
                 class="w-full py-4 px-6 bg-[#FFE500] hover:bg-yellow-400 text-black border-4 border-black font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all duration-75 rounded-lg flex items-center justify-center gap-2 cursor-pointer mt-2"
                 wire:loading.attr="disabled"
+                wire:target="login"
                 wire:loading.class="opacity-60 cursor-not-allowed">
                 <span wire:loading.remove wire:target="login">Masuk Akun</span>
-                <span wire:loading wire:target="login" class="flex items-center gap-2">
+                <span wire:loading wire:target="login" class="flex items-center gap-2" style="display: none;">
                     <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>

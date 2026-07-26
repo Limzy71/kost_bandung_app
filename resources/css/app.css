@@ -11,6 +11,9 @@
 /* Alpine.js: hide elements with x-cloak until Alpine has initialized them */
 [x-cloak] { display: none !important; }
 
+/* Livewire: hide wire:loading elements by default until loading state triggers */
+[wire\:loading]:not([wire\:loading\.remove]):not([wire\:loading\.class]):not([wire\:loading\.attr]) { display: none; }
+
 @theme {
     --font-sans: 'Outfit', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 

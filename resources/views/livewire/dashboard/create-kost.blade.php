@@ -581,7 +581,7 @@
 
                         <!-- State 2: Upload Complete & Photo Preview -->
                         @if (count($photos) > 0)
-                            <div x-show="!isUploading" class="space-y-4">
+                            <div class="space-y-4">
                                 <div class="flex items-center justify-between border-b-2 border-black pb-2">
                                     <div class="text-xs font-black text-black uppercase flex items-center gap-2">
                                         Preview Foto

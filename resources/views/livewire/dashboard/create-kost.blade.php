@@ -225,21 +225,42 @@
                 <div x-data="{
                     lat: @entangle('latitude'),
                     lng: @entangle('longitude'),
+                    address: @entangle('address'),
                     hasGoogleKey: '{{ $googleMapsApiKey }}',
                     map: null,
                     marker: null,
+                    setCoords(newLat, newLng) {
+                        const formattedLat = newLat.toFixed(6);
+                        const formattedLng = newLng.toFixed(6);
+                        this.lat = formattedLat;
+                        this.lng = formattedLng;
+                        $wire.set('latitude', formattedLat);
+                        $wire.set('longitude', formattedLng);
+                    },
+                    geocodeAddress(addr) {
+                        if (!addr || addr.trim() === '') return;
+                        const query = addr + ', Bandung';
+                        if (window.google && window.google.maps) {
+                            const geocoder = new google.maps.Geocoder();
+                            geocoder.geocode({ address: query }, (results, status) => {
+                                if (status === 'OK' && results[0]) {
+                                    const loc = results[0].geometry.location;
+                                    this.setCoords(loc.lat(), loc.lng());
+                                }
+                            });
+                        } else if (typeof L !== 'undefined') {
+                            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`)
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data && data.length > 0) {
+                                        this.setCoords(parseFloat(data[0].lat), parseFloat(data[0].lon));
+                                    }
+                                }).catch(err => console.warn('Nominatim error', err));
+                        }
+                    },
                     initMap() {
                         const curLat = parseFloat(this.lat) || -6.917464;
                         const curLng = parseFloat(this.lng) || 107.619123;
-                
-                        const setCoords = (newLat, newLng) => {
-                            const formattedLat = newLat.toFixed(6);
-                            const formattedLng = newLng.toFixed(6);
-                            this.lat = formattedLat;
-                            this.lng = formattedLng;
-                            $wire.set('latitude', formattedLat);
-                            $wire.set('longitude', formattedLng);
-                        };
                 
                         const setupGoogleMap = () => {
                             if (this.map || !window.google || !window.google.maps) return false;
@@ -260,12 +281,12 @@
                                 });
                 
                                 this.marker.addListener('dragend', (e) => {
-                                    setCoords(e.latLng.lat(), e.latLng.lng());
+                                    this.setCoords(e.latLng.lat(), e.latLng.lng());
                                 });
                 
                                 this.map.addListener('click', (e) => {
                                     this.marker.setPosition(e.latLng);
-                                    setCoords(e.latLng.lat(), e.latLng.lng());
+                                    this.setCoords(e.latLng.lat(), e.latLng.lng());
                                 });
                                 return true;
                             } catch (e) {
@@ -287,12 +308,12 @@
                 
                             this.marker.on('dragend', (e) => {
                                 const pos = e.target.getLatLng();
-                                setCoords(pos.lat, pos.lng);
+                                this.setCoords(pos.lat, pos.lng);
                             });
                 
                             this.map.on('click', (e) => {
                                 this.marker.setLatLng(e.latlng);
-                                setCoords(e.latlng.lat, e.latlng.lng);
+                                this.setCoords(e.latlng.lat, e.latlng.lng);
                             });
                         };
                 
@@ -344,6 +365,9 @@
                         
                         this.$watch('lat', () => this.updateMapPosition());
                         this.$watch('lng', () => this.updateMapPosition());
+                        this.$watch('address', (value) => {
+                            if (value) this.geocodeAddress(value);
+                        });
                     },
                     updateMapPosition() {
                         const newLat = parseFloat(this.lat);

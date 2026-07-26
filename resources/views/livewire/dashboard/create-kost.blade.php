@@ -376,7 +376,7 @@
                     </p>
 
                     <!-- Google Maps / Leaflet Canvas -->
-                    <div class="relative">
+                    <div class="relative" wire:ignore>
                         <div x-ref="mapElement"
                             class="w-full h-80 rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] z-0 bg-zinc-100">
                         </div>

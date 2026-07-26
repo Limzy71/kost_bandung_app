@@ -211,7 +211,7 @@
                             Alamat Lengkap <span class="text-rose-600">*</span>
                         </label>
                         <input type="text" id="address" wire:model.live.debounce.1000ms="address"
-                            x-on:keydown.enter.prevent
+                            x-on:keydown.enter.prevent="$el.blur()"
                             placeholder="Contoh: Jl. Dipatiukur No. 80, RT 02/RW 05"
                             class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
                         @error('address')

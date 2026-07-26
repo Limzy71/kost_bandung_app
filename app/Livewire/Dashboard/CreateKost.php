@@ -27,6 +27,27 @@ class CreateKost extends Component
     public array $selectedFacilities = [];
     public array $photos = [];
 
+    public function updatedPriceMonthly($value)
+    {
+        if (is_numeric($value) && $value < 0) {
+            $this->price_monthly = '0';
+        }
+    }
+
+    public function updatedTotalRooms($value)
+    {
+        if (is_numeric($value) && $value < 0) {
+            $this->total_rooms = '0';
+        }
+    }
+
+    public function updatedAvailableRooms($value)
+    {
+        if (is_numeric($value) && $value < 0) {
+            $this->available_rooms = '0';
+        }
+    }
+
     protected function rules(): array
     {
         return [

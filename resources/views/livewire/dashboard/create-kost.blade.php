@@ -122,6 +122,7 @@
                             id="description" 
                             x-model="desc" 
                             rows="4" 
+                            maxlength="500"
                             placeholder="Contoh: Kost khusus putra di Coblong, 5 menit dari kampus. Kamar full furnished, AC, WiFi cepat. Lingkungan aman, dekat minimarket & warung makan. Cocok untuk mahasiswa/karyawan." 
                             class="w-full bg-white border-2 border-black rounded-lg p-4 pb-10 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
                         ></textarea>
@@ -132,11 +133,11 @@
                                 class="px-2.5 py-1 text-[10px] font-black uppercase rounded border-2 transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-block"
                                 :class="{
                                     'bg-zinc-100 text-zinc-700 border-black': count <= 299,
-                                    'bg-yellow-300 text-black border-black': count >= 300 && count <= 500,
-                                    'bg-rose-100 text-rose-700 border-rose-500': count > 500
+                                    'bg-yellow-300 text-black border-black': count >= 300 && count < 500,
+                                    'bg-rose-100 text-rose-700 border-rose-500': count >= 500
                                 }"
                             >
-                                <span x-text="count"></span>/300 karakter
+                                <span x-text="count"></span>/500 karakter
                             </span>
                         </div>
                     </div>

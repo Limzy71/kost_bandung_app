@@ -17,7 +17,7 @@ class CreateKost extends Component
     public string $name = '';
     public string $gender_type = 'campur';
     public string $description = '';
-    public string $district = 'Coblong';
+    public string $district = '';
     public string $address = '';
     public string $price_monthly = '';
     public string $latitude = '-6.917464';

@@ -226,6 +226,7 @@
                     lat: @entangle('latitude'),
                     lng: @entangle('longitude'),
                     address: @entangle('address'),
+                    district: @entangle('district'),
                     hasGoogleKey: '{{ $googleMapsApiKey }}',
                     map: null,
                     marker: null,
@@ -239,10 +240,25 @@
                     },
                     geocodeAddress(addr) {
                         if (!addr || addr.trim() === '') return;
-                        const query = addr + ', Bandung';
+                        
+                        let query = addr;
+                        if (this.district && this.district.trim() !== '') {
+                            query += ', Kec. ' + this.district;
+                        }
+                        query += ', Kota Bandung, Jawa Barat, Indonesia';
+                        
                         if (window.google && window.google.maps) {
                             const geocoder = new google.maps.Geocoder();
-                            geocoder.geocode({ address: query }, (results, status) => {
+                            const bandungBounds = new google.maps.LatLngBounds(
+                                new google.maps.LatLng(-6.9839, 107.5451),
+                                new google.maps.LatLng(-6.8378, 107.7388)
+                            );
+                            
+                            geocoder.geocode({ 
+                                address: query,
+                                bounds: bandungBounds,
+                                region: 'id'
+                            }, (results, status) => {
                                 if (status === 'OK' && results[0]) {
                                     const loc = results[0].geometry.location;
                                     this.setCoords(loc.lat(), loc.lng());

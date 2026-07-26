@@ -10,9 +10,6 @@
             <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
                 {{-- Logo & Brand --}}
                 <a href="{{ route('home') }}" class="flex items-center gap-2.5 group" wire:navigate>
-                    <span class="flex h-8 w-8 items-center justify-center">
-                        <x-app-logo-icon class="size-8 fill-current text-black" />
-                    </span>
                     <span class="text-lg font-black text-black uppercase tracking-tight flex items-center leading-none">
                         KostBandung<span class="bg-[#FFE500] border-2 border-black px-1.5 py-0.5 rounded text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ml-1 font-black text-black">.id</span>
                     </span>

@@ -64,3 +64,19 @@ test('successful login clears the rate limiter', function () {
     // sehingga hit count kembali ke 0
     expect(RateLimiter::attempts('login_127.0.0.1'))->toBe(0);
 });
+
+test('user can login with remember me checked', function () {
+    $user = User::factory()->create([
+        'password' => bcrypt('password123'),
+    ]);
+
+    Livewire::test(Login::class)
+        ->set('email', $user->email)
+        ->set('password', 'password123')
+        ->set('remember', true)
+        ->call('login')
+        ->assertHasNoErrors();
+
+    expect(Auth::check())->toBeTrue();
+    expect(Auth::id())->toBe($user->id);
+});

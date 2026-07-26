@@ -160,29 +160,36 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <!-- Dropdown Kecamatan -->
                     <div class="space-y-2 md:col-span-1">
-                        <label for="district" class="block text-xs font-black uppercase tracking-wider text-black">
-                            Kecamatan (Kota Bandung) <span class="text-rose-600">*</span>
+                        <label for="district" class="block text-xs font-black uppercase tracking-wider text-black truncate">
+                            Kecamatan <span class="text-rose-600">*</span>
                         </label>
-                        <select 
-                            id="district" 
-                            wire:model.live="district" 
-                            class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px_16px] bg-no-repeat bg-[right_14px_center] pr-10"
-                        >
-                            <option value="" disabled>-- Pilih Kecamatan --</option>
-                            @foreach($districts as $dist)
-                                <option value="{{ $dist }}" class="font-bold text-sm text-black">Kec. {{ $dist }}</option>
-                            @endforeach
-                        </select>
+                        <div class="relative">
+                            <select 
+                                id="district" 
+                                wire:model.live="district" 
+                                class="w-full bg-white border-2 border-black rounded-lg pl-3.5 pr-9 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all appearance-none"
+                            >
+                                <option value="" disabled>-- Pilih Kecamatan --</option>
+                                @foreach($districts as $dist)
+                                    <option value="{{ $dist }}" class="font-bold text-sm text-black">Kec. {{ $dist }}</option>
+                                @endforeach
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-black">
+                                <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </div>
+                        </div>
                         @error('district')
                             <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <!-- Alamat Lengkap -->
-                    <div class="space-y-2 md:col-span-2">
+                    <div class="space-y-2 md:col-span-3">
                         <label for="address" class="block text-xs font-black uppercase tracking-wider text-black">
                             Alamat Lengkap <span class="text-rose-600">*</span>
                         </label>

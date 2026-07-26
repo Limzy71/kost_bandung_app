@@ -65,6 +65,10 @@
                 class="text-left p-5 border-3 border-black rounded-xl shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer {{ $activeTab === 'pending' ? 'bg-amber-300 ring-4 ring-black translate-x-0.5 translate-y-0.5' : 'bg-amber-100 hover:bg-amber-200' }}"
             >
                 <p class="text-xs font-black uppercase tracking-wider text-black flex items-center gap-1.5">
+                    <span class="relative flex h-2 w-2 shrink-0">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-600 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-700"></span>
+                    </span>
                     <svg class="w-4 h-4 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     <span>Menunggu Review</span>
                 </p>

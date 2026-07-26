@@ -156,7 +156,7 @@
                                         <svg class="w-4 h-4 text-black group-hover:rotate-90 transition-transform stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
                                         </svg>
-                                        <span>Pasang Iklan Kost</span>
+                                        <span>Tambah Kost Baru</span>
                                     </a>
                                 </li>
                                 @php

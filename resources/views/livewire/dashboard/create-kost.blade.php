@@ -243,9 +243,9 @@
                         
                         let query = addr;
                         if (this.district && this.district.trim() !== '') {
-                            query += ', ' + this.district;
+                            query += ', Kecamatan ' + this.district;
                         }
-                        query += ', Bandung, Indonesia';
+                        query += ', Kota Bandung, Jawa Barat';
                         
                         const useNominatim = () => {
                             fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`)
@@ -261,7 +261,9 @@
                             const geocoder = new google.maps.Geocoder();
                             geocoder.geocode({ 
                                 address: query,
-                                region: 'id'
+                                componentRestrictions: {
+                                    country: 'ID'
+                                }
                             }, (results, status) => {
                                 if (status === 'OK' && results[0]) {
                                     const loc = results[0].geometry.location;

@@ -53,7 +53,7 @@ class CreateKost extends Component
         return [
             'name' => 'required|string|max:255',
             'gender_type' => 'required|in:putra,putri,campur',
-            'description' => 'required|string|min:10',
+            'description' => 'required|string|min:10|max:1000',
             'district' => ['required', 'string', \Illuminate\Validation\Rule::in(array_keys(config('bandung.districts', [])))],
             'address' => 'required|string|max:500',
             'price_monthly' => 'required|numeric|min:100000',
@@ -75,6 +75,7 @@ class CreateKost extends Component
             'gender_type.required' => 'Tipe kost wajib dipilih.',
             'description.required' => 'Deskripsi kost wajib diisi.',
             'description.min' => 'Deskripsi kost minimal 10 karakter.',
+            'description.max' => 'Deskripsi kost maksimal 1000 karakter.',
             'district.required' => 'Kecamatan wajib dipilih.',
             'district.in' => 'Kecamatan tidak valid.',
             'address.required' => 'Alamat lengkap wajib diisi.',

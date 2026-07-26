@@ -101,17 +101,46 @@
                 </div>
 
                 <!-- Deskripsi Kost -->
-                <div class="space-y-2">
-                    <label for="description" class="block text-xs font-black uppercase tracking-wider text-black">
-                        Deskripsi Lengkap <span class="text-rose-600">*</span>
-                    </label>
-                    <textarea 
-                        id="description" 
-                        wire:model="description" 
-                        rows="4" 
-                        placeholder="Jelaskan keunggulan, aksesibilitas ke kampus/perkantoran, dan suasana hunian kost Anda..." 
-                        class="w-full bg-white border-2 border-black rounded-lg p-4 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
-                    ></textarea>
+                <div 
+                    x-data="{ 
+                        desc: @entangle('description').live,
+                        get count() { return (this.desc || '').length }
+                    }"
+                    class="space-y-2"
+                >
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                        <label for="description" class="block text-xs font-black uppercase tracking-wider text-black">
+                            Deskripsi Lengkap <span class="text-rose-600">*</span>
+                        </label>
+                        <span class="text-[11px] font-bold italic text-zinc-600">
+                            Tips: sebutkan lokasi, fasilitas unggulan, dan lingkungan sekitar dalam 3–5 kalimat singkat.
+                        </span>
+                    </div>
+
+                    <div class="relative">
+                        <textarea 
+                            id="description" 
+                            x-model="desc" 
+                            rows="4" 
+                            placeholder="Contoh: Kost khusus putra di Coblong, 5 menit dari kampus. Kamar full furnished, AC, WiFi cepat. Lingkungan aman, dekat minimarket & warung makan. Cocok untuk mahasiswa/karyawan." 
+                            class="w-full bg-white border-2 border-black rounded-lg p-4 pb-10 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+                        ></textarea>
+
+                        <!-- Neo-Brutalist Live Character Counter Badge -->
+                        <div class="absolute bottom-3 right-3 pointer-events-none">
+                            <span 
+                                class="px-2.5 py-1 text-[10px] font-black uppercase rounded border-2 transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-block"
+                                :class="{
+                                    'bg-zinc-100 text-zinc-700 border-black': count <= 299,
+                                    'bg-yellow-300 text-black border-black': count >= 300 && count <= 500,
+                                    'bg-rose-100 text-rose-700 border-rose-500': count > 500
+                                }"
+                            >
+                                <span x-text="count"></span>/300 karakter
+                            </span>
+                        </div>
+                    </div>
+
                     @error('description')
                         <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
                     @enderror

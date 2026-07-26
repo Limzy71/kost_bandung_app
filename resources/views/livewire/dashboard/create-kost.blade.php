@@ -162,7 +162,7 @@
 
                 <div class="flex flex-col md:flex-row gap-6">
                     <!-- Dropdown Kecamatan -->
-                    <div class="space-y-2 md:w-64 flex-shrink-0">
+                    <div class="space-y-2 md:w-50 flex-shrink-0">
                         <label for="district" class="block text-xs font-black uppercase tracking-wider text-black">
                             Kecamatan <span class="text-rose-600">*</span>
                         </label>
@@ -585,11 +585,11 @@
                                 <div class="flex items-center justify-between border-b-2 border-black pb-2">
                                     <div class="text-xs font-black text-black uppercase flex items-center gap-2">
                                         Preview Foto
-                                        <span class="px-2 py-0.5 rounded border-2 border-black text-xs font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] {{ count($photos) < 3 ? 'bg-rose-300 text-black' : (count($photos) > 10 ? 'bg-rose-400 text-black' : 'bg-lime-300 text-black') }}">
+                                        <span class="px-2 py-0.5 rounded border-2 border-black text-xs font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] {{ count($photos) < 4 ? 'bg-rose-300 text-black' : (count($photos) > 10 ? 'bg-rose-400 text-black' : 'bg-lime-300 text-black') }}">
                                             {{ count($photos) }}/10
                                         </span>
-                                        @if(count($photos) < 3)
-                                            <span class="text-[10px] font-black text-rose-600 bg-rose-100 border border-rose-400 px-1.5 py-0.5 rounded uppercase">Kurang {{ 3 - count($photos) }} foto lagi</span>
+                                        @if(count($photos) < 4)
+                                            <span class="text-[10px] font-black text-rose-600 bg-rose-100 border border-rose-400 px-1.5 py-0.5 rounded uppercase">Kurang {{ 4 - count($photos) }} foto lagi</span>
                                         @elseif(count($photos) > 10)
                                             <span class="text-[10px] font-black text-rose-600 bg-rose-100 border border-rose-400 px-1.5 py-0.5 rounded uppercase">Melebihi batas maksimum!</span>
                                         @else

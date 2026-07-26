@@ -24,8 +24,8 @@
             <div>
                 <p class="block text-xs font-black uppercase tracking-wider text-black mb-3">Tipe Akun Saya</p>
                 <div class="grid grid-cols-2 gap-3">
-                    <button type="button" wire:click="$set('role', 'seeker')"
-                        class="py-3.5 px-4 text-xs font-black uppercase border-4 border-black rounded-lg transition-all cursor-pointer {{ $role === 'seeker'
+                    <button type="button" wire:click="$set('role', 'user')"
+                        class="py-3.5 px-4 text-xs font-black uppercase border-4 border-black rounded-lg transition-all cursor-pointer {{ $role === 'user'
                             ? 'bg-[#FFE500] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -translate-x-0.5 -translate-y-0.5'
                             : 'bg-white hover:bg-zinc-100 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none' }}">
                         🔍 Pencari Kost

@@ -5,7 +5,7 @@ namespace App\Livewire\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Password;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 
@@ -15,7 +15,7 @@ class Register extends Component
     public string $email                 = '';
     public string $password              = '';
     public string $password_confirmation = '';
-    public string $role                  = 'seeker';
+    public string $role                  = 'user';
     public string $phone_number          = '';
     public string $business_name         = '';
 
@@ -25,7 +25,7 @@ class Register extends Component
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|max:255|unique:users,email',
             'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()],
-            'role'     => ['required', Rule::in(['seeker', 'owner'])],
+            'role'     => ['required', Rule::in(['user', 'owner'])],
         ];
 
         if ($this->role === 'owner') {
@@ -54,7 +54,7 @@ class Register extends Component
         'business_name.required' => 'Nama properti/usaha kost wajib diisi untuk Pemilik Kost.',
     ];
 
-    // Reset owner-only fields when role switches back to seeker
+    // Reset owner-only fields when role switches back to user
     public function updatedRole(): void
     {
         if ($this->role !== 'owner') {

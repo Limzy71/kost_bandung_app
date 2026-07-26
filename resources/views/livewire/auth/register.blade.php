@@ -25,16 +25,22 @@
                 <p class="block text-xs font-black uppercase tracking-wider text-black mb-3">Tipe Akun Saya</p>
                 <div class="grid grid-cols-2 gap-3">
                     <button type="button" wire:click="$set('role', 'user')"
-                        class="py-3.5 px-4 text-xs font-black text-black uppercase border-4 border-black rounded-lg transition-all cursor-pointer {{ $role === 'user'
-                            ? 'bg-[#FFE500] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -translate-x-0.5 -translate-y-0.5'
-                            : 'bg-white hover:bg-zinc-100 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none' }}">
-                        🔍 Pencari Kost
+                        class="py-3.5 px-4 text-xs font-black text-black uppercase border-2 border-black rounded-lg transition-all cursor-pointer focus:outline-none focus:ring-0 {{ $role === 'user'
+                            ? 'bg-[#FFE500] shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] -translate-x-0.5 -translate-y-0.5'
+                            : 'bg-white hover:bg-zinc-100 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none' }}">
+                        <div class="flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                            <span>Pencari Kost</span>
+                        </div>
                     </button>
                     <button type="button" wire:click="$set('role', 'owner')"
-                        class="py-3.5 px-4 text-xs font-black text-black uppercase border-4 border-black rounded-lg transition-all cursor-pointer {{ $role === 'owner'
-                            ? 'bg-[#FFE500] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -translate-x-0.5 -translate-y-0.5'
-                            : 'bg-white hover:bg-zinc-100 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none' }}">
-                        🏠 Pemilik Kost
+                        class="py-3.5 px-4 text-xs font-black text-black uppercase border-2 border-black rounded-lg transition-all cursor-pointer focus:outline-none focus:ring-0 {{ $role === 'owner'
+                            ? 'bg-[#FFE500] shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] -translate-x-0.5 -translate-y-0.5'
+                            : 'bg-white hover:bg-zinc-100 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none' }}">
+                        <div class="flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                            <span>Pemilik Kost</span>
+                        </div>
                     </button>
                 </div>
                 @error('role')

@@ -243,28 +243,11 @@
                         
                         let query = addr;
                         if (this.district && this.district.trim() !== '') {
-                            query += ', Kec. ' + this.district;
+                            query += ', ' + this.district;
                         }
-                        query += ', Kota Bandung, Jawa Barat, Indonesia';
+                        query += ', Bandung, Indonesia';
                         
-                        if (window.google && window.google.maps) {
-                            const geocoder = new google.maps.Geocoder();
-                            const bandungBounds = new google.maps.LatLngBounds(
-                                new google.maps.LatLng(-6.9839, 107.5451),
-                                new google.maps.LatLng(-6.8378, 107.7388)
-                            );
-                            
-                            geocoder.geocode({ 
-                                address: query,
-                                bounds: bandungBounds,
-                                region: 'id'
-                            }, (results, status) => {
-                                if (status === 'OK' && results[0]) {
-                                    const loc = results[0].geometry.location;
-                                    this.setCoords(loc.lat(), loc.lng());
-                                }
-                            });
-                        } else if (typeof L !== 'undefined') {
+                        const useNominatim = () => {
                             fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`)
                                 .then(res => res.json())
                                 .then(data => {
@@ -272,6 +255,24 @@
                                         this.setCoords(parseFloat(data[0].lat), parseFloat(data[0].lon));
                                     }
                                 }).catch(err => console.warn('Nominatim error', err));
+                        };
+
+                        if (window.google && window.google.maps) {
+                            const geocoder = new google.maps.Geocoder();
+                            geocoder.geocode({ 
+                                address: query,
+                                region: 'id'
+                            }, (results, status) => {
+                                if (status === 'OK' && results[0]) {
+                                    const loc = results[0].geometry.location;
+                                    this.setCoords(loc.lat(), loc.lng());
+                                } else {
+                                    console.warn('Google Geocode failed:', status, '- falling back to Nominatim');
+                                    useNominatim();
+                                }
+                            });
+                        } else if (typeof L !== 'undefined') {
+                            useNominatim();
                         }
                     },
                     initMap() {

@@ -164,15 +164,16 @@
                     <!-- Dropdown Kecamatan -->
                     <div class="space-y-2 md:col-span-1">
                         <label for="district" class="block text-xs font-black uppercase tracking-wider text-black">
-                            Kecamatan <span class="text-rose-600">*</span>
+                            Kecamatan (Kota Bandung) <span class="text-rose-600">*</span>
                         </label>
                         <select 
                             id="district" 
-                            wire:model="district" 
-                            class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all"
+                            wire:model.live="district" 
+                            class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px_16px] bg-no-repeat bg-[right_14px_center] pr-10"
                         >
+                            <option value="" disabled>-- Pilih Kecamatan --</option>
                             @foreach($districts as $dist)
-                                <option value="{{ $dist }}">{{ $dist }}</option>
+                                <option value="{{ $dist }}" class="font-bold text-sm text-black">Kec. {{ $dist }}</option>
                             @endforeach
                         </select>
                         @error('district')

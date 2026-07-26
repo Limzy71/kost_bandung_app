@@ -27,6 +27,15 @@ class CreateKost extends Component
     public array $selectedFacilities = [];
     public array $photos = [];
 
+    public function updatedDistrict($value)
+    {
+        $districtsConfig = config('bandung.districts', []);
+        if (isset($districtsConfig[$value]['center'])) {
+            $this->latitude = (string) $districtsConfig[$value]['center']['lat'];
+            $this->longitude = (string) $districtsConfig[$value]['center']['lng'];
+        }
+    }
+
     public function updatedPriceMonthly($value)
     {
         if (is_numeric($value) && $value < 0) {

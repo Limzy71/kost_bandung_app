@@ -140,63 +140,75 @@
                     <ul class="space-y-2.5 text-xs font-black uppercase">
                         @auth
                             @if(auth()->user()->role === 'owner')
-                                <li>
-                                    <a href="{{ route('home') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
-                                        <svg class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                                        </svg>
-                                        <span>Beranda Utama</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('dashboard') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
-                                        <svg class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
-                                        </svg>
-                                        <span>Dashboard Pemilik</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('dashboard.kost.create') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
-                                        <svg class="w-4 h-4 text-black group-hover:rotate-90 transition-transform stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-                                        </svg>
-                                        <span>Tambah Kost Baru</span>
-                                    </a>
-                                </li>
-                                @php
-                                    $unreadInquiriesCountMobile = \App\Models\Inquiry::where('status', 'unread')->whereHas('kost', function($q) {
-                                        $q->where('user_id', auth()->id());
-                                    })->count();
-                                @endphp
-                                <li>
-                                    <a href="{{ route('dashboard.inquiries') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
-                                        <svg class="w-4 h-4 text-black group-hover:scale-110 transition-transform stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                                        <span>Inbox Pesan</span>
-                                        @if($unreadInquiriesCountMobile > 0)
-                                            <span class="bg-rose-500 text-white rounded-full px-1.5 py-0.5 text-[9px] font-black min-w-[20px] text-center ml-1 border-2 border-black">{{ $unreadInquiriesCountMobile }}</span>
-                                        @endif
-                                    </a>
-                                </li>
+                                @unless(request()->routeIs('home'))
+                                    <li>
+                                        <a href="{{ route('home') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
+                                            <svg class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                                            </svg>
+                                            <span>Beranda Utama</span>
+                                        </a>
+                                    </li>
+                                @endunless
+                                @unless(request()->routeIs('dashboard'))
+                                    <li>
+                                        <a href="{{ route('dashboard') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
+                                            <svg class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                                            </svg>
+                                            <span>Dashboard Pemilik</span>
+                                        </a>
+                                    </li>
+                                @endunless
+                                @unless(request()->routeIs('dashboard.kost.create'))
+                                    <li>
+                                        <a href="{{ route('dashboard.kost.create') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
+                                            <svg class="w-4 h-4 text-black group-hover:rotate-90 transition-transform stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                                            </svg>
+                                            <span>Tambah Kost Baru</span>
+                                        </a>
+                                    </li>
+                                @endunless
+                                @unless(request()->routeIs('dashboard.inquiries'))
+                                    @php
+                                        $unreadInquiriesCountMobile = \App\Models\Inquiry::where('status', 'unread')->whereHas('kost', function($q) {
+                                            $q->where('user_id', auth()->id());
+                                        })->count();
+                                    @endphp
+                                    <li>
+                                        <a href="{{ route('dashboard.inquiries') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
+                                            <svg class="w-4 h-4 text-black group-hover:scale-110 transition-transform stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                            <span>Inbox Pesan</span>
+                                            @if($unreadInquiriesCountMobile > 0)
+                                                <span class="bg-rose-500 text-white rounded-full px-1.5 py-0.5 text-[9px] font-black min-w-[20px] text-center ml-1 border-2 border-black">{{ $unreadInquiriesCountMobile }}</span>
+                                            @endif
+                                        </a>
+                                    </li>
+                                @endunless
                             @else
-                                <li>
-                                    <a href="{{ route('home') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
-                                        <svg class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                                        </svg>
-                                        <span>Beranda Utama</span>
-                                    </a>
-                                </li>
+                                @unless(request()->routeIs('home'))
+                                    <li>
+                                        <a href="{{ route('home') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
+                                            <svg class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                                            </svg>
+                                            <span>Beranda Utama</span>
+                                        </a>
+                                    </li>
+                                @endunless
                             @endif
                         @else
-                            <li>
-                                <a href="{{ route('home') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
-                                    <svg class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                                    </svg>
-                                    <span>Beranda Utama</span>
-                                </a>
-                            </li>
+                            @unless(request()->routeIs('home'))
+                                <li>
+                                    <a href="{{ route('home') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
+                                        <svg class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                                        </svg>
+                                        <span>Beranda Utama</span>
+                                    </a>
+                                </li>
+                            @endunless
                             <li>
                                 <a href="{{ route('login') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
                                     <svg class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">

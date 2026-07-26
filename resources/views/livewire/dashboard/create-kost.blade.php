@@ -160,10 +160,10 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="flex flex-col md:flex-row gap-6">
                     <!-- Dropdown Kecamatan -->
-                    <div class="space-y-2 md:col-span-1">
-                        <label for="district" class="block text-xs font-black uppercase tracking-wider text-black truncate">
+                    <div class="space-y-2 md:w-52 flex-shrink-0">
+                        <label for="district" class="block text-xs font-black uppercase tracking-wider text-black">
                             Kecamatan <span class="text-rose-600">*</span>
                         </label>
                         <div class="relative">
@@ -189,7 +189,7 @@
                     </div>
 
                     <!-- Alamat Lengkap -->
-                    <div class="space-y-2 md:col-span-3">
+                    <div class="space-y-2 flex-1">
                         <label for="address" class="block text-xs font-black uppercase tracking-wider text-black">
                             Alamat Lengkap <span class="text-rose-600">*</span>
                         </label>

@@ -1,18 +1,23 @@
-<div class="min-h-screen bg-[#f8f9fa] bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:24px_24px]">
+<div
+    class="min-h-screen bg-[#f8f9fa] bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:24px_24px]">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-8">
 
         <!-- Top Header & Back Button -->
         <div>
-            <a href="{{ route('dashboard') }}" class="inline-flex items-center gap-2 text-xs font-black uppercase text-black bg-white border-2 border-black px-3.5 py-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-yellow-300 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg mb-6 group">
-                <svg class="w-4 h-4 text-black group-hover:-translate-x-1 transition-transform stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            <a href="{{ route('dashboard') }}"
+                class="inline-flex items-center gap-2 text-xs font-black uppercase text-black bg-white border-2 border-black px-3.5 py-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-yellow-300 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg mb-6 group">
+                <svg class="w-4 h-4 text-black group-hover:-translate-x-1 transition-transform stroke-[3]" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
                 <span>Kembali ke Dashboard</span>
             </a>
-            
-            <div class="bg-yellow-300 border-4 border-black p-6 md:p-8 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+
+            <div
+                class="bg-yellow-300 border-4 border-black p-6 md:p-8 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <span class="px-3 py-1 bg-black text-yellow-300 font-extrabold text-xs uppercase tracking-wider border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                    <span
+                        class="px-3 py-1 bg-black text-yellow-300 font-extrabold text-xs uppercase tracking-wider border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                         Form Pendaftaran
                     </span>
                     <h1 class="text-3xl md:text-4xl font-black text-black tracking-tight uppercase mt-2">
@@ -29,9 +34,11 @@
         <form wire:submit.prevent="save" class="space-y-8">
 
             <!-- Seksi 1: Informasi Dasar -->
-            <div class="bg-white rounded-xl p-6 md:p-8 border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6">
+            <div
+                class="bg-white rounded-xl p-6 md:p-8 border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6">
                 <div class="flex items-center gap-3 border-b-3 border-black pb-4">
-                    <div class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                    <div
+                        class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                         1
                     </div>
                     <div>
@@ -45,15 +52,13 @@
                     <label for="name" class="block text-xs font-black uppercase tracking-wider text-black">
                         Nama Properti Kost <span class="text-rose-600">*</span>
                     </label>
-                    <input 
-                        type="text" 
-                        id="name" 
-                        wire:model="name" 
-                        placeholder="Contoh: Kost Eksklusif Dago Asri" 
-                        class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
-                    >
+                    <input type="text" id="name" wire:model="name"
+                        placeholder="Contoh: Kost Eksklusif Dago Asri"
+                        class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
                     @error('name')
-                        <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
+                        <p
+                            class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                            {{ $message }}</p>
                     @enderror
                 </div>
 
@@ -65,9 +70,12 @@
                     <div class="grid grid-cols-3 gap-3">
                         <label class="cursor-pointer">
                             <input type="radio" wire:model="gender_type" value="campur" class="peer sr-only">
-                            <div class="px-4 py-3.5 rounded-lg border-2 border-black text-center font-black text-xs md:text-sm text-black bg-zinc-50 hover:bg-yellow-100 peer-checked:bg-yellow-400 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-center gap-2">
-                                <svg class="w-4 h-4 md:w-5 md:h-5 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            <div
+                                class="px-4 py-3.5 rounded-lg border-2 border-black text-center font-black text-xs md:text-sm text-black bg-zinc-50 hover:bg-yellow-100 peer-checked:bg-yellow-400 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4 md:w-5 md:h-5 text-black stroke-[2.5]" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                                 </svg>
                                 <span>Campur</span>
                             </div>
@@ -75,11 +83,16 @@
 
                         <label class="cursor-pointer">
                             <input type="radio" wire:model="gender_type" value="putri" class="peer sr-only">
-                            <div class="px-4 py-3.5 rounded-lg border-2 border-black text-center font-black text-xs md:text-sm text-black bg-zinc-50 hover:bg-pink-100 peer-checked:bg-pink-400 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-center gap-2">
-                                <svg class="w-4 h-4 md:w-5 md:h-5 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5z"/>
-                                    <circle cx="12" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.5 9c.5.8 1.5 1.2 2.5 1.2s2-.4 2.5-1.2"/>
+                            <div
+                                class="px-4 py-3.5 rounded-lg border-2 border-black text-center font-black text-xs md:text-sm text-black bg-zinc-50 hover:bg-pink-100 peer-checked:bg-pink-400 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4 md:w-5 md:h-5 text-black stroke-[2.5]" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M12 14c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5z" />
+                                    <circle cx="12" cy="7" r="4" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M9.5 9c.5.8 1.5 1.2 2.5 1.2s2-.4 2.5-1.2" />
                                 </svg>
                                 <span>Khusus Putri</span>
                             </div>
@@ -87,27 +100,29 @@
 
                         <label class="cursor-pointer">
                             <input type="radio" wire:model="gender_type" value="putra" class="peer sr-only">
-                            <div class="px-4 py-3.5 rounded-lg border-2 border-black text-center font-black text-xs md:text-sm text-black bg-zinc-50 hover:bg-cyan-100 peer-checked:bg-cyan-300 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-center gap-2">
-                                <svg class="w-4 h-4 md:w-5 md:h-5 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5z"/>
+                            <div
+                                class="px-4 py-3.5 rounded-lg border-2 border-black text-center font-black text-xs md:text-sm text-black bg-zinc-50 hover:bg-cyan-100 peer-checked:bg-cyan-300 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4 md:w-5 md:h-5 text-black stroke-[2.5]" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5z" />
                                 </svg>
                                 <span>Khusus Putra</span>
                             </div>
                         </label>
                     </div>
                     @error('gender_type')
-                        <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
+                        <p
+                            class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                            {{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Deskripsi Kost -->
-                <div 
-                    x-data="{ 
-                        desc: @entangle('description').live,
-                        get count() { return (this.desc || '').length }
-                    }"
-                    class="space-y-2"
-                >
+                <div x-data="{
+                    desc: @entangle('description').live,
+                    get count() { return (this.desc || '').length }
+                }" class="space-y-2">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                         <label for="description" class="block text-xs font-black uppercase tracking-wider text-black">
                             Deskripsi Lengkap <span class="text-rose-600">*</span>
@@ -118,45 +133,45 @@
                     </div>
 
                     <div class="relative">
-                        <textarea 
-                            id="description" 
-                            x-model="desc" 
-                            rows="4" 
-                            maxlength="500"
-                            placeholder="Contoh: Kost khusus putra di Coblong, 5 menit dari kampus. Kamar full furnished, AC, WiFi cepat. Lingkungan aman, dekat minimarket & warung makan. Cocok untuk mahasiswa/karyawan." 
-                            class="w-full bg-white border-2 border-black rounded-lg p-4 pb-10 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
-                        ></textarea>
+                        <textarea id="description" x-model="desc" rows="4" maxlength="500"
+                            placeholder="Contoh: Kost khusus putra di Coblong, 5 menit dari kampus. Kamar full furnished, AC, WiFi cepat. Lingkungan aman, dekat minimarket & warung makan. Cocok untuk mahasiswa/karyawan."
+                            class="w-full bg-white border-2 border-black rounded-lg p-4 pb-10 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"></textarea>
 
                         <!-- Neo-Brutalist Live Character Counter Badge -->
                         <div class="absolute bottom-3 right-3 pointer-events-none">
-                            <span 
+                            <span
                                 class="px-2.5 py-1 text-[10px] font-black uppercase rounded border-2 transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-block"
                                 :class="{
                                     'bg-zinc-100 text-zinc-700 border-black': count <= 299,
                                     'bg-yellow-300 text-black border-black': count >= 300 && count < 500,
                                     'bg-rose-100 text-rose-700 border-rose-500': count >= 500
-                                }"
-                            >
+                                }">
                                 <span x-text="count"></span>/500 karakter
                             </span>
                         </div>
                     </div>
 
                     @error('description')
-                        <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
+                        <p
+                            class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                            {{ $message }}</p>
                     @enderror
                 </div>
             </div>
 
             <!-- Seksi 2: Lokasi & Geofencing -->
-            <div class="bg-white rounded-xl p-6 md:p-8 border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6">
+            <div
+                class="bg-white rounded-xl p-6 md:p-8 border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6">
                 <div class="flex items-center gap-3 border-b-3 border-black pb-4">
-                    <div class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                    <div
+                        class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                         2
                     </div>
                     <div>
-                        <h2 class="text-xl font-black text-black uppercase tracking-tight">Lokasi Kost & Geofencing Bandung</h2>
-                        <p class="text-xs font-bold text-zinc-600">Area kecamatan, alamat fisik, dan penentuan titik presisi lokasi pada peta</p>
+                        <h2 class="text-xl font-black text-black uppercase tracking-tight">Lokasi Kost & Geofencing
+                            Bandung</h2>
+                        <p class="text-xs font-bold text-zinc-600">Area kecamatan, alamat fisik, dan penentuan titik
+                            presisi lokasi pada peta</p>
                     </div>
                 </div>
 
@@ -167,24 +182,26 @@
                             Kecamatan <span class="text-rose-600">*</span>
                         </label>
                         <div class="relative">
-                            <select 
-                                id="district" 
-                                wire:model.live="district" 
-                                class="w-full bg-white border-2 border-black rounded-lg pl-3.5 pr-9 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all appearance-none"
-                            >
+                            <select id="district" wire:model.live="district"
+                                class="w-full bg-white border-2 border-black rounded-lg pl-3.5 pr-9 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all appearance-none">
                                 <option value="" disabled>-- Pilih Kecamatan --</option>
-                                @foreach($districts as $dist)
-                                    <option value="{{ $dist }}" class="font-bold text-sm text-black">Kec. {{ $dist }}</option>
+                                @foreach ($districts as $dist)
+                                    <option value="{{ $dist }}" class="font-bold text-sm text-black">Kec.
+                                        {{ $dist }}</option>
                                 @endforeach
                             </select>
-                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-black">
-                                <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                            <div
+                                class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-black">
+                                <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
                                 </svg>
                             </div>
                         </div>
                         @error('district')
-                            <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
+                            <p
+                                class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                                {{ $message }}</p>
                         @enderror
                     </div>
 
@@ -193,175 +210,196 @@
                         <label for="address" class="block text-xs font-black uppercase tracking-wider text-black">
                             Alamat Lengkap <span class="text-rose-600">*</span>
                         </label>
-                        <input 
-                            type="text" 
-                            id="address" 
-                            wire:model="address" 
-                            placeholder="Contoh: Jl. Dipatiukur No. 80, RT 02/RW 05" 
-                            class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
-                        >
+                        <input type="text" id="address" wire:model="address"
+                            placeholder="Contoh: Jl. Dipatiukur No. 80, RT 02/RW 05"
+                            class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
                         @error('address')
-                            <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
+                            <p
+                                class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                                {{ $message }}</p>
                         @enderror
                     </div>
                 </div>
 
                 <!-- Peta Interaktif & Pin Picker (Geofencing Bandung) -->
-                <div 
-                    x-data="{
-                        lat: @entangle('latitude'),
-                        lng: @entangle('longitude'),
-                        hasGoogleKey: '{{ $googleMapsApiKey }}',
-                        map: null,
-                        marker: null,
-                        initMap() {
-                            const curLat = parseFloat(this.lat) || -6.917464;
-                            const curLng = parseFloat(this.lng) || 107.619123;
-
-                            const setCoords = (newLat, newLng) => {
-                                const formattedLat = newLat.toFixed(6);
-                                const formattedLng = newLng.toFixed(6);
-                                this.lat = formattedLat;
-                                this.lng = formattedLng;
-                                $wire.set('latitude', formattedLat);
-                                $wire.set('longitude', formattedLng);
-                            };
-
-                            const setupGoogleMap = () => {
-                                if (this.map || !window.google || !window.google.maps) return false;
-                                try {
-                                    this.map = new google.maps.Map(this.$refs.mapElement, {
-                                        center: { lat: curLat, lng: curLng },
-                                        zoom: 13,
-                                        mapTypeControl: false,
-                                        streetViewControl: false,
-                                        fullscreenControl: false,
-                                    });
-
-                                    this.marker = new google.maps.Marker({
-                                        position: { lat: curLat, lng: curLng },
-                                        map: this.map,
-                                        draggable: true,
-                                        title: 'Lokasi Kost Anda'
-                                    });
-
-                                    this.marker.addListener('dragend', (e) => {
-                                        setCoords(e.latLng.lat(), e.latLng.lng());
-                                    });
-
-                                    this.map.addListener('click', (e) => {
-                                        this.marker.setPosition(e.latLng);
-                                        setCoords(e.latLng.lat(), e.latLng.lng());
-                                    });
-                                    return true;
-                                } catch (e) {
-                                    console.warn('Google Maps load error, falling back to Leaflet:', e);
-                                    return false;
-                                }
-                            };
-
-                            const setupLeafletMap = () => {
-                                if (this.map || typeof L === 'undefined') return;
-                                this.map = L.map(this.$refs.mapElement).setView([curLat, curLng], 13);
-
-                                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                                    maxZoom: 19,
-                                    attribution: '&copy; OpenStreetMap'
-                                }).addTo(this.map);
-
-                                this.marker = L.marker([curLat, curLng], { draggable: true }).addTo(this.map);
-
-                                this.marker.on('dragend', (e) => {
-                                    const pos = e.target.getLatLng();
-                                    setCoords(pos.lat, pos.lng);
+                <div x-data="{
+                    lat: @entangle('latitude'),
+                    lng: @entangle('longitude'),
+                    hasGoogleKey: '{{ $googleMapsApiKey }}',
+                    map: null,
+                    marker: null,
+                    initMap() {
+                        const curLat = parseFloat(this.lat) || -6.917464;
+                        const curLng = parseFloat(this.lng) || 107.619123;
+                
+                        const setCoords = (newLat, newLng) => {
+                            const formattedLat = newLat.toFixed(6);
+                            const formattedLng = newLng.toFixed(6);
+                            this.lat = formattedLat;
+                            this.lng = formattedLng;
+                            $wire.set('latitude', formattedLat);
+                            $wire.set('longitude', formattedLng);
+                        };
+                
+                        const setupGoogleMap = () => {
+                            if (this.map || !window.google || !window.google.maps) return false;
+                            try {
+                                this.map = new google.maps.Map(this.$refs.mapElement, {
+                                    center: { lat: curLat, lng: curLng },
+                                    zoom: 13,
+                                    mapTypeControl: false,
+                                    streetViewControl: false,
+                                    fullscreenControl: false,
                                 });
-
-                                this.map.on('click', (e) => {
-                                    this.marker.setLatLng(e.latlng);
-                                    setCoords(e.latlng.lat, e.latlng.lng);
+                
+                                this.marker = new google.maps.Marker({
+                                    position: { lat: curLat, lng: curLng },
+                                    map: this.map,
+                                    draggable: true,
+                                    title: 'Lokasi Kost Anda'
                                 });
-                            };
-
-                            const loadLeafletAndInit = () => {
-                                if (typeof L !== 'undefined') {
-                                    setupLeafletMap();
-                                    return;
-                                }
-                                if (!document.getElementById('leaflet-css')) {
-                                    const link = document.createElement('link');
-                                    link.id = 'leaflet-css';
-                                    link.rel = 'stylesheet';
-                                    link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-                                    document.head.appendChild(link);
-                                }
-                                if (!document.getElementById('leaflet-js')) {
-                                    const script = document.createElement('script');
-                                    script.id = 'leaflet-js';
-                                    script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-                                    script.onload = () => setupLeafletMap();
-                                    document.head.appendChild(script);
-                                } else {
-                                    setTimeout(() => loadLeafletAndInit(), 200);
-                                }
-                            };
-
-                            if (this.hasGoogleKey) {
-                                if (window.google && window.google.maps) {
-                                    setupGoogleMap();
-                                } else {
-                                    if (!document.getElementById('google-create-map-script')) {
-                                        window.initGoogleCreateMap = () => window.dispatchEvent(new CustomEvent('google-create-map-loaded'));
-                                        const s = document.createElement('script');
-                                        s.id = 'google-create-map-script';
-                                        s.src = `https://maps.googleapis.com/maps/api/js?key=${this.hasGoogleKey}&callback=initGoogleCreateMap`;
-                                        s.async = true;
-                                        s.defer = true;
-                                        s.onerror = () => loadLeafletAndInit();
-                                        document.head.appendChild(s);
-                                    }
-                                    window.addEventListener('google-create-map-loaded', () => {
-                                        if (!setupGoogleMap()) loadLeafletAndInit();
-                                    });
-                                    setTimeout(() => { if (!this.map) loadLeafletAndInit(); }, 3000);
-                                }
-                            } else {
-                                loadLeafletAndInit();
+                
+                                this.marker.addListener('dragend', (e) => {
+                                    setCoords(e.latLng.lat(), e.latLng.lng());
+                                });
+                
+                                this.map.addListener('click', (e) => {
+                                    this.marker.setPosition(e.latLng);
+                                    setCoords(e.latLng.lat(), e.latLng.lng());
+                                });
+                                return true;
+                            } catch (e) {
+                                console.warn('Google Maps load error, falling back to Leaflet:', e);
+                                return false;
                             }
+                        };
+                
+                        const setupLeafletMap = () => {
+                            if (this.map || typeof L === 'undefined') return;
+                            this.map = L.map(this.$refs.mapElement).setView([curLat, curLng], 13);
+                
+                            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                maxZoom: 19,
+                                attribution: '&copy; OpenStreetMap'
+                            }).addTo(this.map);
+                
+                            this.marker = L.marker([curLat, curLng], { draggable: true }).addTo(this.map);
+                
+                            this.marker.on('dragend', (e) => {
+                                const pos = e.target.getLatLng();
+                                setCoords(pos.lat, pos.lng);
+                            });
+                
+                            this.map.on('click', (e) => {
+                                this.marker.setLatLng(e.latlng);
+                                setCoords(e.latlng.lat, e.latlng.lng);
+                            });
+                        };
+                
+                        const loadLeafletAndInit = () => {
+                            if (typeof L !== 'undefined') {
+                                setupLeafletMap();
+                                return;
+                            }
+                            if (!document.getElementById('leaflet-css')) {
+                                const link = document.createElement('link');
+                                link.id = 'leaflet-css';
+                                link.rel = 'stylesheet';
+                                link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+                                document.head.appendChild(link);
+                            }
+                            if (!document.getElementById('leaflet-js')) {
+                                const script = document.createElement('script');
+                                script.id = 'leaflet-js';
+                                script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+                                script.onload = () => setupLeafletMap();
+                                document.head.appendChild(script);
+                            } else {
+                                setTimeout(() => loadLeafletAndInit(), 200);
+                            }
+                        };
+                
+                        if (this.hasGoogleKey) {
+                            if (window.google && window.google.maps) {
+                                setupGoogleMap();
+                            } else {
+                                if (!document.getElementById('google-create-map-script')) {
+                                    window.initGoogleCreateMap = () => window.dispatchEvent(new CustomEvent('google-create-map-loaded'));
+                                    const s = document.createElement('script');
+                                    s.id = 'google-create-map-script';
+                                    s.src = `https://maps.googleapis.com/maps/api/js?key=${this.hasGoogleKey}&callback=initGoogleCreateMap`;
+                                    s.async = true;
+                                    s.defer = true;
+                                    s.onerror = () => loadLeafletAndInit();
+                                    document.head.appendChild(s);
+                                }
+                                window.addEventListener('google-create-map-loaded', () => {
+                                    if (!setupGoogleMap()) loadLeafletAndInit();
+                                });
+                                setTimeout(() => { if (!this.map) loadLeafletAndInit(); }, 3000);
+                            }
+                        } else {
+                            loadLeafletAndInit();
                         }
-                    }"
-                    x-init="initMap()"
-                    class="space-y-3 pt-2"
-                >
+                        
+                        this.$watch('lat', () => this.updateMapPosition());
+                        this.$watch('lng', () => this.updateMapPosition());
+                    },
+                    updateMapPosition() {
+                        const newLat = parseFloat(this.lat);
+                        const newLng = parseFloat(this.lng);
+                        if (isNaN(newLat) || isNaN(newLng) || !this.map || !this.marker) return;
+                        
+                        if (typeof L !== 'undefined' && this.marker.setLatLng) {
+                            this.marker.setLatLng([newLat, newLng]);
+                            this.map.setView([newLat, newLng]);
+                        } else if (window.google && this.marker.setPosition) {
+                            this.marker.setPosition({ lat: newLat, lng: newLng });
+                            this.map.panTo({ lat: newLat, lng: newLng });
+                        }
+                    }
+                }" x-init="initMap()" class="space-y-3 pt-2">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <label class="block text-xs font-black uppercase tracking-wider text-black">
-                            Tentukan Titik Presisi Lokasi (Peta Interaktif Bandung) <span class="text-rose-600">*</span>
+                            Tentukan Titik Presisi Lokasi (Peta Interaktif Bandung) <span
+                                class="text-rose-600">*</span>
                         </label>
-                        <div class="inline-flex items-center gap-1.5 bg-yellow-300 border-2 border-black px-3 py-1 rounded text-xs font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                        <div
+                            class="inline-flex items-center gap-1.5 bg-yellow-300 border-2 border-black px-3 py-1 rounded text-xs font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                             <span>📍 Lat: <span x-text="lat"></span> | Lng: <span x-text="lng"></span></span>
                         </div>
                     </div>
 
                     <p class="text-xs font-bold text-zinc-600">
-                        Geser marker/pin merah atau klik di mana saja pada peta untuk menandai titik fisik kost Anda. Titik harus berada di dalam batas administratif Kota Bandung.
+                        Geser marker/pin merah atau klik di mana saja pada peta untuk menandai titik fisik kost Anda.
+                        Titik harus berada di dalam batas administratif Kota Bandung.
                     </p>
 
                     <!-- Google Maps / Leaflet Canvas -->
                     <div class="relative">
-                        <div x-ref="mapElement" class="w-full h-80 rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] z-0 bg-zinc-100"></div>
+                        <div x-ref="mapElement"
+                            class="w-full h-80 rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] z-0 bg-zinc-100">
+                        </div>
                     </div>
 
                     @error('latitude')
-                        <div class="p-3 bg-rose-100 border-3 border-black rounded-xl text-rose-700 font-black text-xs shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] flex items-center gap-2">
-                            <svg class="w-5 h-5 text-rose-600 shrink-0 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        <div
+                            class="p-3 bg-rose-100 border-3 border-black rounded-xl text-rose-700 font-black text-xs shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] flex items-center gap-2">
+                            <svg class="w-5 h-5 text-rose-600 shrink-0 stroke-[2.5]" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                             </svg>
                             <span>{{ $message }}</span>
                         </div>
                     @enderror
                     @error('longitude')
-                        <div class="p-3 bg-rose-100 border-3 border-black rounded-xl text-rose-700 font-black text-xs shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] flex items-center gap-2">
-                            <svg class="w-5 h-5 text-rose-600 shrink-0 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        <div
+                            class="p-3 bg-rose-100 border-3 border-black rounded-xl text-rose-700 font-black text-xs shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] flex items-center gap-2">
+                            <svg class="w-5 h-5 text-rose-600 shrink-0 stroke-[2.5]" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                             </svg>
                             <span>{{ $message }}</span>
                         </div>
@@ -370,14 +408,17 @@
             </div>
 
             <!-- Seksi 3: Harga & Fasilitas -->
-            <div class="bg-white rounded-xl p-6 md:p-8 border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6">
+            <div
+                class="bg-white rounded-xl p-6 md:p-8 border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6">
                 <div class="flex items-center gap-3 border-b-3 border-black pb-4">
-                    <div class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                    <div
+                        class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                         3
                     </div>
                     <div>
                         <h2 class="text-xl font-black text-black uppercase tracking-tight">Harga & Fasilitas</h2>
-                        <p class="text-xs font-bold text-zinc-600">Tarif sewa bulanan dan fasilitas pendukung yang disediakan</p>
+                        <p class="text-xs font-bold text-zinc-600">Tarif sewa bulanan dan fasilitas pendukung yang
+                            disediakan</p>
                     </div>
                 </div>
 
@@ -385,28 +426,28 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <!-- Harga Sewa per Bulan -->
                     <div class="space-y-2">
-                        <label for="price_monthly" class="block text-xs font-black uppercase tracking-wider text-black">
+                        <label for="price_monthly"
+                            class="block text-xs font-black uppercase tracking-wider text-black">
                             Harga Sewa Per Bulan (IDR) <span class="text-rose-600">*</span>
                         </label>
-                        <div class="relative rounded-lg overflow-hidden flex border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                            <div class="bg-yellow-300 border-r-2 border-black px-4 flex items-center font-black text-sm text-black">
+                        <div
+                            class="relative rounded-lg overflow-hidden flex border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                            <div
+                                class="bg-yellow-300 border-r-2 border-black px-4 flex items-center font-black text-sm text-black">
                                 Rp
                             </div>
-                            <input 
-                                type="number" 
-                                id="price_monthly" 
-                                wire:model="price_monthly" 
-                                placeholder="1500000" 
-                                min="0"
-                                oninput="if(this.value < 0) this.value = 0"
-                                class="w-full bg-white px-4 py-3 text-sm font-black text-black focus:outline-none focus:bg-yellow-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                            >
-                            <div class="bg-zinc-100 border-l-2 border-black px-4 flex items-center text-xs font-black text-black uppercase">
+                            <input type="number" id="price_monthly" wire:model="price_monthly"
+                                placeholder="1500000" min="0" oninput="if(this.value < 0) this.value = 0"
+                                class="w-full bg-white px-4 py-3 text-sm font-black text-black focus:outline-none focus:bg-yellow-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                            <div
+                                class="bg-zinc-100 border-l-2 border-black px-4 flex items-center text-xs font-black text-black uppercase">
                                 / Bln
                             </div>
                         </div>
                         @error('price_monthly')
-                            <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
+                            <p
+                                class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                                {{ $message }}</p>
                         @enderror
                     </div>
 
@@ -415,36 +456,29 @@
                         <label for="total_rooms" class="block text-xs font-black uppercase tracking-wider text-black">
                             Total Jumlah Kamar <span class="text-rose-600">*</span>
                         </label>
-                        <input 
-                            type="number" 
-                            id="total_rooms" 
-                            wire:model="total_rooms" 
-                            placeholder="10" 
-                            min="0"
-                            oninput="if(this.value < 0) this.value = 0"
-                            class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-black text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                        >
+                        <input type="number" id="total_rooms" wire:model="total_rooms" placeholder="10"
+                            min="0" oninput="if(this.value < 0) this.value = 0"
+                            class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-black text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                         @error('total_rooms')
-                            <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
+                            <p
+                                class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                                {{ $message }}</p>
                         @enderror
                     </div>
 
                     <!-- Kamar Tersedia -->
                     <div class="space-y-2">
-                        <label for="available_rooms" class="block text-xs font-black uppercase tracking-wider text-black">
+                        <label for="available_rooms"
+                            class="block text-xs font-black uppercase tracking-wider text-black">
                             Sisa Kamar Kosong <span class="text-rose-600">*</span>
                         </label>
-                        <input 
-                            type="number" 
-                            id="available_rooms" 
-                            wire:model="available_rooms" 
-                            placeholder="2" 
-                            min="0"
-                            oninput="if(this.value < 0) this.value = 0"
-                            class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-black text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                        >
+                        <input type="number" id="available_rooms" wire:model="available_rooms" placeholder="2"
+                            min="0" oninput="if(this.value < 0) this.value = 0"
+                            class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-black text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                         @error('available_rooms')
-                            <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
+                            <p
+                                class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                                {{ $message }}</p>
                         @enderror
                     </div>
                 </div>
@@ -456,82 +490,79 @@
                     </label>
 
                     <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                        @foreach($facilities as $facility)
+                        @foreach ($facilities as $facility)
                             <label class="cursor-pointer">
-                                <input 
-                                    type="checkbox" 
-                                    wire:model="selectedFacilities" 
-                                    value="{{ $facility->id }}" 
-                                    class="peer sr-only"
-                                >
-                                <div class="px-4 py-3 rounded-lg border-2 border-black bg-zinc-50 text-black text-xs font-black flex items-center justify-between peer-checked:bg-lime-300 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-yellow-100 transition-all">
+                                <input type="checkbox" wire:model="selectedFacilities" value="{{ $facility->id }}"
+                                    class="peer sr-only">
+                                <div
+                                    class="px-4 py-3 rounded-lg border-2 border-black bg-zinc-50 text-black text-xs font-black flex items-center justify-between peer-checked:bg-lime-300 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-yellow-100 transition-all">
                                     <span>{{ $facility->name }}</span>
-                                    <span class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs">✓</span>
+                                    <span
+                                        class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs">✓</span>
                                 </div>
                             </label>
                         @endforeach
                     </div>
                     @error('selectedFacilities')
-                        <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
+                        <p
+                            class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                            {{ $message }}</p>
                     @enderror
                 </div>
             </div>
 
             <!-- Seksi 4: Foto Utama Kost -->
-            <div class="bg-white rounded-xl p-6 md:p-8 border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6">
+            <div
+                class="bg-white rounded-xl p-6 md:p-8 border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6">
                 <div class="flex items-center gap-3 border-b-3 border-black pb-4">
-                    <div class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                    <div
+                        class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                         4
                     </div>
                     <div>
                         <h2 class="text-xl font-black text-black uppercase tracking-tight">Foto Utama Properti</h2>
-                        <p class="text-xs font-bold text-zinc-600">Unggah foto fasad atau kamar terbaik properti kost Anda</p>
+                        <p class="text-xs font-bold text-zinc-600">Unggah foto fasad atau kamar terbaik properti kost
+                            Anda</p>
                     </div>
                 </div>
 
                 <!-- Drag & Drop Upload Dropzone -->
-                <div 
-                    x-data="{
-                        isUploading: false,
-                        progress: 0,
-                        startUpload() {
-                            this.isUploading = true;
-                            this.progress = 0;
-                        },
-                        updateProgress(val) {
-                            this.progress = val;
-                        },
-                        finishUpload() {
-                            this.progress = 100;
-                            setTimeout(() => {
-                                this.isUploading = false;
-                                this.progress = 0;
-                            }, 400);
-                        },
-                        errorUpload() {
+                <div x-data="{
+                    isUploading: false,
+                    progress: 0,
+                    startUpload() {
+                        this.isUploading = true;
+                        this.progress = 0;
+                    },
+                    updateProgress(val) {
+                        this.progress = val;
+                    },
+                    finishUpload() {
+                        this.progress = 100;
+                        setTimeout(() => {
                             this.isUploading = false;
                             this.progress = 0;
-                        }
-                    }"
-                    x-on:livewire-upload-start="startUpload()"
-                    x-on:livewire-upload-finish="finishUpload()"
-                    x-on:livewire-upload-error="errorUpload()"
-                    x-on:livewire-upload-progress="updateProgress($event.detail.progress)"
-                    class="space-y-4"
-                >
-                    <div class="relative border-3 border-dashed border-black rounded-xl p-8 text-center bg-yellow-100/70 hover:bg-yellow-200/80 transition-all cursor-pointer group shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                        <input 
-                            type="file" 
-                            wire:model="photos" 
-                            multiple
-                            accept="image/*" 
-                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                        >
+                        }, 400);
+                    },
+                    errorUpload() {
+                        this.isUploading = false;
+                        this.progress = 0;
+                    }
+                }" x-on:livewire-upload-start="startUpload()"
+                    x-on:livewire-upload-finish="finishUpload()" x-on:livewire-upload-error="errorUpload()"
+                    x-on:livewire-upload-progress="updateProgress($event.detail.progress)" class="space-y-4">
+                    <div
+                        class="relative border-3 border-dashed border-black rounded-xl p-8 text-center bg-yellow-100/70 hover:bg-yellow-200/80 transition-all cursor-pointer group shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                        <input type="file" wire:model="photos" multiple accept="image/*"
+                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
 
                         <div class="space-y-3 pointer-events-none">
-                            <div class="w-14 h-14 rounded-lg bg-white border-2 border-black flex items-center justify-center mx-auto text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] group-hover:scale-110 transition-transform">
-                                <svg class="w-7 h-7 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            <div
+                                class="w-14 h-14 rounded-lg bg-white border-2 border-black flex items-center justify-center mx-auto text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] group-hover:scale-110 transition-transform">
+                                <svg class="w-7 h-7 stroke-[2]" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
                             </div>
 
@@ -539,11 +570,13 @@
                                 <p class="text-sm font-black text-black uppercase">
                                     Klik atau seret file foto ke area ini
                                 </p>
-                                <p class="text-xs font-black text-black mt-2 bg-black text-yellow-300 inline-block px-3 py-1 rounded border border-black">
+                                <p
+                                    class="text-xs font-black text-black mt-2 bg-black text-yellow-300 inline-block px-3 py-1 rounded border border-black">
                                     WAJIB UNGGAH MINIMAL 4 FOTO, MAKSIMAL 10 FOTO (MAKS 2MB/FOTO)
                                 </p>
                                 <p class="text-xs font-bold text-zinc-600 mt-1.5">Format: JPG, PNG, WEBP</p>
-                                <span class="inline-block mt-3 bg-yellow-400 text-black font-black text-xs uppercase px-4 py-2 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] group-hover:bg-yellow-300 transition-all rounded">
+                                <span
+                                    class="inline-block mt-3 bg-yellow-400 text-black font-black text-xs uppercase px-4 py-2 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] group-hover:bg-yellow-300 transition-all rounded">
                                     Pilih File Foto
                                 </span>
                             </div>
@@ -551,31 +584,32 @@
                     </div>
 
                     <!-- Neo-Brutalist Upload Status & Preview Container (Unified No-Shift Card) -->
-                    <div 
-                        x-show="isUploading || {{ count($photos) > 0 ? 'true' : 'false' }}" 
-                        x-cloak 
-                        class="bg-lime-100 border-3 border-black p-4 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200"
-                    >
+                    <div x-show="isUploading || {{ count($photos) > 0 ? 'true' : 'false' }}" x-cloak
+                        class="bg-lime-100 border-3 border-black p-4 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
                         <!-- State 1: Upload Progress in Track -->
                         <div x-show="isUploading" class="space-y-2.5 font-black text-black">
                             <div class="flex items-center justify-between text-xs uppercase">
                                 <span class="flex items-center gap-2">
-                                    <svg class="animate-spin h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    <svg class="animate-spin h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10"
+                                            stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                        </path>
                                     </svg>
                                     <span>Mengunggah Foto...</span>
                                 </span>
-                                <span x-text="progress + '%'" class="bg-yellow-300 border-2 border-black px-2.5 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] text-xs font-black">0%</span>
+                                <span x-text="progress + '%'"
+                                    class="bg-yellow-300 border-2 border-black px-2.5 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] text-xs font-black">0%</span>
                             </div>
 
                             <!-- Progress Track -->
-                            <div class="w-full bg-white border-2 border-black rounded-lg h-6 p-0.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden">
+                            <div
+                                class="w-full bg-white border-2 border-black rounded-lg h-6 p-0.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden">
                                 <!-- Progress Fill -->
-                                <div 
-                                    class="bg-lime-400 border-r-2 border-black h-full transition-all duration-300 ease-out rounded-sm" 
-                                    :style="'width: ' + progress + '%'"
-                                ></div>
+                                <div class="bg-lime-400 border-r-2 border-black h-full transition-all duration-300 ease-out rounded-sm"
+                                    :style="'width: ' + progress + '%'"></div>
                             </div>
                         </div>
 
@@ -585,45 +619,60 @@
                                 <div class="flex items-center justify-between border-b-2 border-black pb-2">
                                     <div class="text-xs font-black text-black uppercase flex items-center gap-2">
                                         Preview Foto
-                                        <span class="px-2 py-0.5 rounded border-2 border-black text-xs font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] {{ count($photos) < 4 ? 'bg-rose-300 text-black' : (count($photos) > 10 ? 'bg-rose-400 text-black' : 'bg-lime-300 text-black') }}">
+                                        <span
+                                            class="px-2 py-0.5 rounded border-2 border-black text-xs font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] {{ count($photos) < 4 ? 'bg-rose-300 text-black' : (count($photos) > 10 ? 'bg-rose-400 text-black' : 'bg-lime-300 text-black') }}">
                                             {{ count($photos) }}/10
                                         </span>
-                                        @if(count($photos) < 4)
-                                            <span class="text-[10px] font-black text-rose-600 bg-rose-100 border border-rose-400 px-1.5 py-0.5 rounded uppercase">Kurang {{ 4 - count($photos) }} foto lagi</span>
+                                        @if (count($photos) < 4)
+                                            <span
+                                                class="text-[10px] font-black text-rose-600 bg-rose-100 border border-rose-400 px-1.5 py-0.5 rounded uppercase">Kurang
+                                                {{ 4 - count($photos) }} foto lagi</span>
                                         @elseif(count($photos) > 10)
-                                            <span class="text-[10px] font-black text-rose-600 bg-rose-100 border border-rose-400 px-1.5 py-0.5 rounded uppercase">Melebihi batas maksimum!</span>
+                                            <span
+                                                class="text-[10px] font-black text-rose-600 bg-rose-100 border border-rose-400 px-1.5 py-0.5 rounded uppercase">Melebihi
+                                                batas maksimum!</span>
                                         @else
-                                            <span class="text-[10px] font-black text-lime-700 bg-lime-100 border border-lime-500 px-1.5 py-0.5 rounded uppercase">✓ Jumlah valid</span>
+                                            <span
+                                                class="text-[10px] font-black text-lime-700 bg-lime-100 border border-lime-500 px-1.5 py-0.5 rounded uppercase">✓
+                                                Jumlah valid</span>
                                         @endif
                                     </div>
-                                    @error('photos') <span class="text-xs font-bold text-rose-500 bg-rose-100 border-2 border-black px-2 py-0.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">{{ $message }}</span> @enderror
+                                    @error('photos')
+                                        <span
+                                            class="text-xs font-bold text-rose-500 bg-rose-100 border-2 border-black px-2 py-0.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                                     @foreach ($photos as $index => $photo)
-                                        <div class="relative group aspect-[4/3] rounded-lg border-3 border-black overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-zinc-200">
-                                            <img src="{{ $photo->temporaryUrl() }}" alt="Preview Foto {{ $index + 1 }}" class="w-full h-full object-cover">
-                                            
+                                        <div
+                                            class="relative group aspect-[4/3] rounded-lg border-3 border-black overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-zinc-200">
+                                            <img src="{{ $photo->temporaryUrl() }}"
+                                                alt="Preview Foto {{ $index + 1 }}"
+                                                class="w-full h-full object-cover">
+
                                             <!-- Remove Button -->
-                                            <button 
-                                                type="button"
-                                                wire:click="removePhoto({{ $index }})"
+                                            <button type="button" wire:click="removePhoto({{ $index }})"
                                                 class="absolute top-2 right-2 w-7 h-7 bg-rose-400 hover:bg-rose-300 border-2 border-black rounded text-black font-black text-[10px] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none z-20"
-                                                title="Hapus Foto"
-                                            >
+                                                title="Hapus Foto">
                                                 &#x2715;
                                             </button>
 
                                             <!-- Primary Badge -->
-                                            @if($index === 0)
-                                                <div class="absolute bottom-2 left-2 bg-yellow-400 text-black text-[9px] font-black uppercase px-2 py-0.5 border-2 border-black rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] pointer-events-none">
+                                            @if ($index === 0)
+                                                <div
+                                                    class="absolute bottom-2 left-2 bg-yellow-400 text-black text-[9px] font-black uppercase px-2 py-0.5 border-2 border-black rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] pointer-events-none">
                                                     Foto Utama
                                                 </div>
                                             @endif
                                         </div>
                                     @endforeach
                                 </div>
-                                @foreach($photos as $index => $photo)
-                                    @error("photos.{$index}") <span class="block text-[10px] font-bold text-rose-500 bg-rose-100 border-2 border-black px-2 py-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] mt-1">Foto ke-{{ $index + 1 }}: {{ $message }}</span> @enderror
+                                @foreach ($photos as $index => $photo)
+                                    @error("photos.{$index}")
+                                        <span
+                                            class="block text-[10px] font-bold text-rose-500 bg-rose-100 border-2 border-black px-2 py-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] mt-1">Foto
+                                            ke-{{ $index + 1 }}: {{ $message }}</span>
+                                    @enderror
                                 @endforeach
                             </div>
                         @endif
@@ -633,21 +682,22 @@
 
             <!-- Submit & Action Buttons -->
             <div class="flex items-center justify-end gap-4 pt-4 border-t-3 border-black">
-                <a href="{{ route('dashboard') }}" class="px-6 py-3 bg-white hover:bg-zinc-100 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded">
+                <a href="{{ route('dashboard') }}"
+                    class="px-6 py-3 bg-white hover:bg-zinc-100 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded">
                     Batal
                 </a>
 
-                <button 
-                    type="submit" 
-                    wire:loading.attr="disabled"
-                    wire:target="save"
-                    class="px-8 py-3.5 bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black font-black text-sm uppercase shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all rounded inline-flex items-center gap-2 disabled:opacity-50"
-                >
+                <button type="submit" wire:loading.attr="disabled" wire:target="save"
+                    class="px-8 py-3.5 bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black font-black text-sm uppercase shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all rounded inline-flex items-center gap-2 disabled:opacity-50">
                     <span wire:loading.remove wire:target="save">Simpan Properti Kost</span>
                     <span wire:loading wire:target="save" class="inline-flex items-center gap-2">
-                        <svg class="animate-spin h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        <svg class="animate-spin h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg"
+                            fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                            </path>
                         </svg>
                         Menyimpan...
                     </span>

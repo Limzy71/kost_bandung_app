@@ -203,8 +203,9 @@
                                     <!-- Top Right Status Badges -->
                                     <div class="absolute top-3 right-3 flex flex-col items-end gap-1.5">
                                         @if($kost->status === 'pending')
-                                            <span class="px-3 py-1 bg-amber-300 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                                ⏳ Menunggu Review
+                                            <span class="px-3 py-1 bg-amber-300 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1">
+                                                <svg class="w-3.5 h-3.5 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                                <span>Menunggu Review</span>
                                             </span>
                                         @elseif($kost->status === 'rejected')
                                             <span class="px-3 py-1 bg-rose-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">

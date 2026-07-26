@@ -1,0 +1,5 @@
+fix(dashboard): update status icons, facility seeding, and min photo count
+
+1. Replaced hourglass emoji in 'Menunggu Review' badge with SVG clock icon.
+2. Added auto-seeding for standard facilities so facility checkboxes exist.
+3. Updated minimum required photos from 3 to 4 on frontend & validation.

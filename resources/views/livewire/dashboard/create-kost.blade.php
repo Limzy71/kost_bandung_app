@@ -502,7 +502,7 @@
                                     Klik atau seret file foto ke area ini
                                 </p>
                                 <p class="text-xs font-black text-black mt-2 bg-black text-yellow-300 inline-block px-3 py-1 rounded border border-black">
-                                    WAJIB UNGGAH MINIMAL 3 FOTO, MAKSIMAL 10 FOTO (MAKS 2MB/FOTO)
+                                    WAJIB UNGGAH MINIMAL 4 FOTO, MAKSIMAL 10 FOTO (MAKS 2MB/FOTO)
                                 </p>
                                 <p class="text-xs font-bold text-zinc-600 mt-1.5">Format: JPG, PNG, WEBP</p>
                                 <span class="inline-block mt-3 bg-yellow-400 text-black font-black text-xs uppercase px-4 py-2 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] group-hover:bg-yellow-300 transition-all rounded">

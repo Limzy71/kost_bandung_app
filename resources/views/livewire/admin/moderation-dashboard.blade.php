@@ -64,7 +64,10 @@
                 wire:click="setTab('pending')" 
                 class="text-left p-5 border-3 border-black rounded-xl shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer {{ $activeTab === 'pending' ? 'bg-amber-300 ring-4 ring-black translate-x-0.5 translate-y-0.5' : 'bg-amber-100 hover:bg-amber-200' }}"
             >
-                <p class="text-xs font-black uppercase tracking-wider text-black">⏳ Menunggu Review</p>
+                <p class="text-xs font-black uppercase tracking-wider text-black flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span>Menunggu Review</span>
+                </p>
                 <h3 class="text-3xl sm:text-4xl font-black text-black mt-2 tracking-tight">{{ $pendingCount }}</h3>
                 <p class="text-[10px] font-bold text-black/70 mt-1 uppercase">Perlu Tindakan Admin</p>
             </button>

@@ -63,7 +63,7 @@ class CreateKost extends Component
             'available_rooms' => 'required|integer|min:0',
             'selectedFacilities' => 'nullable|array',
             'selectedFacilities.*' => 'exists:facilities,id',
-            'photos' => 'required|array|min:3|max:10',
+            'photos' => 'required|array|min:4|max:10',
             'photos.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
         ];
     }
@@ -88,8 +88,8 @@ class CreateKost extends Component
             'total_rooms.min' => 'Total kamar minimal 1.',
             'available_rooms.required' => 'Sisa kamar tersedia wajib diisi.',
             'available_rooms.integer' => 'Sisa kamar harus berupa angka bulat.',
-            'photos.required' => 'MINIMAL 3 FOTO KOST WAJIB DIUNGGAH.',
-            'photos.min' => 'MINIMAL 3 FOTO KOST WAJIB DIUNGGAH.',
+            'photos.required' => 'MINIMAL 4 FOTO KOST WAJIB DIUNGGAH.',
+            'photos.min' => 'MINIMAL 4 FOTO KOST WAJIB DIUNGGAH.',
             'photos.max' => 'MAKSIMAL 10 FOTO KOST DAPAT DIUNGGAH.',
             'photos.*.image' => 'File harus berupa gambar (JPG, PNG, WEBP).',
             'photos.*.mimes' => 'File harus berupa gambar dengan format JPG, PNG, atau WEBP.',
@@ -189,6 +189,31 @@ class CreateKost extends Component
     public function render()
     {
         $facilities = Facility::orderBy('name')->get();
+
+        if ($facilities->isEmpty()) {
+            $defaultFacilities = [
+                ['name' => 'Wi-Fi 100Mbps', 'type' => 'room'],
+                ['name' => 'Kamar Mandi Dalam', 'type' => 'room'],
+                ['name' => 'AC (Air Conditioner)', 'type' => 'room'],
+                ['name' => 'Water Heater (Air Hangat)', 'type' => 'room'],
+                ['name' => 'Kasur Springbed & Lemari', 'type' => 'room'],
+                ['name' => 'Meja & Kursi Belajar/Kerja', 'type' => 'room'],
+                ['name' => 'Kulkas Dalam Kamar', 'type' => 'room'],
+                ['name' => 'Dapur Bersama', 'type' => 'building'],
+                ['name' => 'Kulkas Bersama', 'type' => 'building'],
+                ['name' => 'Mesin Cuci / Laundry', 'type' => 'building'],
+                ['name' => 'Parkir Mobil & Motor', 'type' => 'building'],
+                ['name' => 'CCTV 24 Jam & Keamanan', 'type' => 'building'],
+                ['name' => 'Jam Bebas 24 Jam', 'type' => 'building'],
+                ['name' => 'Termasuk Listrik (Gratis)', 'type' => 'room'],
+            ];
+
+            foreach ($defaultFacilities as $facility) {
+                Facility::firstOrCreate(['name' => $facility['name']], $facility);
+            }
+
+            $facilities = Facility::orderBy('name')->get();
+        }
 
         $districts = array_keys(config('bandung.districts', []));
 

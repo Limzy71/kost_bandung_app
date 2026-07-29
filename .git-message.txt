@@ -1,5 +1,7 @@
-fix(dashboard): update status icons, facility seeding, and min photo count
+feat(create-kost): strict geofencing, reverse geocode, and UI feedbacks
 
-1. Replaced hourglass emoji in 'Menunggu Review' badge with SVG clock icon.
-2. Added auto-seeding for standard facilities so facility checkboxes exist.
-3. Updated minimum required photos from 3 to 4 on frontend & validation.
+- Added client-side geofencing bounds check (disables submit button if pin is outside the selected district bounds)
+- Implemented reverse geocoding on map marker drag with debounce to auto-update/detect district based on exact coordinates
+- Enhanced Google Maps `address_components` parsing logic by checking levels in priority order (administrative_area_level_3 to sublocality)
+- Added visual feedback UI for auto-detected district messages and out-of-bounds map warnings
+- Added intelligent map zooming based on location geometry type (rooftop vs approximate)

@@ -266,26 +266,41 @@
                             },
 
                             matchDistrict: function(components, source) {
-                                var found = null;
+                                var normalize = function(str) {
+                                    if (!str) return '';
+                                    return str.replace(/^kecamatan\s+/i,'').replace(/^kec\.?\s+/i,'').trim().toLowerCase();
+                                };
+                                
+                                var keys = Object.keys(this.districtsData);
+                                var checkAgainstKeys = function(val) {
+                                    if (!val) return null;
+                                    var norm = normalize(val);
+                                    for (var j = 0; j < keys.length; j++) {
+                                        if (keys[j].toLowerCase() === norm) return keys[j];
+                                    }
+                                    for (var k = 0; k < keys.length; k++) {
+                                        var kn = keys[k].toLowerCase().replace(/\s+/g,' ');
+                                        var vn = norm.replace(/\s+/g,' ');
+                                        if (kn.includes(vn) || vn.includes(kn)) return keys[k];
+                                    }
+                                    return null;
+                                };
+
                                 if (source === 'google') {
-                                    var levels = ['administrative_area_level_3','administrative_area_level_4','sublocality_level_1','sublocality'];
-                                    for (var i = 0; i < levels.length; i++) {
-                                        var comp = components.find(function(c) { return c.types.includes(levels[i]); });
-                                        if (comp) { found = comp.long_name; break; }
+                                    // Check all components aggressively
+                                    for (var i = 0; i < components.length; i++) {
+                                        var match = checkAgainstKeys(components[i].long_name) || checkAgainstKeys(components[i].short_name);
+                                        if (match) return match;
                                     }
                                 } else if (source === 'nominatim') {
-                                    found = components.suburb || components.city_district || components.county;
-                                }
-                                if (!found) return null;
-                                var norm = found.replace(/^kecamatan\s+/i,'').replace(/^kec\.?\s+/i,'').trim().toLowerCase();
-                                var keys = Object.keys(this.districtsData);
-                                for (var j = 0; j < keys.length; j++) {
-                                    if (keys[j].toLowerCase() === norm) return keys[j];
-                                }
-                                for (var k = 0; k < keys.length; k++) {
-                                    var kn = keys[k].toLowerCase().replace(/\s+/g,' ');
-                                    var vn = norm.replace(/\s+/g,' ');
-                                    if (kn.includes(vn) || vn.includes(kn)) return keys[k];
+                                    // Check all potential Nominatim address fields
+                                    var fields = ['district', 'city_district', 'suburb', 'county', 'village', 'town', 'municipality'];
+                                    for (var i = 0; i < fields.length; i++) {
+                                        if (components[fields[i]]) {
+                                            var match = checkAgainstKeys(components[fields[i]]);
+                                            if (match) return match;
+                                        }
+                                    }
                                 }
                                 return null;
                             },

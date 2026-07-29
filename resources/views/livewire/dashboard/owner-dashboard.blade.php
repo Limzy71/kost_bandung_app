@@ -237,7 +237,7 @@
                                 <div class="p-5 space-y-4">
                                     <div>
                                         <h3 class="text-lg font-black text-black leading-snug line-clamp-1 hover:underline">
-                                            <a href="{{ route('kost.show', $kost->slug) }}">
+                                            <a href="{{ route('kost.show', $kost->slug) }}?from=dashboard">
                                                 {{ $kost->name }}
                                             </a>
                                         </h3>
@@ -301,7 +301,7 @@
 
                                 <!-- Detail Link Button -->
                                 <a 
-                                    href="{{ route('kost.show', $kost->slug) }}" 
+                                    href="{{ route('kost.show', $kost->slug) }}?from=dashboard" 
                                     class="h-9 px-4 bg-orange-400 hover:bg-orange-300 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-[transform,background-color,box-shadow] duration-300 ease-out rounded-lg inline-flex items-center justify-center gap-1 shrink-0 whitespace-nowrap"
                                 >
                                     <span>Lihat</span>

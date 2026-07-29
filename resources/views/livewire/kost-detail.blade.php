@@ -34,12 +34,12 @@
 
         <!-- Navigation Back Button -->
         <div class="flex items-center justify-between">
-            <a href="{{ route('home') }}"
+            <a href="{{ $backUrl }}"
                 class="inline-flex items-center gap-2 bg-white text-black border-3 border-black font-black text-xs uppercase px-4 py-2.5 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer">
                 <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                 </svg>
-                <span>Kembali ke Pencarian</span>
+                <span>{{ $backLabel }}</span>
             </a>
         </div>
 

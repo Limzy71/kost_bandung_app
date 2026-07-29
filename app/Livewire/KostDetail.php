@@ -30,6 +30,9 @@ class KostDetail extends Component
         'inquiry_message.required' => 'Pesan tidak boleh kosong.',
     ];
 
+    public string $backUrl = '';
+    public string $backLabel = '';
+
     public function mount(Kost $kost)
     {
         $this->kost = $kost;
@@ -39,6 +42,22 @@ class KostDetail extends Component
         }
 
         $this->kost->load(['facilities', 'rules', 'images', 'user']);
+
+        // Determine back URL and label dynamically based on origin
+        $previousUrl = url()->previous();
+        if (request()->has('from') && request('from') === 'dashboard') {
+            $this->backUrl = route('dashboard');
+            $this->backLabel = 'Kembali ke Dashboard Pemilik';
+        } elseif ($previousUrl && str_contains($previousUrl, '/dashboard')) {
+            $this->backUrl = route('dashboard');
+            $this->backLabel = 'Kembali ke Dashboard Pemilik';
+        } elseif ($previousUrl && $previousUrl !== url()->current()) {
+            $this->backUrl = $previousUrl;
+            $this->backLabel = 'Kembali ke Pencarian';
+        } else {
+            $this->backUrl = route('home');
+            $this->backLabel = 'Kembali ke Beranda Utama';
+        }
     }
 
     public function sendInquiry()

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full bg-[#f4f4f0]">
+<html lang="id" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,11 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/catalog-map.js'])
 </head>
-<body class="h-full flex flex-col font-sans antialiased text-gray-950 bg-[#f4f4f0] relative">
-    <!-- Dotted Background Pattern -->
-    <div class="fixed inset-0 pointer-events-none opacity-20 z-0" style="background-image: radial-gradient(#000 1.5px, transparent 1.5px); background-size: 24px 24px;"></div>
-    
-    <div class="relative z-10 flex flex-col h-full">
+<body class="h-full flex flex-col font-sans antialiased text-gray-950" style="background-color: #f4f4f0; background-image: radial-gradient(#000000 1.2px, transparent 1.2px); background-size: 20px 20px;">
 
     <!-- Header / Navbar -->
     <header class="bg-white border-b-3 border-black sticky top-0 z-50 shadow-[0_4px_0_0_rgba(0,0,0,1)]">
@@ -241,6 +237,5 @@
         </div>
     </footer>
 
-    </div>
 </body>
 </html>

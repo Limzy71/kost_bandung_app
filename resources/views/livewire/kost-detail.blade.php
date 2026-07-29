@@ -663,15 +663,15 @@
                     this.layers.street.addTo(this.map);
                     this.currentLayer = 'street';
 
-                    // Custom Neo-Brutalist House Icon Badge
+                    // Custom Neo-Brutalist House Icon Badge (Medium size)
                     const houseIcon = L.divIcon({
-                        html: `<div style="width:44px;height:44px;background:#FACC15;border:3px solid #000;border-radius:12px;box-shadow:4px 4px 0 #000;display:flex;align-items:center;justify-content:center;">
-                            <svg width="24" height="24" fill="none" stroke="black" stroke-width="2.5" viewBox="0 0 24 24">
+                        html: `<div style="width:32px;height:32px;background:#FACC15;border:2.5px solid #000;border-radius:8px;box-shadow:2.5px 2.5px 0 #000;display:flex;align-items:center;justify-content:center;">
+                            <svg width="18" height="18" fill="none" stroke="black" stroke-width="2.5" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                             </svg>
                         </div>`,
-                        iconSize: [44, 44],
-                        iconAnchor: [22, 22],
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 16],
                         className: ''
                     });
 
@@ -720,7 +720,7 @@
                             });
                             this.googleMap = gmap;
                             
-                            const houseSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44" fill="none"><rect x="2" y="2" width="40" height="40" rx="10" fill="#FACC15" stroke="#000000" stroke-width="3"/><path d="M11 22L13 20M13 20L22 11L31 20M13 20V30C13 30.5523 13.4477 31 14 31H17M31 20L33 22M31 20V30C31 30.5523 30.5523 31 30 31H27M17 31C17.5523 31 18 30.5523 18 30V26C18 25.4477 18.4477 25 19 25H25C25.5523 25 26 25.4477 26 26V30C26 30.5523 26.4477 31 27 31M17 31H27" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+                            const houseSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34" fill="none"><rect x="2" y="2" width="30" height="30" rx="8" fill="#FACC15" stroke="#000000" stroke-width="2.5"/><path d="M8 17L10 15M10 15L17 8L24 15M10 15V23C10 23.5523 10.4477 24 11 24H14M24 15L26 17M24 15V23C24 23.5523 23.5523 24 23 24H20M14 24C14.5523 24 15 23.5523 15 23V20C15 19.4477 15.4477 19 16 19H18C18.5523 19 19 19.4477 19 20V23C19 23.5523 19.4477 24 20 24M14 24H20" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
                             const marker = new google.maps.Marker({
                                 position: {
@@ -731,8 +731,8 @@
                                 title: kostTitle,
                                 icon: {
                                     url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(houseSvg),
-                                    scaledSize: new google.maps.Size(44, 44),
-                                    anchor: new google.maps.Point(22, 22)
+                                    scaledSize: new google.maps.Size(34, 34),
+                                    anchor: new google.maps.Point(17, 17)
                                 }
                             });
                         };

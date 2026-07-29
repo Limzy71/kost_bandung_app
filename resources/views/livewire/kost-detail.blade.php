@@ -384,7 +384,7 @@
                                 title="Peta Standard">Peta</button>
                             <button type="button" @click="switchLayer('satellite')"
                                 :class="currentLayer === 'satellite' ?
-                                    'bg-yellow-400 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]' :
+                                    'bg-cyan-300 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]' :
                                     'bg-white border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-zinc-100'"
                                 class="px-3.5 py-1.5 text-xs font-black uppercase border-2 rounded-lg text-black transition-all cursor-pointer"
                                 title="Tampilan Satelit">Satelit</button>
@@ -663,15 +663,15 @@
                     this.layers.street.addTo(this.map);
                     this.currentLayer = 'street';
 
-                    // Custom Neo-Brutalist House Icon Badge (28x28 size)
+                    // Custom Neo-Brutalist House Icon Badge (36x36 size)
                     const houseIcon = L.divIcon({
-                        html: `<div style="width:28px;height:28px;background:#FACC15;border:2px solid #000;border-radius:6px;box-shadow:2px 2px 0 #000;display:flex;align-items:center;justify-content:center;">
-                            <svg width="14" height="14" fill="none" stroke="black" stroke-width="2.5" viewBox="0 0 24 24">
+                        html: `<div style="width:36px;height:36px;background:#FACC15;border:2.5px solid #000;border-radius:10px;box-shadow:3px 3px 0 #000;display:flex;align-items:center;justify-content:center;">
+                            <svg width="20" height="20" fill="none" stroke="black" stroke-width="2.5" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                             </svg>
                         </div>`,
-                        iconSize: [28, 28],
-                        iconAnchor: [14, 14],
+                        iconSize: [36, 36],
+                        iconAnchor: [18, 18],
                         className: ''
                     });
 
@@ -720,7 +720,7 @@
                             });
                             this.googleMap = gmap;
                             
-                            const houseSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="2" y="2" width="24" height="24" rx="6" fill="#FACC15" stroke="#000000" stroke-width="2"/><path d="M7 14L8.5 12.5M8.5 12.5L14 7L19.5 12.5M8.5 12.5V19C8.5 19.5523 8.94772 20 9.5 20H11.5M19.5 12.5L21 14M19.5 12.5V19C19.5 19.5523 19.0523 20 18.5 20H16.5M11.5 20C11.9523 20 12.3 19.5523 12.3 19V16.5C12.3 16.0477 12.6477 15.7 13.1 15.7H14.9C15.3523 15.7 15.7 16.0477 15.7 16.5V19C15.7 19.5523 16.0477 20 16.5 20M11.5 20H16.5" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+                            const houseSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="2" y="2" width="32" height="32" rx="8" fill="#FACC15" stroke="#000000" stroke-width="2.5"/><path d="M9 18L11 16M11 16L18 9L25 16M11 16V25C11 25.5523 11.4477 26 12 26H15M25 16L27 18M25 16V25C25 25.5523 24.5523 26 24 26H21M15 26C15.5523 26 16 25.5523 16 25V21C16 20.4477 16.4477 20 17 20H19C19.5523 20 20 20.4477 20 21V25C20 25.5523 20.4477 26 21 26M15 26H21" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
                             const marker = new google.maps.Marker({
                                 position: {
@@ -731,8 +731,8 @@
                                 title: kostTitle,
                                 icon: {
                                     url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(houseSvg),
-                                    scaledSize: new google.maps.Size(28, 28),
-                                    anchor: new google.maps.Point(14, 14)
+                                    scaledSize: new google.maps.Size(36, 36),
+                                    anchor: new google.maps.Point(18, 18)
                                 }
                             });
                         };

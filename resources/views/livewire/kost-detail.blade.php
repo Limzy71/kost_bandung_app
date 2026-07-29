@@ -663,16 +663,20 @@
                     this.layers.street.addTo(this.map);
                     this.currentLayer = 'street';
 
-                    // Custom marker
-                    const pinIcon = L.divIcon({
-                        html: `<div style="width:36px;height:36px;background:#FACC15;border:3px solid #000;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:3px 3px 0 rgba(0,0,0,0.6);"><div style="transform:rotate(45deg);width:100%;height:100%;display:flex;align-items:center;justify-content:center;"><svg width="16" height="16" fill="none" stroke="black" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg></div></div>`,
-                        iconSize: [36, 36],
-                        iconAnchor: [18, 36],
+                    // Custom Neo-Brutalist House Icon Badge
+                    const houseIcon = L.divIcon({
+                        html: `<div style="width:44px;height:44px;background:#FACC15;border:3px solid #000;border-radius:12px;box-shadow:4px 4px 0 #000;display:flex;align-items:center;justify-content:center;">
+                            <svg width="24" height="24" fill="none" stroke="black" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                            </svg>
+                        </div>`,
+                        iconSize: [44, 44],
+                        iconAnchor: [22, 22],
                         className: ''
                     });
 
                     const marker = L.marker([lat, lng], {
-                        icon: pinIcon
+                        icon: houseIcon
                     }).addTo(this.map);
                 };
 
@@ -715,6 +719,9 @@
                                 fullscreenControl: false,
                             });
                             this.googleMap = gmap;
+                            
+                            const houseSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44" fill="none"><rect x="2" y="2" width="40" height="40" rx="10" fill="#FACC15" stroke="#000000" stroke-width="3"/><path d="M11 22L13 20M13 20L22 11L31 20M13 20V30C13 30.5523 13.4477 31 14 31H17M31 20L33 22M31 20V30C31 30.5523 30.5523 31 30 31H27M17 31C17.5523 31 18 30.5523 18 30V26C18 25.4477 18.4477 25 19 25H25C25.5523 25 26 25.4477 26 26V30C26 30.5523 26.4477 31 27 31M17 31H27" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
                             const marker = new google.maps.Marker({
                                 position: {
                                     lat,
@@ -722,6 +729,11 @@
                                 },
                                 map: gmap,
                                 title: kostTitle,
+                                icon: {
+                                    url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(houseSvg),
+                                    scaledSize: new google.maps.Size(44, 44),
+                                    anchor: new google.maps.Point(22, 22)
+                                }
                             });
                         };
                         const s = document.createElement('script');

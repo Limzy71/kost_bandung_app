@@ -217,17 +217,25 @@
 
                         if (!districtFound) return null;
 
-                        let normalized = districtFound.replace(/kecamatan\s+/i, '').trim().toLowerCase();
+                        // Normalize: remove prefix "Kecamatan", strip spaces, lowercase
+                        let normalized = districtFound
+                            .replace(/^kecamatan\s+/i, '')
+                            .replace(/^kec\.?\s+/i, '')
+                            .trim()
+                            .toLowerCase();
                         
                         const keys = Object.keys(this.districtsData);
+                        // Exact match first
                         for (let key of keys) {
                             if (key.toLowerCase() === normalized) {
                                 return key;
                             }
                         }
-                        
+                        // Fuzzy: key contains normalized or vice versa
                         for (let key of keys) {
-                            if (key.toLowerCase().includes(normalized) || normalized.includes(key.toLowerCase())) {
+                            const keyNorm = key.toLowerCase().replace(/\s+/g, ' ');
+                            const valNorm = normalized.replace(/\s+/g, ' ');
+                            if (keyNorm === valNorm || keyNorm.includes(valNorm) || valNorm.includes(keyNorm)) {
                                 return key;
                             }
                         }
@@ -430,7 +438,22 @@
                                     script.onerror = loadLeafletAndInit;
                                     document.body.appendChild(script);
                                 } else {
-                                    loadLeafletAndInit();
+                                    // Script tag exists but google may not be ready yet — poll
+                                    if (window.google && window.google.maps) {
+                                        if (!setupGoogleMap()) loadLeafletAndInit();
+                                    } else {
+                                        let waited = 0;
+                                        const poll = setInterval(() => {
+                                            waited += 100;
+                                            if (window.google && window.google.maps) {
+                                                clearInterval(poll);
+                                                if (!setupGoogleMap()) loadLeafletAndInit();
+                                            } else if (waited >= 5000) {
+                                                clearInterval(poll);
+                                                loadLeafletAndInit();
+                                            }
+                                        }, 100);
+                                    }
                                 }
                             }
                         } else {

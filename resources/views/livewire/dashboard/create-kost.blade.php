@@ -160,7 +160,303 @@
             </div>
 
             <!-- Seksi 2: Lokasi & Geofencing -->
-            <div
+            <script>
+                window.bandungDistricts = @json(config('bandung.districts', []));
+            </script>
+            <div x-data="{
+                    lat: @entangle('latitude'),
+                    lng: @entangle('longitude'),
+                    address: @entangle('address'),
+                    district: @entangle('district'),
+                    districtAutoMessage: @entangle('district_auto_message'),
+                    districtsData: window.bandungDistricts,
+                    hasGoogleKey: '{{ $googleMapsApiKey }}',
+                    map: null,
+                    marker: null,
+                    isOutOfBounds: false,
+                    reverseGeocodeTimeout: null,
+                    checkBounds(lat, lng) {
+                        if (!this.district || !this.districtsData[this.district] || !this.districtsData[this.district].bounds) {
+                            this.isOutOfBounds = false;
+                            window.dispatchEvent(new CustomEvent('bounds-update', { detail: this.isOutOfBounds }));
+                            return;
+                        }
+                        const bounds = this.districtsData[this.district].bounds;
+                        this.isOutOfBounds = !(lat >= bounds.lat_min && lat <= bounds.lat_max && lng >= bounds.lng_min && lng <= bounds.lng_max);
+                        window.dispatchEvent(new CustomEvent('bounds-update', { detail: this.isOutOfBounds }));
+                    },
+                    setCoords(newLat, newLng) {
+                        const formattedLat = newLat.toFixed(6);
+                        const formattedLng = newLng.toFixed(6);
+                        this.lat = formattedLat;
+                        this.lng = formattedLng;
+                        $wire.set('latitude', formattedLat);
+                        $wire.set('longitude', formattedLng);
+                        this.checkBounds(newLat, newLng);
+
+                        clearTimeout(this.reverseGeocodeTimeout);
+                        this.reverseGeocodeTimeout = setTimeout(() => {
+                            this.reverseGeocode(newLat, newLng);
+                        }, 800);
+                    },
+                    matchDistrict(components, source) {
+                        let districtFound = null;
+                        
+                        if (source === 'google') {
+                            const levels = ['administrative_area_level_3', 'administrative_area_level_4', 'sublocality_level_1', 'sublocality'];
+                            for (let level of levels) {
+                                const comp = components.find(c => c.types.includes(level));
+                                if (comp) {
+                                    districtFound = comp.long_name;
+                                    break;
+                                }
+                            }
+                        } else if (source === 'nominatim') {
+                            districtFound = components.suburb || components.city_district || components.county;
+                        }
+
+                        if (!districtFound) return null;
+
+                        let normalized = districtFound.replace(/kecamatan\s+/i, '').trim().toLowerCase();
+                        
+                        const keys = Object.keys(this.districtsData);
+                        for (let key of keys) {
+                            if (key.toLowerCase() === normalized) {
+                                return key;
+                            }
+                        }
+                        
+                        for (let key of keys) {
+                            if (key.toLowerCase().includes(normalized) || normalized.includes(key.toLowerCase())) {
+                                return key;
+                            }
+                        }
+                        
+                        return null;
+                    },
+                    updateDistrictFromMatch(matchedDistrict) {
+                        if (matchedDistrict) {
+                            if (!this.district) {
+                                this.districtAutoMessage = `Kecamatan terdeteksi otomatis dari lokasi.`;
+                            } else if (this.district !== matchedDistrict) {
+                                this.districtAutoMessage = `Kecamatan disesuaikan otomatis dari ${this.district} menjadi ${matchedDistrict}.`;
+                            }
+                            this.district = matchedDistrict;
+                            $wire.set('district', matchedDistrict);
+                        } else {
+                            this.districtAutoMessage = `Kecamatan tidak dapat dideteksi otomatis, silakan pilih manual.`;
+                        }
+                        this.checkBounds(parseFloat(this.lat), parseFloat(this.lng));
+                    },
+                    reverseGeocode(lat, lng) {
+                        if (window.google && window.google.maps) {
+                            const geocoder = new google.maps.Geocoder();
+                            geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+                                if (status === 'OK' && results[0]) {
+                                    const matched = this.matchDistrict(results[0].address_components, 'google');
+                                    this.updateDistrictFromMatch(matched);
+                                }
+                            });
+                        } else {
+                            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`)
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data && data.address) {
+                                        const matched = this.matchDistrict(data.address, 'nominatim');
+                                        this.updateDistrictFromMatch(matched);
+                                    }
+                                }).catch(err => console.warn('Nominatim reverse error', err));
+                        }
+                    },
+                    geocodeAddress(addr) {
+                        if (!addr || addr.trim() === '') return;
+                        
+                        let query = addr;
+                        if (this.district && this.district.trim() !== '') {
+                            query += ', Kecamatan ' + this.district;
+                        }
+                        query += ', Kota Bandung, Jawa Barat';
+                        
+                        const useNominatim = () => {
+                            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1&addressdetails=1`)
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data && data.length > 0) {
+                                        const resLat = parseFloat(data[0].lat);
+                                        const resLon = parseFloat(data[0].lon);
+                                        const matched = this.matchDistrict(data[0].address, 'nominatim');
+                                        this.updateDistrictFromMatch(matched);
+                                        
+                                        this.setCoords(resLat, resLon);
+                                        if (this.map) {
+                                            if (typeof L !== 'undefined' && this.map.setView) {
+                                                this.map.setView([resLat, resLon], 16);
+                                            }
+                                        }
+                                    }
+                                }).catch(err => console.warn('Nominatim error', err));
+                        };
+
+                        if (window.google && window.google.maps) {
+                            const geocoder = new google.maps.Geocoder();
+                            geocoder.geocode({ 
+                                address: query,
+                                componentRestrictions: {
+                                    country: 'ID'
+                                }
+                            }, (results, status) => {
+                                if (status === 'OK' && results[0]) {
+                                    const loc = results[0].geometry.location;
+                                    const locType = results[0].geometry.location_type;
+                                    const matched = this.matchDistrict(results[0].address_components, 'google');
+                                    this.updateDistrictFromMatch(matched);
+                                    
+                                    this.setCoords(loc.lat(), loc.lng());
+                                    
+                                    if (this.map && this.map.setCenter) {
+                                        this.map.setCenter(loc);
+                                        let zoom = 15;
+                                        if (locType === 'ROOFTOP' || locType === 'RANGE_INTERPOLATED') {
+                                            zoom = 17;
+                                        } else if (locType === 'APPROXIMATE') {
+                                            zoom = 14;
+                                        }
+                                        this.map.setZoom(zoom);
+                                    }
+                                } else {
+                                    console.warn('Google Geocode failed:', status, '- falling back to Nominatim');
+                                    useNominatim();
+                                }
+                            });
+                        } else if (typeof L !== 'undefined') {
+                            useNominatim();
+                        }
+                    },
+                    initMap() {
+                        const curLat = parseFloat(this.lat) || -6.917464;
+                        const curLng = parseFloat(this.lng) || 107.619123;
+                
+                        const setupGoogleMap = () => {
+                            if (this.map || !window.google || !window.google.maps) return false;
+                            try {
+                                this.map = new google.maps.Map(this.$refs.mapElement, {
+                                    center: { lat: curLat, lng: curLng },
+                                    zoom: 13,
+                                    mapTypeControl: false,
+                                    streetViewControl: false,
+                                    fullscreenControl: false,
+                                });
+                
+                                this.marker = new google.maps.Marker({
+                                    position: { lat: curLat, lng: curLng },
+                                    map: this.map,
+                                    draggable: true,
+                                    title: 'Lokasi Kost Anda'
+                                });
+                
+                                this.marker.addListener('dragend', (e) => {
+                                    this.setCoords(e.latLng.lat(), e.latLng.lng());
+                                });
+                
+                                this.map.addListener('click', (e) => {
+                                    this.marker.setPosition(e.latLng);
+                                    this.setCoords(e.latLng.lat(), e.latLng.lng());
+                                });
+                                return true;
+                            } catch (e) {
+                                console.warn('Google Maps load error, falling back to Leaflet:', e);
+                                return false;
+                            }
+                        };
+                
+                        const setupLeafletMap = () => {
+                            if (this.map || typeof L === 'undefined') return;
+                            this.map = L.map(this.$refs.mapElement).setView([curLat, curLng], 13);
+                
+                            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                maxZoom: 19,
+                                attribution: '&copy; OpenStreetMap'
+                            }).addTo(this.map);
+                
+                            this.marker = L.marker([curLat, curLng], { draggable: true }).addTo(this.map);
+                
+                            this.marker.on('dragend', (e) => {
+                                const pos = e.target.getLatLng();
+                                this.setCoords(pos.lat, pos.lng);
+                            });
+                
+                            this.map.on('click', (e) => {
+                                this.marker.setLatLng(e.latlng);
+                                this.setCoords(e.latlng.lat, e.latlng.lng);
+                            });
+                        };
+                
+                        const loadLeafletAndInit = () => {
+                            if (typeof L !== 'undefined') {
+                                setupLeafletMap();
+                                return;
+                            }
+                            if (!document.getElementById('leaflet-css')) {
+                                const link = document.createElement('link');
+                                link.id = 'leaflet-css';
+                                link.rel = 'stylesheet';
+                                link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+                                document.head.appendChild(link);
+                            }
+                            if (!document.getElementById('leaflet-js')) {
+                                const script = document.createElement('script');
+                                script.id = 'leaflet-js';
+                                script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+                                script.onload = setupLeafletMap;
+                                document.body.appendChild(script);
+                            } else {
+                                setupLeafletMap();
+                            }
+                        };
+                
+                        if (this.hasGoogleKey) {
+                            if (window.google && window.google.maps) {
+                                if (!setupGoogleMap()) loadLeafletAndInit();
+                            } else {
+                                if (!document.getElementById('google-maps-script')) {
+                                    const script = document.createElement('script');
+                                    script.id = 'google-maps-script';
+                                    script.src = `https://maps.googleapis.com/maps/api/js?key=${this.hasGoogleKey}`;
+                                    script.async = true;
+                                    script.defer = true;
+                                    script.onload = () => {
+                                        if (!setupGoogleMap()) loadLeafletAndInit();
+                                    };
+                                    script.onerror = loadLeafletAndInit;
+                                    document.body.appendChild(script);
+                                } else {
+                                    loadLeafletAndInit();
+                                }
+                            }
+                        } else {
+                            loadLeafletAndInit();
+                        }
+                        
+                        this.$watch('lat', () => this.updateMapPosition());
+                        this.$watch('lng', () => this.updateMapPosition());
+                        this.$watch('address', (value) => {
+                            if (value) this.geocodeAddress(value);
+                        });
+                    },
+                    updateMapPosition() {
+                        const newLat = parseFloat(this.lat);
+                        const newLng = parseFloat(this.lng);
+                        if (isNaN(newLat) || isNaN(newLng) || !this.map || !this.marker) return;
+                        
+                        if (typeof L !== 'undefined' && this.marker.setLatLng) {
+                            this.marker.setLatLng([newLat, newLng]);
+                            this.map.setView([newLat, newLng]);
+                        } else if (window.google && this.marker.setPosition) {
+                            this.marker.setPosition({ lat: newLat, lng: newLng });
+                            this.map.panTo({ lat: newLat, lng: newLng });
+                        }
+                    }
+                }" x-init="initMap()"
                 class="bg-white rounded-xl p-6 md:p-8 border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6">
                 <div class="flex items-center gap-3 border-b-3 border-black pb-4">
                     <div

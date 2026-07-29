@@ -7,7 +7,7 @@
             <p class="text-sm font-bold text-zinc-600 mt-1">Kelola pertanyaan calon penyewa untuk properti Anda.</p>
         </div>
         
-        <div class="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0">
+        <div class="flex flex-wrap items-center gap-2 mt-4 md:mt-0">
             <button wire:click="$set('filter', 'all')" class="px-4 py-2 border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg {{ $filter === 'all' ? 'bg-black text-white' : 'bg-white text-black hover:bg-zinc-100' }}">Semua</button>
             <button wire:click="$set('filter', 'unread')" class="px-4 py-2 border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg {{ $filter === 'unread' ? 'bg-yellow-400 text-black' : 'bg-white text-black hover:bg-yellow-100' }}">Belum Dibaca</button>
             <button wire:click="$set('filter', 'read')" class="px-4 py-2 border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg {{ $filter === 'read' ? 'bg-emerald-400 text-black' : 'bg-white text-black hover:bg-emerald-100' }}">Sudah Dibaca</button>

@@ -20,15 +20,18 @@ class CreateKost extends Component
     public string $district = '';
     public string $address = '';
     public string $price_monthly = '';
-    public string $latitude = '-6.917464';
-    public string $longitude = '107.619123';
+    public string $latitude = '';
+    public string $longitude = '';
     public string $total_rooms = '1';
     public string $available_rooms = '1';
     public array $selectedFacilities = [];
     public array $photos = [];
+    public ?string $district_auto_message = null;
 
     public function updatedDistrict($value)
     {
+        $this->district_auto_message = null; // Reset auto message if changed manually
+
         $districtsConfig = config('bandung.districts', []);
         if (isset($districtsConfig[$value]['center'])) {
             $this->latitude = (string) $districtsConfig[$value]['center']['lat'];

@@ -31,7 +31,7 @@
         </div>
 
         <!-- Form Start -->
-        <form wire:submit.prevent="save" class="space-y-8">
+        <form wire:submit.prevent="save" x-data="{ formIsOutOfBounds: false }" @bounds-update.window="formIsOutOfBounds = $event.detail" class="space-y-8">
 
             <!-- Seksi 1: Informasi Dasar -->
             <div
@@ -203,6 +203,10 @@
                                 class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
                                 {{ $message }}</p>
                         @enderror
+                        <!-- District Auto Message -->
+                        <div x-show="districtAutoMessage" x-cloak class="mt-2 text-xs font-bold text-sky-700 bg-sky-100 border-2 border-sky-400 px-2.5 py-1.5 rounded-md inline-block shadow-[2px_2px_0px_0px_rgba(14,165,233,1)]">
+                            <span x-text="districtAutoMessage"></span>
+                        </div>
                     </div>
 
                     <!-- Alamat Lengkap -->
@@ -228,9 +232,23 @@
                     lng: @entangle('longitude'),
                     address: @entangle('address'),
                     district: @entangle('district'),
+                    districtAutoMessage: @entangle('district_auto_message'),
+                    districtsData: @json(config('bandung.districts', [])),
                     hasGoogleKey: '{{ $googleMapsApiKey }}',
                     map: null,
                     marker: null,
+                    isOutOfBounds: false,
+                    reverseGeocodeTimeout: null,
+                    checkBounds(lat, lng) {
+                        if (!this.district || !this.districtsData[this.district] || !this.districtsData[this.district].bounds) {
+                            this.isOutOfBounds = false;
+                            window.dispatchEvent(new CustomEvent('bounds-update', { detail: this.isOutOfBounds }));
+                            return;
+                        }
+                        const bounds = this.districtsData[this.district].bounds;
+                        this.isOutOfBounds = !(lat >= bounds.lat_min && lat <= bounds.lat_max && lng >= bounds.lng_min && lng <= bounds.lng_max);
+                        window.dispatchEvent(new CustomEvent('bounds-update', { detail: this.isOutOfBounds }));
+                    },
                     setCoords(newLat, newLng) {
                         const formattedLat = newLat.toFixed(6);
                         const formattedLng = newLng.toFixed(6);
@@ -238,6 +256,81 @@
                         this.lng = formattedLng;
                         $wire.set('latitude', formattedLat);
                         $wire.set('longitude', formattedLng);
+                        this.checkBounds(newLat, newLng);
+
+                        clearTimeout(this.reverseGeocodeTimeout);
+                        this.reverseGeocodeTimeout = setTimeout(() => {
+                            this.reverseGeocode(newLat, newLng);
+                        }, 800);
+                    },
+                    matchDistrict(components, source) {
+                        let districtFound = null;
+                        
+                        if (source === 'google') {
+                            const levels = ['administrative_area_level_3', 'administrative_area_level_4', 'sublocality_level_1', 'sublocality'];
+                            for (let level of levels) {
+                                const comp = components.find(c => c.types.includes(level));
+                                if (comp) {
+                                    districtFound = comp.long_name;
+                                    break;
+                                }
+                            }
+                        } else if (source === 'nominatim') {
+                            districtFound = components.suburb || components.city_district || components.county;
+                        }
+
+                        if (!districtFound) return null;
+
+                        let normalized = districtFound.replace(/kecamatan\s+/i, '').trim().toLowerCase();
+                        
+                        const keys = Object.keys(this.districtsData);
+                        for (let key of keys) {
+                            if (key.toLowerCase() === normalized) {
+                                return key;
+                            }
+                        }
+                        
+                        for (let key of keys) {
+                            if (key.toLowerCase().includes(normalized) || normalized.includes(key.toLowerCase())) {
+                                return key;
+                            }
+                        }
+                        
+                        return null;
+                    },
+                    updateDistrictFromMatch(matchedDistrict) {
+                        if (matchedDistrict) {
+                            if (!this.district) {
+                                this.districtAutoMessage = `Kecamatan terdeteksi otomatis dari lokasi.`;
+                            } else if (this.district !== matchedDistrict) {
+                                this.districtAutoMessage = `Kecamatan disesuaikan otomatis dari ${this.district} menjadi ${matchedDistrict}.`;
+                            }
+                            this.district = matchedDistrict;
+                            $wire.set('district', matchedDistrict);
+                        } else {
+                            this.districtAutoMessage = `Kecamatan tidak dapat dideteksi otomatis, silakan pilih manual.`;
+                        }
+                        this.checkBounds(parseFloat(this.lat), parseFloat(this.lng));
+                    },
+                    reverseGeocode(lat, lng) {
+                        if (window.google && window.google.maps) {
+                            const geocoder = new google.maps.Geocoder();
+                            geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+                                if (status === 'OK' && results[0]) {
+                                    const matched = this.matchDistrict(results[0].address_components, 'google');
+                                    this.updateDistrictFromMatch(matched);
+                                }
+                            });
+                        } else {
+                            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`)
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data && data.address) {
+                                        const matched = this.matchDistrict(data.address, 'nominatim');
+                                        this.updateDistrictFromMatch(matched);
+                                    }
+                                }).catch(err => console.warn('Nominatim reverse error', err));
+                        }
                     },
                     geocodeAddress(addr) {
                         if (!addr || addr.trim() === '') return;
@@ -249,11 +342,21 @@
                         query += ', Kota Bandung, Jawa Barat';
                         
                         const useNominatim = () => {
-                            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`)
+                            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1&addressdetails=1`)
                                 .then(res => res.json())
                                 .then(data => {
                                     if (data && data.length > 0) {
-                                        this.setCoords(parseFloat(data[0].lat), parseFloat(data[0].lon));
+                                        const resLat = parseFloat(data[0].lat);
+                                        const resLon = parseFloat(data[0].lon);
+                                        const matched = this.matchDistrict(data[0].address, 'nominatim');
+                                        this.updateDistrictFromMatch(matched);
+                                        
+                                        this.setCoords(resLat, resLon);
+                                        if (this.map) {
+                                            if (typeof L !== 'undefined' && this.map.setView) {
+                                                this.map.setView([resLat, resLon], 16);
+                                            }
+                                        }
                                     }
                                 }).catch(err => console.warn('Nominatim error', err));
                         };
@@ -268,7 +371,22 @@
                             }, (results, status) => {
                                 if (status === 'OK' && results[0]) {
                                     const loc = results[0].geometry.location;
+                                    const locType = results[0].geometry.location_type;
+                                    const matched = this.matchDistrict(results[0].address_components, 'google');
+                                    this.updateDistrictFromMatch(matched);
+                                    
                                     this.setCoords(loc.lat(), loc.lng());
+                                    
+                                    if (this.map && this.map.setCenter) {
+                                        this.map.setCenter(loc);
+                                        let zoom = 15;
+                                        if (locType === 'ROOFTOP' || locType === 'RANGE_INTERPOLATED') {
+                                            zoom = 17;
+                                        } else if (locType === 'APPROXIMATE') {
+                                            zoom = 14;
+                                        }
+                                        this.map.setZoom(zoom);
+                                    }
                                 } else {
                                     console.warn('Google Geocode failed:', status, '- falling back to Nominatim');
                                     useNominatim();
@@ -423,6 +541,20 @@
                     <div class="relative" wire:ignore>
                         <div x-ref="mapElement"
                             class="w-full h-80 rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] z-0 bg-zinc-100">
+                        </div>
+                    </div>
+
+                    <!-- Client-Side Geofencing Warning -->
+                    <div x-show="isOutOfBounds" x-cloak
+                        class="p-4 bg-rose-100 border-3 border-black rounded-xl text-rose-700 font-black text-sm shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-start gap-3 mt-4">
+                        <svg class="w-6 h-6 text-rose-600 shrink-0 stroke-[3] mt-0.5" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <div>
+                            <span class="block uppercase tracking-wide">Peringatan: Lokasi di Luar Batas</span>
+                            <span class="block font-bold text-xs mt-1 text-rose-600">Titik lokasi peta tidak berada di dalam wilayah <span x-text="district ? 'Kecamatan ' + district : 'yang dipilih'"></span>. Harap geser marker ke dalam area yang sesuai atau perbaiki input alamat Anda!</span>
                         </div>
                     </div>
 
@@ -731,8 +863,9 @@
                     Batal
                 </a>
 
-                <button type="submit" wire:loading.attr="disabled" wire:target="save"
-                    class="px-8 py-3.5 bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black font-black text-sm uppercase shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all rounded inline-flex items-center gap-2 disabled:opacity-50">
+                <button type="submit" wire:loading.attr="disabled" wire:target="save" x-bind:disabled="formIsOutOfBounds"
+                    :class="formIsOutOfBounds ? 'opacity-50 cursor-not-allowed bg-zinc-300' : 'bg-yellow-400 hover:bg-yellow-300 active:translate-x-1 active:translate-y-1 active:shadow-none'"
+                    class="px-8 py-3.5 text-black border-3 border-black font-black text-sm uppercase shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] transition-all rounded inline-flex items-center gap-2">
                     <span wire:loading.remove wire:target="save">Simpan Properti Kost</span>
                     <span wire:loading wire:target="save" class="inline-flex items-center gap-2">
                         <svg class="animate-spin h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg"

@@ -227,13 +227,16 @@
                 </div>
 
                 <!-- Peta Interaktif & Pin Picker (Geofencing Bandung) -->
+                <script>
+                    window.bandungDistricts = @json(config('bandung.districts', []));
+                </script>
                 <div x-data="{
                     lat: @entangle('latitude'),
                     lng: @entangle('longitude'),
                     address: @entangle('address'),
                     district: @entangle('district'),
                     districtAutoMessage: @entangle('district_auto_message'),
-                    districtsData: @json(config('bandung.districts', [])),
+                    districtsData: window.bandungDistricts,
                     hasGoogleKey: '{{ $googleMapsApiKey }}',
                     map: null,
                     marker: null,

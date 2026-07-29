@@ -95,7 +95,7 @@
                     <h3 class="text-2xl font-black text-black uppercase">Belum Ada Pesan</h3>
                     <p class="text-sm font-bold text-zinc-700 max-w-md mx-auto mt-2">
                         @if($filter === 'all')
-                            Anda belum menerima pesan pertanyaan apapun dari calon penyewa kost.
+                            Anda belum menerima pesan pertanyaan apapun dari calon penyewa&nbsp;kost.
                         @else
                             Tidak ada pesan dalam kategori ini.
                         @endif

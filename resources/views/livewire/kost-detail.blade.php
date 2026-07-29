@@ -663,15 +663,15 @@
                     this.layers.street.addTo(this.map);
                     this.currentLayer = 'street';
 
-                    // Custom Neo-Brutalist House Icon Badge (Compact size)
+                    // Custom Neo-Brutalist House Icon Badge (28x28 size)
                     const houseIcon = L.divIcon({
-                        html: `<div style="width:26px;height:26px;background:#FACC15;border:2px solid #000;border-radius:6px;box-shadow:2px 2px 0 #000;display:flex;align-items:center;justify-content:center;">
+                        html: `<div style="width:28px;height:28px;background:#FACC15;border:2px solid #000;border-radius:6px;box-shadow:2px 2px 0 #000;display:flex;align-items:center;justify-content:center;">
                             <svg width="14" height="14" fill="none" stroke="black" stroke-width="2.5" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                             </svg>
                         </div>`,
-                        iconSize: [26, 26],
-                        iconAnchor: [13, 13],
+                        iconSize: [28, 28],
+                        iconAnchor: [14, 14],
                         className: ''
                     });
 

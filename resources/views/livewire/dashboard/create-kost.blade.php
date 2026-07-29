@@ -456,7 +456,7 @@
                             this.map.panTo({ lat: newLat, lng: newLng });
                         }
                     }
-                }" x-init="initMap()"
+                }" x-init="initMap()" @geocode-address.window="geocodeAddress($event.detail.address)"
                 class="bg-white rounded-xl p-6 md:p-8 border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6">
                 <div class="flex items-center gap-3 border-b-3 border-black pb-4">
                     <div
@@ -512,7 +512,6 @@
                         </label>
                         <input type="text" id="address" wire:model.live.debounce.1000ms="address"
                             x-on:keydown.enter.prevent="$el.blur()"
-                            x-on:input.debounce.1000ms="if ($event.target.value.trim()) geocodeAddress($event.target.value.trim())"
                             placeholder="Contoh: Jl. Dipatiukur No. 80, RT 02/RW 05"
                             class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
                         @error('address')

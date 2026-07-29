@@ -39,6 +39,13 @@ class CreateKost extends Component
         }
     }
 
+    public function updatedAddress($value)
+    {
+        if (!empty(trim($value))) {
+            $this->dispatch('geocode-address', address: trim($value));
+        }
+    }
+
     public function updatedPriceMonthly($value)
     {
         if (is_numeric($value) && $value < 0) {

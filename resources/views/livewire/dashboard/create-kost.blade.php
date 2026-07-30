@@ -204,10 +204,14 @@
                                 this.lat = newLat.toFixed(6);
                                 this.lng = newLng.toFixed(6);
                                 this.checkBounds(newLat, newLng);
+                                // Only reverse-geocode (and lock isReverseGeocoding) when user
+                                // dragged/clicked the map directly. When called from geocodeAddress
+                                // we must NOT set the lock so subsequent keystrokes are not blocked.
+                                if (!isUserMapInteraction) return;
                                 clearTimeout(this.reverseGeocodeTimeout);
                                 var self = this;
                                 this.reverseGeocodeTimeout = setTimeout(function() {
-                                    self.reverseGeocode(newLat, newLng, isUserMapInteraction);
+                                    self.reverseGeocode(newLat, newLng, true);
                                 }, 800);
                             },
 
@@ -315,7 +319,8 @@
                             },
 
                             geocodeAddress: function(addr) {
-                                if (this.isReverseGeocoding) return;
+                                // Never block from isReverseGeocoding here — that flag is only
+                                // for map-drag reverse geocodes and must not block address typing.
 
                                 var clean = (addr || '').trim();
 
@@ -503,10 +508,6 @@
                                 class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
                                 {{ $message }}</p>
                         @enderror
-                        <!-- District Auto Message -->
-                        <div x-show="districtAutoMessage" x-cloak class="mt-2 text-xs font-bold text-sky-700 bg-sky-100 border-2 border-sky-400 px-2.5 py-1.5 rounded-md inline-block shadow-[2px_2px_0px_0px_rgba(14,165,233,1)] max-w-full text-balance">
-                            <span x-text="districtAutoMessage"></span>
-                        </div>
                     </div>
 
                     <!-- Alamat Lengkap dengan Tombol Clear (X) Neo-Brutalist -->
@@ -534,6 +535,11 @@
                                 {{ $message }}</p>
                         @enderror
                     </div>
+                </div>
+                <!-- District Auto Message — di luar flex row agar tidak wrap/kelebihan lebar -->
+                <div x-show="districtAutoMessage" x-cloak
+                    class="text-xs font-bold text-sky-700 bg-sky-100 border-2 border-sky-400 px-3 py-1.5 rounded-md shadow-[2px_2px_0px_0px_rgba(14,165,233,1)] inline-block whitespace-nowrap">
+                    <span x-text="districtAutoMessage"></span>
                 </div>
 
                 <!-- Peta Interaktif & Pin Picker (Geofencing Bandung) -->

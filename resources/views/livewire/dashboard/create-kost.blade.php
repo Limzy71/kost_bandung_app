@@ -200,13 +200,15 @@
                                 window.dispatchEvent(new CustomEvent('bounds-update', { detail: this.isOutOfBounds }));
                             },
 
-                            setCoords: function(newLat, newLng) {
+                            setCoords: function(newLat, newLng, isUserMapInteraction) {
                                 this.lat = newLat.toFixed(6);
                                 this.lng = newLng.toFixed(6);
                                 this.checkBounds(newLat, newLng);
                                 clearTimeout(this.reverseGeocodeTimeout);
                                 var self = this;
-                                this.reverseGeocodeTimeout = setTimeout(function() { self.reverseGeocode(newLat, newLng); }, 800);
+                                this.reverseGeocodeTimeout = setTimeout(function() {
+                                    self.reverseGeocode(newLat, newLng, isUserMapInteraction);
+                                }, 800);
                             },
 
                             matchDistrict: function(components, source) {
@@ -271,7 +273,7 @@
                                 return str.replace(/^[A-Z0-9]{4,8}\+[A-Z0-9]{2,4}\s*,?\s*/i, '').trim();
                             },
 
-                            reverseGeocode: function(lat, lng) {
+                            reverseGeocode: function(lat, lng, isUserMapInteraction) {
                                 var self = this;
                                 self.isReverseGeocoding = true;
 
@@ -281,7 +283,7 @@
                                         .then(function(d) {
                                             if (d) {
                                                 if (d.address) self.updateDistrictFromMatch(self.matchDistrict(d.address, 'nominatim'));
-                                                if (d.display_name) self.address = self.cleanAddress(d.display_name);
+                                                if (isUserMapInteraction && d.display_name) self.address = self.cleanAddress(d.display_name);
                                             }
                                             setTimeout(function() { self.isReverseGeocoding = false; }, 400);
                                         })
@@ -296,7 +298,7 @@
                                         new google.maps.Geocoder().geocode({ location: { lat: lat, lng: lng } }, function(results, status) {
                                             if (status === 'OK' && results && results[0]) {
                                                 self.updateDistrictFromMatch(self.matchDistrict(results[0].address_components, 'google'));
-                                                if (results[0].formatted_address) {
+                                                if (isUserMapInteraction && results[0].formatted_address) {
                                                     self.address = self.cleanAddress(results[0].formatted_address);
                                                 }
                                                 setTimeout(function() { self.isReverseGeocoding = false; }, 400);
@@ -373,8 +375,8 @@
                                     try {
                                         self.map = new google.maps.Map(self.$refs.mapElement, { center: { lat: lat0, lng: lng0 }, zoom: 13, mapTypeControl: false, streetViewControl: false, fullscreenControl: false });
                                         self.marker = new google.maps.Marker({ position: { lat: lat0, lng: lng0 }, map: self.map, draggable: true, title: 'Lokasi Kost Anda' });
-                                        self.marker.addListener('dragend', function(e) { self.setCoords(e.latLng.lat(), e.latLng.lng()); });
-                                        self.map.addListener('click', function(e) { self.marker.setPosition(e.latLng); self.setCoords(e.latLng.lat(), e.latLng.lng()); });
+                                        self.marker.addListener('dragend', function(e) { self.setCoords(e.latLng.lat(), e.latLng.lng(), true); });
+                                        self.map.addListener('click', function(e) { self.marker.setPosition(e.latLng); self.setCoords(e.latLng.lat(), e.latLng.lng(), true); });
                                         return true;
                                     } catch(e) { console.warn('Google Maps init error:', e); return false; }
                                 };
@@ -384,8 +386,8 @@
                                     self.map = L.map(self.$refs.mapElement).setView([lat0, lng0], 13);
                                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(self.map);
                                     self.marker = L.marker([lat0, lng0], { draggable: true }).addTo(self.map);
-                                    self.marker.on('dragend', function(e) { var p = e.target.getLatLng(); self.setCoords(p.lat, p.lng); });
-                                    self.map.on('click', function(e) { self.marker.setLatLng(e.latlng); self.setCoords(e.latlng.lat, e.latlng.lng); });
+                                    self.marker.on('dragend', function(e) { var p = e.target.getLatLng(); self.setCoords(p.lat, p.lng, true); });
+                                    self.map.on('click', function(e) { self.marker.setLatLng(e.latlng); self.setCoords(e.latlng.lat, e.latlng.lng, true); });
                                 };
 
                                 var loadLeaflet = function() {

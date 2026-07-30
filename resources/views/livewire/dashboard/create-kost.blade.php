@@ -160,79 +160,9 @@
             </div>
 
             <!-- Seksi 2: Lokasi & Geofencing -->
-            <!-- Seksi 2: Lokasi & Geofencing -->
             <script>
                 window.bandungDistricts = @json(config('bandung.districts', []));
-            </script>
-            <div x-data="{ districtAutoMessage: @entangle('district_auto_message') }"
-                class="bg-white rounded-xl p-6 md:p-8 border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6">
-                <div class="flex items-center gap-3 border-b-3 border-black pb-4">
-                    <div
-                        class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                        2
-                    </div>
-                    <div>
-                        <h2 class="text-xl font-black text-black uppercase tracking-tight">Lokasi Kost & Geofencing
-                            Bandung</h2>
-                        <p class="text-xs font-bold text-zinc-600">Area kecamatan, alamat fisik, dan penentuan titik
-                            presisi lokasi pada peta</p>
-                    </div>
-                </div>
-
-                <div class="flex flex-col md:flex-row gap-6">
-                    <!-- Dropdown Kecamatan -->
-                    <div class="space-y-2 md:w-50 flex-shrink-0">
-                        <label for="district" class="block text-xs font-black uppercase tracking-wider text-black">
-                            Kecamatan <span class="text-rose-600">*</span>
-                        </label>
-                        <div class="relative">
-                            <select id="district" wire:model.live="district" @change="districtAutoMessage = null"
-                                class="w-full bg-white border-2 border-black rounded-lg pl-3.5 pr-9 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all appearance-none">
-                                <option value="" disabled>-- Pilih Kecamatan --</option>
-                                @foreach ($districts as $dist)
-                                    <option value="{{ $dist }}" class="font-bold text-sm text-black">Kec.
-                                        {{ $dist }}</option>
-                                @endforeach
-                            </select>
-                            <div
-                                class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-black">
-                                <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </div>
-                        </div>
-                        @error('district')
-                            <p
-                                class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
-                                {{ $message }}</p>
-                        @enderror
-                        <!-- District Auto Message -->
-                        <div x-show="districtAutoMessage" x-cloak class="mt-2 text-xs font-bold text-sky-700 bg-sky-100 border-2 border-sky-400 px-2.5 py-1.5 rounded-md inline-block shadow-[2px_2px_0px_0px_rgba(14,165,233,1)]">
-                            <span x-text="districtAutoMessage"></span>
-                        </div>
-                    </div>
-
-                    <!-- Alamat Lengkap -->
-                    <div class="space-y-2 flex-1">
-                        <label for="address" class="block text-xs font-black uppercase tracking-wider text-black">
-                            Alamat Lengkap <span class="text-rose-600">*</span>
-                        </label>
-                        <input type="text" id="address" wire:model.live.debounce.500ms="address"
-                            x-on:keydown.enter.prevent="$el.blur()"
-                            placeholder="Contoh: Jl. Dipatiukur No. 80, RT 02/RW 05"
-                            class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
-                        @error('address')
-                            <p
-                                class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
-                                {{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-
-                <!-- Peta Interaktif & Pin Picker (Geofencing Bandung) -->
-                <script>
-                    if (!window.kostMapInit) {
+                if (!window.kostMapInit) {
                     window.kostMapInit = function() {
                         return {
                             map: null, marker: null, isOutOfBounds: false, reverseGeocodeTimeout: null,
@@ -290,7 +220,6 @@
                                         }
                                     }
                                 } else if (source === 'nominatim') {
-                                    // Check all potential Nominatim address fields
                                     var fields = ['district', 'city_district', 'suburb', 'county', 'village', 'town', 'municipality'];
                                     for (var i = 0; i < fields.length; i++) {
                                         if (components[fields[i]]) {
@@ -325,17 +254,8 @@
                             reverseGeocode: function(lat, lng) {
                                 var self = this;
                                 self.isReverseGeocoding = true;
-                                if (window.google && window.google.maps) {
-                                    new google.maps.Geocoder().geocode({ location: { lat: lat, lng: lng } }, function(results, status) {
-                                        if (status === 'OK' && results[0]) {
-                                            self.updateDistrictFromMatch(self.matchDistrict(results[0].address_components, 'google'));
-                                            if (results[0].formatted_address) {
-                                                self.address = self.cleanAddress(results[0].formatted_address);
-                                            }
-                                        }
-                                        setTimeout(function() { self.isReverseGeocoding = false; }, 400);
-                                    });
-                                } else {
+
+                                var useNominatimReverse = function() {
                                     fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lng + '&addressdetails=1')
                                         .then(function(r) { return r.json(); })
                                         .then(function(d) {
@@ -349,6 +269,26 @@
                                             console.warn('Nominatim reverse error', e);
                                             self.isReverseGeocoding = false;
                                         });
+                                };
+
+                                if (window.google && window.google.maps && window.google.maps.Geocoder) {
+                                    try {
+                                        new google.maps.Geocoder().geocode({ location: { lat: lat, lng: lng } }, function(results, status) {
+                                            if (status === 'OK' && results && results[0]) {
+                                                self.updateDistrictFromMatch(self.matchDistrict(results[0].address_components, 'google'));
+                                                if (results[0].formatted_address) {
+                                                    self.address = self.cleanAddress(results[0].formatted_address);
+                                                }
+                                                setTimeout(function() { self.isReverseGeocoding = false; }, 400);
+                                            } else {
+                                                useNominatimReverse();
+                                            }
+                                        });
+                                    } catch(err) {
+                                        useNominatimReverse();
+                                    }
+                                } else {
+                                    useNominatimReverse();
                                 }
                             },
 
@@ -389,7 +329,7 @@
 
                                 if (window.google && window.google.maps) {
                                     new google.maps.Geocoder().geocode({ address: q, componentRestrictions: { country: 'ID' } }, function(results, status) {
-                                        if (status === 'OK' && results[0]) {
+                                        if (status === 'OK' && results && results[0]) {
                                             var loc = results[0].geometry.location;
                                             var locType = results[0].geometry.location_type;
                                             self.updateDistrictFromMatch(self.matchDistrict(results[0].address_components, 'google'));
@@ -483,16 +423,84 @@
                             }
                         };
                     };
-                    }
-                </script>
-                <div x-data="Object.assign(window.kostMapInit(), {
+                }
+            </script>
+            <div x-data="Object.assign(window.kostMapInit(), {
                     lat: @entangle('latitude'),
                     lng: @entangle('longitude'),
                     district: @entangle('district'),
                     districtAutoMessage: @entangle('district_auto_message'),
                     address: @entangle('address')
-                })" x-init="initMap()" @geocode-address.window="geocodeAddress($event.detail.address)"
-                class="space-y-3 pt-2">
+                })"
+                x-init="initMap()"
+                @geocode-address.window="geocodeAddress($event.detail.address)"
+                class="bg-white rounded-xl p-6 md:p-8 border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6">
+                <div class="flex items-center gap-3 border-b-3 border-black pb-4">
+                    <div
+                        class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                        2
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-black text-black uppercase tracking-tight">Lokasi Kost & Geofencing
+                            Bandung</h2>
+                        <p class="text-xs font-bold text-zinc-600">Area kecamatan, alamat fisik, dan penentuan titik
+                            presisi lokasi pada peta</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-6">
+                    <!-- Dropdown Kecamatan -->
+                    <div class="space-y-2 md:w-50 flex-shrink-0">
+                        <label for="district" class="block text-xs font-black uppercase tracking-wider text-black">
+                            Kecamatan <span class="text-rose-600">*</span>
+                        </label>
+                        <div class="relative">
+                            <select id="district" wire:model.live="district" x-model="district" @change="districtAutoMessage = null"
+                                class="w-full bg-white border-2 border-black rounded-lg pl-3.5 pr-9 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all appearance-none">
+                                <option value="" disabled>-- Pilih Kecamatan --</option>
+                                @foreach ($districts as $dist)
+                                    <option value="{{ $dist }}" class="font-bold text-sm text-black">Kec.
+                                        {{ $dist }}</option>
+                                @endforeach
+                            </select>
+                            <div
+                                class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-black">
+                                <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </div>
+                        @error('district')
+                            <p
+                                class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                                {{ $message }}</p>
+                        @enderror
+                        <!-- District Auto Message -->
+                        <div x-show="districtAutoMessage" x-cloak class="mt-2 text-xs font-bold text-sky-700 bg-sky-100 border-2 border-sky-400 px-2.5 py-1.5 rounded-md inline-block shadow-[2px_2px_0px_0px_rgba(14,165,233,1)]">
+                            <span x-text="districtAutoMessage"></span>
+                        </div>
+                    </div>
+
+                    <!-- Alamat Lengkap -->
+                    <div class="space-y-2 flex-1">
+                        <label for="address" class="block text-xs font-black uppercase tracking-wider text-black">
+                            Alamat Lengkap <span class="text-rose-600">*</span>
+                        </label>
+                        <input type="text" id="address" wire:model.live.debounce.500ms="address" x-model="address"
+                            x-on:keydown.enter.prevent="$el.blur()"
+                            placeholder="Contoh: Jl. Dipatiukur No. 80, RT 02/RW 05"
+                            class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
+                        @error('address')
+                            <p
+                                class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                                {{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- Peta Interaktif & Pin Picker (Geofencing Bandung) -->
+                <div class="space-y-3 pt-2">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <label class="block text-xs font-black uppercase tracking-wider text-black">
                             Tentukan Titik Presisi Lokasi (Peta Interaktif Bandung) <span
@@ -518,16 +526,21 @@
 
                     <!-- Client-Side Geofencing Warning -->
                     <div x-show="isOutOfBounds" x-cloak
-                        class="p-4 bg-rose-100 border-3 border-black rounded-xl text-rose-700 font-black text-sm shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-start gap-3 mt-4">
-                        <svg class="w-6 h-6 text-rose-600 shrink-0 stroke-[3] mt-0.5" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                        </svg>
-                        <div>
-                            <span class="block uppercase tracking-wide">Peringatan: Lokasi di Luar Batas</span>
-                            <span class="block font-bold text-xs mt-1 text-rose-600">Titik lokasi peta tidak berada di dalam wilayah <span x-text="district ? 'Kecamatan ' + district : 'yang dipilih'"></span>. Harap geser marker ke dalam area yang sesuai atau perbaiki input alamat Anda!</span>
+                        class="p-4 bg-rose-100 border-3 border-black rounded-xl text-rose-700 font-black text-xs shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] space-y-1">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5 text-rose-600 shrink-0 stroke-[2.5]" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            <span class="text-sm font-black text-rose-800 uppercase">📍 Lokasi Di Luar Batas
+                                Kecamatan!</span>
                         </div>
+                        <p class="text-xs font-bold text-rose-900 pl-7">
+                            Titik lokasi yang Anda pilih berada di luar wilayah administratif kecamatan <span
+                                class="underline font-black text-rose-950" x-text="district"></span> Kota Bandung.
+                            Silakan geser pin kembali ke dalam area kecamatan ini atau ubah pilihan kecamatan.
+                        </p>
                     </div>
 
                     @error('latitude')

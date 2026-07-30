@@ -339,9 +339,6 @@
                                 var q = clean;
 
                                 if (!/bandung/i.test(q)) {
-                                    if (this.district && this.district.trim() && !/kecamatan|kec\./i.test(q)) {
-                                        q += ', Kecamatan ' + this.district;
-                                    }
                                     q += ', Kota Bandung, Jawa Barat';
                                 }
 

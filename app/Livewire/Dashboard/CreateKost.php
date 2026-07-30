@@ -30,8 +30,6 @@ class CreateKost extends Component
 
     public function updatedDistrict($value)
     {
-        $this->district_auto_message = null; // Reset auto message if changed manually
-
         $districtsConfig = config('bandung.districts', []);
         if (isset($districtsConfig[$value]['center'])) {
             $this->latitude = (string) $districtsConfig[$value]['center']['lat'];

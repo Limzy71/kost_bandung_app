@@ -164,13 +164,7 @@
             <script>
                 window.bandungDistricts = @json(config('bandung.districts', []));
             </script>
-            <div x-data="{
-                    lat: @entangle('latitude'),
-                    lng: @entangle('longitude'),
-                    address: @entangle('address'),
-                    district: @entangle('district'),
-                    districtAutoMessage: @entangle('district_auto_message')
-                }"
+            <div x-data="{ districtAutoMessage: @entangle('district_auto_message') }"
                 class="bg-white rounded-xl p-6 md:p-8 border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6">
                 <div class="flex items-center gap-3 border-b-3 border-black pb-4">
                     <div
@@ -192,7 +186,7 @@
                             Kecamatan <span class="text-rose-600">*</span>
                         </label>
                         <div class="relative">
-                            <select id="district" wire:model.live="district"
+                            <select id="district" wire:model.live="district" @change="districtAutoMessage = null"
                                 class="w-full bg-white border-2 border-black rounded-lg pl-3.5 pr-9 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all appearance-none">
                                 <option value="" disabled>-- Pilih Kecamatan --</option>
                                 @foreach ($districts as $dist)
@@ -287,10 +281,13 @@
                                 };
 
                                 if (source === 'google') {
-                                    // Check all components aggressively
-                                    for (var i = 0; i < components.length; i++) {
-                                        var match = checkAgainstKeys(components[i].long_name) || checkAgainstKeys(components[i].short_name);
-                                        if (match) return match;
+                                    var levels = ['administrative_area_level_3','administrative_area_level_4','sublocality_level_1','sublocality'];
+                                    for (var i = 0; i < levels.length; i++) {
+                                        var comp = components.find(function(c) { return c.types.includes(levels[i]); });
+                                        if (comp) {
+                                            var match = checkAgainstKeys(comp.long_name) || checkAgainstKeys(comp.short_name);
+                                            if (match) return match;
+                                        }
                                     }
                                 } else if (source === 'nominatim') {
                                     // Check all potential Nominatim address fields
@@ -435,6 +432,10 @@
                                 if (this.hasGoogleKey) { tryGoogle(); } else { loadLeaflet(); }
                                 this.$watch('lat', function() { self.updateMapPosition(); });
                                 this.$watch('lng', function() { self.updateMapPosition(); });
+                                this.$watch('district', function() { 
+                                    var lt = parseFloat(self.lat), ln = parseFloat(self.lng);
+                                    if (!isNaN(lt) && !isNaN(ln)) self.checkBounds(lt, ln);
+                                });
                             },
 
                             updateMapPosition: function() {

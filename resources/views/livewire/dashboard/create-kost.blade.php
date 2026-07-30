@@ -165,7 +165,7 @@
                 if (!window.kostMapInit) {
                     window.kostMapInit = function() {
                         return {
-                            map: null, marker: null, isOutOfBounds: false, reverseGeocodeTimeout: null, ignoreNextAddressWatch: false, markerManuallyMoved: false,
+                            map: null, marker: null, isOutOfBounds: false, reverseGeocodeTimeout: null, ignoreNextAddressWatch: false, markerManuallyMoved: false, isGeocoding: false,
                             hasGoogleKey: '{{ $googleMapsApiKey }}',
                             get districtsData() { return window.bandungDistricts || {}; },
 
@@ -178,6 +178,7 @@
                                 this.isOutOfBounds = false;
                                 this.ignoreNextAddressWatch = false;
                                 this.markerManuallyMoved = false;
+                                this.isGeocoding = false;
                                 var lat0 = -6.917464, lng0 = 107.619123;
                                 if (this.map) {
                                     if (typeof L !== 'undefined' && this.marker && this.marker.setLatLng) {
@@ -196,6 +197,7 @@
                                     this.isOutOfBounds = false;
                                 this.ignoreNextAddressWatch = false;
                                 this.markerManuallyMoved = false;
+                                this.isGeocoding = false;
                                     window.dispatchEvent(new CustomEvent('bounds-update', { detail: false }));
                                     return;
                                 }
@@ -344,6 +346,7 @@
                                 }
 
                                 var self = this;
+                                self.isGeocoding = true;
                                 var q = clean;
 
                                 if (!/bandung/i.test(q)) {
@@ -354,6 +357,7 @@
                                     fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(q) + '&limit=1&addressdetails=1')
                                         .then(function(r) { return r.json(); })
                                         .then(function(d) {
+                                            self.isGeocoding = false;
                                             if (d && d.length > 0) {
                                                 var rl = parseFloat(d[0].lat), rn = parseFloat(d[0].lon);
                                                 self.updateDistrictFromMatch(self.matchDistrict(d[0].address, 'nominatim'));
@@ -361,11 +365,12 @@
                                                 self.setCoords(rl, rn);
                                                 if (self.map && typeof L !== 'undefined' && self.map.setView) self.map.setView([rl, rn], 16);
                                             }
-                                        }).catch(function(e) { console.warn('Nominatim error', e); });
+                                        }).catch(function(e) { self.isGeocoding = false; console.warn('Nominatim error', e); });
                                 };
 
                                 if (window.google && window.google.maps && window.google.maps.Geocoder) {
                                     new google.maps.Geocoder().geocode({ address: q, componentRestrictions: { country: 'ID' } }, function(results, status) {
+                                        self.isGeocoding = false;
                                         if (status === 'OK' && results && results[0]) {
                                             var loc = results[0].geometry.location;
                                             var locType = results[0].geometry.location_type;
@@ -552,13 +557,19 @@
                                 placeholder="Contoh: Jl. Dipatiukur No. 80, RT 02/RW 05"
                                 style="padding-left: 1.25rem !important;"
                                 class="w-full bg-white border-2 border-black rounded-lg !pl-5 pr-12 py-3.5 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
-                            <button type="button" x-show="address" x-cloak @click="resetToDefaultLocation()"
+                            <button type="button" x-show="address && !isGeocoding" x-cloak @click="resetToDefaultLocation()"
                                 class="absolute right-2.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded bg-rose-400 hover:bg-rose-500 text-black border-2 border-black flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-[1px] active:translate-y-[1px] transition-all cursor-pointer"
                                 title="Hapus alamat dan reset lokasi">
                                 <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </button>
+                            <div x-show="isGeocoding" x-cloak class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center text-zinc-400">
+                                <svg class="animate-spin w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            </div>
                         </div>
                         @error('address')
                             <p

@@ -169,6 +169,26 @@
                             hasGoogleKey: '{{ $googleMapsApiKey }}',
                             get districtsData() { return window.bandungDistricts || {}; },
 
+                            resetToDefaultLocation: function() {
+                                this.address = '';
+                                this.district = '';
+                                this.districtAutoMessage = null;
+                                this.lat = '-6.917464';
+                                this.lng = '107.619123';
+                                this.isOutOfBounds = false;
+                                var lat0 = -6.917464, lng0 = 107.619123;
+                                if (this.map) {
+                                    if (typeof L !== 'undefined' && this.marker && this.marker.setLatLng) {
+                                        this.marker.setLatLng([lat0, lng0]);
+                                        this.map.setView([lat0, lng0], 13);
+                                    } else if (window.google && this.marker && this.marker.setPosition) {
+                                        this.marker.setPosition({ lat: lat0, lng: lng0 });
+                                        this.map.panTo({ lat: lat0, lng: lng0 });
+                                        this.map.setZoom(13);
+                                    }
+                                }
+                            },
+
                             checkBounds: function(lat, lng) {
                                 if (!this.district || !this.districtsData[this.district] || !this.districtsData[this.district].bounds) {
                                     this.isOutOfBounds = false;
@@ -296,23 +316,19 @@
                                 if (this.isReverseGeocoding) return;
 
                                 if (!addr || !addr.trim()) {
-                                    var lat0 = -6.917464, lng0 = 107.619123;
-                                    if (this.district && this.districtsData[this.district] && this.districtsData[this.district].center) {
-                                        lat0 = this.districtsData[this.district].center.lat;
-                                        lng0 = this.districtsData[this.district].center.lng;
-                                    }
-                                    this.lat = lat0.toFixed(6);
-                                    this.lng = lng0.toFixed(6);
-                                    this.updateMapPosition();
-                                    this.checkBounds(lat0, lng0);
-                                    this.districtAutoMessage = null;
+                                    this.resetToDefaultLocation();
                                     return;
                                 }
 
                                 var self = this;
                                 var q = addr.trim();
-                                if (this.district && this.district.trim()) q += ', Kecamatan ' + this.district;
-                                q += ', Kota Bandung, Jawa Barat';
+
+                                if (!/bandung/i.test(q)) {
+                                    if (this.district && this.district.trim() && !/kecamatan|kec\./i.test(q)) {
+                                        q += ', Kecamatan ' + this.district;
+                                    }
+                                    q += ', Kota Bandung, Jawa Barat';
+                                }
 
                                 var useNominatim = function() {
                                     fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(q) + '&limit=1&addressdetails=1')
@@ -327,7 +343,7 @@
                                         }).catch(function(e) { console.warn('Nominatim error', e); });
                                 };
 
-                                if (window.google && window.google.maps) {
+                                if (window.google && window.google.maps && window.google.maps.Geocoder) {
                                     new google.maps.Geocoder().geocode({ address: q, componentRestrictions: { country: 'ID' } }, function(results, status) {
                                         if (status === 'OK' && results && results[0]) {
                                             var loc = results[0].geometry.location;
@@ -342,7 +358,7 @@
                                             useNominatim();
                                         }
                                     });
-                                } else if (typeof L !== 'undefined') {
+                                } else {
                                     useNominatim();
                                 }
                             },
@@ -482,15 +498,24 @@
                         </div>
                     </div>
 
-                    <!-- Alamat Lengkap -->
+                    <!-- Alamat Lengkap dengan Tombol Clear (X) -->
                     <div class="space-y-2 flex-1">
                         <label for="address" class="block text-xs font-black uppercase tracking-wider text-black">
                             Alamat Lengkap <span class="text-rose-600">*</span>
                         </label>
-                        <input type="text" id="address" wire:model.live.debounce.500ms="address" x-model="address"
-                            x-on:keydown.enter.prevent="$el.blur()"
-                            placeholder="Contoh: Jl. Dipatiukur No. 80, RT 02/RW 05"
-                            class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
+                        <div class="relative">
+                            <input type="text" id="address" wire:model.live.debounce.300ms="address" x-model="address"
+                                x-on:keydown.enter.prevent="$el.blur()"
+                                placeholder="Contoh: Jl. Dipatiukur No. 80, RT 02/RW 05"
+                                class="w-full bg-white border-2 border-black rounded-lg pl-4 pr-10 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
+                            <button type="button" x-show="address" x-cloak @click="resetToDefaultLocation()"
+                                class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-zinc-400 hover:text-black transition-colors"
+                                title="Hapus alamat dan reset lokasi">
+                                <svg class="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
                         @error('address')
                             <p
                                 class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">

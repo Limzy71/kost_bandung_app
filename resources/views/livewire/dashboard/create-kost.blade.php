@@ -441,6 +441,15 @@
                                     var lt = parseFloat(self.lat), ln = parseFloat(self.lng);
                                     if (!isNaN(lt) && !isNaN(ln)) self.checkBounds(lt, ln);
                                 });
+                                // Trigger geocoding directly from Alpine — bypasses Livewire round-trip
+                                // so every keystroke fires a fresh geocode after 600ms quiet time.
+                                var geocodeTimer = null;
+                                this.$watch('address', function(val) {
+                                    clearTimeout(geocodeTimer);
+                                    geocodeTimer = setTimeout(function() {
+                                        self.geocodeAddress(val);
+                                    }, 600);
+                                });
                             },
 
                             updateMapPosition: function() {
@@ -464,7 +473,6 @@
                     address: @entangle('address')
                 })"
                 x-init="initMap()"
-                @geocode-address.window="geocodeAddress($event.detail.address)"
                 class="bg-white rounded-xl p-6 md:p-8 border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6">
                 <div class="flex items-center gap-3 border-b-3 border-black pb-4">
                     <div
@@ -536,9 +544,9 @@
                         @enderror
                     </div>
                 </div>
-                <!-- District Auto Message — di luar flex row agar tidak wrap/kelebihan lebar -->
+                <!-- District Auto Message -->
                 <div x-show="districtAutoMessage" x-cloak
-                    class="text-xs font-bold text-sky-700 bg-sky-100 border-2 border-sky-400 px-3 py-1.5 rounded-md shadow-[2px_2px_0px_0px_rgba(14,165,233,1)] inline-block whitespace-nowrap">
+                    class="text-xs font-bold text-zinc-600 bg-zinc-100 border-2 border-zinc-400 px-3 py-1.5 rounded-md shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)] inline-block whitespace-nowrap">
                     <span x-text="districtAutoMessage"></span>
                 </div>
 

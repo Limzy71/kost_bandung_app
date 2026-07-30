@@ -317,24 +317,58 @@
                                 if (!isNaN(lt) && !isNaN(ln)) this.checkBounds(lt, ln);
                             },
 
+                            cleanAddress: function(str) {
+                                if (!str) return '';
+                                return str.replace(/^[A-Z0-9]{4,8}\+[A-Z0-9]{2,4}\s*,?\s*/i, '').trim();
+                            },
+
                             reverseGeocode: function(lat, lng) {
                                 var self = this;
+                                self.isReverseGeocoding = true;
                                 if (window.google && window.google.maps) {
                                     new google.maps.Geocoder().geocode({ location: { lat: lat, lng: lng } }, function(results, status) {
                                         if (status === 'OK' && results[0]) {
                                             self.updateDistrictFromMatch(self.matchDistrict(results[0].address_components, 'google'));
+                                            if (results[0].formatted_address) {
+                                                self.address = self.cleanAddress(results[0].formatted_address);
+                                            }
                                         }
+                                        setTimeout(function() { self.isReverseGeocoding = false; }, 400);
                                     });
                                 } else {
                                     fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lng + '&addressdetails=1')
                                         .then(function(r) { return r.json(); })
-                                        .then(function(d) { if (d && d.address) self.updateDistrictFromMatch(self.matchDistrict(d.address, 'nominatim')); })
-                                        .catch(function(e) { console.warn('Nominatim reverse error', e); });
+                                        .then(function(d) {
+                                            if (d) {
+                                                if (d.address) self.updateDistrictFromMatch(self.matchDistrict(d.address, 'nominatim'));
+                                                if (d.display_name) self.address = self.cleanAddress(d.display_name);
+                                            }
+                                            setTimeout(function() { self.isReverseGeocoding = false; }, 400);
+                                        })
+                                        .catch(function(e) {
+                                            console.warn('Nominatim reverse error', e);
+                                            self.isReverseGeocoding = false;
+                                        });
                                 }
                             },
 
                             geocodeAddress: function(addr) {
-                                if (!addr || !addr.trim()) return;
+                                if (this.isReverseGeocoding) return;
+
+                                if (!addr || !addr.trim()) {
+                                    var lat0 = -6.917464, lng0 = 107.619123;
+                                    if (this.district && this.districtsData[this.district] && this.districtsData[this.district].center) {
+                                        lat0 = this.districtsData[this.district].center.lat;
+                                        lng0 = this.districtsData[this.district].center.lng;
+                                    }
+                                    this.lat = lat0.toFixed(6);
+                                    this.lng = lng0.toFixed(6);
+                                    this.updateMapPosition();
+                                    this.checkBounds(lat0, lng0);
+                                    this.districtAutoMessage = null;
+                                    return;
+                                }
+
                                 var self = this;
                                 var q = addr.trim();
                                 if (this.district && this.district.trim()) q += ', Kecamatan ' + this.district;
@@ -455,7 +489,8 @@
                     lat: @entangle('latitude'),
                     lng: @entangle('longitude'),
                     district: @entangle('district'),
-                    districtAutoMessage: @entangle('district_auto_message')
+                    districtAutoMessage: @entangle('district_auto_message'),
+                    address: @entangle('address')
                 })" x-init="initMap()" @geocode-address.window="geocodeAddress($event.detail.address)"
                 class="space-y-3 pt-2">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">

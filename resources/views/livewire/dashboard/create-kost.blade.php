@@ -162,42 +162,75 @@
             <!-- Seksi 2: Lokasi & Geofencing -->
             <script>
                 window.bandungDistricts = @json(config('bandung.districts', []));
+                var DEFAULT_LAT = -6.917464, DEFAULT_LNG = 107.619123;
                 if (!window.kostMapInit) {
                     window.kostMapInit = function() {
                         return {
-                            map: null, marker: null, isOutOfBounds: false, reverseGeocodeTimeout: null, ignoreNextAddressWatch: false, markerManuallyMoved: false, isGeocoding: false,
+                            map: null, marker: null, isOutOfBounds: false, isReverseGeocoding: false, reverseGeocodeTimeout: null, ignoreNextAddressWatch: false, markerManuallyMoved: false, isGeocoding: false, _updatingPosition: false, geocodeMessage: '',
                             hasGoogleKey: '{{ $googleMapsApiKey }}',
                             get districtsData() { return window.bandungDistricts || {}; },
 
+                            pickBestNominatim: function(results, query) {
+                                if (!results || results.length === 0) return null;
+                                var qNorm = query.replace(/^jalan\s+/i, '').trim().toLowerCase();
+                                var isStreetLevel = function(cls, type) {
+                                    cls = (cls || '').toLowerCase();
+                                    type = (type || '').toLowerCase();
+                                    return cls === 'highway' || cls === 'building' || cls === 'amenity' || cls === 'shop' ||
+                                        (cls === 'place' && (type === 'house' || type === 'plot' || type === 'road'));
+                                };
+                                var nameMatch = function(item) {
+                                    var n = (item.name || '').replace(/^jalan\s+/i, '').trim().toLowerCase();
+                                    var d = (item.display_name || '').replace(/^jalan\s+/i, '').trim().toLowerCase();
+                                    return n === qNorm || d.startsWith(qNorm + ',') || d === qNorm;
+                                };
+                                var nameContains = function(item) {
+                                    var d = (item.display_name || '').replace(/^jalan\s+/i, '').toLowerCase();
+                                    var dWords = d.replace(/[^a-z0-9\s]/g, '').split(/\s+/);
+                                    var qWords = qNorm.replace(/[^a-z0-9\s]/g, '').split(/\s+/).filter(function(w) {
+                                        return w.length > 2 && !/^\d+$/.test(w);
+                                    });
+                                    if (qWords.length === 0) return true;
+                                    var matches = 0;
+                                    for (var i = 0; i < qWords.length; i++) {
+                                        if (dWords.indexOf(qWords[i]) !== -1) matches++;
+                                    }
+                                    return matches >= Math.min(2, qWords.length);
+                                };
+                                for (var i = 0; i < results.length; i++) {
+                                    if (isStreetLevel(results[i].class, results[i].type) && nameMatch(results[i])) return results[i];
+                                }
+                                for (var i = 0; i < results.length; i++) {
+                                    if (isStreetLevel(results[i].class, results[i].type) && nameContains(results[i])) return results[i];
+                                }
+                                for (var i = 0; i < results.length; i++) {
+                                    if (isStreetLevel(results[i].class, results[i].type)) return results[i];
+                                }
+                                for (var i = 0; i < results.length; i++) {
+                                    if ((results[i].class || '').toLowerCase() === 'place') return results[i];
+                                }
+                                return null;
+                            },
+
                             resetToDefaultLocation: function() {
                                 this.address = '';
+                                this.geocodeMessage = '';
                                 this.district = '';
                                 this.districtAutoMessage = null;
-                                this.lat = '-6.917464';
-                                this.lng = '107.619123';
                                 this.isOutOfBounds = false;
                                 this.ignoreNextAddressWatch = false;
                                 this.markerManuallyMoved = false;
                                 this.isGeocoding = false;
-                                var lat0 = -6.917464, lng0 = 107.619123;
-                                if (this.map) {
-                                    if (typeof L !== 'undefined' && this.marker && this.marker.setLatLng) {
-                                        this.marker.setLatLng([lat0, lng0]);
-                                        this.map.setView([lat0, lng0], 13);
-                                    } else if (window.google && this.marker && this.marker.setPosition) {
-                                        this.marker.setPosition({ lat: lat0, lng: lng0 });
-                                        this.map.panTo({ lat: lat0, lng: lng0 });
-                                        this.map.setZoom(13);
-                                    }
-                                }
+                                this._updatingPosition = true;
+                                this.lat = String(DEFAULT_LAT);
+                                this.lng = String(DEFAULT_LNG);
+                                this._updatingPosition = false;
+                                this.updateMapPosition();
                             },
 
                             checkBounds: function(lat, lng) {
                                 if (!this.district || !this.districtsData[this.district] || !this.districtsData[this.district].bounds) {
                                     this.isOutOfBounds = false;
-                                this.ignoreNextAddressWatch = false;
-                                this.markerManuallyMoved = false;
-                                this.isGeocoding = false;
                                     window.dispatchEvent(new CustomEvent('bounds-update', { detail: false }));
                                     return;
                                 }
@@ -207,9 +240,12 @@
                             },
 
                             setCoords: function(newLat, newLng, isUserMapInteraction) {
+                                this._updatingPosition = true;
                                 this.lat = newLat.toFixed(6);
                                 this.lng = newLng.toFixed(6);
+                                this._updatingPosition = false;
                                 this.checkBounds(newLat, newLng);
+                                this.updateMapPosition();
                                 // Only reverse-geocode (and lock isReverseGeocoding) when user
                                 // dragged/clicked the map directly. When called from geocodeAddress
                                 // we must NOT set the lock so subsequent keystrokes are not blocked.
@@ -329,62 +365,102 @@
                             },
 
                             geocodeAddress: function(addr) {
-                                // Never block from isReverseGeocoding here — that flag is only
-                                // for map-drag reverse geocodes and must not block address typing.
-
                                 var clean = (addr || '').trim();
+                                this.geocodeMessage = '';
+                                if (!clean) { this.resetToDefaultLocation(); return; }
 
-                                if (!clean) {
-                                    this.resetToDefaultLocation();
-                                    return;
-                                }
-
-                                // Ignore incomplete query prefixes like 'jl', 'jl.', 'jalan', 'gg', 'gg.' or <4 chars
                                 var lower = clean.toLowerCase();
-                                if (clean.length < 4 || /^(jl\.?|jalan|gg\.?|gang|no\.?)$/i.test(lower)) {
-                                    return;
-                                }
+                                if (clean.length < 4 || /^(jl\.?|jalan|gg\.?|gang|no\.?)$/i.test(lower)) return;
 
                                 var self = this;
                                 self.isGeocoding = true;
-                                var q = clean;
 
-                                if (!/bandung/i.test(q)) {
-                                    q += ', Kota Bandung, Jawa Barat';
+                                var q = clean.replace(/^jl\.?\s+/i, 'Jalan ').replace(/^jalan\s+/i, 'Jalan ');
+                                if (!/bandung/i.test(q)) q += ', Kota Bandung, Jawa Barat';
+                                else if (self.district && !new RegExp(self.district.replace(/(\s)/g,'\\s'), 'i').test(q)) q += ', ' + self.district;
+
+                                var districtBounds = null;
+                                if (self.district && self.districtsData[self.district] && self.districtsData[self.district].bounds) {
+                                    districtBounds = self.districtsData[self.district].bounds;
                                 }
 
                                 var useNominatim = function() {
-                                    fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(q) + '&limit=1&addressdetails=1')
+                                    var url = 'https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(q) + '&limit=10&addressdetails=1';
+                                    if (districtBounds) {
+                                        url += '&viewbox=' + districtBounds.lng_min + ',' + districtBounds.lat_max + ',' + districtBounds.lng_max + ',' + districtBounds.lat_min;
+                                    }
+                                    fetch(url)
                                         .then(function(r) { return r.json(); })
                                         .then(function(d) {
                                             self.isGeocoding = false;
-                                            if (d && d.length > 0) {
-                                                var rl = parseFloat(d[0].lat), rn = parseFloat(d[0].lon);
-                                                self.updateDistrictFromMatch(self.matchDistrict(d[0].address, 'nominatim'));
+                                            var picked = self.pickBestNominatim(d, q);
+                                            if (picked) {
+                                                var rl = parseFloat(picked.lat), rn = parseFloat(picked.lon);
+                                                self.geocodeMessage = '';
                                                 self.markerManuallyMoved = true;
+                                                self.updateDistrictFromMatch(self.matchDistrict(picked.address, 'nominatim'));
                                                 self.setCoords(rl, rn);
-                                                if (self.map && typeof L !== 'undefined' && self.map.setView) self.map.setView([rl, rn], 16);
+                                            } else {
+                                                self.geocodeMessage = 'Lokasi tidak ditemukan. Coba masukkan alamat atau nama lokasi yang lebih spesifik.';
                                             }
                                         }).catch(function(e) { self.isGeocoding = false; console.warn('Nominatim error', e); });
                                 };
 
-                                if (window.google && window.google.maps && window.google.maps.Geocoder) {
-                                    new google.maps.Geocoder().geocode({ address: q, componentRestrictions: { country: 'ID' } }, function(results, status) {
-                                        self.isGeocoding = false;
-                                        if (status === 'OK' && results && results[0]) {
-                                            var loc = results[0].geometry.location;
-                                            var locType = results[0].geometry.location_type;
-                                            self.updateDistrictFromMatch(self.matchDistrict(results[0].address_components, 'google'));
-                                            self.markerManuallyMoved = true;
-                                            self.setCoords(loc.lat(), loc.lng());
-                                            if (self.map && self.map.setCenter) {
-                                                self.map.setCenter(loc);
-                                                self.map.setZoom(locType === 'ROOFTOP' || locType === 'RANGE_INTERPOLATED' ? 17 : locType === 'APPROXIMATE' ? 14 : 15);
+                                var tryPlaces = function() {
+                                    if (window.google && window.google.maps && window.google.maps.places) {
+                                        var dummyDiv = document.createElement('div');
+                                        new google.maps.places.PlacesService(dummyDiv).textSearch({ query: q, region: 'id' }, function(results, status) {
+                                            if (status === 'OK' && results && results.length > 0) {
+                                                var loc = results[0].geometry.location;
+                                                var addr = (results[0].formatted_address || '').toLowerCase();
+                                                var matched = null, keys = Object.keys(self.districtsData);
+                                                for (var i = 0; i < keys.length; i++) {
+                                                    if (addr.indexOf(keys[i].toLowerCase()) !== -1) { matched = keys[i]; break; }
+                                                }
+                                                self.geocodeMessage = '';
+                                                self.markerManuallyMoved = true;
+                                                self.updateDistrictFromMatch(matched);
+                                                self.setCoords(loc.lat(), loc.lng());
+                                            } else {
+                                                useNominatim();
                                             }
-                                        } else {
-                                            useNominatim();
-                                        }
-                                    });
+                                        });
+                                    } else {
+                                        useNominatim();
+                                    }
+                                };
+
+                                if (window.google && window.google.maps && window.google.maps.Geocoder) {
+                                    var geocodeParams = { address: q, componentRestrictions: { country: 'ID' } };
+                                    if (districtBounds) {
+                                        geocodeParams.bounds = new window.google.maps.LatLngBounds(
+                                            new window.google.maps.LatLng(districtBounds.lat_min, districtBounds.lng_min),
+                                            new window.google.maps.LatLng(districtBounds.lat_max, districtBounds.lng_max)
+                                        );
+                                    }
+                                    var qClean = q.replace(/^jalan\s+/i, '').replace(/[^a-z0-9\s]/g, '').toLowerCase().split(/\s+/).filter(function(w) { return w.length > 2 && !/^\d+$/.test(w); });
+                                    try {
+                                        new google.maps.Geocoder().geocode(geocodeParams, function(results, status) {
+                                            self.isGeocoding = false;
+                                            if (status === 'OK' && results && results.length > 0) {
+                                                var best = results[0], bestScore = -1;
+                                                for (var i = 0; i < results.length; i++) {
+                                                    var addr = (results[i].formatted_address || '').replace(/[^a-z0-9\s]/g, '').toLowerCase();
+                                                    var wordMatch = qClean.length === 0 ? 0 : qClean.filter(function(w) { return addr.indexOf(w) !== -1; }).length;
+                                                    var s = (results[i].partial_match ? 0 : 10) + wordMatch * 3;
+                                                    s += results[i].geometry.location_type === 'ROOFTOP' ? 5 : results[i].geometry.location_type === 'RANGE_INTERPOLATED' ? 3 : 1;
+                                                    if (s > bestScore) { bestScore = s; best = results[i]; }
+                                                }
+                                                var loc = best.geometry.location;
+                                                self.geocodeMessage = '';
+                                                self.markerManuallyMoved = true;
+                                                self.updateDistrictFromMatch(self.matchDistrict(best.address_components, 'google'));
+                                                self.setCoords(loc.lat(), loc.lng());
+                                            } else {
+                                                tryPlaces();
+                                            }
+                                        });
+                                    } catch (e) { console.warn('Google Geocoder threw, fallback to Places/Nominatim', e); self.isGeocoding = false; tryPlaces(); }
                                 } else {
                                     useNominatim();
                                 }
@@ -392,8 +468,8 @@
 
                             initMap: function() {
                                 var self = this;
-                                var lat0 = parseFloat(this.lat) || -6.917464;
-                                var lng0 = parseFloat(this.lng) || 107.619123;
+                                var lat0 = parseFloat(this.lat) || DEFAULT_LAT;
+                                var lng0 = parseFloat(this.lng) || DEFAULT_LNG;
 
                                 var setupGoogle = function() {
                                     if (self.map || !window.google || !window.google.maps) return false;
@@ -431,7 +507,7 @@
                                     } else if (!document.getElementById('google-maps-script')) {
                                         var gs = document.createElement('script');
                                         gs.id = 'google-maps-script';
-                                        gs.src = 'https://maps.googleapis.com/maps/api/js?key=' + self.hasGoogleKey;
+                                        gs.src = 'https://maps.googleapis.com/maps/api/js?key=' + self.hasGoogleKey + '&libraries=places';
                                         gs.async = true; gs.defer = true;
                                         gs.onload = function() { if (!setupGoogle()) loadLeaflet(); };
                                         gs.onerror = loadLeaflet;
@@ -447,8 +523,8 @@
                                 };
 
                                 if (this.hasGoogleKey) { tryGoogle(); } else { loadLeaflet(); }
-                                this.$watch('lat', function() { self.updateMapPosition(); });
-                                this.$watch('lng', function() { self.updateMapPosition(); });
+                                this.$watch('lat', function() { if (!self._updatingPosition) self.updateMapPosition(); });
+                                this.$watch('lng', function() { if (!self._updatingPosition) self.updateMapPosition(); });
                                 this.$watch('district', function(newVal, oldVal) { 
                                     var lt = parseFloat(self.lat), ln = parseFloat(self.lng);
                                     if (!isNaN(lt) && !isNaN(ln)) self.checkBounds(lt, ln);
@@ -457,11 +533,9 @@
                                         var center = self.districtsData[newVal].center;
                                         if (!self.markerManuallyMoved) {
                                             self.setCoords(center.lat, center.lng, false);
-                                            if (self.map && typeof L !== 'undefined' && self.map.setView) self.map.setView([center.lat, center.lng], 14);
-                                            else if (window.google && self.map && self.map.setCenter) { self.map.setCenter({lat: center.lat, lng: center.lng}); self.map.setZoom(14); }
-                                        } else {
-                                            if (self.map && typeof L !== 'undefined' && self.map.setView) self.map.setView([center.lat, center.lng], 14);
-                                            else if (window.google && self.map && self.map.panTo) { self.map.panTo({lat: center.lat, lng: center.lng}); self.map.setZoom(14); }
+                                        } else if (self.map) {
+                                            if (typeof L !== 'undefined' && self.map.setView) self.map.setView([center.lat, center.lng], 14);
+                                            else if (window.google && self.map.panTo) { self.map.panTo({lat: center.lat, lng: center.lng}); self.map.setZoom(14); }
                                         }
                                     }
                                 });
@@ -549,12 +623,12 @@
                     <!-- Alamat Lengkap dengan Tombol Clear (X) Neo-Brutalist -->
                     <div class="space-y-2 flex-1 w-full min-w-0">
                         <label for="address" class="block text-xs font-black uppercase tracking-wider text-black">
-                            Alamat Lengkap <span class="text-rose-600">*</span>
+                            Alamat Lengkap / Nama Kost <span class="text-rose-600">*</span>
                         </label>
                         <div class="relative w-full">
                             <input type="text" id="address" x-model="address"
                                 x-on:keydown.enter.prevent="$el.blur()"
-                                placeholder="Contoh: Jl. Dipatiukur No. 80, RT 02/RW 05"
+                                placeholder="Contoh: Jl. Dipatiukur No. 80 atau nama kost"
                                 style="padding-left: 1.25rem !important;"
                                 class="w-full bg-white border-2 border-black rounded-lg !pl-5 pr-12 py-3.5 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
                             <button type="button" x-show="address && !isGeocoding" x-cloak @click="resetToDefaultLocation()"
@@ -576,6 +650,10 @@
                                 class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
                                 {{ $message }}</p>
                         @enderror
+                        <div x-show="geocodeMessage" x-cloak
+                            class="text-xs font-bold text-amber-700 bg-amber-100 border-2 border-amber-500 px-3 py-1.5 rounded-md mt-1 inline-block shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)]">
+                            <span x-text="geocodeMessage"></span>
+                        </div>
                     </div>
                 </div>
                 <!-- District Auto Message -->

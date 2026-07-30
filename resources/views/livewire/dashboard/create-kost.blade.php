@@ -491,7 +491,7 @@
                             Kecamatan <span class="text-rose-600">*</span>
                         </label>
                         <div class="relative w-full">
-                            <select id="district" wire:model.live="district" x-model="district" @change="districtAutoMessage = null"
+                            <select id="district" x-model="district" @change="districtAutoMessage = null"
                                 style="padding-left: 1.25rem !important;"
                                 class="w-full bg-white border-2 border-black rounded-lg !pl-5 pr-10 py-3.5 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all appearance-none">
                                 <option value="" disabled>-- Pilih Kecamatan --</option>
@@ -521,7 +521,7 @@
                             Alamat Lengkap <span class="text-rose-600">*</span>
                         </label>
                         <div class="relative w-full">
-                            <input type="text" id="address" wire:model.live.debounce.300ms="address" x-model="address"
+                            <input type="text" id="address" x-model="address"
                                 x-on:keydown.enter.prevent="$el.blur()"
                                 placeholder="Contoh: Jl. Dipatiukur No. 80, RT 02/RW 05"
                                 style="padding-left: 1.25rem !important;"

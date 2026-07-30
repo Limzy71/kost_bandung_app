@@ -30,10 +30,14 @@ class CreateKost extends Component
 
     public function updatedDistrict($value)
     {
-        $districtsConfig = config('bandung.districts', []);
-        if (isset($districtsConfig[$value]['center'])) {
-            $this->latitude = (string) $districtsConfig[$value]['center']['lat'];
-            $this->longitude = (string) $districtsConfig[$value]['center']['lng'];
+        // Hanya set lat/lng ke center kecamatan jika koordinat masih kosong.
+        // Jangan timpa titik presisi jika sudah didapat dari geocode alamat / drag manual pin.
+        if ($this->latitude === '' && $this->longitude === '') {
+            $districtsConfig = config('bandung.districts', []);
+            if (isset($districtsConfig[$value]['center'])) {
+                $this->latitude = (string) $districtsConfig[$value]['center']['lat'];
+                $this->longitude = (string) $districtsConfig[$value]['center']['lng'];
+            }
         }
     }
 

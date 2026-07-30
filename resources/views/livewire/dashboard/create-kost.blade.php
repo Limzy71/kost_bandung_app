@@ -476,7 +476,7 @@
 
                 <div class="flex flex-col md:flex-row gap-6">
                     <!-- Dropdown Kecamatan -->
-                    <div class="space-y-2 w-full md:w-64 flex-shrink-0">
+                    <div class="space-y-2 w-full md:w-[215px] flex-shrink-0">
                         <label for="district" class="block text-xs font-black uppercase tracking-wider text-black">
                             Kecamatan <span class="text-rose-600">*</span>
                         </label>

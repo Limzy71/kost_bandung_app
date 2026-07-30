@@ -472,7 +472,7 @@
                         </label>
                         <div class="relative">
                             <select id="district" wire:model.live="district" x-model="district" @change="districtAutoMessage = null"
-                                class="w-full bg-white border-2 border-black rounded-lg pl-3.5 pr-9 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all appearance-none">
+                                class="w-full bg-white border-2 border-black rounded-lg pl-4 pr-9 py-3.5 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all appearance-none">
                                 <option value="" disabled>-- Pilih Kecamatan --</option>
                                 @foreach ($districts as $dist)
                                     <option value="{{ $dist }}" class="font-bold text-sm text-black">Kec.
@@ -498,7 +498,7 @@
                         </div>
                     </div>
 
-                    <!-- Alamat Lengkap dengan Tombol Clear (X) -->
+                    <!-- Alamat Lengkap dengan Tombol Clear (X) Neo-Brutalist -->
                     <div class="space-y-2 flex-1">
                         <label for="address" class="block text-xs font-black uppercase tracking-wider text-black">
                             Alamat Lengkap <span class="text-rose-600">*</span>
@@ -507,11 +507,11 @@
                             <input type="text" id="address" wire:model.live.debounce.300ms="address" x-model="address"
                                 x-on:keydown.enter.prevent="$el.blur()"
                                 placeholder="Contoh: Jl. Dipatiukur No. 80, RT 02/RW 05"
-                                class="w-full bg-white border-2 border-black rounded-lg pl-4 pr-10 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
+                                class="w-full bg-white border-2 border-black rounded-lg pl-4.5 pr-12 py-3.5 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
                             <button type="button" x-show="address" x-cloak @click="resetToDefaultLocation()"
-                                class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-zinc-400 hover:text-black transition-colors"
+                                class="absolute right-2.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded bg-rose-400 hover:bg-rose-500 text-black border-2 border-black flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-[1px] active:translate-y-[1px] transition-all cursor-pointer"
                                 title="Hapus alamat dan reset lokasi">
-                                <svg class="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </button>

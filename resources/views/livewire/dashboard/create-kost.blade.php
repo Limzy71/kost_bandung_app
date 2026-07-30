@@ -317,13 +317,21 @@
                             geocodeAddress: function(addr) {
                                 if (this.isReverseGeocoding) return;
 
-                                if (!addr || !addr.trim()) {
+                                var clean = (addr || '').trim();
+
+                                if (!clean) {
                                     this.resetToDefaultLocation();
                                     return;
                                 }
 
+                                // Ignore incomplete query prefixes like 'jl', 'jl.', 'jalan', 'gg', 'gg.' or <4 chars
+                                var lower = clean.toLowerCase();
+                                if (clean.length < 4 || /^(jl\.?|jalan|gg\.?|gang|no\.?)$/i.test(lower)) {
+                                    return;
+                                }
+
                                 var self = this;
-                                var q = addr.trim();
+                                var q = clean;
 
                                 if (!/bandung/i.test(q)) {
                                     if (this.district && this.district.trim() && !/kecamatan|kec\./i.test(q)) {
@@ -468,7 +476,7 @@
 
                 <div class="flex flex-col md:flex-row gap-6">
                     <!-- Dropdown Kecamatan -->
-                    <div class="space-y-2 md:w-50 flex-shrink-0">
+                    <div class="space-y-2 w-full md:w-64 flex-shrink-0">
                         <label for="district" class="block text-xs font-black uppercase tracking-wider text-black">
                             Kecamatan <span class="text-rose-600">*</span>
                         </label>
@@ -496,7 +504,7 @@
                                 {{ $message }}</p>
                         @enderror
                         <!-- District Auto Message -->
-                        <div x-show="districtAutoMessage" x-cloak class="mt-2 text-xs font-bold text-sky-700 bg-sky-100 border-2 border-sky-400 px-2.5 py-1.5 rounded-md inline-block shadow-[2px_2px_0px_0px_rgba(14,165,233,1)]">
+                        <div x-show="districtAutoMessage" x-cloak class="mt-2 text-xs font-bold text-sky-700 bg-sky-100 border-2 border-sky-400 px-2.5 py-1.5 rounded-md inline-block shadow-[2px_2px_0px_0px_rgba(14,165,233,1)] max-w-full text-balance">
                             <span x-text="districtAutoMessage"></span>
                         </div>
                     </div>

@@ -165,7 +165,7 @@
                 if (!window.kostMapInit) {
                     window.kostMapInit = function() {
                         return {
-                            map: null, marker: null, isOutOfBounds: false, reverseGeocodeTimeout: null,
+                            map: null, marker: null, isOutOfBounds: false, reverseGeocodeTimeout: null, ignoreNextAddressWatch: false, markerManuallyMoved: false,
                             hasGoogleKey: '{{ $googleMapsApiKey }}',
                             get districtsData() { return window.bandungDistricts || {}; },
 
@@ -176,6 +176,8 @@
                                 this.lat = '-6.917464';
                                 this.lng = '107.619123';
                                 this.isOutOfBounds = false;
+                                this.ignoreNextAddressWatch = false;
+                                this.markerManuallyMoved = false;
                                 var lat0 = -6.917464, lng0 = 107.619123;
                                 if (this.map) {
                                     if (typeof L !== 'undefined' && this.marker && this.marker.setLatLng) {
@@ -192,6 +194,8 @@
                             checkBounds: function(lat, lng) {
                                 if (!this.district || !this.districtsData[this.district] || !this.districtsData[this.district].bounds) {
                                     this.isOutOfBounds = false;
+                                this.ignoreNextAddressWatch = false;
+                                this.markerManuallyMoved = false;
                                     window.dispatchEvent(new CustomEvent('bounds-update', { detail: false }));
                                     return;
                                 }
@@ -287,7 +291,10 @@
                                         .then(function(d) {
                                             if (d) {
                                                 if (d.address) self.updateDistrictFromMatch(self.matchDistrict(d.address, 'nominatim'));
-                                                if (isUserMapInteraction && d.display_name) self.address = self.cleanAddress(d.display_name);
+                                                if (isUserMapInteraction && d.display_name) {
+                                                    self.ignoreNextAddressWatch = true;
+                                                    self.address = self.cleanAddress(d.display_name);
+                                                }
                                             }
                                             setTimeout(function() { self.isReverseGeocoding = false; }, 400);
                                         })
@@ -303,6 +310,7 @@
                                             if (status === 'OK' && results && results[0]) {
                                                 self.updateDistrictFromMatch(self.matchDistrict(results[0].address_components, 'google'));
                                                 if (isUserMapInteraction && results[0].formatted_address) {
+                                                    self.ignoreNextAddressWatch = true;
                                                     self.address = self.cleanAddress(results[0].formatted_address);
                                                 }
                                                 setTimeout(function() { self.isReverseGeocoding = false; }, 400);
@@ -349,6 +357,7 @@
                                             if (d && d.length > 0) {
                                                 var rl = parseFloat(d[0].lat), rn = parseFloat(d[0].lon);
                                                 self.updateDistrictFromMatch(self.matchDistrict(d[0].address, 'nominatim'));
+                                                self.markerManuallyMoved = true;
                                                 self.setCoords(rl, rn);
                                                 if (self.map && typeof L !== 'undefined' && self.map.setView) self.map.setView([rl, rn], 16);
                                             }
@@ -361,6 +370,7 @@
                                             var loc = results[0].geometry.location;
                                             var locType = results[0].geometry.location_type;
                                             self.updateDistrictFromMatch(self.matchDistrict(results[0].address_components, 'google'));
+                                            self.markerManuallyMoved = true;
                                             self.setCoords(loc.lat(), loc.lng());
                                             if (self.map && self.map.setCenter) {
                                                 self.map.setCenter(loc);
@@ -385,8 +395,8 @@
                                     try {
                                         self.map = new google.maps.Map(self.$refs.mapElement, { center: { lat: lat0, lng: lng0 }, zoom: 13, mapTypeControl: false, streetViewControl: false, fullscreenControl: false });
                                         self.marker = new google.maps.Marker({ position: { lat: lat0, lng: lng0 }, map: self.map, draggable: true, title: 'Lokasi Kost Anda' });
-                                        self.marker.addListener('dragend', function(e) { self.setCoords(e.latLng.lat(), e.latLng.lng(), true); });
-                                        self.map.addListener('click', function(e) { self.marker.setPosition(e.latLng); self.setCoords(e.latLng.lat(), e.latLng.lng(), true); });
+                                        self.marker.addListener('dragend', function(e) { self.markerManuallyMoved = true; self.setCoords(e.latLng.lat(), e.latLng.lng(), true); });
+                                        self.map.addListener('click', function(e) { self.markerManuallyMoved = true; self.marker.setPosition(e.latLng); self.setCoords(e.latLng.lat(), e.latLng.lng(), true); });
                                         return true;
                                     } catch(e) { console.warn('Google Maps init error:', e); return false; }
                                 };
@@ -396,8 +406,8 @@
                                     self.map = L.map(self.$refs.mapElement).setView([lat0, lng0], 13);
                                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(self.map);
                                     self.marker = L.marker([lat0, lng0], { draggable: true }).addTo(self.map);
-                                    self.marker.on('dragend', function(e) { var p = e.target.getLatLng(); self.setCoords(p.lat, p.lng, true); });
-                                    self.map.on('click', function(e) { self.marker.setLatLng(e.latlng); self.setCoords(e.latlng.lat, e.latlng.lng, true); });
+                                    self.marker.on('dragend', function(e) { self.markerManuallyMoved = true; var p = e.target.getLatLng(); self.setCoords(p.lat, p.lng, true); });
+                                    self.map.on('click', function(e) { self.markerManuallyMoved = true; self.marker.setLatLng(e.latlng); self.setCoords(e.latlng.lat, e.latlng.lng, true); });
                                 };
 
                                 var loadLeaflet = function() {
@@ -434,14 +444,30 @@
                                 if (this.hasGoogleKey) { tryGoogle(); } else { loadLeaflet(); }
                                 this.$watch('lat', function() { self.updateMapPosition(); });
                                 this.$watch('lng', function() { self.updateMapPosition(); });
-                                this.$watch('district', function() { 
+                                this.$watch('district', function(newVal, oldVal) { 
                                     var lt = parseFloat(self.lat), ln = parseFloat(self.lng);
                                     if (!isNaN(lt) && !isNaN(ln)) self.checkBounds(lt, ln);
+                                    
+                                    if (newVal && newVal !== oldVal && self.districtsData[newVal] && self.districtsData[newVal].center) {
+                                        var center = self.districtsData[newVal].center;
+                                        if (!self.markerManuallyMoved) {
+                                            self.setCoords(center.lat, center.lng, false);
+                                            if (self.map && typeof L !== 'undefined' && self.map.setView) self.map.setView([center.lat, center.lng], 14);
+                                            else if (window.google && self.map && self.map.setCenter) { self.map.setCenter({lat: center.lat, lng: center.lng}); self.map.setZoom(14); }
+                                        } else {
+                                            if (self.map && typeof L !== 'undefined' && self.map.setView) self.map.setView([center.lat, center.lng], 14);
+                                            else if (window.google && self.map && self.map.panTo) { self.map.panTo({lat: center.lat, lng: center.lng}); self.map.setZoom(14); }
+                                        }
+                                    }
                                 });
                                 // Trigger geocoding directly from Alpine — bypasses Livewire round-trip
                                 // so every keystroke fires a fresh geocode after 600ms quiet time.
                                 var geocodeTimer = null;
                                 this.$watch('address', function(val) {
+                                    if (self.ignoreNextAddressWatch) {
+                                        self.ignoreNextAddressWatch = false;
+                                        return;
+                                    }
                                     clearTimeout(geocodeTimer);
                                     geocodeTimer = setTimeout(function() {
                                         self.geocodeAddress(val);

@@ -73,7 +73,7 @@ class CreateKost extends Component
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
             'total_rooms' => 'required|integer|min:1',
-            'available_rooms' => 'required|integer|min:0',
+            'available_rooms' => 'required|integer|min:0|lte:total_rooms',
             'selectedFacilities' => 'nullable|array',
             'selectedFacilities.*' => 'exists:facilities,id',
             'photos' => 'required|array|min:4|max:10',
@@ -102,6 +102,8 @@ class CreateKost extends Component
             'total_rooms.min' => 'Total kamar minimal 1.',
             'available_rooms.required' => 'Sisa kamar tersedia wajib diisi.',
             'available_rooms.integer' => 'Sisa kamar harus berupa angka bulat.',
+            'available_rooms.min' => 'Sisa kamar minimal 0.',
+            'available_rooms.lte' => 'Sisa kamar tersedia tidak boleh melebihi total jumlah kamar.',
             'photos.required' => 'MINIMAL 4 FOTO KOST WAJIB DIUNGGAH.',
             'photos.min' => 'MINIMAL 4 FOTO KOST WAJIB DIUNGGAH.',
             'photos.max' => 'MAKSIMAL 10 FOTO KOST DAPAT DIUNGGAH.',
@@ -128,7 +130,11 @@ class CreateKost extends Component
 
         if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($key, 5)) {
             $seconds = \Illuminate\Support\Facades\RateLimiter::availableIn($key);
-            $this->addError('name', 'TERLALU BANYAK MENAMBAH PROPERTI. TUNGGU ' . ceil($seconds/60) . ' MENIT.');
+            if ($seconds < 60) {
+                $this->addError('name', 'Terlalu banyak permintaan pembuatan kost. Silakan tunggu ' . $seconds . ' detik lagi.');
+            } else {
+                $this->addError('name', 'Terlalu banyak permintaan pembuatan kost. Silakan tunggu ' . ceil($seconds/60) . ' menit lagi.');
+            }
             return;
         }
 

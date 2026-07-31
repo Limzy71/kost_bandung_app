@@ -256,7 +256,7 @@
                                 >
                                     <span wire:loading.remove wire:target="toggleAvailability({{ $kost->id }})" class="inline-flex items-center gap-1.5 whitespace-nowrap">
                                         @if($kost->is_available)
-                                            <x-icon name="lucide-circle-slash" class="w-3.5 h-3.5 stroke-[2.5] shrink-0" />
+                                            <x-icon name="lucide-ban" class="w-3.5 h-3.5 stroke-[2.5] shrink-0" />
                                             <span>Set Status Penuh</span>
                                         @else
                                             <x-icon name="lucide-circle-check" class="w-3.5 h-3.5 stroke-[2.5] shrink-0" />

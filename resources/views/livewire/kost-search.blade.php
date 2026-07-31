@@ -27,24 +27,18 @@
         <!-- Header -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b-3 border-black pb-3.5 gap-3">
             <h2 class="text-base sm:text-lg font-black text-black uppercase tracking-tight flex items-center gap-2">
-                <svg class="w-5 h-5 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
-                </svg>
+                <x-icon name="lucide-filter" class="w-5 h-5 text-black stroke-[2.5]" />
                 <span>Filter Pencarian Kost</span>
             </h2>
             <div class="flex items-center gap-2.5 shrink-0 self-end sm:self-auto">
                 <button x-show="hasFilter" x-cloak type="button" wire:click="resetFilters" @click="hasFilter = false; wasApplied = false"
                     class="bg-rose-400 hover:bg-rose-300 text-black border-2 border-black font-black text-xs uppercase px-3.5 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
-                    <svg class="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                    </svg>
+                    <x-icon name="lucide-refresh-cw" class="w-3.5 h-3.5 stroke-[3]" />
                     <span>Reset Filter</span>
                 </button>
                 <button type="button" wire:click="applyFilters" @click="wasApplied = true"
                     class="bg-lime-400 hover:bg-lime-300 text-black border-2 border-black font-black text-xs uppercase px-4 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
-                    <svg class="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
+                    <x-icon name="lucide-search" class="w-3.5 h-3.5 stroke-[3]" />
                     <span>Terapkan Filter</span>
                 </button>
             </div>
@@ -66,9 +60,7 @@
                         placeholder="Contoh: Dago, Tamansari, Setiabudi..."
                         class="w-full bg-white border-3 border-black rounded-xl pl-10 pr-10 py-2.5 text-xs font-black uppercase text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
                     >
-                    <svg class="w-5 h-5 text-black absolute left-3 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
+                    <x-icon name="lucide-search" class="w-5 h-5 text-black absolute left-3 pointer-events-none" />
                     <template x-if="query || ($refs.searchInput && $refs.searchInput.value)">
                         <button type="button"
                             @click="$refs.searchInput.value=''; $wire.search=''; checkFilter(); if(wasApplied){$wire.applyFilters();}"
@@ -164,10 +156,7 @@
         <div wire:loading.delay wire:target="applyFilters, resetFilters"
             class="absolute inset-0 bg-white/70 backdrop-blur-xs z-30 flex items-center justify-center rounded-2xl border-4 border-black">
             <div class="bg-yellow-300 border-3 border-black px-6 py-4 rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex items-center gap-3">
-                <svg class="animate-spin h-6 w-6 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
+                <x-icon name="lucide-loader-circle" class="animate-spin h-6 w-6 text-black" />
                 <span class="font-black text-black text-sm uppercase tracking-wide">Memuat Hunian...</span>
             </div>
         </div>
@@ -188,9 +177,7 @@
                                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                     @else
                                         <div class="w-full h-full flex items-center justify-center bg-yellow-100 text-black">
-                                            <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                            </svg>
+                                            <x-icon name="lucide-image" class="w-12 h-12" />
                                         </div>
                                     @endif
 
@@ -209,10 +196,7 @@
                                     <!-- Top Right District -->
                                     <div class="absolute top-3 right-3">
                                         <span class="px-2.5 py-1 bg-cyan-300 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider inline-flex items-center gap-1">
-                                            <svg class="w-3 h-3 shrink-0 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                            </svg>
+                                            <x-icon name="lucide-map-pin" class="w-3 h-3 shrink-0 stroke-[2.5]" />
                                             <span>{{ $kost->district }}</span>
                                         </span>
                                     </div>
@@ -254,7 +238,7 @@
                                 <a href="{{ route('kost.show', $kost->slug) }}"
                                     class="px-4 py-2 bg-orange-400 hover:bg-orange-300 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1">
                                     <span>Lihat Detail</span>
-                                    <svg class="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                    <x-icon name="lucide-arrow-right" class="w-3.5 h-3.5 stroke-[3]" />
                                 </a>
                             </div>
                         </div>
@@ -270,9 +254,7 @@
             <!-- Empty State: Show only when viewMode is list, no x-init override -->
             <div wire:key="empty-state" x-show="viewMode === 'list'" x-cloak class="bg-yellow-100 border-4 border-black rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] space-y-4">
                 <div class="w-20 h-20 bg-white border-3 border-black rounded-2xl flex items-center justify-center mx-auto text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -rotate-3">
-                    <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
+                    <x-icon name="lucide-search" class="w-10 h-10" />
                 </div>
                 <div>
                     <h3 class="text-3xl font-black text-black uppercase">Tidak Ada Hunian Ditemukan</h3>
@@ -289,7 +271,7 @@
                 <button type="button" wire:click="resetFilters"
                     @click="viewMode = 'list'; hasFilter=false; wasApplied=false"
                     class="px-6 py-3 bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl inline-flex items-center gap-2 cursor-pointer">
-                    <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    <x-icon name="lucide-refresh-cw" class="w-4 h-4 stroke-[3]" />
                     @if($search && !$gender && !$district && !$price_min && !$price_max)
                         <span>Hapus Pencarian</span>
                     @else
@@ -316,7 +298,7 @@
                 <!-- Overlay Pesan Kecamatan Kosong -->
                 <div x-show="items.length === 0" x-cloak class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-yellow-300 border-4 border-black p-4 sm:p-6 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] z-[400] text-center w-11/12 max-w-sm pointer-events-none">
                     <div class="w-12 h-12 bg-white border-3 border-black rounded-full flex items-center justify-center mx-auto mb-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                        <svg class="w-6 h-6 text-black stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <x-icon name="lucide-info" class="w-6 h-6 text-black stroke-[3]" />
                     </div>
                     <h4 class="text-lg font-black text-black uppercase mb-1">Kecamatan Kosong</h4>
                     <p class="text-sm font-bold text-zinc-800">Belum ada kost terdaftar di kecamatan ini.</p>
@@ -326,7 +308,7 @@
             <!-- Fallback Neo-Brutalist Error Card -->
             <div x-show="mapFailed" x-cloak class="bg-rose-400 border-4 border-black rounded-2xl p-10 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center justify-center space-y-4">
                 <div class="w-16 h-16 bg-white border-3 border-black rounded-full flex items-center justify-center text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                    <svg class="w-8 h-8 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    <x-icon name="lucide-triangle-alert" class="w-8 h-8 stroke-[3]" />
                 </div>
                 <h3 class="text-2xl font-black text-black uppercase">⚠️ Gagal Memuat Peta Interaktif</h3>
                 <p class="text-sm font-bold text-black max-w-md mx-auto">Koneksi ke layanan peta gagal atau terputus. Silakan gunakan mode daftar untuk melihat properti kost.</p>

@@ -29,9 +29,7 @@
             
             <div class="flex items-center gap-3">
                 <a href="{{ route('dashboard.kost.create') }}" class="bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black font-black text-sm uppercase px-6 py-3.5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all inline-flex items-center gap-2 rounded-lg group">
-                    <svg class="w-5 h-5 text-black group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-                    </svg>
+                    <x-icon name="lucide-plus" class="w-5 h-5 text-black stroke-[2.5] group-hover:rotate-90 transition-transform duration-300" />
                     <span>Tambah Kost Baru</span>
                 </a>
             </div>
@@ -83,9 +81,7 @@
                         <p class="text-xs font-bold text-black/80 mt-1">Kost terdaftar dalam sistem</p>
                     </div>
                     <div class="w-14 h-14 rounded-lg bg-white border-2 border-black flex items-center justify-center text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0h4m-4 0H9m4 0V7m0 0h4m-4 0H9"/>
-                        </svg>
+                        <x-icon name="lucide-building-2" class="w-7 h-7 stroke-[2]" />
                     </div>
                 </div>
             </div>
@@ -99,9 +95,7 @@
                         <span class="text-xs font-black text-black bg-white border-2 border-black px-2.5 py-0.5 rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-block mt-2 uppercase">Status Siap Huni</span>
                     </div>
                     <div class="w-14 h-14 rounded-lg bg-white border-2 border-black flex items-center justify-center text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
+                        <x-icon name="lucide-circle-check" class="w-7 h-7 stroke-[2]" />
                     </div>
                 </div>
             </div>
@@ -115,9 +109,7 @@
                         <p class="text-xs font-bold text-black/80 mt-1">Pertanyaan dari calon penyewa</p>
                     </div>
                     <div class="w-14 h-14 rounded-lg bg-white border-2 border-black flex items-center justify-center text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                        </svg>
+                        <x-icon name="lucide-message-square" class="w-7 h-7 stroke-[2]" />
                     </div>
                 </div>
             </div>
@@ -128,9 +120,7 @@
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border-4 border-black p-5 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
                 <div>
                     <h2 class="text-xl sm:text-2xl font-black text-black uppercase tracking-tight flex items-center gap-2">
-                        <svg class="w-6 h-6 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0h4m-4 0H9m4 0V7m0 0h4m-4 0H9"/>
-                        </svg>
+                        <x-icon name="lucide-building-2" class="w-6 h-6 text-black stroke-[2.5]" />
                         <span>Daftar Properti Kost</span>
                     </h2>
                     <p class="text-xs font-bold text-zinc-600 mt-0.5">Kelola status ketersediaan & informasi properti kost Anda.</p>
@@ -145,9 +135,7 @@
                         placeholder="Cari nama atau lokasi..." 
                         class="w-full bg-white border-3 border-black rounded-xl pl-10 pr-10 py-2.5 text-xs font-black uppercase text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
                     >
-                    <svg class="w-5 h-5 text-black absolute left-3 top-2.5 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
+                    <x-icon name="lucide-search" class="w-5 h-5 text-black absolute left-3 top-2.5 pointer-events-none stroke-[2.5]" />
 
                     <!-- Clear Search Input ✕ Button -->
                     <template x-if="query || ($refs.searchInput && $refs.searchInput.value)">
@@ -175,7 +163,7 @@
                                         <img src="{{ Str::startsWith($kost->primaryImage->image_path, 'http') ? $kost->primaryImage->image_path : Storage::url($kost->primaryImage->image_path) }}" alt="{{ $kost->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                     @else
                                         <div class="w-full h-full flex items-center justify-center bg-yellow-100 text-black">
-                                            <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                            <x-icon name="lucide-image" class="w-12 h-12 stroke-[2]" />
                                         </div>
                                     @endif
 
@@ -186,15 +174,7 @@
                                         </span>
                                         @if($kost->boosted_at)
                                             <span class="px-2.5 py-1 bg-yellow-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider flex items-center gap-1">
-                                                <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 20 20">
-                                                    <defs>
-                                                        <linearGradient id="bolt-grad-owner-{{ $kost->id }}" x1="0%" y1="0%" x2="100%" y2="100%">
-                                                            <stop offset="0%" stop-color="#FBBF24" />
-                                                            <stop offset="100%" stop-color="#F97316" />
-                                                        </linearGradient>
-                                                    </defs>
-                                                    <path fill="url(#bolt-grad-owner-{{ $kost->id }})" stroke="#000000" stroke-width="0.8" fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z" clip-rule="evenodd" />
-                                                </svg>
+                                                <x-icon name="lucide-zap" fill="#FBBF24" stroke-width="0.8" class="w-3.5 h-3.5 shrink-0" />
                                                 <span>Super Boost</span>
                                             </span>
                                         @endif
@@ -208,7 +188,7 @@
                                                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-600 opacity-75"></span>
                                                     <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-700"></span>
                                                 </span>
-                                                <svg class="w-3.5 h-3.5 text-black stroke-[2.5] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                                <x-icon name="lucide-clock" class="w-3.5 h-3.5 text-black stroke-[2.5] shrink-0" />
                                                 <span>Menunggu Review</span>
                                             </span>
                                         @elseif($kost->status === 'rejected')
@@ -242,10 +222,7 @@
                                             </a>
                                         </h3>
                                         <p class="text-xs font-bold text-zinc-600 mt-1 line-clamp-1 inline-flex items-center gap-1">
-                                            <svg class="w-3.5 h-3.5 text-zinc-700 shrink-0 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                            </svg>
+                                            <x-icon name="lucide-map-pin" class="w-3.5 h-3.5 text-zinc-700 shrink-0 stroke-[2.5]" />
                                             <span>{{ $kost->address }}, {{ $kost->district }}</span>
                                         </p>
                                     </div>
@@ -279,22 +256,15 @@
                                 >
                                     <span wire:loading.remove wire:target="toggleAvailability({{ $kost->id }})" class="inline-flex items-center gap-1.5 whitespace-nowrap">
                                         @if($kost->is_available)
-                                            <svg class="w-3.5 h-3.5 stroke-[2.5] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
-                                            </svg>
+                                            <x-icon name="lucide-circle-slash" class="w-3.5 h-3.5 stroke-[2.5] shrink-0" />
                                             <span>Set Status Penuh</span>
                                         @else
-                                            <svg class="w-3.5 h-3.5 stroke-[2.5] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                            </svg>
+                                            <x-icon name="lucide-circle-check" class="w-3.5 h-3.5 stroke-[2.5] shrink-0" />
                                             <span>Set Status Tersedia</span>
                                         @endif
                                     </span>
                                     <span wire:loading wire:target="toggleAvailability({{ $kost->id }})" class="inline-flex items-center gap-1.5 whitespace-nowrap">
-                                        <svg class="animate-spin h-3.5 w-3.5 text-black shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                        </svg>
+                                        <x-icon name="lucide-loader-circle" class="animate-spin h-3.5 w-3.5 text-black shrink-0" />
                                         <span>Memproses...</span>
                                     </span>
                                 </button>
@@ -305,7 +275,7 @@
                                     class="h-9 px-4 bg-cyan-400 hover:bg-cyan-300 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-[transform,background-color,box-shadow] duration-300 ease-out rounded-lg inline-flex items-center justify-center gap-1 shrink-0 whitespace-nowrap"
                                 >
                                     <span>Edit</span>
-                                    <svg class="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                    <x-icon name="lucide-pencil" class="w-3.5 h-3.5 stroke-[3]" />
                                 </a>
 
                                 <!-- Detail Link Button -->
@@ -314,7 +284,7 @@
                                     class="h-9 px-4 bg-orange-400 hover:bg-orange-300 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-[transform,background-color,box-shadow] duration-300 ease-out rounded-lg inline-flex items-center justify-center gap-1 shrink-0 whitespace-nowrap"
                                 >
                                     <span>Lihat</span>
-                                    <svg class="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                    <x-icon name="lucide-arrow-right" class="w-3.5 h-3.5 stroke-[3]" />
                                 </a>
                             </div>
                         </div>
@@ -329,9 +299,7 @@
                 <!-- Empty State -->
                 <div class="bg-yellow-100 border-3 border-black rounded-xl p-12 text-center shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-4">
                     <div class="w-16 h-16 bg-white border-2 border-black rounded-lg flex items-center justify-center mx-auto text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0h4m-4 0H9m4 0V7m0 0h4m-4 0H9"/>
-                        </svg>
+                        <x-icon name="lucide-building-2" class="w-8 h-8 stroke-[2]" />
                     </div>
                     <div>
                         <h3 class="text-2xl font-black text-black uppercase">Belum Ada Properti Kost</h3>
@@ -349,7 +317,7 @@
                         </button>
                     @else
                         <a href="{{ route('dashboard.kost.create') }}" class="px-6 py-3 bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all inline-flex items-center gap-2 rounded-lg">
-                            <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                            <x-icon name="lucide-plus" class="w-4 h-4 stroke-[3]" />
                             <span>Tambah Properti Pertama</span>
                         </a>
                     @endif

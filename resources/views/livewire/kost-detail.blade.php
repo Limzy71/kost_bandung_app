@@ -55,9 +55,7 @@
         <div class="flex items-center justify-between">
             <a href="{{ $backUrl }}"
                 class="inline-flex items-center gap-2 bg-white text-black border-3 border-black font-black text-xs uppercase px-4 py-2.5 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer">
-                <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
+                <x-icon name="lucide-chevron-left" class="w-4 h-4 stroke-[3]" />
                 <span>{{ $backLabel }}</span>
             </a>
         </div>
@@ -92,10 +90,7 @@
                             alt="{{ $kost->name }}">
                         <button type="button" @click.stop="showGalleryModal = true; activeIndex = 0"
                             class="absolute bottom-4 right-4 px-4 py-2 bg-yellow-300 hover:bg-yellow-400 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg flex items-center gap-2 cursor-pointer z-10">
-                            <svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                            </svg>
+                            <x-icon name="lucide-images" class="w-4 h-4 stroke-[2.5]" />
                             <span>Lihat Semua Foto</span>
                         </button>
                     </div>
@@ -167,20 +162,7 @@
                             @if ($kost->boosted_at)
                                 <span
                                     class="px-3.5 py-1 bg-yellow-400 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider inline-flex items-center gap-1.5">
-                                    <svg class="w-4 h-4 shrink-0 drop-shadow-[1px_1px_0px_rgba(0,0,0,1)]"
-                                        viewBox="0 0 20 20">
-                                        <defs>
-                                            <linearGradient id="bolt-grad-detail" x1="0%" y1="0%"
-                                                x2="100%" y2="100%">
-                                                <stop offset="0%" stop-color="#FBBF24" />
-                                                <stop offset="100%" stop-color="#F97316" />
-                                            </linearGradient>
-                                        </defs>
-                                        <path fill="url(#bolt-grad-detail)" stroke="#000000" stroke-width="0.8"
-                                            fill-rule="evenodd"
-                                            d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z"
-                                            clip-rule="evenodd" />
-                                    </svg>
+                                    <x-icon name="lucide-zap" fill="#FBBF24" stroke-width="0.8" class="w-4 h-4 shrink-0 drop-shadow-[1px_1px_0px_rgba(0,0,0,1)]" />
                                     <span>Properti Rekomendasi</span>
                                 </span>
                             @endif
@@ -191,13 +173,7 @@
                         </h1>
 
                         <div class="flex items-start gap-2 text-zinc-700 text-sm sm:text-base font-bold">
-                            <svg class="w-5 h-5 text-black shrink-0 stroke-[2.5] mt-0.5" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
+                            <x-icon name="lucide-map-pin" class="w-5 h-5 text-black shrink-0 stroke-[2.5] mt-0.5" />
                             <span>{{ $kost->address }}, Kecamatan {{ $kost->district }}, Kota Bandung</span>
                         </div>
                     </div>
@@ -208,11 +184,7 @@
                     <!-- Deskripsi -->
                     <div class="space-y-3">
                         <h2 class="text-xl font-black text-black uppercase tracking-tight flex items-center gap-2">
-                            <svg class="w-5 h-5 text-black stroke-[2.5]" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
+                            <x-icon name="lucide-file-text" class="w-5 h-5 text-black stroke-[2.5]" />
                             <span>Tentang Kost Ini</span>
                         </h2>
                         <p class="leading-relaxed text-zinc-700 font-medium text-base sm:text-lg">
@@ -238,11 +210,7 @@
                     @endphp
                     <div class="space-y-4">
                         <h2 class="text-xl font-black text-black uppercase tracking-tight flex items-center gap-2">
-                            <svg class="w-5 h-5 text-black stroke-[2.5]" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
+                            <x-icon name="lucide-info" class="w-5 h-5 text-black stroke-[2.5]" />
                             <span>Info Properti</span>
                         </h2>
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
@@ -263,11 +231,7 @@
                     <!-- Fasilitas Utama -->
                     <div class="space-y-6">
                         <h2 class="text-xl font-black text-black uppercase tracking-tight flex items-center gap-2">
-                            <svg class="w-5 h-5 text-black stroke-[2.5]" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                            </svg>
+                            <x-icon name="lucide-sparkles" class="w-5 h-5 text-black stroke-[2.5]" />
                             <span>Fasilitas Properti</span>
                         </h2>
 
@@ -280,11 +244,7 @@
                         @if ($roomFacilities->count() > 0)
                             <div class="space-y-3">
                                 <h3 class="text-sm font-black uppercase tracking-wider text-black flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-black stroke-[2.5]" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z" />
-                                    </svg>
+                                    <x-icon name="lucide-user" class="w-4 h-4 text-black stroke-[2.5]" />
                                     Fasilitas Kamar
                                     <span
                                         class="text-[10px] font-black uppercase bg-lime-300 border-2 border-black px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
@@ -318,11 +278,7 @@
                         @if ($buildingFacilities->count() > 0)
                             <div class="space-y-3">
                                 <h3 class="text-sm font-black uppercase tracking-wider text-black flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-black stroke-[2.5]" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4h6v4M9 10h.01M15 10h.01M9 14h.01M15 14h.01" />
-                                    </svg>
+                                    <x-icon name="lucide-building-2" class="w-4 h-4 text-black stroke-[2.5]" />
                                     Fasilitas Umum
                                     <span
                                         class="text-[10px] font-black uppercase bg-cyan-300 border-2 border-black px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
@@ -356,10 +312,7 @@
                         @if ($parkingFacilities->count() > 0)
                             <div class="space-y-3">
                                 <h3 class="text-sm font-black uppercase tracking-wider text-black flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h4a3 3 0 010 6H8V7z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 17v-4" />
-                                    </svg>
+                                    <x-icon name="lucide-square-parking" class="w-4 h-4 text-black stroke-[2.5]" />
                                     Fasilitas Parkir
                                     <span class="text-[10px] font-black uppercase bg-yellow-300 border-2 border-black px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
                                         {{ $parkingFacilities->count() }}
@@ -399,21 +352,14 @@
                     <!-- Aturan Kost -->
                     <div class="space-y-4">
                         <h2 class="text-xl font-black text-black uppercase tracking-tight flex items-center gap-2">
-                            <svg class="w-5 h-5 text-black stroke-[2.5]" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
+                            <x-icon name="lucide-triangle-alert" class="w-5 h-5 text-black stroke-[2.5]" />
                             <span>Aturan Properti</span>
                         </h2>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             @forelse($kost->rules as $rule)
                                 <div
                                     class="flex items-start gap-3 bg-zinc-100 border-2 border-black p-3.5 rounded-xl text-sm font-bold text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                    <svg class="w-4 h-4 text-pink-600 shrink-0 stroke-[2.5] mt-0.5" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                    </svg>
+                                    <x-icon name="lucide-check" class="w-4 h-4 text-pink-600 shrink-0 stroke-[2.5] mt-0.5" />
                                     <span>{{ $rule->name }}</span>
                                 </div>
                             @empty
@@ -471,21 +417,13 @@
 
                         <a href="https://wa.me/{{ $waNumber }}?text={{ $waMessage }}" target="_blank"
                             class="w-full py-4 bg-emerald-400 hover:bg-emerald-300 text-black border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 group cursor-pointer">
-                            <svg class="w-5 h-5 text-black stroke-[2.5] group-hover:scale-110 transition-transform"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                            </svg>
+                            <x-icon name="lucide-message-square" class="w-5 h-5 text-black stroke-[2.5] group-hover:scale-110 transition-transform" />
                             <span>Tanya via WhatsApp</span>
                         </a>
 
                         <button type="button" @click="showModal = true"
                             class="w-full py-4 bg-cyan-300 hover:bg-cyan-200 text-black border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 cursor-pointer">
-                            <svg class="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
+                            <x-icon name="lucide-mail" class="w-5 h-5 stroke-[2.5]" />
                             <span>Kirim Pesan Internal</span>
                         </button>
                     </div>
@@ -495,11 +433,7 @@
                         <p class="text-xs font-black uppercase text-zinc-500">Disewakan Oleh</p>
                         <p
                             class="text-sm font-black text-black bg-zinc-100 border-2 border-black py-1.5 px-3 rounded-lg inline-flex items-center gap-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                            <svg class="w-4 h-4 text-black stroke-[2.5]" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
+                            <x-icon name="lucide-user" class="w-4 h-4 text-black stroke-[2.5]" />
                             <span>{{ $kost->user->name ?? 'Pemilik Kost' }}</span>
                         </p>
                     </div>
@@ -519,13 +453,7 @@
                     <div class="bg-yellow-300 border-b-4 border-black px-6 py-4 flex items-center justify-between gap-3">
                         <div class="flex items-center gap-3 min-w-0">
                             <div class="w-9 h-9 bg-black rounded flex items-center justify-center shrink-0">
-                                <svg class="w-5 h-5 text-yellow-300 stroke-[2.5]" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
+                                <x-icon name="lucide-map-pin" class="w-5 h-5 text-yellow-300 stroke-[2.5]" />
                             </div>
                             <div class="truncate">
                                 <h2 class="text-xl font-black text-black uppercase tracking-tight truncate">Lokasi Kost</h2>
@@ -536,11 +464,7 @@
                         <a href="https://www.google.com/maps/search/?api=1&query={{ $kost->latitude }},{{ $kost->longitude }}"
                             target="_blank" rel="noopener noreferrer"
                             class="ml-auto inline-flex items-center gap-1.5 bg-black text-yellow-300 hover:bg-zinc-800 border-2 border-black font-black text-xs uppercase px-3.5 py-2.5 rounded-xl shadow-[3px_3px_0px_0px_rgba(255,255,255,0.4)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all shrink-0 cursor-pointer">
-                            <svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
+                            <x-icon name="lucide-external-link" class="w-4 h-4 stroke-[2.5]" />
                             <span>BUKA DI GOOGLE MAPS</span>
                         </a>
                     </div>
@@ -611,10 +535,7 @@
                 </button>
                 <a href="https://wa.me/{{ $waNumber }}?text={{ $waMessageMobile }}" target="_blank"
                     class="px-5 py-3 bg-emerald-400 hover:bg-emerald-300 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl whitespace-nowrap inline-flex items-center gap-1.5 cursor-pointer">
-                    <svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                    </svg>
+                    <x-icon name="lucide-message-square" class="w-4 h-4 stroke-[2.5]" />
                     <span>Tanya WA</span>
                 </a>
             </div>
@@ -637,9 +558,7 @@
                 <h3 class="text-xl font-black text-black uppercase tracking-tight">Kirim Pesan ke Pemilik</h3>
                 <button type="button" @click="showModal = false"
                     class="w-8 h-8 bg-white border-2 border-black rounded flex items-center justify-center text-black hover:bg-rose-400 active:translate-y-0.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none transition-all cursor-pointer">
-                    <svg class="w-5 h-5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    <x-icon name="lucide-x" class="w-5 h-5 stroke-[3]" />
                 </button>
             </div>
 
@@ -678,14 +597,7 @@
                         class="w-full mt-4 py-3.5 bg-cyan-400 hover:bg-cyan-300 text-black border-3 border-black font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 cursor-pointer">
                         <span wire:loading.remove wire:target="sendInquiry">Kirim Sekarang</span>
                         <span wire:loading wire:target="sendInquiry" class="flex items-center gap-2">
-                            <svg class="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg"
-                                fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10"
-                                    stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor"
-                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                </path>
-                            </svg>
+                            <x-icon name="lucide-loader-circle" class="animate-spin h-5 w-5 text-black" />
                             Mengirim...
                         </span>
                     </button>
@@ -702,10 +614,7 @@
                 class="bg-lime-400 border-4 border-black p-4 rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex items-center gap-4 max-w-sm">
                 <div
                     class="w-10 h-10 bg-white border-2 border-black rounded-lg flex items-center justify-center shrink-0">
-                    <svg class="w-6 h-6 text-black stroke-[3]" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
+                    <x-icon name="lucide-check" class="w-6 h-6 text-black stroke-[3]" />
                 </div>
                 <div>
                     <h4 class="text-sm font-black text-black uppercase">Berhasil!</h4>
@@ -713,9 +622,7 @@
                 </div>
                 <button @click="show = false"
                     class="text-black hover:text-rose-500 transition-colors ml-auto cursor-pointer">
-                    <svg class="w-5 h-5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    <x-icon name="lucide-x" class="w-5 h-5 stroke-[3]" />
                 </button>
             </div>
         </div>
@@ -744,9 +651,7 @@
             <!-- Right: Close Button -->
             <button type="button" @click="showGalleryModal = false"
                 class="px-4 py-2 bg-[#FFE500] hover:bg-yellow-400 text-black border-3 border-black font-black text-xs uppercase shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center gap-2 cursor-pointer">
-                <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <x-icon name="lucide-x" class="w-4 h-4 stroke-[3]" />
                 <span>TUTUP GALERI</span>
             </button>
         </div>
@@ -757,9 +662,7 @@
             <button type="button" @click.stop="prevImage()"
                 class="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 p-4 bg-white hover:bg-[#FFE500] text-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer z-50 rounded-xl"
                 title="Foto Sebelumnya (Panah Kiri)">
-                <svg class="w-6 h-6 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
+                <x-icon name="lucide-chevron-left" class="w-6 h-6 stroke-[3]" />
             </button>
 
             <!-- Active Heroic Image -->
@@ -771,9 +674,7 @@
             <button type="button" @click.stop="nextImage()"
                 class="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 p-4 bg-white hover:bg-[#FFE500] text-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer z-50 rounded-xl"
                 title="Foto Selanjutnya (Panah Kanan)">
-                <svg class="w-6 h-6 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
+                <x-icon name="lucide-chevron-right" class="w-6 h-6 stroke-[3]" />
             </button>
         </div>
 
@@ -811,7 +712,8 @@
                 return L.divIcon({
                     html: `<div style="width:36px;height:36px;background:${bg};border:2.5px solid #000;border-radius:10px;box-shadow:3px 3px 0 #000;display:flex;align-items:center;justify-content:center;">
                         <svg width="20" height="20" fill="none" stroke="black" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                         </svg>
                     </div>`,
                     iconSize: [36, 36],
@@ -822,7 +724,7 @@
 
             getGoogleHouseIcon(layerType) {
                 const bg = layerType === 'satellite' ? '#22D3EE' : '#FACC15';
-                const houseSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="2" y="2" width="32" height="32" rx="8" fill="${bg}" stroke="#000000" stroke-width="2.5"/><path d="M9 18L11 16M11 16L18 9L25 16M11 16V25C11 25.5523 11.4477 26 12 26H15M25 16L27 18M25 16V25C25 25.5523 24.5523 26 24 26H21M15 26C15.5523 26 16 25.5523 16 25V21C16 20.4477 16.4477 20 17 20H19C19.5523 20 20 20.4477 20 21V25C20 25.5523 20.4477 26 21 26M15 26H21" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+                const houseSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="2" y="2" width="32" height="32" rx="8" fill="${bg}" stroke="#000000" stroke-width="2.5"/><path d="M19 31v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 20a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 25 20v9a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2z" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
                 return {
                     url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(houseSvg),
                     scaledSize: new google.maps.Size(36, 36),

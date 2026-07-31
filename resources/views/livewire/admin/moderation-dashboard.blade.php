@@ -69,7 +69,7 @@
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-600 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-700"></span>
                     </span>
-                    <svg class="w-4 h-4 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <x-icon name="lucide-clock" class="w-4 h-4 text-black stroke-[2.5]" />
                     <span>Menunggu Review</span>
                 </p>
                 <h3 class="text-3xl sm:text-4xl font-black text-black mt-2 tracking-tight">{{ $pendingCount }}</h3>
@@ -116,7 +116,7 @@
                 class="text-left p-5 border-3 border-black rounded-xl shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer {{ $activeTab === 'facilities' ? 'bg-violet-300 ring-4 ring-black translate-x-0.5 translate-y-0.5' : 'bg-violet-100 hover:bg-violet-200' }}"
             >
                 <p class="text-xs font-black uppercase tracking-wider text-black flex items-center gap-1.5">
-                    <svg class="w-4 h-4 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                    <x-icon name="lucide-box" class="w-4 h-4 text-black stroke-[2.5]" />
                     <span>Fasilitas Menunggu</span>
                 </p>
                 <h3 class="text-3xl sm:text-4xl font-black text-black mt-2 tracking-tight">{{ $pendingFacilityCount }}</h3>
@@ -174,9 +174,7 @@
                     placeholder="Cari nama kost atau pemilik..." 
                     class="w-full bg-white border-3 border-black rounded-xl pl-10 pr-10 py-2 text-xs font-black uppercase text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
                 >
-                <svg class="w-4 h-4 text-black absolute left-3 top-2.5 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                </svg>
+                <x-icon name="lucide-search" class="w-4 h-4 text-black absolute left-3 top-2.5 pointer-events-none" />
 
                 <template x-if="query">
                     <button 
@@ -201,7 +199,7 @@
                                 <div class="flex items-start justify-between gap-3">
                                     <div class="flex items-center gap-3 min-w-0">
                                         <div class="w-11 h-11 rounded-xl bg-violet-300 border-2 border-black flex items-center justify-center shrink-0 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                            <svg class="w-5 h-5 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                                            <x-icon name="lucide-box" class="w-5 h-5 text-black stroke-[2.5]" />
                                         </div>
                                         <div class="min-w-0">
                                             <h3 class="text-lg font-black text-black leading-snug truncate">{{ $facility->name }}</h3>
@@ -260,7 +258,7 @@
                 <!-- Empty State -->
                 <div class="bg-yellow-100 border-4 border-black rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] space-y-4">
                     <div class="w-20 h-20 bg-white border-3 border-black rounded-2xl flex items-center justify-center mx-auto text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -rotate-3">
-                        <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <x-icon name="lucide-circle-check" class="w-10 h-10" />
                     </div>
                     <div>
                         <h3 class="text-3xl font-black text-black uppercase">Tidak Ada Fasilitas Pending</h3>
@@ -283,7 +281,7 @@
                                     <img src="{{ Str::startsWith($kost->primaryImage->image_path, 'http') ? $kost->primaryImage->image_path : Storage::url($kost->primaryImage->image_path) }}" alt="{{ $kost->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                 @else
                                     <div class="w-full h-full flex items-center justify-center bg-yellow-100 text-black">
-                                        <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                        <x-icon name="lucide-image" class="w-12 h-12" />
                                     </div>
                                 @endif
 
@@ -324,10 +322,7 @@
                                         </a>
                                     </h3>
                                     <p class="text-xs font-bold text-zinc-600 mt-1 line-clamp-1 inline-flex items-center gap-1">
-                                        <svg class="w-3.5 h-3.5 text-zinc-700 shrink-0 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        </svg>
+                                        <x-icon name="lucide-map-pin" class="w-3.5 h-3.5 text-zinc-700 shrink-0 stroke-[2.5]" />
                                         <span>{{ $kost->address }}, {{ $kost->district }}</span>
                                     </p>
                                 </div>
@@ -368,7 +363,7 @@
                                         class="w-full py-3 bg-lime-400 hover:bg-lime-300 active:bg-lime-500 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl cursor-pointer flex items-center justify-center gap-1.5"
                                     >
                                         <span wire:loading.remove wire:target="approve({{ $kost->id }})" class="inline-flex items-center gap-1">
-                                            <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                            <x-icon name="lucide-check" class="w-4 h-4 stroke-[3]" />
                                             <span>TERIMA & TAYANGKAN</span>
                                         </span>
                                         <span wire:loading wire:target="approve({{ $kost->id }})">Memproses...</span>
@@ -382,7 +377,7 @@
                                         class="w-full py-3 bg-rose-500 hover:bg-rose-400 active:bg-rose-600 text-white border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl cursor-pointer flex items-center justify-center gap-1.5"
                                     >
                                         <span wire:loading.remove wire:target="reject({{ $kost->id }})" class="inline-flex items-center gap-1">
-                                            <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                                            <x-icon name="lucide-x" class="w-4 h-4 stroke-[3]" />
                                             <span>TOLAK IKLAN</span>
                                         </span>
                                         <span wire:loading wire:target="reject({{ $kost->id }})">Memproses...</span>
@@ -394,7 +389,7 @@
                                     wire:click="reject({{ $kost->id }})" 
                                     class="w-full py-2.5 bg-rose-400 hover:bg-rose-300 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] rounded-lg cursor-pointer inline-flex items-center justify-center gap-1.5"
                                 >
-                                    <svg class="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                                    <x-icon name="lucide-circle-slash" class="w-3.5 h-3.5 stroke-[3]" />
                                     <span>Tarik Dari Publikasi (Tolak)</span>
                                 </button>
                             @else
@@ -403,7 +398,7 @@
                                     wire:click="approve({{ $kost->id }})" 
                                     class="w-full py-2.5 bg-lime-400 hover:bg-lime-300 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] rounded-lg cursor-pointer inline-flex items-center justify-center gap-1.5"
                                 >
-                                    <svg class="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                    <x-icon name="lucide-check" class="w-3.5 h-3.5 stroke-[3]" />
                                     <span>Setujui Kembali (Tayangkan)</span>
                                 </button>
                             @endif
@@ -420,9 +415,7 @@
             <!-- Empty State -->
             <div class="bg-yellow-100 border-4 border-black rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] space-y-4">
                 <div class="w-20 h-20 bg-white border-3 border-black rounded-2xl flex items-center justify-center mx-auto text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -rotate-3">
-                    <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
+                    <x-icon name="lucide-circle-check" class="w-10 h-10" />
                 </div>
                 <div>
                     <h3 class="text-3xl font-black text-black uppercase">Tidak Ada Iklan Dalam Status Ini</h3>

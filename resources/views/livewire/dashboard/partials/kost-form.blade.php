@@ -43,11 +43,8 @@
                             <input type="radio" wire:model="gender_type" value="campur" class="peer sr-only">
                             <div
                                 class="px-4 py-3.5 rounded-lg border-2 border-black text-center font-black text-xs md:text-sm text-black bg-zinc-50 hover:bg-yellow-100 peer-checked:bg-yellow-400 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-center gap-2">
-                                <svg class="w-4 h-4 md:w-5 md:h-5 text-black stroke-[2.5]" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                </svg>
+                                <x-icon name="lucide-users"
+                                    class="w-4 h-4 md:w-5 md:h-5 text-black stroke-[2.5]" />
                                 <span>Campur</span>
                             </div>
                         </label>
@@ -56,15 +53,7 @@
                             <input type="radio" wire:model="gender_type" value="putri" class="peer sr-only">
                             <div
                                 class="px-4 py-3.5 rounded-lg border-2 border-black text-center font-black text-xs md:text-sm text-black bg-zinc-50 hover:bg-pink-100 peer-checked:bg-pink-400 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-center gap-2">
-                                <svg class="w-4 h-4 md:w-5 md:h-5 text-black stroke-[2.5]" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M12 14c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5z" />
-                                    <circle cx="12" cy="7" r="4" stroke-linecap="round"
-                                        stroke-linejoin="round" />
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M9.5 9c.5.8 1.5 1.2 2.5 1.2s2-.4 2.5-1.2" />
-                                </svg>
+                                <x-icon name="lucide-user" class="w-4 h-4 md:w-5 md:h-5 text-black stroke-[2.5]" />
                                 <span>Khusus Putri</span>
                             </div>
                         </label>
@@ -73,11 +62,7 @@
                             <input type="radio" wire:model="gender_type" value="putra" class="peer sr-only">
                             <div
                                 class="px-4 py-3.5 rounded-lg border-2 border-black text-center font-black text-xs md:text-sm text-black bg-zinc-50 hover:bg-cyan-100 peer-checked:bg-cyan-300 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-center gap-2">
-                                <svg class="w-4 h-4 md:w-5 md:h-5 text-black stroke-[2.5]" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5z" />
-                                </svg>
+                                <x-icon name="lucide-user" class="w-4 h-4 md:w-5 md:h-5 text-black stroke-[2.5]" />
                                 <span>Khusus Putra</span>
                             </div>
                         </label>
@@ -578,10 +563,7 @@
                             </select>
                             <div
                                 class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-black">
-                                <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                                </svg>
+                                <x-icon name="lucide-chevron-down" class="w-4 h-4 stroke-[3]" />
                             </div>
                         </div>
                         @error('district')
@@ -605,15 +587,10 @@
                             <button type="button" x-show="address && !isGeocoding" x-cloak @click="resetToDefaultLocation()"
                                 class="absolute right-2.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded bg-rose-400 hover:bg-rose-500 text-black border-2 border-black flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-[1px] active:translate-y-[1px] transition-all cursor-pointer"
                                 title="Hapus alamat dan reset lokasi">
-                                <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
+                                <x-icon name="lucide-x" class="w-4 h-4 stroke-[3]" />
                             </button>
                             <div x-show="isGeocoding" x-cloak class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center text-zinc-400">
-                                <svg class="animate-spin w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
+                                <x-icon name="lucide-loader-circle" class="animate-spin w-5 h-5" />
                             </div>
                         </div>
                         @error('address')
@@ -662,11 +639,7 @@
                     <div x-show="isOutOfBounds" x-cloak
                         class="p-4 bg-rose-100 border-3 border-black rounded-xl text-rose-700 font-black text-xs shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] space-y-1">
                         <div class="flex items-center gap-2">
-                            <svg class="w-5 h-5 text-rose-600 shrink-0 stroke-[2.5]" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
+                            <x-icon name="lucide-triangle-alert" class="w-5 h-5 text-rose-600 shrink-0 stroke-[2.5]" />
                             <span class="text-sm font-black text-rose-800 uppercase">📍 Lokasi Di Luar Batas
                                 Kecamatan!</span>
                         </div>
@@ -680,22 +653,14 @@
                     @error('latitude')
                         <div
                             class="p-3 bg-rose-100 border-3 border-black rounded-xl text-rose-700 font-black text-xs shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] flex items-center gap-2">
-                            <svg class="w-5 h-5 text-rose-600 shrink-0 stroke-[2.5]" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
+                            <x-icon name="lucide-triangle-alert" class="w-5 h-5 text-rose-600 shrink-0 stroke-[2.5]" />
                             <span>{{ $message }}</span>
                         </div>
                     @enderror
                     @error('longitude')
                         <div
                             class="p-3 bg-rose-100 border-3 border-black rounded-xl text-rose-700 font-black text-xs shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] flex items-center gap-2">
-                            <svg class="w-5 h-5 text-rose-600 shrink-0 stroke-[2.5]" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
+                            <x-icon name="lucide-triangle-alert" class="w-5 h-5 text-rose-600 shrink-0 stroke-[2.5]" />
                             <span>{{ $message }}</span>
                         </div>
                     @enderror
@@ -861,10 +826,7 @@
                     <div class="space-y-3">
                         <div class="flex items-center justify-between gap-2">
                             <label class="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-black">
-                                <svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z" />
-                                </svg>
+                                <x-icon name="lucide-user" class="w-4 h-4 stroke-[2.5]" />
                                 Fasilitas Kamar
                             </label>
                             <span
@@ -894,10 +856,7 @@
                     <div class="space-y-3">
                         <div class="flex items-center justify-between gap-2">
                             <label class="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-black">
-                                <svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4h6v4M9 10h.01M15 10h.01M9 14h.01M15 14h.01" />
-                                </svg>
+                                <x-icon name="lucide-building-2" class="w-4 h-4 stroke-[2.5]" />
                                 Fasilitas Umum
                             </label>
                             <span
@@ -927,10 +886,7 @@
                     <div class="space-y-3">
                         <div class="flex items-center justify-between gap-2">
                             <label class="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-black">
-                                <svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h4a3 3 0 010 6H8V7z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 17v-4" />
-                                </svg>
+                                <x-icon name="lucide-square-parking" class="w-4 h-4 stroke-[2.5]" />
                                 Fasilitas Parkir
                             </label>
                             <span
@@ -1233,11 +1189,7 @@
                         <div class="space-y-3 pointer-events-none">
                             <div
                                 class="w-14 h-14 rounded-lg bg-white border-2 border-black flex items-center justify-center mx-auto text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] group-hover:scale-110 transition-transform">
-                                <svg class="w-7 h-7 stroke-[2]" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
+                                <x-icon name="lucide-image" class="w-7 h-7 stroke-[2]" />
                             </div>
 
                             <div>
@@ -1267,14 +1219,7 @@
                         <div x-show="isUploading" class="space-y-2.5 font-black text-black">
                             <div class="flex items-center justify-between text-xs uppercase">
                                 <span class="flex items-center gap-2">
-                                    <svg class="animate-spin h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg"
-                                        fill="none" viewBox="0 0 24 24">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10"
-                                            stroke="currentColor" stroke-width="4"></circle>
-                                        <path class="opacity-75" fill="currentColor"
-                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                        </path>
-                                    </svg>
+                                    <x-icon name="lucide-loader-circle" class="animate-spin h-4 w-4 text-black" />
                                     <span>Mengunggah Foto...</span>
                                 </span>
                                 <span x-text="progress + '%'"

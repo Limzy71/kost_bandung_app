@@ -18,9 +18,7 @@
                 {{-- Back to Home button --}}
                 <a href="{{ route('home') }}" wire:navigate
                     class="inline-flex items-center gap-1.5 bg-white hover:bg-[#FFE500] text-black border-2 border-black font-black text-xs uppercase px-3.5 py-2 rounded-lg shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer">
-                    <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                    </svg>
+                    <x-icon name="lucide-chevron-left" class="w-4 h-4 stroke-[3]" />
                     <span>Kembali ke Beranda</span>
                 </a>
             </div>

@@ -14,17 +14,17 @@
             </a>
 
             <div
-                class="bg-yellow-300 border-4 border-black p-6 md:p-8 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+                class="bg-cyan-300 border-4 border-black p-6 md:p-8 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <span
-                        class="px-3 py-1 bg-black text-yellow-300 font-extrabold text-xs uppercase tracking-wider border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                        Form Pendaftaran
+                        class="px-3 py-1 bg-black text-cyan-300 font-extrabold text-xs uppercase tracking-wider border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                        Edit Properti
                     </span>
                     <h1 class="text-3xl md:text-4xl font-black text-black tracking-tight uppercase mt-2">
-                        Tambah Properti Kost Baru
+                        Edit Properti Kost
                     </h1>
                     <p class="text-sm font-bold text-black/80 mt-1">
-                        Isi detail properti kost Anda dengan lengkap untuk menarik minat pencari kost di Kota Bandung.
+                        Perbarui detail properti kost Anda. Perubahan langsung tercatat pada daftar properti Anda.
                     </p>
                 </div>
             </div>
@@ -33,7 +33,7 @@
         <!-- Form Start -->
         <form wire:submit.prevent="save" x-data="{ formIsOutOfBounds: false }" @bounds-update.window="formIsOutOfBounds = $event.detail" class="space-y-8">
 
-            @include('livewire.dashboard.partials.kost-form', ['isEdit' => false])
+            @include('livewire.dashboard.partials.kost-form', ['isEdit' => true])
 
             <!-- Submit & Action Buttons -->
             <div class="flex items-center justify-end gap-4 pt-4 border-t-3 border-black">
@@ -43,9 +43,9 @@
                 </a>
 
                 <button type="submit" wire:loading.attr="disabled" wire:target="save" x-bind:disabled="formIsOutOfBounds"
-                    :class="formIsOutOfBounds ? 'opacity-50 cursor-not-allowed bg-zinc-300' : 'bg-yellow-400 hover:bg-yellow-300 active:translate-x-1 active:translate-y-1 active:shadow-none'"
+                    :class="formIsOutOfBounds ? 'opacity-50 cursor-not-allowed bg-zinc-300' : 'bg-cyan-400 hover:bg-cyan-300 active:translate-x-1 active:translate-y-1 active:shadow-none'"
                     class="px-8 py-3.5 text-black border-3 border-black font-black text-sm uppercase shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] transition-all rounded inline-flex items-center gap-2">
-                    <span wire:loading.remove wire:target="save">Simpan Properti Kost</span>
+                    <span wire:loading.remove wire:target="save">Simpan Perubahan</span>
                     <span wire:loading wire:target="save" class="inline-flex items-center gap-2">
                         <svg class="animate-spin h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg"
                             fill="none" viewBox="0 0 24 24">

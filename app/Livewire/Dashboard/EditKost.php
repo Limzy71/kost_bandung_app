@@ -6,14 +6,16 @@ use App\Models\Facility;
 use App\Models\Kost;
 use App\Models\KostImage;
 use App\Models\Rule;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-class CreateKost extends Component
+class EditKost extends Component
 {
     use WithFileUploads;
+
+    public Kost $kost;
 
     public string $name = '';
     public string $gender_type = 'campur';
@@ -40,8 +42,62 @@ class CreateKost extends Component
     public string $additional_rules_note = '';
     public array $photos = [];
     public array $existingPhotos = [];
+    public array $removeExistingIds = [];
     public ?int $primaryPhotoId = null;
     public ?string $district_auto_message = null;
+
+    public function mount(Kost $kost)
+    {
+        abort_unless(auth()->id() === $kost->user_id, 403);
+
+        $this->kost = $kost;
+
+        $this->name = $kost->name;
+        $this->gender_type = $kost->gender_type;
+        $this->description = $kost->description;
+        $this->district = $kost->district;
+        $this->address = $kost->address;
+        $this->price_monthly = (string) $kost->price_monthly;
+        $this->rent_period = $kost->rent_period;
+        $this->price_deposit = $kost->price_deposit !== null ? (string) $kost->price_deposit : '';
+        $this->include_utilities = (bool) $kost->include_utilities;
+        $this->latitude = (string) $kost->latitude;
+        $this->longitude = (string) $kost->longitude;
+        $this->total_rooms = (string) $kost->total_rooms;
+        $this->available_rooms = (string) $kost->available_rooms;
+        $this->whatsapp_contact = (string) ($kost->whatsapp_contact ?? '');
+        $this->nearby_landmarks = (string) ($kost->nearby_landmarks ?? '');
+        $this->additional_rules_note = (string) ($kost->additional_rules_note ?? '');
+
+        $this->selectedFacilities = $kost->facilities()
+            ->where('facilities.status', 'approved')
+            ->pluck('facilities.id')
+            ->map(fn ($id) => (string) $id)->values()->toArray();
+
+        $this->customFacilities = $kost->facilities()
+            ->where('facilities.status', 'pending')
+            ->where('facilities.user_id', auth()->id())
+            ->get()
+            ->map(fn (Facility $f) => ['name' => $f->name, 'type' => $f->type])
+            ->values()
+            ->toArray();
+
+        $this->selectedRules = $kost->rules()->pluck('rules.id')
+            ->map(fn ($id) => (string) $id)->values()->toArray();
+
+        $this->existingPhotos = $kost->images()
+            ->orderByDesc('is_primary')
+            ->get()
+            ->map(fn (KostImage $img) => [
+                'id' => $img->id,
+                'url' => Storage::url($img->image_path),
+                'is_primary' => (bool) $img->is_primary,
+            ])
+            ->values()
+            ->toArray();
+
+        $this->primaryPhotoId = $kost->images()->where('is_primary', true)->value('id') ?: null;
+    }
 
     public function updatedDistrict($value)
     {
@@ -53,7 +109,6 @@ class CreateKost extends Component
             }
         }
     }
-
 
     public function updatedPriceMonthly($value)
     {
@@ -140,7 +195,7 @@ class CreateKost extends Component
                 },
             ],
             'additional_rules_note' => 'nullable|string|max:500',
-            'photos' => 'required|array|min:4|max:10',
+            'photos' => 'nullable|array|max:10',
             'photos.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
         ];
     }
@@ -173,8 +228,6 @@ class CreateKost extends Component
             'available_rooms.min' => 'Sisa kamar minimal 0.',
             'available_rooms.lte' => 'Sisa kamar tersedia tidak boleh melebihi total jumlah kamar.',
             'whatsapp_contact.regex' => 'Nomor WhatsApp tidak valid. Gunakan format angka 9–16 digit.',
-            'photos.required' => 'MINIMAL 4 FOTO KOST WAJIB DIUNGGAH.',
-            'photos.min' => 'MINIMAL 4 FOTO KOST WAJIB DIUNGGAH.',
             'photos.max' => 'MAKSIMAL 10 FOTO KOST DAPAT DIUNGGAH.',
             'photos.*.image' => 'File harus berupa gambar (JPG, PNG, WEBP).',
             'photos.*.mimes' => 'File harus berupa gambar dengan format JPG, PNG, atau WEBP.',
@@ -186,7 +239,6 @@ class CreateKost extends Component
     {
         if (isset($this->photos[$index])) {
             unset($this->photos[$index]);
-            // Re-index array so it stays contiguous
             $this->photos = array_values($this->photos);
         }
     }
@@ -201,6 +253,29 @@ class CreateKost extends Component
         unset($this->photos[$index]);
         array_unshift($this->photos, $photo);
         $this->photos = array_values($this->photos);
+
+        $this->primaryPhotoId = null;
+    }
+
+    public function removeExistingPhoto($imageId)
+    {
+        $this->existingPhotos = array_values(array_filter(
+            $this->existingPhotos,
+            fn ($img) => (int) $img['id'] !== (int) $imageId,
+        ));
+
+        if (! in_array($imageId, $this->removeExistingIds)) {
+            $this->removeExistingIds[] = (int) $imageId;
+        }
+
+        if ($this->primaryPhotoId === (int) $imageId) {
+            $this->primaryPhotoId = null;
+        }
+    }
+
+    public function setExistingPrimary($imageId)
+    {
+        $this->primaryPhotoId = (int) $imageId;
     }
 
     public function addFacility()
@@ -292,23 +367,15 @@ class CreateKost extends Component
     {
         $this->validate();
 
-        $key = 'create_kost_' . request()->ip() . '_' . Auth::id();
-
-        if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($key, 5)) {
-            $seconds = \Illuminate\Support\Facades\RateLimiter::availableIn($key);
-            if ($seconds < 60) {
-                $this->addError('name', 'Terlalu banyak permintaan pembuatan kost. Silakan tunggu ' . $seconds . ' detik lagi.');
-            } else {
-                $this->addError('name', 'Terlalu banyak permintaan pembuatan kost. Silakan tunggu ' . ceil($seconds/60) . ' menit lagi.');
-            }
+        $totalPhotos = count($this->existingPhotos) + count($this->photos);
+        if ($totalPhotos < 4) {
+            $this->addError('photos', 'MINIMAL 4 FOTO KOST WAJIB ADA.');
             return;
         }
 
-        \Illuminate\Support\Facades\RateLimiter::hit($key, 3600);
-
         $lat = (float) $this->latitude;
         $lng = (float) $this->longitude;
-        
+
         $districts = config('bandung.districts', []);
         $bounds = $districts[$this->district]['bounds'] ?? null;
         if ($bounds) {
@@ -321,22 +388,10 @@ class CreateKost extends Component
             }
         }
 
-        $slug = Str::slug($this->name);
-        $originalSlug = $slug;
-        $count = 1;
-        while (Kost::where('slug', $slug)->exists()) {
-            $slug = "{$originalSlug}-{$count}";
-            $count++;
-        }
+        $kost = $this->kost;
 
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
-
-        // Create Kost record with dynamically selected coordinates
-        $kost = Kost::create([
-            'user_id' => $user->id,
+        $kost->update([
             'name' => $this->name,
-            'slug' => $slug,
             'description' => $this->description,
             'gender_type' => $this->gender_type,
             'price_monthly' => $this->price_monthly,
@@ -347,30 +402,65 @@ class CreateKost extends Component
             'district' => $this->district,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
-            'is_available' => ((int)$this->available_rooms > 0),
-            'status' => 'pending', // Draft / Pending Admin review
-            'total_rooms' => (int)$this->total_rooms,
-            'available_rooms' => (int)$this->available_rooms,
+            'is_available' => ((int) $this->available_rooms > 0),
+            'total_rooms' => (int) $this->total_rooms,
+            'available_rooms' => (int) $this->available_rooms,
             'whatsapp_contact' => $this->whatsapp_contact !== '' ? $this->whatsapp_contact : null,
             'nearby_landmarks' => $this->nearby_landmarks !== '' ? $this->nearby_landmarks : null,
             'additional_rules_note' => $this->additional_rules_note !== '' ? $this->additional_rules_note : null,
         ]);
 
-        // Store photos in public storage and create KostImage records
+        // Delete removed existing photos
+        if (! empty($this->removeExistingIds)) {
+            KostImage::where('kost_id', $kost->id)
+                ->whereIn('id', $this->removeExistingIds)
+                ->get()
+                ->each(function (KostImage $image) {
+                    if ($image->image_path) {
+                        Storage::disk('public')->delete($image->image_path);
+                    }
+                    $image->delete();
+                });
+        }
+
+        // Determine which photo becomes the primary
+        $newPhotosPrimary = false;
+        if ($this->primaryPhotoId !== null) {
+            KostImage::where('kost_id', $kost->id)
+                ->whereNotIn('id', $this->removeExistingIds)
+                ->update(['is_primary' => false]);
+            KostImage::where('kost_id', $kost->id)
+                ->where('id', $this->primaryPhotoId)
+                ->update(['is_primary' => true]);
+        } elseif (count($this->photos) > 0) {
+            KostImage::where('kost_id', $kost->id)->update(['is_primary' => false]);
+            $newPhotosPrimary = true;
+        } else {
+            // No new photos & no primary chosen: promote the first remaining photo
+            $first = KostImage::where('kost_id', $kost->id)
+                ->whereNotIn('id', $this->removeExistingIds)
+                ->orderBy('id')
+                ->first();
+            if ($first) {
+                KostImage::where('kost_id', $kost->id)->update(['is_primary' => false]);
+                $first->update(['is_primary' => true]);
+            }
+        }
+
+        // Store new photos
         foreach ($this->photos as $index => $photo) {
             $path = $photo->store('kosts', 'public');
-            
+
             KostImage::create([
                 'kost_id' => $kost->id,
                 'image_path' => $path,
-                'is_primary' => $index === 0,
+                'is_primary' => $newPhotosPrimary && $index === 0,
             ]);
         }
         $this->photos = [];
 
-        // Attach facilities if selected
+        // Sync facilities
         $facilityIds = $this->selectedFacilities;
-
         foreach ($this->customFacilities as $custom) {
             $name = trim((string) ($custom['name'] ?? ''));
             if ($name === '') {
@@ -379,18 +469,14 @@ class CreateKost extends Component
             $type = in_array($custom['type'] ?? 'building', ['room', 'building', 'parking']) ? $custom['type'] : 'building';
             $facility = Facility::firstOrCreate(
                 ['name' => $name],
-                ['type' => $type, 'status' => 'pending', 'user_id' => $user->id]
+                ['type' => $type, 'status' => 'pending', 'user_id' => auth()->id()]
             );
             $facilityIds[] = $facility->id;
         }
+        $kost->facilities()->sync(array_unique($facilityIds));
 
-        if (! empty($facilityIds)) {
-            $kost->facilities()->attach(array_unique($facilityIds));
-        }
-
-        // Attach rules if selected
+        // Sync rules
         $ruleIds = $this->selectedRules;
-
         foreach ($this->customRules as $customRuleName) {
             $name = trim($customRuleName);
             if ($name === '') {
@@ -399,12 +485,9 @@ class CreateKost extends Component
             $rule = Rule::firstOrCreate(['name' => $name]);
             $ruleIds[] = $rule->id;
         }
+        $kost->rules()->sync(array_unique($ruleIds));
 
-        if (! empty($ruleIds)) {
-            $kost->rules()->attach(array_unique($ruleIds));
-        }
-
-        session()->flash('status', 'Properti kost "' . $kost->name . '" berhasil diajukan dan sedang dalam peninjauan Admin!');
+        session()->flash('status', 'Properti kost "' . $kost->name . '" berhasil diperbarui!');
 
         return redirect()->route('dashboard');
     }
@@ -475,14 +558,14 @@ class CreateKost extends Component
 
         $districts = array_keys(config('bandung.districts', []));
 
-        return view('livewire.dashboard.create-kost', [
+        return view('livewire.dashboard.edit-kost', [
             'facilities' => $facilities,
             'rules' => $rules,
             'rentPeriods' => $this->rentPeriods(),
             'districts' => $districts,
             'googleMapsApiKey' => config('services.google.maps_api_key') ?: env('GOOGLE_MAPS_API_KEY'),
         ])->layout('layouts.app', [
-            'title' => 'Tambah Kost Baru — KostBandung.id',
+            'title' => 'Edit Kost — KostBandung.id',
         ]);
     }
 

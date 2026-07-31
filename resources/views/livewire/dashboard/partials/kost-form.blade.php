@@ -841,12 +841,7 @@
                                         class="peer sr-only">
                                     <div
                                         class="px-4 py-3 rounded-lg border-2 border-black bg-zinc-50 text-black text-xs font-black flex items-center justify-between peer-checked:bg-lime-300 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-yellow-100 transition-all">
-                                        <span class="flex items-center gap-2">
-                                            @if ($facility->icon)
-                                                <x-icon name="lucide-{{ $facility->icon }}" class="w-4 h-4 stroke-[2.5] shrink-0" />
-                                            @endif
-                                            {{ $facility->name }}
-                                        </span>
+                                        <span>{{ $facility->name }}</span>
                                         <span
                                             class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs">✓</span>
                                     </div>
@@ -906,12 +901,7 @@
                                         class="peer sr-only">
                                     <div
                                         class="px-4 py-3 rounded-lg border-2 border-black bg-zinc-50 text-black text-xs font-black flex items-center justify-between peer-checked:bg-cyan-300 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-yellow-100 transition-all">
-                                        <span class="flex items-center gap-2">
-                                            @if ($facility->icon)
-                                                <x-icon name="lucide-{{ $facility->icon }}" class="w-4 h-4 stroke-[2.5] shrink-0" />
-                                            @endif
-                                            {{ $facility->name }}
-                                        </span>
+                                        <span>{{ $facility->name }}</span>
                                         <span
                                             class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs">✓</span>
                                     </div>
@@ -971,12 +961,7 @@
                                         class="peer sr-only">
                                     <div
                                         class="px-4 py-3 rounded-lg border-2 border-black bg-zinc-50 text-black text-xs font-black flex items-center justify-between peer-checked:bg-yellow-300 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-yellow-100 transition-all">
-                                        <span class="flex items-center gap-2">
-                                            @if ($facility->icon)
-                                                <x-icon name="lucide-{{ $facility->icon }}" class="w-4 h-4 stroke-[2.5] shrink-0" />
-                                            @endif
-                                            {{ $facility->name }}
-                                        </span>
+                                        <span>{{ $facility->name }}</span>
                                         <span
                                             class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs">✓</span>
                                     </div>

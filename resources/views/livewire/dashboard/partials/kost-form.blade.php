@@ -850,6 +850,36 @@
                                 <p class="text-zinc-500 font-bold text-sm col-span-full">Belum ada fasilitas kamar.</p>
                             @endforelse
                         </div>
+
+                        <div class="mt-2 flex gap-2">
+                            <input type="text" wire:model="newRoomFacility"
+                                wire:keydown.enter.prevent="addFacility('room')"
+                                placeholder="Fasilitas kamar lainnya (kustom)..."
+                                maxlength="50"
+                                class="w-full bg-white border-2 border-black rounded-lg px-3 py-2 text-xs font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all">
+                            <button type="button" wire:click="addFacility('room')"
+                                class="px-4 py-2 bg-yellow-300 hover:bg-yellow-400 text-black border-2 border-black font-black text-[10px] uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer shrink-0">
+                                + Tambah
+                            </button>
+                        </div>
+                        @error('newRoomFacility')
+                            <p class="text-[10px] font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2 py-0.5 rounded-md inline-block">{{ $message }}</p>
+                        @enderror
+
+                        @if(collect($customFacilities)->where('type', 'room')->count() > 0)
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                @foreach ($customFacilities as $index => $customItem)
+                                    @if($customItem['type'] === 'room')
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 border-2 border-black rounded-lg text-[10px] font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] bg-lime-200">
+                                            {{ $customItem['name'] }}
+                                            <button type="button" wire:click="removeCustomFacility({{ $index }})"
+                                                class="w-3.5 h-3.5 rounded bg-rose-400 hover:bg-rose-300 border border-black text-[8px] font-black leading-none flex items-center justify-center cursor-pointer"
+                                                title="Hapus fasilitas">✕</button>
+                                        </span>
+                                    @endif
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
 
                     <!-- Fasilitas Umum -->
@@ -880,6 +910,36 @@
                                 <p class="text-zinc-500 font-bold text-sm col-span-full">Belum ada fasilitas umum.</p>
                             @endforelse
                         </div>
+
+                        <div class="mt-2 flex gap-2">
+                            <input type="text" wire:model="newBuildingFacility"
+                                wire:keydown.enter.prevent="addFacility('building')"
+                                placeholder="Fasilitas umum lainnya (kustom)..."
+                                maxlength="50"
+                                class="w-full bg-white border-2 border-black rounded-lg px-3 py-2 text-xs font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all">
+                            <button type="button" wire:click="addFacility('building')"
+                                class="px-4 py-2 bg-cyan-300 hover:bg-cyan-400 text-black border-2 border-black font-black text-[10px] uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer shrink-0">
+                                + Tambah
+                            </button>
+                        </div>
+                        @error('newBuildingFacility')
+                            <p class="text-[10px] font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2 py-0.5 rounded-md inline-block">{{ $message }}</p>
+                        @enderror
+
+                        @if(collect($customFacilities)->where('type', 'building')->count() > 0)
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                @foreach ($customFacilities as $index => $customItem)
+                                    @if($customItem['type'] === 'building')
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 border-2 border-black rounded-lg text-[10px] font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] bg-cyan-200">
+                                            {{ $customItem['name'] }}
+                                            <button type="button" wire:click="removeCustomFacility({{ $index }})"
+                                                class="w-3.5 h-3.5 rounded bg-rose-400 hover:bg-rose-300 border border-black text-[8px] font-black leading-none flex items-center justify-center cursor-pointer"
+                                                title="Hapus fasilitas">✕</button>
+                                        </span>
+                                    @endif
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
 
                     <!-- Fasilitas Parkir -->
@@ -917,73 +977,6 @@
                             class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
                             {{ $message }}</p>
                     @enderror
-                </div>
-
-                <!-- Fasilitas Lainnya (Custom) -->
-                <div class="space-y-3 pt-2 border-t-2 border-black">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                        <label class="block text-xs font-black uppercase tracking-wider text-black">
-                            Fasilitas Lainnya (Kustom)
-                        </label>
-                        <span class="text-[11px] font-bold italic text-zinc-600">
-                            Fasilitas custom akan ditinjau Admin sebelum menjadi pilihan publik.
-                        </span>
-                    </div>
-
-                    <div class="flex flex-col sm:flex-row gap-2">
-                        <div class="flex rounded-lg border-2 border-black overflow-hidden shrink-0 self-start">
-                            <button type="button" wire:click="$set('newFacilityType', 'room')"
-                                class="px-3.5 py-3 text-[11px] font-black uppercase transition-all cursor-pointer border-r-2 border-black {{ $newFacilityType === 'room' ? 'bg-lime-300 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 hover:bg-zinc-200' }}">
-                                Kamar
-                            </button>
-                            <button type="button" wire:click="$set('newFacilityType', 'building')"
-                                class="px-3.5 py-3 text-[11px] font-black uppercase transition-all cursor-pointer {{ $newFacilityType === 'building' ? 'bg-cyan-300 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 hover:bg-zinc-200' }}">
-                                Umum
-                            </button>
-                        </div>
-
-                        <input type="text" wire:model="newFacility"
-                            wire:keydown.enter.prevent="addFacility"
-                            placeholder="Contoh: Wifi 500Mbps, GYM, Ruang Rapat..."
-                            maxlength="50"
-                            class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
-                        <button type="button" wire:click="addFacility"
-                            class="px-5 py-3 bg-yellow-300 hover:bg-yellow-400 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer shrink-0">
-                            + Tambah
-                        </button>
-                    </div>
-
-                    @error('newFacility')
-                        <p
-                            class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
-                            {{ $message }}</p>
-                    @enderror
-
-                    @error('customFacilities.*.name')
-                        <p
-                            class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
-                            {{ $message }}</p>
-                    @enderror
-
-                    @if (count($customFacilities) > 0)
-                        <div class="flex flex-wrap gap-2">
-                            @foreach ($customFacilities as $index => $customItem)
-                                <span
-                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 border-2 border-black rounded-lg text-xs font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] {{ $customItem['type'] === 'room' ? 'bg-lime-200' : 'bg-cyan-200' }}">
-                                    {{ $customItem['name'] }}
-                                    <span
-                                        class="px-1.5 py-0.5 rounded border border-black text-[9px] font-black uppercase {{ $customItem['type'] === 'room' ? 'bg-lime-400' : 'bg-cyan-400' }}">
-                                        {{ $customItem['type'] === 'room' ? 'Kamar' : 'Umum' }}
-                                    </span>
-                                    <button type="button" wire:click="removeCustomFacility({{ $index }})"
-                                        class="w-4 h-4 rounded bg-rose-400 hover:bg-rose-300 border border-black text-[9px] font-black leading-none flex items-center justify-center cursor-pointer"
-                                        title="Hapus fasilitas">
-                                        ✕
-                                    </button>
-                                </span>
-                            @endforeach
-                        </div>
-                    @endif
                 </div>
             </div>
 

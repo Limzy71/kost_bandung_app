@@ -32,8 +32,8 @@ class CreateKost extends Component
     public string $nearby_landmarks = '';
     public array $selectedFacilities = [];
     public array $customFacilities = [];
-    public string $newFacility = '';
-    public string $newFacilityType = 'building';
+    public string $newRoomFacility = '';
+    public string $newBuildingFacility = '';
     public array $selectedRules = [];
     public array $customRules = [];
     public string $newRule = '';
@@ -120,7 +120,6 @@ class CreateKost extends Component
                 },
             ],
             'customFacilities.*.type' => 'required|in:room,building',
-            'newFacilityType' => 'required|in:room,building',
             'selectedRules' => 'nullable|array',
             'selectedRules.*' => 'exists:rules,id',
             'customRules' => 'nullable|array',
@@ -203,40 +202,41 @@ class CreateKost extends Component
         $this->photos = array_values($this->photos);
     }
 
-    public function addFacility()
+    public function addFacility(string $type)
     {
-        $this->resetErrorBag('newFacility');
+        $property = $type === 'room' ? 'newRoomFacility' : 'newBuildingFacility';
+        $this->resetErrorBag($property);
 
-        $name = trim($this->newFacility);
+        $name = trim($this->$property);
 
         if ($name === '') {
-            $this->addError('newFacility', 'Nama fasilitas tidak boleh kosong.');
+            $this->addError($property, 'Nama fasilitas tidak boleh kosong.');
             return;
         }
 
         if (mb_strlen($name) > 50) {
-            $this->addError('newFacility', 'Fasilitas lain maksimal 50 karakter.');
+            $this->addError($property, 'Fasilitas lain maksimal 50 karakter.');
             return;
         }
 
         $duplicateInDb = Facility::whereRaw('LOWER(name) = ?', [Str::lower($name)])->exists();
         if ($duplicateInDb) {
-            $this->addError('newFacility', 'Fasilitas "' . $name . '" sudah tersedia di daftar fasilitas.');
+            $this->addError($property, 'Fasilitas "' . $name . '" sudah tersedia di daftar fasilitas.');
             return;
         }
 
         foreach ($this->customFacilities as $existing) {
             if (Str::lower($existing['name']) === Str::lower($name)) {
-                $this->addError('newFacility', 'Fasilitas "' . $name . '" sudah ditambahkan.');
+                $this->addError($property, 'Fasilitas "' . $name . '" sudah ditambahkan.');
                 return;
             }
         }
 
         $this->customFacilities[] = [
             'name' => $name,
-            'type' => $this->newFacilityType,
+            'type' => $type,
         ];
-        $this->newFacility = '';
+        $this->$property = '';
     }
 
     public function removeCustomFacility($index)
@@ -416,17 +416,17 @@ class CreateKost extends Component
         if ($facilities->isEmpty()) {
             $defaultFacilities = [
                 ['name' => 'Kamar Mandi Dalam', 'type' => 'room'],
-                ['name' => 'AC (Air Conditioner)', 'type' => 'room'],
+                ['name' => 'AC', 'type' => 'room'],
                 ['name' => 'Kasur', 'type' => 'room'],
                 ['name' => 'Bantal & Guling', 'type' => 'room'],
                 ['name' => 'Lemari', 'type' => 'room'],
-                ['name' => 'Meja & Kursi Belajar/Kerja', 'type' => 'room'],
+                ['name' => 'Meja & Kursi', 'type' => 'room'],
+                ['name' => 'Meja Rias', 'type' => 'room'],
+                ['name' => 'Ventilasi', 'type' => 'room'],
+                ['name' => 'Jendela', 'type' => 'room'],
                 ['name' => 'Kipas Angin', 'type' => 'room'],
-                ['name' => 'Water Heater (Air Hangat)', 'type' => 'room'],
-                ['name' => 'Kulkas Dalam Kamar', 'type' => 'room'],
-                ['name' => 'Rak Pakaian', 'type' => 'room'],
-                ['name' => 'Gorden', 'type' => 'room'],
-                ['name' => 'Cermin', 'type' => 'room'],
+                ['name' => 'TV', 'type' => 'room'],
+                ['name' => 'Kulkas', 'type' => 'room'],
                 ['name' => 'Wi-Fi 100Mbps', 'type' => 'building'],
                 ['name' => 'Kamar Mandi Luar', 'type' => 'building'],
                 ['name' => 'Dapur Bersama', 'type' => 'building'],

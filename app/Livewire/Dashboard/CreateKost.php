@@ -427,6 +427,7 @@ class CreateKost extends Component
                 ['name' => 'Kipas Angin', 'type' => 'room'],
                 ['name' => 'TV', 'type' => 'room'],
                 ['name' => 'Kulkas', 'type' => 'room'],
+                ['name' => 'Water Heater (Air Hangat)', 'type' => 'room'],
                 ['name' => 'Wi-Fi 100Mbps', 'type' => 'building'],
                 ['name' => 'Kamar Mandi Luar', 'type' => 'building'],
                 ['name' => 'Dapur Bersama', 'type' => 'building'],
@@ -444,7 +445,13 @@ class CreateKost extends Component
             ];
 
             foreach ($defaultFacilities as $facility) {
-                Facility::updateOrCreate(['name' => $facility['name']], array_merge($facility, ['status' => 'approved']));
+                Facility::updateOrCreate(
+                    ['name' => $facility['name']],
+                    array_merge($facility, [
+                        'status' => 'approved',
+                        'icon' => Facility::resolveIcon($facility['name']),
+                    ]),
+                );
             }
 
             $facilities = Facility::where('status', 'approved')->orderBy('name')->get();

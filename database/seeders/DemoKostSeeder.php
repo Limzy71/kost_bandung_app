@@ -63,7 +63,10 @@ class DemoKostSeeder extends Seeder
         foreach ($defaultFacilities as $facility) {
             \App\Models\Facility::updateOrCreate(
                 ['name' => $facility['name']],
-                ['type' => $facility['type']],
+                [
+                    'type' => $facility['type'],
+                    'icon' => \App\Models\Facility::resolveIcon($facility['name']),
+                ],
             );
         }
 

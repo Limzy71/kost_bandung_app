@@ -152,5 +152,22 @@ return [
             'zoom' => 14,
             'bounds' => ['lat_min' => -6.935, 'lat_max' => -6.880, 'lng_min' => 107.675, 'lng_max' => 107.730]
         ],
-    ]
+    ],
+
+    // Icon Lucide (nama tanpa prefix "lucide-") untuk fasilitas kamar yang diminta
+    'facility_icons' => [
+        'Kasur' => 'bed',
+        'Bantal & Guling' => 'bed-single',
+        'Lemari' => 'door-open',
+        'Kamar Mandi Dalam' => 'shower-head',
+        'Meja & Kursi' => 'armchair',
+        'Meja Rias' => 'sparkles',
+        'Ventilasi' => 'wind',
+        'Jendela' => 'frame',
+        'Kipas Angin' => 'fan',
+        'AC' => 'air-vent',
+        'TV' => 'tv',
+        'Kulkas' => 'refrigerator',
+        'Water Heater (Air Hangat)' => 'thermometer-sun',
+    ],
 ];

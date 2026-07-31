@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Facility extends Model
 {
-    protected $fillable = ['name', 'type', 'status', 'user_id'];
+    protected $fillable = ['name', 'type', 'status', 'user_id', 'icon'];
 
     public function kosts(): BelongsToMany
     {
@@ -18,5 +18,10 @@ class Facility extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public static function resolveIcon(string $name): ?string
+    {
+        return config('bandung.facility_icons.' . $name);
     }
 }

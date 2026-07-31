@@ -220,8 +220,11 @@
                                         <div class="flex flex-wrap justify-end gap-1 overflow-hidden shrink min-w-0">
                                             @if ($kost->facilities && $kost->facilities->count() > 0)
                                                 @foreach ($kost->facilities->take(2) as $facility)
-                                                    <span class="bg-zinc-100 border-2 border-black text-[10px] font-bold text-black px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] truncate max-w-[110px]">
-                                                        {{ $facility->name }}
+                                                    <span class="bg-zinc-100 border-2 border-black text-[10px] font-bold text-black px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1 truncate max-w-[110px]">
+                                                        @if ($facility->icon)
+                                                            <x-icon name="lucide-{{ $facility->icon }}" class="w-3 h-3 stroke-[2.5] shrink-0" />
+                                                        @endif
+                                                        <span class="truncate">{{ $facility->name }}</span>
                                                     </span>
                                                 @endforeach
                                             @endif

@@ -247,7 +247,7 @@
                             </div>
 
                             <!-- Card Footer Actions -->
-                            <div class="px-5 py-4 bg-zinc-100 border-t-3 border-black flex items-center gap-2 shrink-0">
+                            <div class="px-5 py-4 bg-zinc-100 border-t-3 border-black flex flex-wrap items-center gap-2 shrink-0">
                                 <!-- Toggle Availability Button -->
                                 <button 
                                     wire:click="toggleAvailability({{ $kost->id }})" 
@@ -263,7 +263,7 @@
                                             <span>Set Status Tersedia</span>
                                         @endif
                                     </span>
-                                    <span wire:loading wire:target="toggleAvailability({{ $kost->id }})" class="inline-flex items-center gap-1.5 whitespace-nowrap">
+                                    <span wire:loading.inline-flex wire:target="toggleAvailability({{ $kost->id }})" class="items-center gap-1.5 whitespace-nowrap">
                                         <x-icon name="lucide-loader-circle" class="animate-spin h-3.5 w-3.5 text-black shrink-0" />
                                         <span>Memproses...</span>
                                     </span>

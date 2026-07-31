@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Models\Facility;
 use App\Models\Kost;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -11,7 +12,7 @@ class ModerationDashboard extends Component
     use WithPagination;
 
     public string $search = '';
-    public string $activeTab = 'pending'; // 'pending', 'published', 'rejected', 'all'
+    public string $activeTab = 'pending'; // 'pending', 'published', 'rejected', 'all', 'facilities'
 
     public function updatingSearch(): void
     {
@@ -48,12 +49,56 @@ class ModerationDashboard extends Component
         }
     }
 
+    public function approveFacility(int $facilityId): void
+    {
+        $facility = Facility::find($facilityId);
+
+        if ($facility) {
+            $facility->status = 'approved';
+            $facility->save();
+
+            $this->dispatch('show-toast', message: 'Fasilitas "' . $facility->name . '" telah DISETUJUI & Tersedia untuk Semua Pemilik!');
+        }
+    }
+
+    public function rejectFacility(int $facilityId): void
+    {
+        $facility = Facility::find($facilityId);
+
+        if ($facility) {
+            $facility->kosts()->detach();
+            $facility->status = 'rejected';
+            $facility->save();
+
+            $this->dispatch('show-toast', message: 'Fasilitas "' . $facility->name . '" telah DITOLAK dan DILEPAS dari seluruh kost.');
+        }
+    }
+
     public function render()
     {
         $pendingCount = Kost::where('status', 'pending')->count();
         $publishedCount = Kost::where('status', 'published')->count();
         $rejectedCount = Kost::where('status', 'rejected')->count();
         $totalCount = Kost::count();
+        $pendingFacilityCount = Facility::where('status', 'pending')->count();
+
+        if ($this->activeTab === 'facilities') {
+            $facilities = Facility::where('status', 'pending')
+                ->with(['kosts.user'])
+                ->orderBy('name')
+                ->paginate(9);
+
+            return view('livewire.admin.moderation-dashboard', [
+                'facilities' => $facilities,
+                'pendingCount' => $pendingCount,
+                'publishedCount' => $publishedCount,
+                'rejectedCount' => $rejectedCount,
+                'totalCount' => $totalCount,
+                'pendingFacilityCount' => $pendingFacilityCount,
+            ])->layout('layouts.app', [
+                'title' => 'Moderation Dashboard — Admin KostBandung.id',
+            ]);
+        }
 
         $query = Kost::query()
             ->with(['user', 'primaryImage', 'facilities', 'rules'])
@@ -80,6 +125,7 @@ class ModerationDashboard extends Component
             'publishedCount' => $publishedCount,
             'rejectedCount' => $rejectedCount,
             'totalCount' => $totalCount,
+            'pendingFacilityCount' => $pendingFacilityCount,
         ])->layout('layouts.app', [
             'title' => 'Moderation Dashboard — Admin KostBandung.id',
         ]);

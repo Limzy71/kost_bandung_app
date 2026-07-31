@@ -57,7 +57,7 @@
         </div>
 
         <!-- Metric Stat Cards -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 sm:gap-6">
             <!-- Pending -->
             <button 
                 type="button" 
@@ -108,6 +108,20 @@
                 <h3 class="text-3xl sm:text-4xl font-black text-black mt-2 tracking-tight">{{ $totalCount }}</h3>
                 <p class="text-[10px] font-bold text-black/70 mt-1 uppercase">Seluruh Database</p>
             </button>
+
+            <!-- Facilities Pending -->
+            <button 
+                type="button" 
+                wire:click="setTab('facilities')" 
+                class="text-left p-5 border-3 border-black rounded-xl shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer {{ $activeTab === 'facilities' ? 'bg-violet-300 ring-4 ring-black translate-x-0.5 translate-y-0.5' : 'bg-violet-100 hover:bg-violet-200' }}"
+            >
+                <p class="text-xs font-black uppercase tracking-wider text-black flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                    <span>Fasilitas Menunggu</span>
+                </p>
+                <h3 class="text-3xl sm:text-4xl font-black text-black mt-2 tracking-tight">{{ $pendingFacilityCount }}</h3>
+                <p class="text-[10px] font-bold text-black/70 mt-1 uppercase">Perlu Review Admin</p>
+            </button>
         </div>
 
         <!-- Filter & Search Bar -->
@@ -142,6 +156,13 @@
                 >
                     Semua ({{ $totalCount }})
                 </button>
+                <button 
+                    type="button" 
+                    wire:click="setTab('facilities')" 
+                    class="px-4 py-2 border-2 border-black font-black text-xs uppercase rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer {{ $activeTab === 'facilities' ? 'bg-violet-400 text-black' : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-700' }}"
+                >
+                    Fasilitas ({{ $pendingFacilityCount }})
+                </button>
             </div>
 
             <!-- Search Input -->
@@ -169,6 +190,87 @@
             </div>
         </div>
 
+        <!-- Facilities Moderation List -->
+        @if($activeTab === 'facilities')
+            @if($facilities->count() > 0)
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @foreach($facilities as $facility)
+                        <div class="bg-white border-4 border-black rounded-2xl overflow-hidden shadow-[7px_7px_0px_0px_rgba(0,0,0,1)] flex flex-col justify-between group">
+                            <div class="p-5 space-y-4">
+                                <!-- Header -->
+                                <div class="flex items-start justify-between gap-3">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <div class="w-11 h-11 rounded-xl bg-violet-300 border-2 border-black flex items-center justify-center shrink-0 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                            <svg class="w-5 h-5 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                                        </div>
+                                        <div class="min-w-0">
+                                            <h3 class="text-lg font-black text-black leading-snug truncate">{{ $facility->name }}</h3>
+                                            <span class="text-[10px] font-black uppercase text-zinc-500">Tipe: {{ $facility->type === 'room' ? 'Kamar' : 'Umum' }}</span>
+                                        </div>
+                                    </div>
+                                    <span class="px-2.5 py-1 bg-amber-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] animate-pulse shrink-0">
+                                        ⏳ Pending
+                                    </span>
+                                </div>
+
+                                <!-- Used By Kosts -->
+                                <div class="bg-yellow-50 border-2 border-black p-3 rounded-xl space-y-1.5">
+                                    <p class="text-[10px] font-black uppercase text-zinc-500">Diajukan pada {{ $facility->kosts->count() }} kost:</p>
+                                    @forelse($facility->kosts->take(3) as $kost)
+                                        <div class="flex items-center justify-between gap-2 text-xs font-black text-black">
+                                            <span class="truncate">{{ $kost->name }}</span>
+                                            <span class="text-[10px] font-bold text-zinc-600 truncate max-w-[120px]">{{ $kost->user->name ?? '-' }}</span>
+                                        </div>
+                                    @empty
+                                        <p class="text-xs font-bold text-zinc-600">Belum dipakai oleh kost mana pun.</p>
+                                    @endforelse
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="p-4 bg-zinc-100 border-t-4 border-black grid grid-cols-2 gap-2">
+                                <button 
+                                    type="button" 
+                                    wire:click="approveFacility({{ $facility->id }})" 
+                                    wire:loading.attr="disabled"
+                                    class="w-full py-3 bg-lime-400 hover:bg-lime-300 active:bg-lime-500 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl cursor-pointer"
+                                >
+                                    <span wire:loading.remove wire:target="approveFacility({{ $facility->id }})">✓ APPROVE</span>
+                                    <span wire:loading wire:target="approveFacility({{ $facility->id }})">Memproses...</span>
+                                </button>
+                                <button 
+                                    type="button" 
+                                    wire:click="rejectFacility({{ $facility->id }})" 
+                                    wire:loading.attr="disabled"
+                                    class="w-full py-3 bg-rose-500 hover:bg-rose-400 active:bg-rose-600 text-white border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl cursor-pointer"
+                                >
+                                    <span wire:loading.remove wire:target="rejectFacility({{ $facility->id }})">✕ REJECT</span>
+                                    <span wire:loading wire:target="rejectFacility({{ $facility->id }})">Memproses...</span>
+                                </button>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                <!-- Pagination -->
+                <div class="mt-8">
+                    {{ $facilities->links() }}
+                </div>
+            @else
+                <!-- Empty State -->
+                <div class="bg-yellow-100 border-4 border-black rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] space-y-4">
+                    <div class="w-20 h-20 bg-white border-3 border-black rounded-2xl flex items-center justify-center mx-auto text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -rotate-3">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-3xl font-black text-black uppercase">Tidak Ada Fasilitas Pending</h3>
+                        <p class="text-sm font-bold text-zinc-700 max-w-md mx-auto mt-2">
+                            Semua fasilitas custom telah selesai ditinjau. Fasilitas baru akan muncul di sini setelah pemilik kost mengajukannya.
+                        </p>
+                    </div>
+                </div>
+            @endif
+        @else
         <!-- Moderation List Grid -->
         @if($kosts->count() > 0)
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -333,6 +435,7 @@
                     </p>
                 </div>
             </div>
+        @endif
         @endif
 
     </div>

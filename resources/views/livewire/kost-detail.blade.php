@@ -255,9 +255,7 @@
                                     @foreach ($roomFacilities as $facility)
                                         <div
                                             class="flex items-center gap-2.5 bg-lime-100 border-2 border-black px-3.5 py-2.5 rounded-xl text-sm font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                            @if ($facility->icon)
-                                                <x-icon name="lucide-{{ $facility->icon }}" class="w-4 h-4 text-lime-600 stroke-[2.5] shrink-0" />
-                                            @endif
+
                                             <span>{{ $facility->name }}</span>
                                             @if (auth()->check() && auth()->id() === $kost->user_id && $facility->status === 'pending' && $facility->user_id === auth()->id())
                                                 <span
@@ -291,9 +289,7 @@
                                     @foreach ($buildingFacilities as $facility)
                                         <div
                                             class="flex items-center gap-2.5 bg-cyan-50 border-2 border-black px-3.5 py-2.5 rounded-xl text-sm font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                            @if ($facility->icon)
-                                                <x-icon name="lucide-{{ $facility->icon }}" class="w-4 h-4 text-cyan-600 stroke-[2.5] shrink-0" />
-                                            @endif
+
                                             <span>{{ $facility->name }}</span>
                                             @if (auth()->check() && auth()->id() === $kost->user_id && $facility->status === 'pending' && $facility->user_id === auth()->id())
                                                 <span
@@ -325,9 +321,7 @@
                                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                                     @foreach ($parkingFacilities as $facility)
                                         <div class="flex items-center gap-2.5 bg-yellow-50 border-2 border-black px-3.5 py-2.5 rounded-xl text-sm font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                            @if ($facility->icon)
-                                                <x-icon name="lucide-{{ $facility->icon }}" class="w-4 h-4 text-yellow-600 stroke-[2.5] shrink-0" />
-                                            @endif
+
                                             <span>{{ $facility->name }}</span>
                                             @if (auth()->check() && auth()->id() === $kost->user_id && $facility->status === 'pending' && $facility->user_id === auth()->id())
                                                 <span

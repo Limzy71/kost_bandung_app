@@ -270,7 +270,7 @@
                             </div>
 
                             <!-- Card Footer Actions -->
-                            <div class="px-5 py-4 bg-zinc-100 border-t-3 border-black flex items-center justify-between gap-2 shrink-0">
+                            <div class="px-5 py-4 bg-zinc-100 border-t-3 border-black flex flex-wrap items-center justify-between gap-2 shrink-0">
                                 <!-- Toggle Availability Button -->
                                 <button 
                                     wire:click="toggleAvailability({{ $kost->id }})" 
@@ -298,6 +298,15 @@
                                         <span>Memproses...</span>
                                     </span>
                                 </button>
+
+                                <!-- Edit Link Button -->
+                                <a 
+                                    href="{{ route('dashboard.kost.edit', $kost->slug) }}" 
+                                    class="h-9 px-4 bg-cyan-400 hover:bg-cyan-300 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-[transform,background-color,box-shadow] duration-300 ease-out rounded-lg inline-flex items-center justify-center gap-1 shrink-0 whitespace-nowrap"
+                                >
+                                    <span>Edit</span>
+                                    <svg class="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                </a>
 
                                 <!-- Detail Link Button -->
                                 <a 

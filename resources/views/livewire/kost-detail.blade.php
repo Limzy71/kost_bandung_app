@@ -8,6 +8,25 @@
     if ($allImages->isEmpty()) {
         $allImages = collect(['https://placehold.co/800x500/eeeeee/31343c?text=Foto+Utama']);
     }
+
+    $waNumber = preg_replace('/\D+/', '', $kost->whatsapp_contact ?: ($kost->user->phone_number ?? ''));
+    if (Str::startsWith($waNumber, '0')) {
+        $waNumber = '62' . Str::substr($waNumber, 1);
+    }
+    if ($waNumber === '' || ! Str::startsWith($waNumber, '62')) {
+        $waNumber = '62' . $waNumber;
+    }
+    if ($waNumber === '62') {
+        $waNumber = '6281234567890';
+    }
+
+    $rentPeriodLabels = [
+        'daily' => 'Per Hari',
+        'weekly' => 'Per Minggu',
+        'monthly' => 'Per Bulan',
+        'yearly' => 'Per Tahun',
+    ];
+    $rentPeriodLabel = $rentPeriodLabels[$kost->rent_period] ?? 'Per Bulan';
 @endphp
 
 <div class="min-h-screen bg-[#f8f9fa] bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:24px_24px] pb-28 lg:pb-16 pt-8"
@@ -128,6 +147,11 @@
                                 Tipe {{ $kost->gender_type }}
                             </span>
 
+                            <span
+                                class="px-3.5 py-1 bg-cyan-300 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider">
+                                Sewa {{ $rentPeriodLabel }}
+                            </span>
+
                             @if ($kost->is_available)
                                 <span
                                     class="px-3.5 py-1 bg-lime-400 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider">
@@ -199,8 +223,45 @@
                     <!-- Divider -->
                     <div class="border-t-4 border-black"></div>
 
-                    <!-- Fasilitas Utama -->
+                    <!-- Info Properti -->
+                    @php
+                        $infoItems = [];
+                        $infoItems[] = ['label' => 'Periode Sewa', 'value' => $rentPeriodLabel];
+                        if ($kost->price_deposit !== null) {
+                            $infoItems[] = ['label' => 'Uang Deposit', 'value' => 'Rp ' . number_format((float) $kost->price_deposit, 0, ',', '.')];
+                        }
+                        $infoItems[] = ['label' => 'Listrik & Air', 'value' => $kost->include_utilities ? 'Sudah Termasuk' : 'Terpisah / Diluar Sewa'];
+                        if ($kost->nearby_landmarks) {
+                            $infoItems[] = ['label' => 'Titik Terdekat', 'value' => $kost->nearby_landmarks];
+                        }
+                        $infoItems[] = ['label' => 'Ketersediaan Kamar', 'value' => $kost->available_rooms . ' dari ' . $kost->total_rooms . ' kamar tersedia'];
+                    @endphp
                     <div class="space-y-4">
+                        <h2 class="text-xl font-black text-black uppercase tracking-tight flex items-center gap-2">
+                            <svg class="w-5 h-5 text-black stroke-[2.5]" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>Info Properti</span>
+                        </h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                            @foreach ($infoItems as $item)
+                                <div
+                                    class="bg-cyan-50 border-2 border-black rounded-xl px-4 py-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                    <p class="text-[10px] font-black uppercase tracking-wider text-zinc-500">
+                                        {{ $item['label'] }}</p>
+                                    <p class="text-sm font-black text-black mt-0.5">{{ $item['value'] }}</p>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="border-t-4 border-black"></div>
+
+                    <!-- Fasilitas Utama -->
+                    <div class="space-y-6">
                         <h2 class="text-xl font-black text-black uppercase tracking-tight flex items-center gap-2">
                             <svg class="w-5 h-5 text-black stroke-[2.5]" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
@@ -209,17 +270,127 @@
                             </svg>
                             <span>Fasilitas Properti</span>
                         </h2>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                            @forelse($kost->facilities as $facility)
-                                <div
-                                    class="flex items-center gap-2.5 bg-yellow-100 border-2 border-black px-3.5 py-2.5 rounded-xl text-sm font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                    <span class="text-lime-600 font-extrabold text-base">✓</span>
-                                    <span>{{ $facility->name }}</span>
+
+                        @php
+                            $roomFacilities = $kost->facilities->where('type', 'room');
+                            $buildingFacilities = $kost->facilities->where('type', 'building');
+                            $parkingFacilities = $kost->facilities->where('type', 'parking');
+                        @endphp
+
+                        @if ($roomFacilities->count() > 0)
+                            <div class="space-y-3">
+                                <h3 class="text-sm font-black uppercase tracking-wider text-black flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-black stroke-[2.5]" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z" />
+                                    </svg>
+                                    Fasilitas Kamar
+                                    <span
+                                        class="text-[10px] font-black uppercase bg-lime-300 border-2 border-black px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                                        {{ $roomFacilities->count() }}
+                                    </span>
+                                </h3>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                                    @foreach ($roomFacilities as $facility)
+                                        <div
+                                            class="flex items-center gap-2.5 bg-lime-100 border-2 border-black px-3.5 py-2.5 rounded-xl text-sm font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                            <span class="text-lime-600 font-extrabold text-base">✓</span>
+                                            <span>{{ $facility->name }}</span>
+                                            @if (auth()->check() && auth()->id() === $kost->user_id && $facility->status === 'pending' && $facility->user_id === auth()->id())
+                                                <span
+                                                    class="ml-auto inline-flex items-center gap-1.5 text-[9px] font-black uppercase bg-amber-300 border-2 border-black px-1.5 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                                                    Menunggu review
+                                                    <button type="button" wire:click="removeFacility({{ $facility->id }})"
+                                                        wire:confirm="Hapus fasilitas '{{ $facility->name }}' dari kost ini?"
+                                                        class="w-4 h-4 rounded bg-rose-500 hover:bg-rose-400 border border-black text-white text-[9px] font-black leading-none flex items-center justify-center cursor-pointer"
+                                                        title="Hapus fasilitas">
+                                                        ✕
+                                                    </button>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    @endforeach
                                 </div>
-                            @empty
-                                <p class="text-zinc-500 font-bold">Tidak ada fasilitas terdaftar.</p>
-                            @endforelse
-                        </div>
+                            </div>
+                        @endif
+
+                        @if ($buildingFacilities->count() > 0)
+                            <div class="space-y-3">
+                                <h3 class="text-sm font-black uppercase tracking-wider text-black flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-black stroke-[2.5]" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4h6v4M9 10h.01M15 10h.01M9 14h.01M15 14h.01" />
+                                    </svg>
+                                    Fasilitas Umum
+                                    <span
+                                        class="text-[10px] font-black uppercase bg-cyan-300 border-2 border-black px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                                        {{ $buildingFacilities->count() }}
+                                    </span>
+                                </h3>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                                    @foreach ($buildingFacilities as $facility)
+                                        <div
+                                            class="flex items-center gap-2.5 bg-cyan-50 border-2 border-black px-3.5 py-2.5 rounded-xl text-sm font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                            <span class="text-cyan-600 font-extrabold text-base">✓</span>
+                                            <span>{{ $facility->name }}</span>
+                                            @if (auth()->check() && auth()->id() === $kost->user_id && $facility->status === 'pending' && $facility->user_id === auth()->id())
+                                                <span
+                                                    class="ml-auto inline-flex items-center gap-1.5 text-[9px] font-black uppercase bg-amber-300 border-2 border-black px-1.5 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                                                    Menunggu review
+                                                    <button type="button" wire:click="removeFacility({{ $facility->id }})"
+                                                        wire:confirm="Hapus fasilitas '{{ $facility->name }}' dari kost ini?"
+                                                        class="w-4 h-4 rounded bg-rose-500 hover:bg-rose-400 border border-black text-white text-[9px] font-black leading-none flex items-center justify-center cursor-pointer"
+                                                        title="Hapus fasilitas">
+                                                        ✕
+                                                    </button>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+
+                        @if ($parkingFacilities->count() > 0)
+                            <div class="space-y-3">
+                                <h3 class="text-sm font-black uppercase tracking-wider text-black flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-black stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h4a3 3 0 010 6H8V7z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 17v-4" />
+                                    </svg>
+                                    Fasilitas Parkir
+                                    <span class="text-[10px] font-black uppercase bg-yellow-300 border-2 border-black px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                                        {{ $parkingFacilities->count() }}
+                                    </span>
+                                </h3>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                                    @foreach ($parkingFacilities as $facility)
+                                        <div class="flex items-center gap-2.5 bg-yellow-50 border-2 border-black px-3.5 py-2.5 rounded-xl text-sm font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                            <span class="text-yellow-600 font-extrabold text-base">✓</span>
+                                            <span>{{ $facility->name }}</span>
+                                            @if (auth()->check() && auth()->id() === $kost->user_id && $facility->status === 'pending' && $facility->user_id === auth()->id())
+                                                <span
+                                                    class="ml-auto inline-flex items-center gap-1.5 text-[9px] font-black uppercase bg-amber-300 border-2 border-black px-1.5 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                                                    Menunggu review
+                                                    <button type="button" wire:click="removeFacility({{ $facility->id }})"
+                                                        wire:confirm="Hapus fasilitas '{{ $facility->name }}' dari kost ini?"
+                                                        class="w-4 h-4 rounded bg-rose-500 hover:bg-rose-400 border border-black text-white text-[9px] font-black leading-none flex items-center justify-center cursor-pointer"
+                                                        title="Hapus fasilitas">
+                                                        ✕
+                                                    </button>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+
+                        @if ($kost->facilities->isEmpty())
+                            <p class="text-zinc-500 font-bold">Tidak ada fasilitas terdaftar.</p>
+                        @endif
                     </div>
 
                     <!-- Divider -->
@@ -249,6 +420,15 @@
                                 <p class="text-zinc-500 font-bold">Tidak ada aturan khusus.</p>
                             @endforelse
                         </div>
+
+                        @if ($kost->additional_rules_note)
+                            <div
+                                class="bg-amber-50 border-2 border-black rounded-xl p-4 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                <p class="text-[10px] font-black uppercase tracking-wider text-zinc-500">Aturan
+                                    Tambahan</p>
+                                <p class="text-sm font-bold text-black mt-0.5">{{ $kost->additional_rules_note }}</p>
+                            </div>
+                        @endif
                     </div>
 
                 </div>
@@ -289,7 +469,7 @@
                             );
                         @endphp
 
-                        <a href="https://wa.me/6281234567890?text={{ $waMessage }}" target="_blank"
+                        <a href="https://wa.me/{{ $waNumber }}?text={{ $waMessage }}" target="_blank"
                             class="w-full py-4 bg-emerald-400 hover:bg-emerald-300 text-black border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 group cursor-pointer">
                             <svg class="w-5 h-5 text-black stroke-[2.5] group-hover:scale-110 transition-transform"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -429,7 +609,7 @@
                     class="px-4 py-3 bg-cyan-300 hover:bg-cyan-200 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl whitespace-nowrap cursor-pointer">
                     Pesan
                 </button>
-                <a href="https://wa.me/6281234567890?text={{ $waMessageMobile }}" target="_blank"
+                <a href="https://wa.me/{{ $waNumber }}?text={{ $waMessageMobile }}" target="_blank"
                     class="px-5 py-3 bg-emerald-400 hover:bg-emerald-300 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl whitespace-nowrap inline-flex items-center gap-1.5 cursor-pointer">
                     <svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round"

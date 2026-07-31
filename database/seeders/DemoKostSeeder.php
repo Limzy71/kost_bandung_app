@@ -23,26 +23,66 @@ class DemoKostSeeder extends Seeder
             ['name' => 'Owner Kost', 'password' => \Illuminate\Support\Facades\Hash::make('password'), 'role' => 'owner']
         );
 
-        // Ensure standard facilities exist
+        // Ensure standard facilities exist (grouped by room/building)
         $defaultFacilities = [
-            ['name' => 'Wi-Fi 100Mbps', 'type' => 'room'],
+            // Fasilitas Kamar
             ['name' => 'Kamar Mandi Dalam', 'type' => 'room'],
             ['name' => 'AC (Air Conditioner)', 'type' => 'room'],
-            ['name' => 'Water Heater (Air Hangat)', 'type' => 'room'],
-            ['name' => 'Kasur Springbed & Lemari', 'type' => 'room'],
+            ['name' => 'Kasur', 'type' => 'room'],
+            ['name' => 'Bantal & Guling', 'type' => 'room'],
+            ['name' => 'Lemari', 'type' => 'room'],
             ['name' => 'Meja & Kursi Belajar/Kerja', 'type' => 'room'],
+            ['name' => 'Kipas Angin', 'type' => 'room'],
+            ['name' => 'Water Heater (Air Hangat)', 'type' => 'room'],
             ['name' => 'Kulkas Dalam Kamar', 'type' => 'room'],
+            ['name' => 'Rak Pakaian', 'type' => 'room'],
+            ['name' => 'Gorden', 'type' => 'room'],
+            ['name' => 'Cermin', 'type' => 'room'],
+
+            // Fasilitas Umum
+            ['name' => 'Wi-Fi 100Mbps', 'type' => 'building'],
+            ['name' => 'Kamar Mandi Luar', 'type' => 'building'],
             ['name' => 'Dapur Bersama', 'type' => 'building'],
             ['name' => 'Kulkas Bersama', 'type' => 'building'],
             ['name' => 'Mesin Cuci / Laundry', 'type' => 'building'],
             ['name' => 'Parkir Mobil & Motor', 'type' => 'building'],
             ['name' => 'CCTV 24 Jam & Keamanan', 'type' => 'building'],
             ['name' => 'Jam Bebas 24 Jam', 'type' => 'building'],
-            ['name' => 'Termasuk Listrik (Gratis)', 'type' => 'room'],
+            ['name' => 'Termasuk Listrik (Gratis)', 'type' => 'building'],
+            ['name' => 'Ruang Tamu Bersama', 'type' => 'building'],
+            ['name' => 'Tempat Jemuran', 'type' => 'building'],
         ];
 
+        // Remove legacy combined facility in favor of separate items
+        \App\Models\Facility::where('name', 'Kasur Springbed & Lemari')->get()
+            ->each(function ($facility) {
+                $facility->kosts()->detach();
+                $facility->delete();
+            });
+
         foreach ($defaultFacilities as $facility) {
-            \App\Models\Facility::firstOrCreate(['name' => $facility['name']], $facility);
+            \App\Models\Facility::updateOrCreate(
+                ['name' => $facility['name']],
+                ['type' => $facility['type']],
+            );
+        }
+
+        // Ensure standard rules exist
+        $defaultRules = [
+            'Bebas Akses 24 Jam',
+            'Ada Jam Malam',
+            'Dilarang Membawa Hewan Peliharaan',
+            'Dilarang Merokok di Dalam Area Kost',
+            'Boleh Membawa Tamu (Dengan Batasan Jam)',
+            'Wajib Lapor Saat Membawa Tamu',
+            'Boleh Memasak di Dapur Bersama',
+            'Khusus 1 Orang per Kamar',
+            'Deposit Dikembalikan Saat Keluar',
+            'Bebas Membawa Tamu',
+        ];
+
+        foreach ($defaultRules as $ruleName) {
+            \App\Models\Rule::firstOrCreate(['name' => $ruleName]);
         }
 
         // Demo Photos Directory check
@@ -89,6 +129,12 @@ class DemoKostSeeder extends Seeder
             }
         };
 
+        // Helper to sync facilities by name
+        $attachFacilities = function (\App\Models\Kost $kost, array $names) {
+            $ids = \App\Models\Facility::whereIn('name', $names)->pluck('id')->all();
+            $kost->facilities()->sync($ids);
+        };
+
         // Seed Kost 1
         $kost1 = \App\Models\Kost::firstOrCreate(
             ['slug' => \Illuminate\Support\Str::slug('Kost Putra Dago Asri Neo-Brutal')],
@@ -110,6 +156,13 @@ class DemoKostSeeder extends Seeder
             ]
         );
         if ($kost1->wasRecentlyCreated) $attachPhotos($kost1, 5);
+        $attachFacilities($kost1, [
+            'Kamar Mandi Dalam', 'AC (Air Conditioner)', 'Kasur', 'Bantal & Guling', 'Lemari',
+            'Meja & Kursi Belajar/Kerja', 'Kipas Angin', 'Water Heater (Air Hangat)', 'Kulkas Dalam Kamar',
+            'Gorden', 'Cermin', 'Rak Pakaian',
+            'Wi-Fi 100Mbps', 'Dapur Bersama', 'Kulkas Bersama', 'Mesin Cuci / Laundry',
+            'Parkir Mobil & Motor', 'CCTV 24 Jam & Keamanan', 'Jam Bebas 24 Jam', 'Termasuk Listrik (Gratis)',
+        ]);
 
         // Seed Kost 2
         $kost2 = \App\Models\Kost::firstOrCreate(
@@ -131,6 +184,12 @@ class DemoKostSeeder extends Seeder
             ]
         );
         if ($kost2->wasRecentlyCreated) $attachPhotos($kost2, 3);
+        $attachFacilities($kost2, [
+            'Kamar Mandi Dalam', 'Kasur', 'Bantal & Guling', 'Lemari', 'Meja & Kursi Belajar/Kerja',
+            'Kipas Angin', 'Rak Pakaian', 'Gorden',
+            'Wi-Fi 100Mbps', 'Kamar Mandi Luar', 'Dapur Bersama', 'Mesin Cuci / Laundry',
+            'CCTV 24 Jam & Keamanan', 'Jam Bebas 24 Jam', 'Tempat Jemuran',
+        ]);
 
         // Seed Kost 3
         $kost3 = \App\Models\Kost::firstOrCreate(
@@ -152,6 +211,11 @@ class DemoKostSeeder extends Seeder
             ]
         );
         if ($kost3->wasRecentlyCreated) $attachPhotos($kost3, 2);
+        $attachFacilities($kost3, [
+            'Kasur', 'Lemari', 'Kipas Angin', 'Meja & Kursi Belajar/Kerja',
+            'Wi-Fi 100Mbps', 'Kamar Mandi Luar', 'Dapur Bersama', 'Kulkas Bersama',
+            'Mesin Cuci / Laundry', 'Parkir Mobil & Motor', 'Jam Bebas 24 Jam', 'Tempat Jemuran',
+        ]);
 
         // Seed Kost 4 (Pending)
         $kost4 = \App\Models\Kost::firstOrCreate(
@@ -173,6 +237,12 @@ class DemoKostSeeder extends Seeder
             ]
         );
         if ($kost4->wasRecentlyCreated) $attachPhotos($kost4, 3);
+        $attachFacilities($kost4, [
+            'Kamar Mandi Dalam', 'AC (Air Conditioner)', 'Kasur', 'Bantal & Guling', 'Lemari',
+            'Meja & Kursi Belajar/Kerja', 'Rak Pakaian', 'Cermin',
+            'Wi-Fi 100Mbps', 'Parkir Mobil & Motor', 'CCTV 24 Jam & Keamanan',
+            'Termasuk Listrik (Gratis)', 'Ruang Tamu Bersama',
+        ]);
 
         $this->command->info('✅ Demo Kost Properties seeded successfully with realistic photos!');
     }

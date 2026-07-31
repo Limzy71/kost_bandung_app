@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Kost;
 use App\Models\Inquiry;
+use App\Models\Facility;
 use Illuminate\Support\Facades\Auth;
 
 class KostDetail extends Component
@@ -58,6 +59,31 @@ class KostDetail extends Component
             $this->backUrl = route('home');
             $this->backLabel = 'Kembali ke Beranda Utama';
         }
+    }
+
+    public function removeFacility(int $facilityId)
+    {
+        if (auth()->id() !== $this->kost->user_id) {
+            abort(403);
+        }
+
+        $facility = Facility::find($facilityId);
+
+        if (! $facility) {
+            return;
+        }
+
+        if ($facility->status !== 'pending' || $facility->user_id !== auth()->id()) {
+            session()->flash('success', 'Fasilitas "' . $facility->name . '" tidak dapat dihapus.');
+            return;
+        }
+
+        $facility->kosts()->detach();
+        $facility->delete();
+
+        $this->kost->load(['facilities', 'rules', 'images', 'user']);
+
+        session()->flash('success', 'Fasilitas "' . $facility->name . '" telah dihapus dari kost.');
     }
 
     public function sendInquiry()

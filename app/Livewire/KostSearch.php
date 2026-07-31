@@ -58,7 +58,9 @@ class KostSearch extends Component
         }
 
         $query = Kost::query()
-            ->with(['primaryImage', 'facilities'])
+            ->with(['primaryImage', 'facilities' => function ($q) {
+                $q->where('status', 'approved');
+            }])
             ->where('status', 'published')
             ->where('is_available', true);
 

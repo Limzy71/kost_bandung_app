@@ -155,12 +155,12 @@
             @if($kosts->count() > 0)
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($kosts as $kost)
-                        <div class="bg-white border-3 border-black rounded-xl overflow-hidden shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:shadow-[7px_7px_0px_0px_rgba(0,0,0,1)] transition-all flex flex-col justify-between group">
+                        <div class="bg-white border-3 border-black rounded-xl overflow-hidden shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:shadow-[7px_7px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 ease-out will-change-transform flex flex-col justify-between group">
                             <div>
                                 <!-- Image Header -->
                                 <div class="aspect-[4/3] bg-zinc-200 relative overflow-hidden border-b-3 border-black">
                                     @if($kost->primaryImage)
-                                        <img src="{{ Str::startsWith($kost->primaryImage->image_path, 'http') ? $kost->primaryImage->image_path : Storage::url($kost->primaryImage->image_path) }}" alt="{{ $kost->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                        <img src="{{ Str::startsWith($kost->primaryImage->image_path, 'http') ? $kost->primaryImage->image_path : Storage::url($kost->primaryImage->image_path) }}" alt="{{ $kost->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ease-out">
                                     @else
                                         <div class="w-full h-full flex items-center justify-center bg-yellow-100 text-black">
                                             <x-icon name="lucide-image" class="w-12 h-12 stroke-[2]" />
@@ -252,7 +252,7 @@
                                 <button 
                                     wire:click="toggleAvailability({{ $kost->id }})" 
                                     wire:loading.attr="disabled"
-                                    class="h-9 px-3.5 border-2 border-black text-xs font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-[transform,background-color,box-shadow] duration-300 ease-out rounded-lg cursor-pointer flex items-center justify-center shrink-0 whitespace-nowrap {{ $kost->is_available ? 'bg-rose-400 hover:bg-rose-300 text-black' : 'bg-lime-400 hover:bg-lime-300 text-black' }}"
+                                    class="h-9 px-3.5 border-2 border-black text-xs font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer flex items-center justify-center shrink-0 whitespace-nowrap min-w-[140px] {{ $kost->is_available ? 'bg-rose-400 hover:bg-rose-300 text-black' : 'bg-lime-400 hover:bg-lime-300 text-black' }}"
                                 >
                                     <span wire:loading.remove wire:target="toggleAvailability({{ $kost->id }})" class="inline-flex items-center gap-1.5 whitespace-nowrap">
                                         @if($kost->is_available)
@@ -272,7 +272,7 @@
                                 <!-- Edit Link Button -->
                                 <a 
                                     href="{{ route('dashboard.kost.edit', $kost->slug) }}" 
-                                    class="h-9 px-4 bg-cyan-400 hover:bg-cyan-300 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-[transform,background-color,box-shadow] duration-300 ease-out rounded-lg inline-flex items-center justify-center gap-1 shrink-0 whitespace-nowrap"
+                                    class="h-9 px-4 bg-cyan-400 hover:bg-cyan-300 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg inline-flex items-center justify-center gap-1 shrink-0 whitespace-nowrap"
                                 >
                                     <span>Edit</span>
                                     <x-icon name="lucide-pencil" class="w-3.5 h-3.5 stroke-[3]" />
@@ -281,7 +281,7 @@
                                 <!-- Detail Link Button -->
                                 <a 
                                     href="{{ route('kost.show', $kost->slug) }}?from=dashboard" 
-                                    class="h-9 px-4 bg-orange-400 hover:bg-orange-300 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-[transform,background-color,box-shadow] duration-300 ease-out rounded-lg inline-flex items-center justify-center gap-1 shrink-0 whitespace-nowrap"
+                                    class="h-9 px-4 bg-orange-400 hover:bg-orange-300 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg inline-flex items-center justify-center gap-1 shrink-0 whitespace-nowrap"
                                 >
                                     <span>Lihat</span>
                                     <x-icon name="lucide-arrow-right" class="w-3.5 h-3.5 stroke-[3]" />

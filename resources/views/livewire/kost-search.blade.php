@@ -166,7 +166,7 @@
             <div wire:key="list-view" x-show="viewMode === 'list'" x-cloak class="space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($kosts as $kost)
-                        <div class="bg-white border-3 border-black rounded-xl overflow-hidden shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:shadow-[7px_7px_0px_0px_rgba(0,0,0,1)] transition-all flex flex-col justify-between group">
+                        <div class="bg-white border-3 border-black rounded-xl overflow-hidden shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:shadow-[7px_7px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 ease-out will-change-transform flex flex-col justify-between group">
                             <div>
                                 <!-- Image -->
                                 <div class="aspect-[4/3] bg-zinc-200 relative overflow-hidden border-b-3 border-black cursor-pointer"
@@ -174,7 +174,7 @@
                                     @if ($kost->primaryImage)
                                         <img src="{{ Str::startsWith($kost->primaryImage->image_path, 'http') ? $kost->primaryImage->image_path : Storage::url($kost->primaryImage->image_path) }}"
                                             alt="{{ $kost->name }}"
-                                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ease-out">
                                     @else
                                         <div class="w-full h-full flex items-center justify-center bg-yellow-100 text-black">
                                             <x-icon name="lucide-image" class="w-12 h-12" />
@@ -221,9 +221,6 @@
                                             @if ($kost->facilities && $kost->facilities->count() > 0)
                                                 @foreach ($kost->facilities->take(2) as $facility)
                                                     <span class="bg-zinc-100 border-2 border-black text-[10px] font-bold text-black px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1 truncate max-w-[110px]">
-                                                        @if ($facility->icon)
-                                                            <x-icon name="lucide-{{ $facility->icon }}" class="w-3 h-3 stroke-[2.5] shrink-0" />
-                                                        @endif
                                                         <span class="truncate">{{ $facility->name }}</span>
                                                     </span>
                                                 @endforeach

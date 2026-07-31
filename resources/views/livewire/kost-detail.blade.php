@@ -447,7 +447,7 @@
                     LOKASI KOST — Clean Interactive Map with Layer Controls
                     ============================================================ -->
                 <div
-                    class="border-4 border-black bg-white rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+                    class="border-4 border-black bg-white rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden isolate relative z-0">
 
                     <!-- Section Header -->
                     <div class="bg-yellow-300 border-b-4 border-black px-6 py-4 flex items-center justify-between gap-3">

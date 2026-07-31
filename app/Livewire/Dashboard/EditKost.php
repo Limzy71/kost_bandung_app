@@ -174,8 +174,8 @@ class EditKost extends Component
                     }
                 },
             ],
-            'customFacilities.*.type' => 'required|in:room,building,parking',
-            'newFacilityType' => 'required|in:room,building,parking',
+            'customFacilities.*.type' => 'required|in:room,building',
+            'newFacilityType' => 'required|in:room,building',
             'selectedRules' => 'nullable|array',
             'selectedRules.*' => 'exists:rules,id',
             'customRules' => 'nullable|array',
@@ -466,7 +466,7 @@ class EditKost extends Component
             if ($name === '') {
                 continue;
             }
-            $type = in_array($custom['type'] ?? 'building', ['room', 'building', 'parking']) ? $custom['type'] : 'building';
+            $type = in_array($custom['type'] ?? 'building', ['room', 'building']) ? $custom['type'] : 'building';
             $facility = Facility::firstOrCreate(
                 ['name' => $name],
                 ['type' => $type, 'status' => 'pending', 'user_id' => auth()->id()]

@@ -981,12 +981,8 @@
                                 Kamar
                             </button>
                             <button type="button" wire:click="$set('newFacilityType', 'building')"
-                                class="px-3.5 py-3 text-[11px] font-black uppercase transition-all cursor-pointer border-r-2 border-black {{ $newFacilityType === 'building' ? 'bg-cyan-300 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 hover:bg-zinc-200' }}">
+                                class="px-3.5 py-3 text-[11px] font-black uppercase transition-all cursor-pointer {{ $newFacilityType === 'building' ? 'bg-cyan-300 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 hover:bg-zinc-200' }}">
                                 Umum
-                            </button>
-                            <button type="button" wire:click="$set('newFacilityType', 'parking')"
-                                class="px-3.5 py-3 text-[11px] font-black uppercase transition-all cursor-pointer border-r-2 border-black {{ $newFacilityType === 'parking' ? 'bg-yellow-300 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 hover:bg-zinc-200' }}">
-                                Parkir
                             </button>
                         </div>
 
@@ -1017,11 +1013,11 @@
                         <div class="flex flex-wrap gap-2">
                             @foreach ($customFacilities as $index => $customItem)
                                 <span
-                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 border-2 border-black rounded-lg text-xs font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] {{ $customItem['type'] === 'room' ? 'bg-lime-200' : ($customItem['type'] === 'building' ? 'bg-cyan-200' : 'bg-yellow-200') }}">
+                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 border-2 border-black rounded-lg text-xs font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] {{ $customItem['type'] === 'room' ? 'bg-lime-200' : 'bg-cyan-200' }}">
                                     {{ $customItem['name'] }}
                                     <span
-                                        class="px-1.5 py-0.5 rounded border border-black text-[9px] font-black uppercase {{ $customItem['type'] === 'room' ? 'bg-lime-400' : ($customItem['type'] === 'building' ? 'bg-cyan-400' : 'bg-yellow-400') }}">
-                                        {{ $customItem['type'] === 'room' ? 'Kamar' : ($customItem['type'] === 'building' ? 'Umum' : 'Parkir') }}
+                                        class="px-1.5 py-0.5 rounded border border-black text-[9px] font-black uppercase {{ $customItem['type'] === 'room' ? 'bg-lime-400' : 'bg-cyan-400' }}">
+                                        {{ $customItem['type'] === 'room' ? 'Kamar' : 'Umum' }}
                                     </span>
                                     <button type="button" wire:click="removeCustomFacility({{ $index }})"
                                         class="w-4 h-4 rounded bg-rose-400 hover:bg-rose-300 border border-black text-[9px] font-black leading-none flex items-center justify-center cursor-pointer"

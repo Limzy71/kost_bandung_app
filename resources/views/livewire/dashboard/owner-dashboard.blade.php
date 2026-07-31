@@ -155,7 +155,7 @@
             @if($kosts->count() > 0)
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($kosts as $kost)
-                        <div class="bg-white border-3 border-black rounded-xl overflow-hidden shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:shadow-[7px_7px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 ease-out will-change-transform flex flex-col justify-between group">
+                        <div class="bg-white border-3 border-black rounded-xl overflow-hidden shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:shadow-[7px_7px_0px_0px_rgba(0,0,0,1)] transition-[transform,box-shadow] duration-300 ease-out will-change-transform flex flex-col justify-between group">
                             <div>
                                 <!-- Image Header -->
                                 <div class="aspect-[4/3] bg-zinc-200 relative overflow-hidden border-b-3 border-black">

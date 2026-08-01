@@ -212,8 +212,8 @@ class EditKost extends Component
                         $fail('Nama fasilitas tidak boleh kosong.');
                         return;
                     }
-                    if (Facility::whereRaw('LOWER(name) = ?', [Str::lower($name)])->exists()) {
-                        $fail('Fasilitas "' . $name . '" sudah tersedia di daftar fasilitas.');
+                    if (Facility::whereRaw('LOWER(name) = ?', [Str::lower($name)])->where('status', 'approved')->exists()) {
+                        $fail('Fasilitas "' . $name . '" sudah tersedia di daftar utama (Silakan pilih dari daftar).');
                     }
                 },
             ],
@@ -231,8 +231,8 @@ class EditKost extends Component
                         $fail('Nama aturan tidak boleh kosong.');
                         return;
                     }
-                    if (Rule::whereRaw('LOWER(name) = ?', [Str::lower($name)])->exists()) {
-                        $fail('Aturan "' . $name . '" sudah tersedia di daftar aturan.');
+                    if (Rule::whereRaw('LOWER(name) = ?', [Str::lower($name)])->where('status', 'approved')->exists()) {
+                        $fail('Aturan "' . $name . '" sudah tersedia di daftar utama (Silakan pilih dari daftar).');
                     }
                 },
             ],

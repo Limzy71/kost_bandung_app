@@ -514,12 +514,17 @@ class EditKost extends Component
         try {
             $this->validate();
         } catch (\Illuminate\Validation\ValidationException $e) {
-            usleep(1000000);
+            if (!app()->runningUnitTests()) {
+                usleep(1000000);
+            }
             throw $e;
         }
 
         $totalPhotos = count($this->existingPhotos) + count($this->photos);
         if ($totalPhotos < 4) {
+            if (!app()->runningUnitTests()) {
+                usleep(1000000);
+            }
             $this->addError('photos', 'MINIMAL 4 FOTO KOST WAJIB ADA.');
             return;
         }
@@ -538,6 +543,9 @@ class EditKost extends Component
                 $lat < $bounds['lat_min'] || $lat > $bounds['lat_max'] ||
                 $lng < $bounds['lng_min'] || $lng > $bounds['lng_max']
             ) {
+                if (!app()->runningUnitTests()) {
+                    usleep(1000000);
+                }
                 $this->addError('latitude', 'Koordinat peta tidak berada di dalam wilayah Kecamatan yang dipilih.');
                 return;
             }
@@ -567,10 +575,12 @@ class EditKost extends Component
 
         $hasChanges = $kost->isDirty() || count($this->photos) > 0 || count($this->removeExistingIds) > 0 || $this->primaryPhotoId !== null;
 
-        if ($hasChanges) {
-            usleep(1500000); // 1.5 detik jika ada perubahan
-        } else {
-            usleep(1000000); // 1 detik jika tidak ada yang diubah
+        if (!app()->runningUnitTests()) {
+            if ($hasChanges) {
+                usleep(1500000); // 1.5 detik jika ada perubahan
+            } else {
+                usleep(1000000); // 1 detik jika tidak ada yang diubah
+            }
         }
 
         $kost->save();

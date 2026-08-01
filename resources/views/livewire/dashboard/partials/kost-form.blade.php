@@ -698,7 +698,7 @@
                                 Rp
                             </div>
                             <input type="number" id="price_monthly" wire:model="price_monthly"
-                                placeholder="1500000" min="0" oninput="if(this.value < 0) this.value = 0"
+                                placeholder="1500000" min="0" oninput="var n = parseInt(this.value, 10); this.value = isNaN(n) ? '' : Math.max(0, n)"
                                 class="w-full bg-white px-4 py-3 text-sm font-black text-black focus:outline-none focus:bg-yellow-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                             <div
                                 class="bg-zinc-100 border-l-2 border-black px-4 flex items-center text-xs font-black text-black uppercase">
@@ -727,7 +727,7 @@
                                 Rp
                             </div>
                             <input type="number" id="price_deposit" wire:model="price_deposit"
-                                placeholder="500000" min="0" oninput="if(this.value < 0) this.value = 0"
+                                placeholder="500000" min="0" oninput="var n = parseInt(this.value, 10); this.value = isNaN(n) ? '' : Math.max(0, n)"
                                 class="w-full bg-white px-4 py-3 text-sm font-black text-black focus:outline-none focus:bg-yellow-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                         </div>
                         <p class="text-[11px] font-bold italic text-zinc-500">Uang jaminan yang dibayarkan saat
@@ -764,7 +764,7 @@
                             Total Jumlah Kamar <span class="text-rose-600">*</span>
                         </label>
                         <input type="number" id="total_rooms" wire:model="total_rooms" placeholder="10"
-                            min="0" oninput="if(this.value < 0) this.value = 0"
+                            min="0" oninput="var n = parseInt(this.value, 10); this.value = isNaN(n) ? '' : Math.max(0, n)"
                             class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-black text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                         @error('total_rooms')
                             <p
@@ -780,7 +780,7 @@
                             Sisa Kamar Kosong <span class="text-rose-600">*</span>
                         </label>
                         <input type="number" id="available_rooms" wire:model="available_rooms" placeholder="2"
-                            min="0" oninput="if(this.value < 0) this.value = 0"
+                            min="0" oninput="var n = parseInt(this.value, 10); this.value = isNaN(n) ? '' : Math.max(0, n)"
                             class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-black text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                         @error('available_rooms')
                             <p
@@ -803,34 +803,38 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         @foreach ($extraPeriodLabels as $period => $label)
-                            <div class="rounded-lg border-2 border-black bg-zinc-50 p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-colors has-checked:bg-lime-300">
+                            @php $checked = in_array($period, $extraPeriods); @endphp
+                            <label for="extra-period-{{ $period }}"
+                                class="rounded-lg border-2 border-black p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-colors cursor-pointer block select-none {{ $checked ? 'bg-lime-300 hover:bg-lime-400' : 'bg-zinc-50 hover:bg-yellow-100' }}">
                                 <input type="checkbox" id="extra-period-{{ $period }}" value="{{ $period }}"
-                                    wire:model="extraPeriods" class="sr-only">
-                                <label for="extra-period-{{ $period }}"
-                                    class="flex items-center justify-between gap-2 cursor-pointer text-black font-black text-xs md:text-sm transition-all rounded px-2 py-1.5 hover:bg-yellow-100">
+                                    wire:model.live="extraPeriods" class="sr-only">
+
+                                <span class="flex items-center justify-between gap-2 text-black font-black text-xs md:text-sm">
                                     <span>{{ $label }}</span>
                                     <span
-                                        class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black opacity-0 has-checked:opacity-100 font-black text-xs shrink-0">✓</span>
-                                </label>
+                                        class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black font-black text-xs shrink-0 {{ $checked ? 'bg-black text-lime-300' : '' }}">✓</span>
+                                </span>
 
-                                <div class="hidden has-checked:block mt-2">
-                                    <div class="relative rounded-lg overflow-hidden flex border-2 border-black">
-                                        <div
-                                            class="bg-yellow-300 border-r-2 border-black px-3 flex items-center font-black text-xs text-black shrink-0">
-                                            Rp
-                                        </div>
-                                        <input type="number" wire:model="extraPeriodPrices.{{ $period }}"
-                                            placeholder="Total bayar {{ strtolower($label) }}"
-                                            min="0" oninput="if(this.value < 0) this.value = 0"
-                                            class="w-full bg-white px-3 py-2 text-sm font-black text-black focus:outline-none focus:bg-yellow-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
-                                    </div>
-                                    @error('extraPeriodPrices.' . $period)
-                                        <p
-                                            class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
-                                            {{ $message }}</p>
-                                    @enderror
-                                </div>
-                            </div>
+                                @if ($checked)
+                                    <span class="block mt-2" @click.stop>
+                                        <span class="relative rounded-lg overflow-hidden flex border-2 border-black">
+                                            <span
+                                                class="bg-yellow-300 border-r-2 border-black px-3 flex items-center font-black text-xs text-black shrink-0">
+                                                Rp
+                                            </span>
+                                            <input type="number" wire:model="extraPeriodPrices.{{ $period }}"
+                                                placeholder="Total bayar {{ strtolower($label) }}"
+                                                min="0" oninput="var n = parseInt(this.value, 10); this.value = isNaN(n) ? '' : Math.max(0, n)"
+                                                class="w-full bg-white px-3 py-2 text-sm font-black text-black focus:outline-none focus:bg-yellow-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                        </span>
+                                        @error('extraPeriodPrices.' . $period)
+                                            <span
+                                                class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                                                {{ $message }}</span>
+                                        @enderror
+                                    </span>
+                                @endif
+                            </label>
                         @endforeach
                     </div>
                 </div>

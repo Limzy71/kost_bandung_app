@@ -216,7 +216,7 @@
                         $infoItems = [];
                         $infoItems[] = ['label' => 'Periode Sewa', 'value' => $periodSummary->join(', ')];
                         if ($kost->price_deposit !== null) {
-                            $infoItems[] = ['label' => 'Uang Deposit', 'value' => 'Rp ' . number_format((float) $kost->price_deposit, 0, ',', '.')];
+                            $infoItems[] = ['label' => 'Uang Deposit', 'value' => 'Rp ' . number_format((float) $kost->price_deposit, 0, ',', '.'), 'note' => 'Dikembalikan saat keluar'];
                         }
                         $infoItems[] = ['label' => 'Listrik & Air', 'value' => $kost->include_utilities ? 'Sudah Termasuk' : 'Terpisah / Diluar Sewa'];
                         $infoItems[] = ['label' => 'Ketersediaan Kamar', 'value' => $kost->available_rooms . ' dari ' . $kost->total_rooms . ' kamar tersedia'];
@@ -233,6 +233,9 @@
                                     <p class="text-[10px] font-black uppercase tracking-wider text-zinc-500">
                                         {{ $item['label'] }}</p>
                                     <p class="text-sm font-black text-black mt-0.5">{{ $item['value'] }}</p>
+                                    @if (!empty($item['note']))
+                                        <p class="text-[10px] font-bold text-zinc-500 mt-0.5 italic">⟳ {{ $item['note'] }}</p>
+                                    @endif
                                 </div>
                             @endforeach
                         </div>

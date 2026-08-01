@@ -726,56 +726,85 @@
                 <!-- Harga & Jumlah Kamar Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Harga Sewa Utama -->
-                    <div class="space-y-2">
-                        <label for="price_monthly"
+                    <div class="space-y-2"
+                        x-data="{
+                            raw: '{{ $price_monthly }}',
+                            formatted: '',
+                            init() {
+                                if (this.raw) this.formatted = Number(this.raw).toLocaleString('id-ID');
+                                this.$watch('raw', v => {
+                                    const n = parseInt(v.replace(/\./g, ''), 10);
+                                    this.formatted = isNaN(n) ? '' : n.toLocaleString('id-ID');
+                                });
+                            },
+                            onInput(e) {
+                                const digits = e.target.value.replace(/[^0-9]/g, '');
+                                const n = parseInt(digits, 10);
+                                this.formatted = isNaN(n) ? '' : n.toLocaleString('id-ID');
+                                this.raw = isNaN(n) ? '' : String(n);
+                                this.$wire.set('price_monthly', this.raw);
+                            }
+                        }">
+                        <label for="price_monthly_display"
                             class="block text-xs font-black uppercase tracking-wider text-black">
                             Harga Sewa Utama <span class="text-rose-600">*</span>
                         </label>
-                        <div
-                            class="relative rounded-lg overflow-hidden flex border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                            <div
-                                class="bg-yellow-300 border-r-2 border-black px-4 flex items-center font-black text-sm text-black">
+                        <div class="relative rounded-lg overflow-hidden flex border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                            <div class="bg-yellow-300 border-r-2 border-black px-4 flex items-center font-black text-sm text-black shrink-0">
                                 Rp
                             </div>
-                            <input type="number" id="price_monthly" wire:model="price_monthly"
-                                placeholder="1500000" min="0" oninput="var n = parseInt(this.value, 10); this.value = isNaN(n) ? '' : Math.max(0, n)"
-                                class="w-full bg-white px-4 py-3 text-sm font-black text-black focus:outline-none focus:bg-yellow-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
-                            <div
-                                class="bg-zinc-100 border-l-2 border-black px-4 flex items-center text-xs font-black text-black uppercase">
+                            <input type="text" id="price_monthly_display" inputmode="numeric"
+                                x-model="formatted"
+                                @input="onInput($event)"
+                                placeholder="1.500.000"
+                                class="w-full bg-white px-4 py-3 text-sm font-black text-black focus:outline-none focus:bg-yellow-50">
+                            <div class="bg-zinc-100 border-l-2 border-black px-4 flex items-center justify-center text-xs font-black text-black uppercase whitespace-nowrap shrink-0">
                                 {{ $rentUnit }}
                             </div>
                         </div>
-                        <p class="text-[11px] font-bold italic text-zinc-500">Harga utama sesuai periode yang dipilih; untuk
-                            filter pencarian dikonversi ke per bulan.</p>
+                        <p class="text-[11px] font-bold italic text-zinc-500">Harga utama sesuai periode yang dipilih; untuk filter pencarian dikonversi ke per bulan.</p>
                         @error('price_monthly')
-                            <p
-                                class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
-                                {{ $message }}</p>
+                            <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <!-- Uang Deposit -->
-                    <div class="space-y-2">
-                        <label for="price_deposit"
+                    <div class="space-y-2"
+                        x-data="{
+                            raw: '{{ $price_deposit }}',
+                            formatted: '',
+                            init() {
+                                if (this.raw) this.formatted = Number(this.raw).toLocaleString('id-ID');
+                                this.$watch('raw', v => {
+                                    const n = parseInt(v.replace(/\./g, ''), 10);
+                                    this.formatted = isNaN(n) ? '' : n.toLocaleString('id-ID');
+                                });
+                            },
+                            onInput(e) {
+                                const digits = e.target.value.replace(/[^0-9]/g, '');
+                                const n = parseInt(digits, 10);
+                                this.formatted = isNaN(n) ? '' : n.toLocaleString('id-ID');
+                                this.raw = isNaN(n) ? '' : String(n);
+                                this.$wire.set('price_deposit', this.raw);
+                            }
+                        }">
+                        <label for="price_deposit_display"
                             class="block text-xs font-black uppercase tracking-wider text-black">
                             Uang Deposit (Opsional)
                         </label>
-                        <div
-                            class="relative rounded-lg overflow-hidden flex border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                            <div
-                                class="bg-yellow-300 border-r-2 border-black px-4 flex items-center font-black text-sm text-black">
+                        <div class="relative rounded-lg overflow-hidden flex border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                            <div class="bg-yellow-300 border-r-2 border-black px-4 flex items-center font-black text-sm text-black shrink-0">
                                 Rp
                             </div>
-                            <input type="number" id="price_deposit" wire:model="price_deposit"
-                                placeholder="500000" min="0" oninput="var n = parseInt(this.value, 10); this.value = isNaN(n) ? '' : Math.max(0, n)"
-                                class="w-full bg-white px-4 py-3 text-sm font-black text-black focus:outline-none focus:bg-yellow-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                            <input type="text" id="price_deposit_display" inputmode="numeric"
+                                x-model="formatted"
+                                @input="onInput($event)"
+                                placeholder="500.000"
+                                class="w-full bg-white px-4 py-3 text-sm font-black text-black focus:outline-none focus:bg-yellow-50">
                         </div>
-                        <p class="text-[11px] font-bold italic text-zinc-500">Uang jaminan yang dibayarkan saat
-                            masuk dan dikembalikan saat keluar.</p>
+                        <p class="text-[11px] font-bold italic text-zinc-500">Uang jaminan yang dibayarkan saat masuk. <span class="text-black font-black">Dikembalikan saat keluar.</span></p>
                         @error('price_deposit')
-                            <p
-                                class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
-                                {{ $message }}</p>
+                            <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
@@ -920,27 +949,6 @@
                         $parkingFacilities = $facilities->where('type', 'parking');
                     @endphp
 
-                    <!-- Termasuk Listrik & Air -->
-                    <div class="space-y-2">
-                        <label class="block text-xs font-black uppercase tracking-wider text-black">
-                            Biaya Listrik & Air
-                        </label>
-                        <label class="cursor-pointer block">
-                            <input type="checkbox" wire:model="include_utilities" value="1"
-                                class="peer sr-only">
-                            <div
-                                class="px-4 py-3 rounded-lg border-2 border-black bg-zinc-50 text-black font-black text-sm flex items-center justify-between gap-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] peer-checked:bg-lime-300 hover:bg-yellow-100 transition-all">
-                                <span class="flex items-center gap-2">
-                                    <x-icon name="lucide-zap" class="w-4 h-4 stroke-[2.5] shrink-0" />
-                                    Termasuk Listrik & Air
-                                </span>
-                                <span
-                                    class="w-6 h-6 rounded border-2 border-black bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs shrink-0 transition-opacity">✓</span>
-                            </div>
-                        </label>
-                        <p class="text-[11px] font-bold italic text-zinc-500">Pilih jika harga sewa sudah termasuk biaya listrik dan air.</p>
-                    </div>
-
                     <!-- Fasilitas Kamar -->
                     <div class="space-y-3">
                         <div class="flex items-center justify-between gap-2">
@@ -950,10 +958,24 @@
                             </label>
                             <span
                                 class="text-[10px] font-black uppercase bg-lime-200 border-2 border-black px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
-                                {{ $roomFacilities->count() }} pilihan
+                                {{ $roomFacilities->count() + 1 }} pilihan
                             </span>
                         </div>
                         <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                            {{-- Listrik & Air sebagai opsi pertama di Fasilitas Kamar --}}
+                            <label class="cursor-pointer">
+                                <input type="checkbox" wire:model="include_utilities" value="1"
+                                    class="peer sr-only">
+                                <div
+                                    class="px-4 py-3 rounded-lg border-2 border-black bg-zinc-50 text-black text-xs font-black flex items-center justify-between peer-checked:bg-lime-300 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-yellow-100 transition-all">
+                                    <span class="flex items-center gap-1.5">
+                                        <x-icon name="lucide-zap" class="w-3.5 h-3.5 stroke-[2.5] shrink-0" />
+                                        Listrik & Air
+                                    </span>
+                                    <span
+                                        class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs shrink-0">✓</span>
+                                </div>
+                            </label>
                             @forelse ($roomFacilities as $facility)
                                 <label class="cursor-pointer">
                                     <input type="checkbox" wire:model="selectedFacilities" value="{{ $facility->id }}"

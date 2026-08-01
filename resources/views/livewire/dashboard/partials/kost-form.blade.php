@@ -827,11 +827,11 @@
                                             :class="periods.includes('{{ $period }}') ? 'bg-black text-lime-300' : ''"
                                             class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black font-black text-xs shrink-0 transition-colors duration-200">✓</span>
                                     </span>
-                                    <div x-show="periods.includes('{{ $period }}')" x-cloak
-                                        x-transition:enter="transition opacity ease-out duration-200"
+                                    <div x-show="periods.includes('{{ $period }}')" x-collapse x-cloak
+                                        x-transition:enter="transition opacity ease-out duration-300"
                                         x-transition:enter-start="opacity-0"
                                         x-transition:enter-end="opacity-100"
-                                        x-transition:leave="transition opacity ease-in duration-150"
+                                        x-transition:leave="transition opacity ease-in duration-200"
                                         x-transition:leave-start="opacity-100"
                                         x-transition:leave-end="opacity-0"
                                         @click.stop class="pt-2">
@@ -865,11 +865,11 @@
                                             :class="periods.includes('{{ $period }}') ? 'bg-black text-lime-300' : ''"
                                             class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black font-black text-xs shrink-0 transition-colors duration-200">✓</span>
                                     </span>
-                                    <div x-show="periods.includes('{{ $period }}')" x-cloak
-                                        x-transition:enter="transition opacity ease-out duration-200"
+                                    <div x-show="periods.includes('{{ $period }}')" x-collapse x-cloak
+                                        x-transition:enter="transition opacity ease-out duration-300"
                                         x-transition:enter-start="opacity-0"
                                         x-transition:enter-end="opacity-100"
-                                        x-transition:leave="transition opacity ease-in duration-150"
+                                        x-transition:leave="transition opacity ease-in duration-200"
                                         x-transition:leave-start="opacity-100"
                                         x-transition:leave-end="opacity-0"
                                         @click.stop class="pt-2">

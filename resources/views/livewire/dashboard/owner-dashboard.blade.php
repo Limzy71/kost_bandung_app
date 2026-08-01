@@ -252,7 +252,7 @@
                                 <button 
                                     wire:click="toggleAvailability({{ $kost->id }})" 
                                     wire:loading.attr="disabled"
-                                    class="h-9 px-3.5 border-2 border-black text-xs font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer flex items-center justify-center shrink-0 whitespace-nowrap min-w-[140px] {{ $kost->is_available ? 'bg-rose-400 hover:bg-rose-300 text-black' : 'bg-lime-400 hover:bg-lime-300 text-black' }}"
+                                    class="h-9 px-3.5 border-2 border-black text-xs font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer flex items-center justify-center whitespace-nowrap flex-1 min-w-[150px] {{ $kost->is_available ? 'bg-rose-400 hover:bg-rose-300 text-black' : 'bg-lime-400 hover:bg-lime-300 text-black' }}"
                                 >
                                     <span wire:loading.remove wire:target="toggleAvailability({{ $kost->id }})" class="inline-flex items-center gap-1.5 whitespace-nowrap">
                                         @if($kost->is_available)
@@ -269,23 +269,26 @@
                                     </span>
                                 </button>
 
-                                <!-- Edit Link Button -->
-                                <a 
-                                    href="{{ route('dashboard.kost.edit', $kost->slug) }}" 
-                                    class="h-9 px-4 bg-cyan-400 hover:bg-cyan-300 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg inline-flex items-center justify-center gap-1 shrink-0 whitespace-nowrap"
-                                >
-                                    <span>Edit</span>
-                                    <x-icon name="lucide-pencil" class="w-3.5 h-3.5 stroke-[3]" />
-                                </a>
+                                <!-- Edit & Detail Links Group -->
+                                <div class="flex items-center gap-2 flex-1 min-w-[150px]">
+                                    <!-- Edit Link Button -->
+                                    <a 
+                                        href="{{ route('dashboard.kost.edit', $kost->slug) }}" 
+                                        class="h-9 px-2 bg-cyan-400 hover:bg-cyan-300 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg inline-flex items-center justify-center gap-1 whitespace-nowrap flex-1 w-full"
+                                    >
+                                        <span>Edit</span>
+                                        <x-icon name="lucide-pencil" class="w-3.5 h-3.5 stroke-[3]" />
+                                    </a>
 
-                                <!-- Detail Link Button -->
-                                <a 
-                                    href="{{ route('kost.show', $kost->slug) }}?from=dashboard" 
-                                    class="h-9 px-4 bg-orange-400 hover:bg-orange-300 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg inline-flex items-center justify-center gap-1 shrink-0 whitespace-nowrap"
-                                >
-                                    <span>Lihat</span>
-                                    <x-icon name="lucide-arrow-right" class="w-3.5 h-3.5 stroke-[3]" />
-                                </a>
+                                    <!-- Detail Link Button -->
+                                    <a 
+                                        href="{{ route('kost.show', $kost->slug) }}?from=dashboard" 
+                                        class="h-9 px-2 bg-orange-400 hover:bg-orange-300 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg inline-flex items-center justify-center gap-1 whitespace-nowrap flex-1 w-full"
+                                    >
+                                        <span>Lihat</span>
+                                        <x-icon name="lucide-arrow-right" class="w-3.5 h-3.5 stroke-[3]" />
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     @endforeach

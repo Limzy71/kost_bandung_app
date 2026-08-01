@@ -247,7 +247,7 @@
                             </div>
 
                             <!-- Card Footer Actions -->
-                            <div class="px-5 py-4 bg-zinc-100 border-t-3 border-black flex flex-wrap items-center gap-2 shrink-0">
+                            <div class="px-5 py-4 bg-zinc-100 border-t-3 border-black flex flex-col gap-2 shrink-0">
                                 <!-- Toggle Availability Button -->
                                 <button 
                                     wire:click="toggleAvailability({{ $kost->id }})" 

@@ -9,7 +9,7 @@
         $allImages = collect(['https://placehold.co/800x500/eeeeee/31343c?text=Foto+Utama']);
     }
 
-    $waNumber = preg_replace('/\D+/', '', $kost->whatsapp_contact ?: ($kost->user->phone_number ?? ''));
+    $waNumber = preg_replace('/\D+/', '', $kost->user->phone_number ?? ($kost->whatsapp_contact ?? ''));
     if (Str::startsWith($waNumber, '0')) {
         $waNumber = '62' . Str::substr($waNumber, 1);
     }
@@ -223,9 +223,6 @@
                             $infoItems[] = ['label' => 'Uang Deposit', 'value' => 'Rp ' . number_format((float) $kost->price_deposit, 0, ',', '.')];
                         }
                         $infoItems[] = ['label' => 'Listrik & Air', 'value' => $kost->include_utilities ? 'Sudah Termasuk' : 'Terpisah / Diluar Sewa'];
-                        if ($kost->nearby_landmarks) {
-                            $infoItems[] = ['label' => 'Titik Terdekat', 'value' => $kost->nearby_landmarks];
-                        }
                         $infoItems[] = ['label' => 'Ketersediaan Kamar', 'value' => $kost->available_rooms . ' dari ' . $kost->total_rooms . ' kamar tersedia'];
                     @endphp
                     <div class="space-y-4">
@@ -243,6 +240,29 @@
                                 </div>
                             @endforeach
                         </div>
+
+                        @if ($kost->nearby_landmarks)
+                            @php
+                                $landmarks = array_filter(array_map('trim', explode(',', $kost->nearby_landmarks)));
+                            @endphp
+                            @if (count($landmarks) > 0)
+                                <!-- Titik Terdekat / Landmark Badges -->
+                                <div class="space-y-2 pt-2">
+                                    <p class="text-[10px] font-black uppercase tracking-wider text-zinc-600 flex items-center gap-1.5">
+                                        <x-icon name="lucide-map-pin" class="w-3.5 h-3.5 text-black stroke-[2.5]" />
+                                        Titik Terdekat & Landmark Strategis
+                                    </p>
+                                    <div class="flex flex-wrap gap-2.5">
+                                        @foreach ($landmarks as $landmark)
+                                            <div
+                                                class="inline-flex items-center gap-2 bg-yellow-200 border-2 border-black px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                <span>📍 {{ $landmark }}</span>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+                        @endif
                     </div>
 
                     <!-- Divider -->

@@ -38,6 +38,8 @@ class CreateKost extends Component
     public array $selectedRules = [];
     public array $customRules = [];
     public string $newRule = '';
+    public string $newLandmark = '';
+    public array $landmarkList = [];
     public string $additional_rules_note = '';
     public array $photos = [];
     public array $existingPhotos = [];
@@ -307,6 +309,39 @@ class CreateKost extends Component
             unset($this->customRules[$index]);
             $this->customRules = array_values($this->customRules);
         }
+    }
+
+    public function addLandmark()
+    {
+        $name = trim($this->newLandmark);
+        if ($name === '') {
+            return;
+        }
+
+        foreach ($this->landmarkList as $existing) {
+            if (Str::lower($existing) === Str::lower($name)) {
+                $this->addError('newLandmark', 'Landmark "' . $name . '" sudah ditambahkan.');
+                return;
+            }
+        }
+
+        $this->landmarkList[] = $name;
+        $this->newLandmark = '';
+        $this->syncLandmarksString();
+    }
+
+    public function removeLandmark($index)
+    {
+        if (isset($this->landmarkList[$index])) {
+            unset($this->landmarkList[$index]);
+            $this->landmarkList = array_values($this->landmarkList);
+            $this->syncLandmarksString();
+        }
+    }
+
+    private function syncLandmarksString()
+    {
+        $this->nearby_landmarks = implode(', ', $this->landmarkList);
     }
 
     public function boot()

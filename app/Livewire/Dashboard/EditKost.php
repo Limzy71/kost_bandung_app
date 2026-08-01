@@ -40,6 +40,8 @@ class EditKost extends Component
     public array $selectedRules = [];
     public array $customRules = [];
     public string $newRule = '';
+    public string $newLandmark = '';
+    public array $landmarkList = [];
     public string $additional_rules_note = '';
     public array $photos = [];
     public array $existingPhotos = [];
@@ -76,6 +78,9 @@ class EditKost extends Component
         $this->available_rooms = (string) $kost->available_rooms;
         $this->whatsapp_contact = (string) ($kost->whatsapp_contact ?? '');
         $this->nearby_landmarks = (string) ($kost->nearby_landmarks ?? '');
+        if ($this->nearby_landmarks !== '') {
+            $this->landmarkList = array_values(array_filter(array_map('trim', explode(',', $this->nearby_landmarks))));
+        }
         $this->additional_rules_note = (string) ($kost->additional_rules_note ?? '');
 
         $this->selectedFacilities = $kost->facilities()
@@ -387,6 +392,39 @@ class EditKost extends Component
             unset($this->customRules[$index]);
             $this->customRules = array_values($this->customRules);
         }
+    }
+
+    public function addLandmark()
+    {
+        $name = trim($this->newLandmark);
+        if ($name === '') {
+            return;
+        }
+
+        foreach ($this->landmarkList as $existing) {
+            if (Str::lower($existing) === Str::lower($name)) {
+                $this->addError('newLandmark', 'Landmark "' . $name . '" sudah ditambahkan.');
+                return;
+            }
+        }
+
+        $this->landmarkList[] = $name;
+        $this->newLandmark = '';
+        $this->syncLandmarksString();
+    }
+
+    public function removeLandmark($index)
+    {
+        if (isset($this->landmarkList[$index])) {
+            unset($this->landmarkList[$index]);
+            $this->landmarkList = array_values($this->landmarkList);
+            $this->syncLandmarksString();
+        }
+    }
+
+    private function syncLandmarksString()
+    {
+        $this->nearby_landmarks = implode(', ', $this->landmarkList);
     }
 
     public function boot()

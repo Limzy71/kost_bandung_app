@@ -1113,7 +1113,7 @@
                     <div class="flex gap-2">
                         <input type="text" wire:model="newRule"
                             wire:keydown.enter.prevent="addRule"
-                            placeholder="Contoh: Tamu kena charge Rp 50.000, Larangan bawa teman tidur..."
+                            placeholder="Ketik aturan baru jika tidak ada di atas..."
                             maxlength="50"
                             class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
                         <button type="button" wire:click="addRule"
@@ -1146,25 +1146,9 @@
                         </div>
                     @endif
                 </div>
-
-                <!-- Aturan Tambahan (Catatan Bebas) -->
-                <div class="space-y-2 pt-2 border-t-2 border-black">
-                    <label for="additional_rules_note"
-                        class="block text-xs font-black uppercase tracking-wider text-black">
-                        Aturan Tambahan / Catatan Khusus (Opsional)
-                    </label>
-                    <textarea id="additional_rules_note" wire:model="additional_rules_note" rows="3" maxlength="500"
-                        placeholder="Contoh: Tamu yang menginap dikenakan biaya Rp 50.000/hari. Jam malam pukul 23.00 WIB."
-                        class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"></textarea>
-                    @error('additional_rules_note')
-                        <p
-                            class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
-                            {{ $message }}</p>
-                    @enderror
-                </div>
             </div>
 
-            <!-- Seksi 5: Kontak & Sekitar -->
+            <!-- Seksi 5: Sekitar Kost -->
             <div
                 class="bg-white rounded-xl p-6 md:p-8 border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6">
                 <div class="flex items-center gap-3 border-b-3 border-black pb-4">
@@ -1173,48 +1157,54 @@
                         5
                     </div>
                     <div>
-                        <h2 class="text-xl font-black text-black uppercase tracking-tight">Kontak & Sekitar Kost</h2>
-                        <p class="text-xs font-bold text-zinc-600">Nomor yang bisa dihubungi dan informasi
-                            lingkungan sekitar</p>
+                        <h2 class="text-xl font-black text-black uppercase tracking-tight">Sekitar Kost & Landmark</h2>
+                        <p class="text-xs font-bold text-zinc-600">Informasi titik terdekat dan lokasi strategis lingkungan sekitar</p>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Nomor WhatsApp -->
-                    <div class="space-y-2">
-                        <label for="whatsapp_contact"
-                            class="block text-xs font-black uppercase tracking-wider text-black">
-                            Nomor WhatsApp Kost (Opsional)
-                        </label>
-                        <input type="text" id="whatsapp_contact" wire:model="whatsapp_contact"
-                            placeholder="Contoh: 081234567890"
+                <!-- Landmark Terdekat (Multi-Item) -->
+                <div class="space-y-2">
+                    <label class="block text-xs font-black uppercase tracking-wider text-black">
+                        Titik Terdekat / Landmark (Opsional - Bisa Banyak)
+                    </label>
+                    <div class="flex gap-2">
+                        <input type="text" wire:model="newLandmark"
+                            wire:keydown.enter.prevent="addLandmark"
+                            placeholder="Contoh: 300m dari UNPAD, 500m RS Borromeus, Dekat Tol..."
+                            maxlength="80"
                             class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
-                        <p class="text-[11px] font-bold italic text-zinc-500">Dipakai untuk tombol "Tanya via
-                            WhatsApp". Jika kosong, akan memakai nomor profil akun Anda.</p>
-                        @error('whatsapp_contact')
-                            <p
-                                class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
-                                {{ $message }}</p>
-                        @enderror
+                        <button type="button" wire:click="addLandmark"
+                            class="px-5 py-3 bg-yellow-300 hover:bg-yellow-400 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer shrink-0">
+                            + Tambah
+                        </button>
                     </div>
+                    <p class="text-[11px] font-bold italic text-zinc-500">
+                        Masukkan lokasi strategis terdekat satu per satu (kampus, rumah sakit, minimarket, tol, dll).
+                    </p>
+                    @error('newLandmark')
+                        <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
+                    @enderror
+                    @error('nearby_landmarks')
+                        <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
+                    @enderror
 
-                    <!-- Landmark Terdekat -->
-                    <div class="space-y-2">
-                        <label for="nearby_landmarks"
-                            class="block text-xs font-black uppercase tracking-wider text-black">
-                            Titik Terdekat / Landmark (Opsional)
-                        </label>
-                        <input type="text" id="nearby_landmarks" wire:model="nearby_landmarks" maxlength="255"
-                            placeholder="Contoh: 300m dari UNPAD, dekat minimarket & rumah makan"
-                            class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
-                        <p class="text-[11px] font-bold italic text-zinc-500">Jarak ke kampus, pasar, atau tempat
-                            strategis lainnya.</p>
-                        @error('nearby_landmarks')
-                            <p
-                                class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
-                                {{ $message }}</p>
-                        @enderror
-                    </div>
+                    @if (count($landmarkList) > 0)
+                        <div class="flex flex-wrap gap-2.5 mt-2.5">
+                            @foreach ($landmarkList as $index => $landmarkItem)
+                                <span
+                                    class="inline-flex items-center gap-2 px-3.5 py-2 bg-yellow-200 border-2 border-black rounded-lg text-xs font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                    📍 {{ $landmarkItem }}
+                                    <button type="button" wire:click="removeLandmark({{ $index }})"
+                                        class="w-5 h-5 rounded-md bg-rose-400 hover:bg-rose-500 text-black border-2 border-black flex items-center justify-center cursor-pointer shrink-0 transition-colors shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:shadow-none"
+                                        title="Hapus landmark">
+                                        <svg class="w-3 h-3 text-black stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </span>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
             </div>
 

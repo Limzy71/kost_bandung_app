@@ -801,41 +801,90 @@
                         </span>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        @foreach ($extraPeriodLabels as $period => $label)
-                            @php $checked = in_array($period, $extraPeriods); @endphp
-                            <label for="extra-period-{{ $period }}"
-                                class="rounded-lg border-2 border-black p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-colors cursor-pointer block select-none {{ $checked ? 'bg-lime-300 hover:bg-lime-400' : 'bg-zinc-50 hover:bg-yellow-100' }}">
-                                <input type="checkbox" id="extra-period-{{ $period }}" value="{{ $period }}"
-                                    wire:model.live="extraPeriods" class="sr-only">
-
-                                <span class="flex items-center justify-between gap-2 text-black font-black text-xs md:text-sm">
-                                    <span>{{ $label }}</span>
-                                    <span
-                                        class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black font-black text-xs shrink-0 {{ $checked ? 'bg-black text-lime-300' : '' }}">✓</span>
-                                </span>
-
-                                @if ($checked)
-                                    <span class="block mt-2" @click.stop>
-                                        <span class="relative rounded-lg overflow-hidden flex border-2 border-black">
-                                            <span
-                                                class="bg-yellow-300 border-r-2 border-black px-3 flex items-center font-black text-xs text-black shrink-0">
-                                                Rp
-                                            </span>
+                    @php
+                        $periodsArray = collect($extraPeriodLabels)->toArray();
+                        $periodsKeys = array_keys($periodsArray);
+                        $periodsValues = array_values($periodsArray);
+                        $leftKeys = array_filter($periodsKeys, fn($k) => array_search($k, $periodsKeys) % 2 === 0);
+                        $rightKeys = array_filter($periodsKeys, fn($k) => array_search($k, $periodsKeys) % 2 !== 0);
+                    @endphp
+                    <div class="grid grid-cols-2 gap-3" x-data="{ periods: @entangle('extraPeriods') }">
+                        {{-- Kolom Kiri --}}
+                        <div class="flex flex-col gap-3">
+                            @foreach ($leftKeys as $period)
+                                @php $label = $extraPeriodLabels[$period]; @endphp
+                                <div
+                                    @click="periods.includes('{{ $period }}') ? periods = periods.filter(p => p !== '{{ $period }}') : periods.push('{{ $period }}')"
+                                    :class="periods.includes('{{ $period }}') ? 'bg-lime-300' : 'bg-zinc-50 hover:bg-yellow-100'"
+                                    class="rounded-lg border-2 border-black p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-colors cursor-pointer select-none">
+                                    <input type="checkbox" id="extra-period-{{ $period }}" value="{{ $period }}"
+                                        :checked="periods.includes('{{ $period }}')" tabindex="-1" class="sr-only">
+                                    <span class="flex items-center justify-between gap-2 text-black font-black text-xs md:text-sm">
+                                        <span>{{ $label }}</span>
+                                        <span
+                                            :class="periods.includes('{{ $period }}') ? 'bg-black text-lime-300' : ''"
+                                            class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black font-black text-xs shrink-0">✓</span>
+                                    </span>
+                                    <div x-show="periods.includes('{{ $period }}')" x-cloak
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 -translate-y-2"
+                                        x-transition:enter-end="opacity-100 translate-y-0"
+                                        x-transition:leave="transition ease-in duration-150"
+                                        x-transition:leave-start="opacity-100 translate-y-0"
+                                        x-transition:leave-end="opacity-0 -translate-y-2"
+                                        @click.stop class="mt-2">
+                                        <div class="relative rounded-lg overflow-hidden flex border-2 border-black">
+                                            <span class="bg-yellow-300 border-r-2 border-black px-3 flex items-center font-black text-xs text-black shrink-0">Rp</span>
                                             <input type="number" wire:model="extraPeriodPrices.{{ $period }}"
                                                 placeholder="Total bayar {{ strtolower($label) }}"
                                                 min="0" oninput="var n = parseInt(this.value, 10); this.value = isNaN(n) ? '' : Math.max(0, n)"
                                                 class="w-full bg-white px-3 py-2 text-sm font-black text-black focus:outline-none focus:bg-yellow-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
-                                        </span>
+                                        </div>
                                         @error('extraPeriodPrices.' . $period)
-                                            <span
-                                                class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
-                                                {{ $message }}</span>
+                                            <span class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</span>
                                         @enderror
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        {{-- Kolom Kanan --}}
+                        <div class="flex flex-col gap-3">
+                            @foreach ($rightKeys as $period)
+                                @php $label = $extraPeriodLabels[$period]; @endphp
+                                <div
+                                    @click="periods.includes('{{ $period }}') ? periods = periods.filter(p => p !== '{{ $period }}') : periods.push('{{ $period }}')"
+                                    :class="periods.includes('{{ $period }}') ? 'bg-lime-300' : 'bg-zinc-50 hover:bg-yellow-100'"
+                                    class="rounded-lg border-2 border-black p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-colors cursor-pointer select-none">
+                                    <input type="checkbox" id="extra-period-{{ $period }}" value="{{ $period }}"
+                                        :checked="periods.includes('{{ $period }}')" tabindex="-1" class="sr-only">
+                                    <span class="flex items-center justify-between gap-2 text-black font-black text-xs md:text-sm">
+                                        <span>{{ $label }}</span>
+                                        <span
+                                            :class="periods.includes('{{ $period }}') ? 'bg-black text-lime-300' : ''"
+                                            class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black font-black text-xs shrink-0">✓</span>
                                     </span>
-                                @endif
-                            </label>
-                        @endforeach
+                                    <div x-show="periods.includes('{{ $period }}')" x-cloak
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 -translate-y-2"
+                                        x-transition:enter-end="opacity-100 translate-y-0"
+                                        x-transition:leave="transition ease-in duration-150"
+                                        x-transition:leave-start="opacity-100 translate-y-0"
+                                        x-transition:leave-end="opacity-0 -translate-y-2"
+                                        @click.stop class="mt-2">
+                                        <div class="relative rounded-lg overflow-hidden flex border-2 border-black">
+                                            <span class="bg-yellow-300 border-r-2 border-black px-3 flex items-center font-black text-xs text-black shrink-0">Rp</span>
+                                            <input type="number" wire:model="extraPeriodPrices.{{ $period }}"
+                                                placeholder="Total bayar {{ strtolower($label) }}"
+                                                min="0" oninput="var n = parseInt(this.value, 10); this.value = isNaN(n) ? '' : Math.max(0, n)"
+                                                class="w-full bg-white px-3 py-2 text-sm font-black text-black focus:outline-none focus:bg-yellow-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                        </div>
+                                        @error('extraPeriodPrices.' . $period)
+                                            <span class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
 

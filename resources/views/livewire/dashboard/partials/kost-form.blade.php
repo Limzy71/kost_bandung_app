@@ -808,7 +808,7 @@
                         $leftKeys = array_filter($periodsKeys, fn($k) => array_search($k, $periodsKeys) % 2 === 0);
                         $rightKeys = array_filter($periodsKeys, fn($k) => array_search($k, $periodsKeys) % 2 !== 0);
                     @endphp
-                    <div class="grid grid-cols-2 gap-3" x-data="{ periods: @entangle('extraPeriods') }">
+                    <div class="grid grid-cols-2 gap-3" x-data="{ periods: @entangle('extraPeriods').live }">
                         {{-- Kolom Kiri --}}
                         <div class="flex flex-col gap-3">
                             @foreach ($leftKeys as $period)

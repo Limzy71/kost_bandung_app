@@ -12,12 +12,12 @@
     $waNumber = preg_replace('/\D+/', '', $kost->user->phone_number ?? ($kost->whatsapp_contact ?? ''));
     if (Str::startsWith($waNumber, '0')) {
         $waNumber = '62' . Str::substr($waNumber, 1);
-    }
-    if ($waNumber === '' || ! Str::startsWith($waNumber, '62')) {
+    } elseif ($waNumber !== '' && ! Str::startsWith($waNumber, '62')) {
         $waNumber = '62' . $waNumber;
     }
-    if ($waNumber === '62') {
-        $waNumber = '6281234567890';
+    $hasWaNumber = strlen($waNumber) >= 11;
+    if (! $hasWaNumber) {
+        $waNumber = '';
     }
 
     $rentPeriodLabels = [
@@ -265,6 +265,27 @@
                         @endif
                     </div>
 
+                    <!-- Opsi Harga Sewa (Mobile) -->
+                    @if ($priceOptions->count() > 1)
+                        <div class="lg:hidden space-y-3">
+                            <h2 class="text-xl font-black text-black uppercase tracking-tight flex items-center gap-2">
+                                <x-icon name="lucide-tag" class="w-5 h-5 text-black stroke-[2.5]" />
+                                <span>Opsi Harga Sewa</span>
+                            </h2>
+                            <div class="border-2 border-black rounded-lg divide-y-2 divide-black bg-zinc-50 overflow-hidden">
+                                @foreach ($priceOptions as $option)
+                                    <div class="flex items-center justify-between gap-3 px-3 py-2.5">
+                                        <span class="text-xs font-black uppercase text-zinc-700">{{ $option['label'] }}</span>
+                                        <span class="text-sm font-black text-black">
+                                            Rp {{ number_format((float) $option['price'], 0, ',', '.') }}
+                                        </span>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <p class="text-[10px] font-bold italic text-zinc-500">Harga di atas adalah total bayar untuk masing-masing periode.</p>
+                        </div>
+                    @endif
+
                     <!-- Divider -->
                     <div class="border-t-4 border-black"></div>
 
@@ -484,11 +505,20 @@
                             );
                         @endphp
 
-                        <a href="https://wa.me/{{ $waNumber }}?text={{ $waMessage }}" target="_blank"
-                            class="w-full py-4 bg-emerald-400 hover:bg-emerald-300 text-black border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 group cursor-pointer">
-                            <x-icon name="lucide-message-square" class="w-5 h-5 text-black stroke-[2.5] group-hover:scale-110 transition-transform" />
-                            <span>Tanya via WhatsApp</span>
-                        </a>
+                        @if ($hasWaNumber)
+                            <a href="https://wa.me/{{ $waNumber }}?text={{ $waMessage }}" target="_blank"
+                                class="w-full py-4 bg-emerald-400 hover:bg-emerald-300 text-black border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 group cursor-pointer">
+                                <x-icon name="lucide-message-square" class="w-5 h-5 text-black stroke-[2.5] group-hover:scale-110 transition-transform" />
+                                <span>Tanya via WhatsApp</span>
+                            </a>
+                        @else
+                            <div
+                                class="w-full py-4 bg-zinc-200 text-zinc-500 border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-xl flex items-center justify-center gap-2 cursor-not-allowed"
+                                title="Kontak WhatsApp belum tersedia">
+                                <x-icon name="lucide-message-square" class="w-5 h-5 stroke-[2.5]" />
+                                <span>Kontak WA Belum Tersedia</span>
+                            </div>
+                        @endif
 
                         <button type="button" @click="showModal = true"
                             class="w-full py-4 bg-cyan-300 hover:bg-cyan-200 text-black border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 cursor-pointer">
@@ -602,11 +632,13 @@
                     class="px-4 py-3 bg-cyan-300 hover:bg-cyan-200 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl whitespace-nowrap cursor-pointer">
                     Pesan
                 </button>
-                <a href="https://wa.me/{{ $waNumber }}?text={{ $waMessageMobile }}" target="_blank"
-                    class="px-5 py-3 bg-emerald-400 hover:bg-emerald-300 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl whitespace-nowrap inline-flex items-center gap-1.5 cursor-pointer">
-                    <x-icon name="lucide-message-square" class="w-4 h-4 stroke-[2.5]" />
-                    <span>Tanya WA</span>
-                </a>
+                @if ($hasWaNumber)
+                    <a href="https://wa.me/{{ $waNumber }}?text={{ $waMessageMobile }}" target="_blank"
+                        class="px-5 py-3 bg-emerald-400 hover:bg-emerald-300 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl whitespace-nowrap inline-flex items-center gap-1.5 cursor-pointer">
+                        <x-icon name="lucide-message-square" class="w-4 h-4 stroke-[2.5]" />
+                        <span>Tanya WA</span>
+                    </a>
+                @endif
             </div>
         </div>
     </div>

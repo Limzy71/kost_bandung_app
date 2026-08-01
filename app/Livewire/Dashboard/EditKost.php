@@ -569,6 +569,7 @@ class EditKost extends Component
 
         // Sync extra period prices
         $kost->prices()->delete();
+        $this->extraPeriods = array_values(array_unique($this->extraPeriods));
         foreach ($this->extraPeriods as $period) {
             KostPrice::create([
                 'kost_id' => $kost->id,
@@ -586,77 +587,7 @@ class EditKost extends Component
     {
         $facilities = Facility::where('status', 'approved')->orderBy('name')->get();
 
-        if ($facilities->isEmpty()) {
-            $defaultFacilities = [
-                ['name' => 'AC', 'type' => 'room'],
-                ['name' => 'Kamar Mandi', 'type' => 'room'],
-                ['name' => 'Kasur', 'type' => 'room'],
-                ['name' => 'Bantal', 'type' => 'room'],
-                ['name' => 'Lemari', 'type' => 'room'],
-                ['name' => 'Meja', 'type' => 'room'],
-                ['name' => 'Kursi', 'type' => 'room'],
-                ['name' => 'Meja Rias', 'type' => 'room'],
-                ['name' => 'Kipas Angin', 'type' => 'room'],
-                ['name' => 'Water Heater', 'type' => 'room'],
-                ['name' => 'Kulkas', 'type' => 'room'],
-                ['name' => 'Cermin', 'type' => 'room'],
-                ['name' => 'Jendela', 'type' => 'room'],
-                ['name' => 'TV', 'type' => 'room'],
-                ['name' => 'Wi-Fi', 'type' => 'building'],
-                ['name' => 'Kamar Mandi', 'type' => 'building'],
-                ['name' => 'Dapur', 'type' => 'building'],
-                ['name' => 'Kulkas', 'type' => 'building'],
-                ['name' => 'Tempat Jemuran', 'type' => 'building'],
-                ['name' => 'CCTV', 'type' => 'building'],
-                ['name' => 'Penjaga Kost', 'type' => 'building'],
-                ['name' => 'Mesin Cuci', 'type' => 'building'],
-                ['name' => 'Ruang Tamu', 'type' => 'building'],
-                ['name' => 'Parkir Mobil', 'type' => 'parking'],
-                ['name' => 'Parkir Motor', 'type' => 'parking'],
-                ['name' => 'Parkir Sepeda', 'type' => 'parking'],
-            ];
-
-            foreach ($defaultFacilities as $facility) {
-                Facility::updateOrCreate(
-                    [
-                        'name' => $facility['name'],
-                        'type' => $facility['type'],
-                    ],
-                    array_merge($facility, [
-                        'status' => 'approved',
-                        'icon' => Facility::resolveIcon($facility['name']),
-                    ]),
-                );
-            }
-
-            $facilities = Facility::where('status', 'approved')->orderBy('name')->get();
-        }
-
         $rules = Rule::orderBy('name')->get();
-
-        if ($rules->isEmpty()) {
-            $defaultRules = [
-                'Akses 24 Jam',
-                'Ada Jam Malam',
-                'Dilarang Merokok di Dalam Kamar',
-                'Wajib Lapor Saat Membawa Tamu',
-                'Boleh Pasutri',
-                'Boleh Membawa Anak',
-                'Lawan Jenis Di Larang Ke Kamar',
-                'Denda Kerusakan Barang Kos',
-                'Tamu Menginap Di Kenakan Biaya',
-                'Dilarang Bawa Hewan',
-                'Ada Jam Malam Untuk Tamu',
-                'Maks. 2 Orang/ Kamar',
-                'Maks. 1 Orang/ Kamar',
-            ];
-
-            foreach ($defaultRules as $ruleName) {
-                Rule::firstOrCreate(['name' => $ruleName]);
-            }
-
-            $rules = Rule::orderBy('name')->get();
-        }
 
         $districts = array_keys(config('bandung.districts', []));
 

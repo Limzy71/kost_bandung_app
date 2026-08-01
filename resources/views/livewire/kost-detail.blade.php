@@ -255,7 +255,8 @@
                                         @foreach ($landmarks as $landmark)
                                             <div
                                                 class="inline-flex items-center gap-2 bg-yellow-200 border-2 border-black px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                                <span>📍 {{ $landmark }}</span>
+                                                <x-icon name="lucide-map-pin" class="w-3.5 h-3.5 text-black stroke-[2.5] shrink-0" />
+                                                <span>{{ $landmark }}</span>
                                             </div>
                                         @endforeach
                                     </div>

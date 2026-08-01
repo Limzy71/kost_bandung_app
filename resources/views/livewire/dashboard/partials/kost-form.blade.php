@@ -619,7 +619,8 @@
                         </label>
                         <div
                             class="inline-flex items-center gap-1.5 bg-yellow-300 border-2 border-black px-3 py-1 rounded text-xs font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                            <span>📍 Lat: <span x-text="lat"></span> | Lng: <span x-text="lng"></span></span>
+                            <x-icon name="lucide-map-pin" class="w-3.5 h-3.5 text-black stroke-[2.5] shrink-0" />
+                            <span>Lat: <span x-text="lat"></span> | Lng: <span x-text="lng"></span></span>
                         </div>
                     </div>
 
@@ -640,7 +641,7 @@
                         class="p-4 bg-rose-100 border-3 border-black rounded-xl text-rose-700 font-black text-xs shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] space-y-1">
                         <div class="flex items-center gap-2">
                             <x-icon name="lucide-triangle-alert" class="w-5 h-5 text-rose-600 shrink-0 stroke-[2.5]" />
-                            <span class="text-sm font-black text-rose-800 uppercase">📍 Lokasi Di Luar Batas
+                            <span class="text-sm font-black text-rose-800 uppercase">Lokasi Di Luar Batas
                                 Kecamatan!</span>
                         </div>
                         <p class="text-xs font-bold text-rose-900 pl-7">
@@ -1334,7 +1335,8 @@
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
                             </svg>
-                            <span x-text="detecting ? 'Mendeteksi...' : '📍 Deteksi Otomatis (500m)'"></span>
+                            <x-icon x-show="!detecting" name="lucide-sparkles" class="w-3.5 h-3.5 text-black stroke-[2.5] shrink-0" />
+                            <span x-text="detecting ? 'Mendeteksi...' : 'Deteksi Otomatis (500m)'"></span>
                         </button>
                         <p x-show="detectMsg !== ''" x-cloak x-text="detectMsg"
                             class="text-xs font-black px-2.5 py-1 rounded-md border-2"
@@ -1356,7 +1358,8 @@
                             @foreach ($landmarkList as $index => $landmarkItem)
                                 <span
                                     class="inline-flex items-center gap-2 px-3.5 py-2 bg-yellow-200 border-2 border-black rounded-lg text-xs font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                    📍 {{ $landmarkItem }}
+                                    <x-icon name="lucide-map-pin" class="w-3.5 h-3.5 text-black stroke-[2.5] shrink-0" />
+                                    <span>{{ $landmarkItem }}</span>
                                     <button type="button" wire:click="removeLandmark({{ $index }})"
                                         class="w-5 h-5 rounded-md bg-rose-400 hover:bg-rose-500 text-black border-2 border-black flex items-center justify-center cursor-pointer shrink-0 transition-colors shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:shadow-none"
                                         title="Hapus landmark">

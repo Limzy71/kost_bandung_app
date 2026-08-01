@@ -1270,19 +1270,22 @@
                                 return;
                             }
                             this.detecting = true;
+                            this.showDetectMsg('Sedang mendeteksi titik terdekat...', 'ok');
                             const allowed = new Set([
                                 'grocery_or_supermarket', 'supermarket', 'convenience_store', 'department_store', 'shopping_mall', 'store',
-                                'restaurant', 'meal_takeaway', 'cafe', 'bakery', 'food',
+                                'restaurant', 'meal_takeaway', 'meal_delivery', 'cafe', 'bakery', 'food', 'bar', 'night_club',
                                 'mosque', 'church', 'place_of_worship', 'hindu_temple', 'synagogue',
                                 'university', 'school', 'primary_school', 'secondary_school',
                                 'hospital', 'pharmacy', 'doctor', 'dentist', 'health',
                                 'gym', 'fitness_center', 'spa', 'beauty_salon',
                                 'atm', 'bank',
                                 'transit_station', 'bus_station', 'bus_stop', 'train_station', 'subway_station', 'light_rail_station', 'taxi_stand',
-                                'toll_station', 'toll_booth'
+                                'toll_station', 'toll_booth',
+                                'laundry', 'clothing_store', 'hardware_store'
                             ]);
-                            const brandRe = /alfamidi|alfamart|indomaret|circle.?k/i;
+                            const brandRe = /alfamidi|alfamart|indomaret|circle.?k|lawson|family.?mart/i;
                             const tollRe = /\btol\b|toll|gerbang.*tol/i;
+                            const foodRe = /warung|warteg|nasi|makan|masakan|kedai|mie|soto|bakso|lalapan|seafood|ayam|padang|angkringan|depot|kantin|kafe|kopi|minuman|jus|buah/i;
                             const service = new google.maps.places.PlacesService(document.createElement('div'));
                             service.nearbySearch({
                                 location: { lat: lat, lng: lng },
@@ -1290,25 +1293,25 @@
                             }, (results, status) => {
                                 this.detecting = false;
                                 if (status !== 'OK' || !results || results.length === 0) {
-                                    this.showDetectMsg('Tidak ada titik terdekat dalam radius 500m dari pin lokasi.', 'warn');
+                                    this.showDetectMsg('Tidak ditemukan tempat apapun di sekitar pin lokasi. Pastikan pin telah diletakkan dengan benar.', 'warn');
                                     return;
                                 }
                                 const items = results
                                     .map((p) => ({ d: this.haversine(lat, lng, p.geometry.location.lat(), p.geometry.location.lng()), name: (p.name || '').trim(), types: p.types || [] }))
                                     .filter((r) => r.d <= 500)
-                                    .filter((r) => r.types.some((t) => allowed.has(t)) || brandRe.test(r.name) || tollRe.test(r.name))
+                                    .filter((r) => r.types.some((t) => allowed.has(t)) || brandRe.test(r.name) || tollRe.test(r.name) || foodRe.test(r.name))
                                     .sort((a, b) => a.d - b.d)
                                     .slice(0, 8)
                                     .map((r) => Math.round(r.d) + 'm ' + r.name);
                                 if (items.length === 0) {
-                                    this.showDetectMsg('Tidak ada titik strategis baru dalam 500m dari pin lokasi.', 'warn');
+                                    this.showDetectMsg('Tidak ada tempat strategis dalam 500m. Coba geser pin lokasi atau tambahkan landmark secara manual.', 'warn');
                                     return;
                                 }
                                 this.$wire.addLandmarks(items);
                             });
                         }
                     }"
-                    @landmarks-added.window="showDetectMsg($event.detail.added > 0 ? $event.detail.added + ' titik terdekat ditambahkan.' : 'Tidak ada titik baru ditambahkan (sudah ada atau batas 12 tercapai).', $event.detail.added > 0 ? 'ok' : 'warn')">
+                    @landmarks-added.window="showDetectMsg($event.detail.added > 0 ? $event.detail.added + ' titik terdekat berhasil ditambahkan!' : 'Semua titik terdekat sudah ditambahkan atau batas 12 tercapai.', $event.detail.added > 0 ? 'ok' : 'warn')">
                     <label class="block text-xs font-black uppercase tracking-wider text-black">
                         Titik Terdekat / Landmark (Opsional - Bisa Banyak)
                     </label>
@@ -1325,7 +1328,11 @@
                     </div>
                     <div class="flex flex-wrap items-center gap-2.5">
                         <button type="button" @click="detect()" :disabled="detecting"
-                            class="px-5 py-3 bg-emerald-300 hover:bg-emerald-400 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer shrink-0 disabled:opacity-50 disabled:cursor-wait">
+                            class="px-5 py-3 bg-emerald-300 hover:bg-emerald-400 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer shrink-0 disabled:opacity-60 disabled:cursor-wait inline-flex items-center gap-2">
+                            <svg x-show="detecting" class="animate-spin w-3.5 h-3.5 text-black shrink-0" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                            </svg>
                             <span x-text="detecting ? 'Mendeteksi...' : '📍 Deteksi Otomatis (500m)'"></span>
                         </button>
                         <p x-show="detectMsg !== ''" x-cloak x-text="detectMsg"

@@ -862,7 +862,9 @@
                                         <span>{{ $label }}</span>
                                         <span
                                             :class="periods.includes('{{ $period }}') ? 'bg-black text-lime-300' : ''"
-                                            class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black font-black text-xs shrink-0 transition-colors duration-300">✓</span>
+                                            class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black font-black text-xs shrink-0 transition-colors duration-300">
+                                            <x-icon name="lucide-check" class="w-3.5 h-3.5 stroke-[3]" />
+                                        </span>
                                     </span>
                                     <div x-cloak @click.stop
                                         class="grid grid-rows-[0fr] opacity-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
@@ -900,7 +902,9 @@
                                         <span>{{ $label }}</span>
                                         <span
                                             :class="periods.includes('{{ $period }}') ? 'bg-black text-lime-300' : ''"
-                                            class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black font-black text-xs shrink-0 transition-colors duration-300">✓</span>
+                                            class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black font-black text-xs shrink-0 transition-colors duration-300">
+                                            <x-icon name="lucide-check" class="w-3.5 h-3.5 stroke-[3]" />
+                                        </span>
                                     </span>
                                     <div x-cloak @click.stop
                                         class="grid grid-rows-[0fr] opacity-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
@@ -1481,7 +1485,8 @@
                                                     batas maksimum!</span>
                                             @else
                                                 <span wire:key="valid"
-                                                    class="text-[10px] font-black text-lime-700 bg-lime-100 border border-lime-500 px-1.5 py-0.5 rounded uppercase transition-all duration-300">✓
+                                                    class="text-[10px] font-black text-lime-700 bg-lime-100 border border-lime-500 px-1.5 py-0.5 rounded uppercase transition-all duration-300 inline-flex items-center gap-1">
+                                                    <x-icon name="lucide-check" class="w-3 h-3 text-lime-700 stroke-[3]" />
                                                     Jumlah valid</span>
                                             @endif
                                         </div>

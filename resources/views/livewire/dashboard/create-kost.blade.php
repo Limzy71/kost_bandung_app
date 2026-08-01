@@ -46,7 +46,7 @@
                         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                         Simpan Properti Kost
                     </span>
-                    <span wire:loading wire:target="save" class="inline-flex items-center gap-2">
+                    <span wire:loading.flex wire:target="save" class="items-center gap-2">
                         <svg class="animate-spin h-5 w-5 text-black shrink-0" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>

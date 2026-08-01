@@ -416,6 +416,7 @@ class CreateKost extends Component
 
     public function save()
     {
+        sleep(5);
         $this->validate();
 
         $key = 'create_kost_' . request()->ip() . '_' . Auth::id();

@@ -24,14 +24,7 @@ class KostPrice extends Model
 
     public static function periodLabels(): array
     {
-        return [
-            'daily' => 'Per Hari',
-            'weekly' => 'Per Minggu',
-            'monthly' => 'Per Bulan',
-            'three_monthly' => 'Per 3 Bulan',
-            'six_monthly' => 'Per 6 Bulan',
-            'yearly' => 'Per Tahun',
-        ];
+        return Kost::rentPeriodLabels();
     }
 
     public static function allowedPeriods(): array

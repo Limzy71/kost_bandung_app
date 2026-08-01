@@ -504,6 +504,7 @@ class EditKost extends Component
 
     public function save()
     {
+        sleep(5);
         $this->validate();
 
         $totalPhotos = count($this->existingPhotos) + count($this->photos);

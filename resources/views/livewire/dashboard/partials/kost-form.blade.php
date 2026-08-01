@@ -686,23 +686,8 @@
 
                 <!-- Periode Sewa Utama -->
                 @php
-                    $rentPeriodUnitMap = [
-                        'daily' => '/ hari',
-                        'weekly' => '/ minggu',
-                        'monthly' => '/ bln',
-                        'three_monthly' => '/ 3 bln',
-                        'six_monthly' => '/ 6 bln',
-                        'yearly' => '/ tahun',
-                    ];
-                    $rentPeriodOptions = [
-                        'daily' => 'Per Hari',
-                        'weekly' => 'Per Minggu',
-                        'monthly' => 'Per Bulan',
-                        'three_monthly' => 'Per 3 Bulan',
-                        'six_monthly' => 'Per 6 Bulan',
-                        'yearly' => 'Per Tahun',
-                    ];
-                    $rentUnit = $rentPeriodUnitMap[$rent_period] ?? '/ bln';
+                    $rentPeriodOptions = \App\Models\Kost::rentPeriodLabels();
+                    $rentUnit = \App\Models\Kost::rentPeriodUnit($rent_period);
                 @endphp
                 <div class="space-y-2">
                     <label for="rent_period" class="block text-xs font-black uppercase tracking-wider text-black">
@@ -940,6 +925,9 @@
                             @endforeach
                         </div>
                     </div>
+                    @error('extraPeriods')
+                        <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- Checkbox Fasilitas Kost -->
@@ -1294,8 +1282,12 @@
                                 type: 'establishment'
                             }, (results, status) => {
                                 this.detecting = false;
-                                if (status !== 'OK' || !results || results.length === 0) {
+                                if (status === 'ZERO_RESULTS' || !results || results.length === 0) {
                                     this.showDetectMsg('Tidak ditemukan tempat apapun di sekitar pin lokasi. Pastikan pin telah diletakkan dengan benar.', 'warn');
+                                    return;
+                                }
+                                if (status !== 'OK') {
+                                    this.showDetectMsg('Gagal terhubung ke Google Maps. Periksa koneksi atau tambahkan landmark secara manual.', 'warn');
                                     return;
                                 }
                                 const items = results
@@ -1472,25 +1464,27 @@
                         @if ($photoTotal > 0)
                             <div class="space-y-4">
                                 <div class="flex items-center justify-between border-b-2 border-black pb-2">
-                                    <div class="text-xs font-black text-black uppercase flex items-center gap-2">
+                                    <div class="text-xs font-black text-black uppercase flex items-center gap-2" wire:key="photo-preview-header">
                                         Preview Foto
                                         <span
-                                            class="px-2 py-0.5 rounded border-2 border-black text-xs font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] {{ $photoTotal < 4 ? 'bg-rose-300 text-black' : ($photoTotal > 10 ? 'bg-rose-400 text-black' : 'bg-lime-300 text-black') }}">
+                                            class="transition-colors duration-300 px-2 py-0.5 rounded border-2 border-black text-xs font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] {{ $photoTotal < 4 ? 'bg-rose-300 text-black' : ($photoTotal > 10 ? 'bg-rose-400 text-black' : 'bg-lime-300 text-black') }}">
                                             {{ $photoTotal }}/10
                                         </span>
-                                        @if ($photoTotal < 4)
-                                            <span
-                                                class="text-[10px] font-black text-rose-600 bg-rose-100 border border-rose-400 px-1.5 py-0.5 rounded uppercase">Kurang
-                                                {{ 4 - $photoTotal }} foto lagi</span>
-                                        @elseif($photoTotal > 10)
-                                            <span
-                                                class="text-[10px] font-black text-rose-600 bg-rose-100 border border-rose-400 px-1.5 py-0.5 rounded uppercase">Melebihi
-                                                batas maksimum!</span>
-                                        @else
-                                            <span
-                                                class="text-[10px] font-black text-lime-700 bg-lime-100 border border-lime-500 px-1.5 py-0.5 rounded uppercase">✓
-                                                Jumlah valid</span>
-                                        @endif
+                                        <div class="relative flex items-center min-h-[24px]">
+                                            @if ($photoTotal < 4)
+                                                <span wire:key="kurang"
+                                                    class="text-[10px] font-black text-rose-600 bg-rose-100 border border-rose-400 px-1.5 py-0.5 rounded uppercase transition-all duration-300">Kurang
+                                                    {{ 4 - $photoTotal }} foto lagi</span>
+                                            @elseif($photoTotal > 10)
+                                                <span wire:key="lebih"
+                                                    class="text-[10px] font-black text-rose-600 bg-rose-100 border border-rose-400 px-1.5 py-0.5 rounded uppercase transition-all duration-300">Melebihi
+                                                    batas maksimum!</span>
+                                            @else
+                                                <span wire:key="valid"
+                                                    class="text-[10px] font-black text-lime-700 bg-lime-100 border border-lime-500 px-1.5 py-0.5 rounded uppercase transition-all duration-300">✓
+                                                    Jumlah valid</span>
+                                            @endif
+                                        </div>
                                     </div>
                                     @error('photos')
                                         <span

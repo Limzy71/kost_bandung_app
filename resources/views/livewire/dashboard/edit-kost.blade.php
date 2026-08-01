@@ -39,13 +39,19 @@
                     Batal
                 </a>
 
-                <button type="submit" wire:loading.attr="disabled" wire:target="save" x-bind:disabled="formIsOutOfBounds"
+                    <button type="submit" wire:loading.attr="disabled" wire:target="save" x-bind:disabled="formIsOutOfBounds"
                     :class="formIsOutOfBounds ? 'opacity-50 cursor-not-allowed bg-zinc-300' : 'bg-cyan-400 hover:bg-cyan-300 active:translate-x-1 active:translate-y-1 active:shadow-none'"
-                    class="px-8 py-3.5 text-black border-3 border-black font-black text-sm uppercase shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] transition-all rounded inline-flex items-center gap-2">
-                    <span wire:loading.remove wire:target="save">Simpan Perubahan</span>
-                    <span wire:loading wire:target="save" class="inline-flex items-center gap-2">
-                        <x-icon name="lucide-loader-circle" class="animate-spin h-4 w-4 text-black" />
-                        Menyimpan...
+                    class="min-w-[220px] justify-center px-8 py-3.5 text-black border-3 border-black font-black text-sm uppercase shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] transition-all rounded inline-flex items-center gap-2">
+                    <span wire:loading.remove wire:target="save" class="inline-flex items-center gap-2">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                        Simpan Perubahan
+                    </span>
+                    <span wire:loading.flex wire:target="save" class="items-center gap-2">
+                        <svg class="animate-spin h-5 w-5 text-black shrink-0" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                        </svg>
+                        Menyimpan Data...
                     </span>
                 </button>
             </div>

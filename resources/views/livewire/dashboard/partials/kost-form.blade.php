@@ -1289,7 +1289,8 @@
                             const service = new google.maps.places.PlacesService(document.createElement('div'));
                             service.nearbySearch({
                                 location: { lat: lat, lng: lng },
-                                rankBy: google.maps.places.RankBy.DISTANCE
+                                radius: 500,
+                                type: 'establishment'
                             }, (results, status) => {
                                 this.detecting = false;
                                 if (status !== 'OK' || !results || results.length === 0) {

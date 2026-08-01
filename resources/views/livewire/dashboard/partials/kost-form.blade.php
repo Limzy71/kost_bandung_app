@@ -748,7 +748,7 @@
                             <input type="checkbox" wire:model="include_utilities" value="1"
                                 class="peer sr-only">
                             <div
-                                class="h-[48px] px-4 rounded-lg border-2 border-black bg-zinc-50 text-black font-black text-xs md:text-sm flex items-center justify-between gap-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] peer-checked:bg-lime-300 hover:bg-yellow-100 transition-all">
+                                class="px-4 py-3 rounded-lg border-2 border-black bg-zinc-50 text-black font-black text-xs md:text-sm flex items-center justify-between gap-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] peer-checked:bg-lime-300 hover:bg-yellow-100 transition-all">
                                 <span>Termasuk Listrik & Air</span>
                                 <span
                                     class="w-6 h-6 rounded border-2 border-black bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs shrink-0 transition-opacity">✓</span>

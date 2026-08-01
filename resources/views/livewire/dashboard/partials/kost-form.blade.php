@@ -941,14 +941,18 @@
                         @enderror
 
                         @if(collect($customFacilities)->where('type', 'room')->count() > 0)
-                            <div class="flex flex-wrap gap-2 mt-2">
+                            <div class="flex flex-wrap gap-2.5 mt-2.5">
                                 @foreach ($customFacilities as $index => $customItem)
                                     @if($customItem['type'] === 'room')
-                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 border-2 border-black rounded-lg text-[10px] font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] bg-lime-200">
+                                        <span class="inline-flex items-center gap-2 px-3.5 py-2 border-2 border-black rounded-lg text-xs font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] bg-lime-200">
                                             {{ $customItem['name'] }}
                                             <button type="button" wire:click="removeCustomFacility({{ $index }})"
-                                                class="w-3.5 h-3.5 rounded bg-rose-400 hover:bg-rose-300 border border-black text-[8px] font-black leading-none flex items-center justify-center cursor-pointer"
-                                                title="Hapus fasilitas">✕</button>
+                                                class="w-5 h-5 rounded-md bg-rose-400 hover:bg-rose-500 text-black border-2 border-black flex items-center justify-center cursor-pointer shrink-0 transition-colors shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:shadow-none"
+                                                title="Hapus fasilitas">
+                                                <svg class="w-3 h-3 text-black stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
                                         </span>
                                     @endif
                                 @endforeach
@@ -1001,14 +1005,18 @@
                         @enderror
 
                         @if(collect($customFacilities)->where('type', 'building')->count() > 0)
-                            <div class="flex flex-wrap gap-2 mt-2">
+                            <div class="flex flex-wrap gap-2.5 mt-2.5">
                                 @foreach ($customFacilities as $index => $customItem)
                                     @if($customItem['type'] === 'building')
-                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 border-2 border-black rounded-lg text-[10px] font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] bg-cyan-200">
+                                        <span class="inline-flex items-center gap-2 px-3.5 py-2 border-2 border-black rounded-lg text-xs font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] bg-cyan-200">
                                             {{ $customItem['name'] }}
                                             <button type="button" wire:click="removeCustomFacility({{ $index }})"
-                                                class="w-3.5 h-3.5 rounded bg-rose-400 hover:bg-rose-300 border border-black text-[8px] font-black leading-none flex items-center justify-center cursor-pointer"
-                                                title="Hapus fasilitas">✕</button>
+                                                class="w-5 h-5 rounded-md bg-rose-400 hover:bg-rose-500 text-black border-2 border-black flex items-center justify-center cursor-pointer shrink-0 transition-colors shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:shadow-none"
+                                                title="Hapus fasilitas">
+                                                <svg class="w-3 h-3 text-black stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
                                         </span>
                                     @endif
                                 @endforeach
@@ -1121,15 +1129,17 @@
                     @enderror
 
                     @if (count($customRules) > 0)
-                        <div class="flex flex-wrap gap-2">
+                        <div class="flex flex-wrap gap-2.5 mt-2.5">
                             @foreach ($customRules as $index => $customName)
                                 <span
-                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-cyan-200 border-2 border-black rounded-lg text-xs font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                    class="inline-flex items-center gap-2 px-3.5 py-2 bg-cyan-200 border-2 border-black rounded-lg text-xs font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                                     {{ $customName }}
                                     <button type="button" wire:click="removeCustomRule({{ $index }})"
-                                        class="w-4 h-4 rounded bg-rose-400 hover:bg-rose-300 border border-black text-[9px] font-black leading-none flex items-center justify-center cursor-pointer"
+                                        class="w-5 h-5 rounded-md bg-rose-400 hover:bg-rose-500 text-black border-2 border-black flex items-center justify-center cursor-pointer shrink-0 transition-colors shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:shadow-none"
                                         title="Hapus aturan">
-                                        ✕
+                                        <svg class="w-3 h-3 text-black stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
                                     </button>
                                 </span>
                             @endforeach

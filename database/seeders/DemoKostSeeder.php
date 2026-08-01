@@ -44,21 +44,27 @@ class DemoKostSeeder extends Seeder
             ['name' => 'Kamar Mandi Luar', 'type' => 'building'],
             ['name' => 'Dapur Bersama', 'type' => 'building'],
             ['name' => 'Kulkas Bersama', 'type' => 'building'],
-            ['name' => 'Mesin Cuci / Laundry', 'type' => 'building'],
-            ['name' => 'Parkir Mobil & Motor', 'type' => 'building'],
-            ['name' => 'CCTV 24 Jam & Keamanan', 'type' => 'building'],
-            ['name' => 'Jam Bebas 24 Jam', 'type' => 'building'],
-            ['name' => 'Termasuk Listrik (Gratis)', 'type' => 'building'],
-            ['name' => 'Ruang Tamu Bersama', 'type' => 'building'],
             ['name' => 'Tempat Jemuran', 'type' => 'building'],
+            ['name' => 'CCTV 24 Jam', 'type' => 'building'],
+            ['name' => 'Keamanan (Penjaga Malam)', 'type' => 'building'],
+            ['name' => 'Akses 24 Jam', 'type' => 'building'],
+            ['name' => 'Mesin Cuci', 'type' => 'building'],
+            ['name' => 'Ruang Tamu', 'type' => 'building'],
         ];
 
-        // Remove legacy combined facility in favor of separate items
-        \App\Models\Facility::where('name', 'Kasur Springbed & Lemari')->get()
-            ->each(function ($facility) {
-                $facility->kosts()->detach();
-                $facility->delete();
-            });
+        // Remove legacy / removed facilities
+        \App\Models\Facility::whereIn('name', [
+            'Kasur Springbed & Lemari',
+            'CCTV 24 Jam & Keamanan',
+            'Jam Bebas 24 Jam',
+            'Mesin Cuci / Laundry',
+            'Ruang Tamu Bersama',
+            'Parkir Mobil & Motor',
+            'Termasuk Listrik (Gratis)'
+        ])->get()->each(function ($facility) {
+            $facility->kosts()->detach();
+            $facility->delete();
+        });
 
         foreach ($defaultFacilities as $facility) {
             \App\Models\Facility::updateOrCreate(

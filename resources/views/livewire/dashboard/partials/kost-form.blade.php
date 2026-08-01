@@ -748,16 +748,18 @@
                             <input type="checkbox" wire:model="include_utilities" value="1"
                                 class="peer sr-only">
                             <div
-                                class="px-4 py-3.5 rounded-lg border-2 border-black bg-zinc-50 text-black font-black text-xs md:text-sm flex items-center justify-between gap-2 peer-checked:bg-lime-300 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-yellow-100 transition-all">
+                                class="h-[48px] px-4 rounded-lg border-2 border-black bg-zinc-50 text-black font-black text-xs md:text-sm flex items-center justify-between gap-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] peer-checked:bg-lime-300 hover:bg-yellow-100 transition-all">
                                 <span>Termasuk Listrik & Air</span>
                                 <span
-                                    class="w-6 h-6 rounded border-2 border-black bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs shrink-0">✓</span>
+                                    class="w-6 h-6 rounded border-2 border-black bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs shrink-0 transition-opacity">✓</span>
                             </div>
                         </label>
-                        <p class="text-[11px] font-bold italic text-zinc-500">Centang jika harga sewa sudah
-                            termasuk biaya listrik dan air.</p>
+                        <p class="text-[11px] font-bold italic text-zinc-500">Pilih jika harga sewa sudah termasuk biaya listrik dan air.</p>
                     </div>
+                </div>
 
+                <!-- Capacity Grid (2 Columns Full Width) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Total Kamar -->
                     <div class="space-y-2">
                         <label for="total_rooms" class="block text-xs font-black uppercase tracking-wider text-black">
@@ -816,33 +818,35 @@
                                 <div
                                     @click="periods.includes('{{ $period }}') ? periods = periods.filter(p => p !== '{{ $period }}') : periods.push('{{ $period }}')"
                                     :class="periods.includes('{{ $period }}') ? 'bg-lime-300' : 'bg-zinc-50 hover:bg-yellow-100'"
-                                    class="rounded-lg border-2 border-black p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-colors cursor-pointer select-none">
+                                    class="rounded-lg border-2 border-black p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 ease-in-out cursor-pointer select-none">
                                     <input type="checkbox" id="extra-period-{{ $period }}" value="{{ $period }}"
                                         :checked="periods.includes('{{ $period }}')" tabindex="-1" class="sr-only">
                                     <span class="flex items-center justify-between gap-2 text-black font-black text-xs md:text-sm">
                                         <span>{{ $label }}</span>
                                         <span
                                             :class="periods.includes('{{ $period }}') ? 'bg-black text-lime-300' : ''"
-                                            class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black font-black text-xs shrink-0">✓</span>
+                                            class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black font-black text-xs shrink-0 transition-colors duration-300">✓</span>
                                     </span>
                                     <div x-show="periods.includes('{{ $period }}')" x-cloak
-                                        x-transition:enter="transition ease-out duration-200"
-                                        x-transition:enter-start="opacity-0 -translate-y-2"
-                                        x-transition:enter-end="opacity-100 translate-y-0"
-                                        x-transition:leave="transition ease-in duration-150"
-                                        x-transition:leave-start="opacity-100 translate-y-0"
-                                        x-transition:leave-end="opacity-0 -translate-y-2"
-                                        @click.stop class="mt-2">
-                                        <div class="relative rounded-lg overflow-hidden flex border-2 border-black">
-                                            <span class="bg-yellow-300 border-r-2 border-black px-3 flex items-center font-black text-xs text-black shrink-0">Rp</span>
-                                            <input type="number" wire:model="extraPeriodPrices.{{ $period }}"
-                                                placeholder="Total bayar {{ strtolower($label) }}"
-                                                min="0" oninput="var n = parseInt(this.value, 10); this.value = isNaN(n) ? '' : Math.max(0, n)"
-                                                class="w-full bg-white px-3 py-2 text-sm font-black text-black focus:outline-none focus:bg-yellow-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                        x-transition:enter="transition-all ease-out duration-300"
+                                        x-transition:enter-start="opacity-0 max-h-0 -translate-y-2"
+                                        x-transition:enter-end="opacity-100 max-h-24 translate-y-0"
+                                        x-transition:leave="transition-all ease-in duration-200"
+                                        x-transition:leave-start="opacity-100 max-h-24 translate-y-0"
+                                        x-transition:leave-end="opacity-0 max-h-0 -translate-y-2"
+                                        @click.stop class="overflow-hidden">
+                                        <div class="pt-2">
+                                            <div class="relative rounded-lg overflow-hidden flex border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                <span class="bg-yellow-300 border-r-2 border-black px-3 flex items-center font-black text-xs text-black shrink-0">Rp</span>
+                                                <input type="number" wire:model="extraPeriodPrices.{{ $period }}"
+                                                    placeholder="Total bayar {{ strtolower($label) }}"
+                                                    min="0" oninput="var n = parseInt(this.value, 10); this.value = isNaN(n) ? '' : Math.max(0, n)"
+                                                    class="w-full bg-white px-3 py-2 text-sm font-black text-black focus:outline-none focus:bg-yellow-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                            </div>
+                                            @error('extraPeriodPrices.' . $period)
+                                                <span class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</span>
+                                            @enderror
                                         </div>
-                                        @error('extraPeriodPrices.' . $period)
-                                            <span class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</span>
-                                        @enderror
                                     </div>
                                 </div>
                             @endforeach
@@ -854,33 +858,35 @@
                                 <div
                                     @click="periods.includes('{{ $period }}') ? periods = periods.filter(p => p !== '{{ $period }}') : periods.push('{{ $period }}')"
                                     :class="periods.includes('{{ $period }}') ? 'bg-lime-300' : 'bg-zinc-50 hover:bg-yellow-100'"
-                                    class="rounded-lg border-2 border-black p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-colors cursor-pointer select-none">
+                                    class="rounded-lg border-2 border-black p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 ease-in-out cursor-pointer select-none">
                                     <input type="checkbox" id="extra-period-{{ $period }}" value="{{ $period }}"
                                         :checked="periods.includes('{{ $period }}')" tabindex="-1" class="sr-only">
                                     <span class="flex items-center justify-between gap-2 text-black font-black text-xs md:text-sm">
                                         <span>{{ $label }}</span>
                                         <span
                                             :class="periods.includes('{{ $period }}') ? 'bg-black text-lime-300' : ''"
-                                            class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black font-black text-xs shrink-0">✓</span>
+                                            class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black font-black text-xs shrink-0 transition-colors duration-300">✓</span>
                                     </span>
                                     <div x-show="periods.includes('{{ $period }}')" x-cloak
-                                        x-transition:enter="transition ease-out duration-200"
-                                        x-transition:enter-start="opacity-0 -translate-y-2"
-                                        x-transition:enter-end="opacity-100 translate-y-0"
-                                        x-transition:leave="transition ease-in duration-150"
-                                        x-transition:leave-start="opacity-100 translate-y-0"
-                                        x-transition:leave-end="opacity-0 -translate-y-2"
-                                        @click.stop class="mt-2">
-                                        <div class="relative rounded-lg overflow-hidden flex border-2 border-black">
-                                            <span class="bg-yellow-300 border-r-2 border-black px-3 flex items-center font-black text-xs text-black shrink-0">Rp</span>
-                                            <input type="number" wire:model="extraPeriodPrices.{{ $period }}"
-                                                placeholder="Total bayar {{ strtolower($label) }}"
-                                                min="0" oninput="var n = parseInt(this.value, 10); this.value = isNaN(n) ? '' : Math.max(0, n)"
-                                                class="w-full bg-white px-3 py-2 text-sm font-black text-black focus:outline-none focus:bg-yellow-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                        x-transition:enter="transition-all ease-out duration-300"
+                                        x-transition:enter-start="opacity-0 max-h-0 -translate-y-2"
+                                        x-transition:enter-end="opacity-100 max-h-24 translate-y-0"
+                                        x-transition:leave="transition-all ease-in duration-200"
+                                        x-transition:leave-start="opacity-100 max-h-24 translate-y-0"
+                                        x-transition:leave-end="opacity-0 max-h-0 -translate-y-2"
+                                        @click.stop class="overflow-hidden">
+                                        <div class="pt-2">
+                                            <div class="relative rounded-lg overflow-hidden flex border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                <span class="bg-yellow-300 border-r-2 border-black px-3 flex items-center font-black text-xs text-black shrink-0">Rp</span>
+                                                <input type="number" wire:model="extraPeriodPrices.{{ $period }}"
+                                                    placeholder="Total bayar {{ strtolower($label) }}"
+                                                    min="0" oninput="var n = parseInt(this.value, 10); this.value = isNaN(n) ? '' : Math.max(0, n)"
+                                                    class="w-full bg-white px-3 py-2 text-sm font-black text-black focus:outline-none focus:bg-yellow-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                            </div>
+                                            @error('extraPeriodPrices.' . $period)
+                                                <span class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</span>
+                                            @enderror
                                         </div>
-                                        @error('extraPeriodPrices.' . $period)
-                                            <span class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</span>
-                                        @enderror
                                     </div>
                                 </div>
                             @endforeach

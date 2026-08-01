@@ -98,4 +98,28 @@ class Kost extends Model
     {
         return $this->prices()->get()->pluck('price', 'period')->map(fn ($p) => (string) $p)->all();
     }
+
+    public static function rentPeriodLabels(): array
+    {
+        return [
+            'daily' => 'Per Hari',
+            'weekly' => 'Per Minggu',
+            'monthly' => 'Per Bulan',
+            'three_monthly' => 'Per 3 Bulan',
+            'six_monthly' => 'Per 6 Bulan',
+            'yearly' => 'Per Tahun',
+        ];
+    }
+
+    public static function rentPeriodUnit(?string $period): string
+    {
+        return [
+            'daily' => '/hari',
+            'weekly' => '/minggu',
+            'monthly' => '/bln',
+            'three_monthly' => '/3 bln',
+            'six_monthly' => '/6 bln',
+            'yearly' => '/tahun',
+        ][$period ?? ''] ?? '/bln';
+    }
 }

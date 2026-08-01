@@ -97,7 +97,8 @@
 
             <!-- Price Range -->
             <div class="lg:col-span-3">
-                <label class="block text-xs font-black uppercase text-black mb-1.5 tracking-wide">Batas Harga Sewa</label>
+                <label class="block text-xs font-black uppercase text-black mb-1.5 tracking-wide">Batas Harga Sewa
+                    <span class="text-[10px] font-bold normal-case text-zinc-500">(setara per bulan)</span></label>
                 <div class="grid grid-cols-2 gap-2">
                     <select x-ref="minSelect" wire:model="price_min"
                         class="w-full bg-white border-3 border-black rounded-xl px-2 py-2.5 text-xs font-black uppercase tracking-wide text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-no-repeat bg-[right_6px_center] pr-5">
@@ -214,7 +215,7 @@
                                         <div class="shrink-0">
                                             <p class="text-[10px] font-black uppercase text-zinc-500">Harga Sewa</p>
                                             <span class="bg-yellow-300 border-2 border-black font-black text-black px-2.5 py-1 rounded text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center whitespace-nowrap mt-0.5">
-                                                Rp {{ number_format($kost->price_monthly, 0, ',', '.') }}<span class="text-[10px] font-bold ml-0.5">/bln</span>
+                                                Rp {{ number_format($kost->price_monthly, 0, ',', '.') }}<span class="text-[10px] font-bold ml-0.5">{{ \App\Models\Kost::rentPeriodUnit($kost->rent_period) }}</span>
                                             </span>
                                         </div>
                                         <div class="flex flex-wrap justify-end gap-1 overflow-hidden shrink min-w-0">

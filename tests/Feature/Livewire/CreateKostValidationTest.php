@@ -114,6 +114,25 @@ it('passes validation and stores prices when extra periods have valid prices', f
     ]);
 });
 
+it('allows monthly as an extra period when the primary period is not monthly', function () {
+    Livewire::test(CreateKost::class)
+        ->set('name', 'Kost Test')
+        ->set('gender_type', 'campur')
+        ->set('description', 'Deskripsi kost yang cukup panjang minimal sepuluh')
+        ->set('district', 'Andir')
+        ->set('address', 'Jl. Test No. 1')
+        ->set('price_monthly', 12000000)
+        ->set('rent_period', 'yearly')
+        ->set('latitude', -6.918)
+        ->set('longitude', 107.584)
+        ->set('total_rooms', 10)
+        ->set('available_rooms', 5)
+        ->set('extraPeriods', ['monthly'])
+        ->set('extraPeriodPrices.monthly', 1000000)
+        ->call('save')
+        ->assertHasNoErrors(['rent_period', 'extraPeriods', 'extraPeriodPrices.monthly']);
+});
+
 it('addLandmarks appends sanitized items and syncs the string', function () {
     Livewire::test(CreateKost::class)
         ->set('landmarkList', [])
@@ -145,4 +164,58 @@ it('addLandmarks caps the total landmark list at 12 items', function () {
         ->call('addLandmarks', ['Landmark A', 'Landmark B', 'Landmark C', 'Landmark D', 'Landmark E'])
         ->assertSet('landmarkList', array_merge($existing, ['Landmark A', 'Landmark B']))
         ->assertDispatched('landmarks-added', added: 2);
+});
+
+it('rejects an invalid rent period', function () {
+    Livewire::test(CreateKost::class)
+        ->set('name', 'Kost Test')
+        ->set('gender_type', 'campur')
+        ->set('description', 'Deskripsi kost yang cukup panjang minimal sepuluh')
+        ->set('district', 'Andir')
+        ->set('address', 'Jl. Test No. 1')
+        ->set('price_monthly', 500000)
+        ->set('rent_period', 'bulanan')
+        ->set('latitude', -6.918)
+        ->set('longitude', 107.584)
+        ->set('total_rooms', 10)
+        ->set('available_rooms', 5)
+        ->call('save')
+        ->assertHasErrors(['rent_period']);
+});
+
+it('removes the selected primary period from the extra periods', function () {
+    Livewire::test(CreateKost::class)
+        ->set('extraPeriods', ['yearly', 'six_monthly'])
+        ->set('rent_period', 'yearly')
+        ->assertSet('extraPeriods', ['six_monthly'])
+        ->assertSet('extraPeriodPrices.yearly', '');
+});
+
+it('persists a yearly primary period and its price', function () {
+    $user = \App\Models\User::factory()->create();
+    $this->actingAs($user);
+
+    $image = \Illuminate\Http\UploadedFile::fake()->image('test.jpg');
+
+    Livewire::test(CreateKost::class)
+        ->set('name', 'Kost Tahunan')
+        ->set('gender_type', 'campur')
+        ->set('description', 'Deskripsi kost yang cukup panjang minimal sepuluh')
+        ->set('district', 'Andir')
+        ->set('address', 'Jl. Test No. 2')
+        ->set('price_monthly', 12000000)
+        ->set('rent_period', 'yearly')
+        ->set('latitude', -6.918)
+        ->set('longitude', 107.584)
+        ->set('total_rooms', 10)
+        ->set('available_rooms', 5)
+        ->set('photos', [$image, $image, $image, $image])
+        ->call('save')
+        ->assertHasNoErrors(['rent_period', 'price_monthly'])
+        ->assertRedirect(route('dashboard'));
+
+    $kost = \App\Models\Kost::where('name', 'Kost Tahunan')->first();
+    expect($kost)->not->toBeNull();
+    expect($kost->rent_period)->toBe('yearly');
+    expect((float) $kost->price_monthly)->toBe(12000000.0);
 });

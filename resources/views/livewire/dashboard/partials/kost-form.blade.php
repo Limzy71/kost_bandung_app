@@ -683,13 +683,53 @@
                     </div>
                 </div>
 
+                <!-- Periode Sewa Utama -->
+                @php
+                    $rentPeriodUnitMap = [
+                        'daily' => '/ hari',
+                        'weekly' => '/ minggu',
+                        'monthly' => '/ bln',
+                        'three_monthly' => '/ 3 bln',
+                        'six_monthly' => '/ 6 bln',
+                        'yearly' => '/ tahun',
+                    ];
+                    $rentPeriodOptions = [
+                        'daily' => 'Per Hari',
+                        'weekly' => 'Per Minggu',
+                        'monthly' => 'Per Bulan',
+                        'three_monthly' => 'Per 3 Bulan',
+                        'six_monthly' => 'Per 6 Bulan',
+                        'yearly' => 'Per Tahun',
+                    ];
+                    $rentUnit = $rentPeriodUnitMap[$rent_period] ?? '/ bln';
+                @endphp
+                <div class="space-y-2">
+                    <label for="rent_period" class="block text-xs font-black uppercase tracking-wider text-black">
+                        Periode Sewa Utama <span class="text-rose-600">*</span>
+                    </label>
+                    <select id="rent_period" wire:model.live="rent_period"
+                        class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-black text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer">
+                        @foreach ($rentPeriodOptions as $value => $label)
+                            <option value="{{ $value }}">{{ $label }}</option>
+                        @endforeach
+                    </select>
+                    <p class="text-[11px] font-bold italic text-zinc-500">
+                        Periode penyewaan utama kost. Harga utama di bawah mengikuti satuan periode ini.
+                    </p>
+                    @error('rent_period')
+                        <p
+                            class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                            {{ $message }}</p>
+                    @enderror
+                </div>
+
                 <!-- Harga & Jumlah Kamar Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Harga Sewa per Bulan -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Harga Sewa Utama -->
                     <div class="space-y-2">
                         <label for="price_monthly"
                             class="block text-xs font-black uppercase tracking-wider text-black">
-                            Harga Sewa <span class="text-rose-600">*</span>
+                            Harga Sewa Utama <span class="text-rose-600">*</span>
                         </label>
                         <div
                             class="relative rounded-lg overflow-hidden flex border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
@@ -702,11 +742,11 @@
                                 class="w-full bg-white px-4 py-3 text-sm font-black text-black focus:outline-none focus:bg-yellow-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                             <div
                                 class="bg-zinc-100 border-l-2 border-black px-4 flex items-center text-xs font-black text-black uppercase">
-                                / Bln
+                                {{ $rentUnit }}
                             </div>
                         </div>
-                        <p class="text-[11px] font-bold italic text-zinc-500">Harga referensi utama yang tampil di
-                            pencarian.</p>
+                        <p class="text-[11px] font-bold italic text-zinc-500">Harga utama sesuai periode yang dipilih; untuk
+                            filter pencarian dikonversi ke per bulan.</p>
                         @error('price_monthly')
                             <p
                                 class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
@@ -737,24 +777,6 @@
                                 class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
                                 {{ $message }}</p>
                         @enderror
-                    </div>
-
-                    <!-- Listrik & Air Termasuk -->
-                    <div class="space-y-2">
-                        <label class="block text-xs font-black uppercase tracking-wider text-black">
-                            Biaya Listrik & Air
-                        </label>
-                        <label class="cursor-pointer block">
-                            <input type="checkbox" wire:model="include_utilities" value="1"
-                                class="peer sr-only">
-                            <div
-                                class="px-4 py-3 rounded-lg border-2 border-black bg-zinc-50 text-black font-black text-xs md:text-sm flex items-center justify-between gap-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] peer-checked:bg-lime-300 hover:bg-yellow-100 transition-all">
-                                <span>Termasuk Listrik & Air</span>
-                                <span
-                                    class="w-6 h-6 rounded border-2 border-black bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs shrink-0 transition-opacity">✓</span>
-                            </div>
-                        </label>
-                        <p class="text-[11px] font-bold italic text-zinc-500">Pilih jika harga sewa sudah termasuk biaya listrik dan air.</p>
                     </div>
                 </div>
 
@@ -804,13 +826,13 @@
                     </div>
 
                     @php
-                        $periodsArray = collect($extraPeriodLabels)->toArray();
+                        $periodsArray = collect($extraPeriodLabels)->except($rent_period)->toArray();
                         $periodsKeys = array_keys($periodsArray);
                         $periodsValues = array_values($periodsArray);
                         $leftKeys = array_filter($periodsKeys, fn($k) => array_search($k, $periodsKeys) % 2 === 0);
                         $rightKeys = array_filter($periodsKeys, fn($k) => array_search($k, $periodsKeys) % 2 !== 0);
                     @endphp
-                    <div class="grid grid-cols-2 gap-3" x-data="{ periods: @entangle('extraPeriods').live }">
+                    <div class="grid grid-cols-2 gap-3" wire:key="extra-periods-grid-{{ $rent_period }}" x-data="{ periods: @entangle('extraPeriods').live }">
                         {{-- Kolom Kiri --}}
                         <div class="flex flex-col gap-3">
                             @foreach ($leftKeys as $period)
@@ -897,6 +919,27 @@
                         $buildingFacilities = $facilities->where('type', 'building');
                         $parkingFacilities = $facilities->where('type', 'parking');
                     @endphp
+
+                    <!-- Termasuk Listrik & Air -->
+                    <div class="space-y-2">
+                        <label class="block text-xs font-black uppercase tracking-wider text-black">
+                            Biaya Listrik & Air
+                        </label>
+                        <label class="cursor-pointer block">
+                            <input type="checkbox" wire:model="include_utilities" value="1"
+                                class="peer sr-only">
+                            <div
+                                class="px-4 py-3 rounded-lg border-2 border-black bg-zinc-50 text-black font-black text-sm flex items-center justify-between gap-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] peer-checked:bg-lime-300 hover:bg-yellow-100 transition-all">
+                                <span class="flex items-center gap-2">
+                                    <x-icon name="lucide-zap" class="w-4 h-4 stroke-[2.5] shrink-0" />
+                                    Termasuk Listrik & Air
+                                </span>
+                                <span
+                                    class="w-6 h-6 rounded border-2 border-black bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs shrink-0 transition-opacity">✓</span>
+                            </div>
+                        </label>
+                        <p class="text-[11px] font-bold italic text-zinc-500">Pilih jika harga sewa sudah termasuk biaya listrik dan air.</p>
+                    </div>
 
                     <!-- Fasilitas Kamar -->
                     <div class="space-y-3">

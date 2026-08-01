@@ -24,6 +24,7 @@ class EditKost extends Component
     public string $district = '';
     public string $address = '';
     public string $price_monthly = '';
+    public string $rent_period = 'monthly';
     public string $price_deposit = '';
     public bool $include_utilities = false;
     public string $latitude = '';
@@ -68,6 +69,7 @@ class EditKost extends Component
         $this->district = $kost->district;
         $this->address = $kost->address;
         $this->price_monthly = (string) $kost->price_monthly;
+        $this->rent_period = (string) ($kost->rent_period ?? 'monthly');
         $this->price_deposit = $kost->price_deposit !== null ? (string) $kost->price_deposit : '';
         $this->include_utilities = (bool) $kost->include_utilities;
         $this->latitude = (string) $kost->latitude;
@@ -114,6 +116,11 @@ class EditKost extends Component
             $this->extraPeriods[] = $price->period;
             $this->extraPeriodPrices[$price->period] = (string) $price->price;
         }
+
+        $this->extraPeriods = array_values(array_filter(
+            $this->extraPeriods,
+            fn ($period) => $period !== $this->rent_period
+        ));
     }
 
     public function updatedDistrict($value)
@@ -139,6 +146,15 @@ class EditKost extends Component
         if (is_numeric($value) && $value < 0) {
             $this->price_deposit = '0';
         }
+    }
+
+    public function updatedRentPeriod($value)
+    {
+        $this->extraPeriods = array_values(array_filter(
+            $this->extraPeriods,
+            fn ($period) => $period !== $value
+        ));
+        $this->extraPeriodPrices[$value] = '';
     }
 
     public function updatedTotalRooms($value)
@@ -173,6 +189,7 @@ class EditKost extends Component
             'district' => ['required', 'string', \Illuminate\Validation\Rule::in(array_keys(config('bandung.districts', [])))],
             'address' => 'required|string|max:500',
             'price_monthly' => 'required|numeric|min:100000',
+            'rent_period' => 'required|in:daily,weekly,monthly,three_monthly,six_monthly,yearly',
             'price_deposit' => 'nullable|numeric|min:0',
             'include_utilities' => 'boolean',
             'latitude' => 'required|numeric',
@@ -222,7 +239,7 @@ class EditKost extends Component
             'photos' => 'nullable|array|max:10',
             'photos.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
             'extraPeriods' => 'nullable|array',
-            'extraPeriods.*' => 'in:daily,weekly,three_monthly,six_monthly,yearly',
+            'extraPeriods.*' => 'in:daily,weekly,monthly,three_monthly,six_monthly,yearly',
         ];
     }
 
@@ -237,9 +254,11 @@ class EditKost extends Component
             'district.required' => 'Kecamatan wajib dipilih.',
             'district.in' => 'Kecamatan tidak valid.',
             'address.required' => 'Alamat lengkap wajib diisi.',
-            'price_monthly.required' => 'Harga per bulan wajib diisi.',
-            'price_monthly.numeric' => 'Harga per bulan harus berupa angka.',
-            'price_monthly.min' => 'Harga per bulan minimal Rp 100.000.',
+            'price_monthly.required' => 'Harga sewa utama wajib diisi.',
+            'price_monthly.numeric' => 'Harga sewa utama harus berupa angka.',
+            'price_monthly.min' => 'Harga sewa utama minimal Rp 100.000.',
+            'rent_period.required' => 'Periode sewa utama wajib dipilih.',
+            'rent_period.in' => 'Periode sewa utama tidak valid.',
             'price_deposit.numeric' => 'Uang deposit harus berupa angka.',
             'price_deposit.min' => 'Uang deposit tidak boleh negatif.',
             'latitude.required' => 'Titik lokasi peta wajib ditentukan.',
@@ -471,6 +490,13 @@ class EditKost extends Component
                         );
                     }
                 }
+
+                if (in_array($this->rent_period, $this->extraPeriods, true)) {
+                    $validator->errors()->add(
+                        'extraPeriods',
+                        'Periode sewa utama tidak boleh diduplikasi pada periode lain.'
+                    );
+                }
             });
         });
     }
@@ -507,6 +533,7 @@ class EditKost extends Component
             'description' => $this->description,
             'gender_type' => $this->gender_type,
             'price_monthly' => $this->price_monthly,
+            'rent_period' => $this->rent_period,
             'price_deposit' => $this->price_deposit !== '' ? $this->price_deposit : null,
             'include_utilities' => $this->include_utilities,
             'address' => $this->address,

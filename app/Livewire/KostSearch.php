@@ -75,13 +75,19 @@ class KostSearch extends Component
             $query->where('gender_type', $this->gender);
         }
 
+        // Normalize the price filter to a monthly-equivalent so costs with a
+        // different primary rent period (daily/weekly/3m/6m/yearly) stay
+        // comparable against a monthly min/max range.
+        $monthlyRefExpr = "price_monthly / CASE rent_period WHEN 'daily' THEN 30 WHEN 'weekly' THEN 4.333 WHEN 'three_monthly' THEN 3 WHEN 'six_monthly' THEN 6 WHEN 'yearly' THEN 12 ELSE 1 END";
+
         if ($this->price_min) {
-            $query->where('price_monthly', '>=', $this->price_min);
+            $query->whereRaw("{$monthlyRefExpr} >= ?", [(int) $this->price_min]);
         }
 
         if ($this->price_max) {
-            $query->where('price_monthly', '<=', $this->price_max);
+            $query->whereRaw("{$monthlyRefExpr} <= ?", [(int) $this->price_max]);
         }
+
 
         // Compute district counts before applying the district filter
         $districtCounts = (clone $query)

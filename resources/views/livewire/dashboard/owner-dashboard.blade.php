@@ -232,7 +232,7 @@
                                         <div>
                                             <p class="text-[10px] font-black uppercase text-zinc-500">Harga Sewa</p>
                                             <span class="bg-yellow-300 border-2 border-black font-black text-black px-2.5 py-0.5 rounded text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-block mt-0.5">
-                                                Rp {{ number_format($kost->price_monthly, 0, ',', '.') }}<span class="text-[10px] font-bold">/bln</span>
+                                                Rp {{ number_format($kost->price_monthly, 0, ',', '.') }}<span class="text-[10px] font-bold">{{ \App\Models\Kost::rentPeriodUnit($kost->rent_period) }}</span>
                                             </span>
                                         </div>
 

@@ -20,24 +20,20 @@
         $waNumber = '';
     }
 
-    $rentPeriodLabels = [
-        'daily' => 'Per Hari',
-        'weekly' => 'Per Minggu',
-        'monthly' => 'Per Bulan',
-        'yearly' => 'Per Tahun',
-    ];
+    $rentPeriodLabels = \App\Models\Kost::rentPeriodLabels();
     $rentPeriodLabel = $rentPeriodLabels[$kost->rent_period] ?? 'Per Bulan';
+    $rentPeriodUnit = \App\Models\Kost::rentPeriodUnit($kost->rent_period);
 
     $extraPeriodLabels = \App\Models\KostPrice::periodLabels();
     $periodOrder = ['daily' => 1, 'weekly' => 2, 'three_monthly' => 3, 'six_monthly' => 4, 'yearly' => 5];
-    $periodSummary = collect(['Per Bulan'])
+    $periodSummary = collect([$rentPeriodLabel])
         ->concat(
             $kost->prices
                 ->sortBy(fn ($p) => $periodOrder[$p->period] ?? 99)
                 ->map(fn ($p) => $extraPeriodLabels[$p->period] ?? ucfirst($p->period)),
         )
         ->values();
-    $priceOptions = collect([['label' => 'Per Bulan', 'price' => $kost->price_monthly]])
+    $priceOptions = collect([['label' => $rentPeriodLabel, 'price' => $kost->price_monthly]])
         ->concat(
             $kost->prices
                 ->sortBy(fn ($p) => $periodOrder[$p->period] ?? 99)
@@ -466,12 +462,12 @@
                     <!-- Display Harga -->
                     <div
                         class="bg-yellow-300 border-3 border-black p-4 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] space-y-1">
-                        <p class="text-xs font-black uppercase tracking-wider text-black">Harga Sewa Bulanan</p>
+                        <p class="text-xs font-black uppercase tracking-wider text-black">Harga Sewa Utama</p>
                         <div class="flex items-baseline gap-1">
                             <span class="text-3xl font-black text-black tracking-tight">
                                 Rp {{ number_format($kost->price_monthly, 0, ',', '.') }}
                             </span>
-                            <span class="text-xs font-black text-black">/ bulan</span>
+                            <span class="text-xs font-black text-black">{{ $rentPeriodUnit }}</span>
                         </div>
                     </div>
 
@@ -614,7 +610,7 @@
                 <div class="flex items-baseline gap-1">
                     <span class="text-lg font-black text-black">Rp
                         {{ number_format($kost->price_monthly, 0, ',', '.') }}</span>
-                    <span class="text-[10px] font-bold text-black">/bln</span>
+                    <span class="text-[10px] font-bold text-black">{{ $rentPeriodUnit }}</span>
                 </div>
             </div>
 

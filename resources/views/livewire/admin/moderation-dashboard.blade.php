@@ -340,7 +340,7 @@
                                 <div class="pt-2 border-t-2 border-black grid grid-cols-2 gap-2 text-center">
                                     <div class="bg-yellow-300 border-2 border-black p-2 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                                         <p class="text-[9px] font-black uppercase text-black">Harga Sewa</p>
-                                        <p class="text-xs font-black text-black mt-0.5">Rp {{ number_format($kost->price_monthly, 0, ',', '.') }}/bln</p>
+                                        <p class="text-xs font-black text-black mt-0.5">Rp {{ number_format($kost->price_monthly, 0, ',', '.') }}{{ \App\Models\Kost::rentPeriodUnit($kost->rent_period) }}</p>
                                     </div>
 
                                     <div class="bg-cyan-300 border-2 border-black p-2 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">

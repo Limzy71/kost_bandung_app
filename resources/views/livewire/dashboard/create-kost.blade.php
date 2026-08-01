@@ -38,7 +38,7 @@
                     <div x-data="{ show: true }" x-show="show" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" class="bg-rose-100 border-3 border-black p-4 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-between gap-3 text-rose-900 font-black text-xs">
                         <div class="flex items-center gap-2">
                             <x-icon name="lucide-triangle-alert" class="w-5 h-5 text-rose-600 shrink-0 stroke-[2.5]" />
-                            <span>Mohon lengkapi seluruh kolom wajib bertanda merah sebelum menyimpan properti.</span>
+                            <span>Gagal menyimpan properti. Silakan periksa kembali bagian berpita merah di atas.</span>
                         </div>
                         <button type="button" @click="show = false" class="text-black hover:bg-rose-200 px-2 py-0.5 rounded border border-black font-black text-xs">✕</button>
                     </div>

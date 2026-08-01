@@ -252,29 +252,29 @@
                                 <button 
                                     wire:click="toggleAvailability({{ $kost->id }})" 
                                     wire:loading.attr="disabled"
-                                    class="h-9 px-3.5 border-2 border-black text-xs font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer flex items-center justify-center whitespace-nowrap flex-1 min-w-[150px] {{ $kost->is_available ? 'bg-rose-400 hover:bg-rose-300 text-black' : 'bg-lime-400 hover:bg-lime-300 text-black' }}"
+                                    class="w-full h-10 px-3.5 border-2 border-black text-xs font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer flex items-center justify-center whitespace-nowrap {{ $kost->is_available ? 'bg-rose-400 hover:bg-rose-300 text-black' : 'bg-lime-400 hover:bg-lime-300 text-black' }}"
                                 >
                                     <span wire:loading.remove wire:target="toggleAvailability({{ $kost->id }})" class="inline-flex items-center gap-1.5 whitespace-nowrap">
                                         @if($kost->is_available)
-                                            <x-icon name="lucide-ban" class="w-3.5 h-3.5 stroke-[2.5] shrink-0" />
+                                            <x-icon name="lucide-ban" class="w-4 h-4 stroke-[2.5] shrink-0" />
                                             <span>Set Status Penuh</span>
                                         @else
-                                            <x-icon name="lucide-circle-check" class="w-3.5 h-3.5 stroke-[2.5] shrink-0" />
+                                            <x-icon name="lucide-circle-check" class="w-4 h-4 stroke-[2.5] shrink-0" />
                                             <span>Set Status Tersedia</span>
                                         @endif
                                     </span>
                                     <span wire:loading.inline-flex wire:target="toggleAvailability({{ $kost->id }})" class="items-center gap-1.5 whitespace-nowrap">
-                                        <x-icon name="lucide-loader-circle" class="animate-spin h-3.5 w-3.5 text-black shrink-0" />
+                                        <x-icon name="lucide-loader-circle" class="animate-spin h-4 w-4 text-black shrink-0" />
                                         <span>Memproses...</span>
                                     </span>
                                 </button>
 
                                 <!-- Edit & Detail Links Group -->
-                                <div class="flex items-center gap-2 flex-1 min-w-[150px]">
+                                <div class="flex items-center gap-2 w-full">
                                     <!-- Edit Link Button -->
                                     <a 
                                         href="{{ route('dashboard.kost.edit', $kost->slug) }}" 
-                                        class="h-9 px-2 bg-cyan-400 hover:bg-cyan-300 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg inline-flex items-center justify-center gap-1 whitespace-nowrap flex-1 w-full"
+                                        class="h-10 px-2 bg-cyan-400 hover:bg-cyan-300 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg inline-flex items-center justify-center gap-1 whitespace-nowrap flex-1"
                                     >
                                         <span>Edit</span>
                                         <x-icon name="lucide-pencil" class="w-3.5 h-3.5 stroke-[3]" />
@@ -283,7 +283,7 @@
                                     <!-- Detail Link Button -->
                                     <a 
                                         href="{{ route('kost.show', $kost->slug) }}?from=dashboard" 
-                                        class="h-9 px-2 bg-orange-400 hover:bg-orange-300 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg inline-flex items-center justify-center gap-1 whitespace-nowrap flex-1 w-full"
+                                        class="h-10 px-2 bg-orange-400 hover:bg-orange-300 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg inline-flex items-center justify-center gap-1 whitespace-nowrap flex-1"
                                     >
                                         <span>Lihat</span>
                                         <x-icon name="lucide-arrow-right" class="w-3.5 h-3.5 stroke-[3]" />

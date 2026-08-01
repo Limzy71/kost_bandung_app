@@ -511,10 +511,9 @@ class EditKost extends Component
             throw $e;
         }
 
-        usleep(1500000); // 1.5 detik jika berhasil (durasi UX ideal)
-
         $totalPhotos = count($this->existingPhotos) + count($this->photos);
         if ($totalPhotos < 4) {
+            usleep(1000000);
             $this->addError('photos', 'MINIMAL 4 FOTO KOST WAJIB ADA.');
             return;
         }
@@ -529,6 +528,7 @@ class EditKost extends Component
                 $lat < $bounds['lat_min'] || $lat > $bounds['lat_max'] ||
                 $lng < $bounds['lng_min'] || $lng > $bounds['lng_max']
             ) {
+                usleep(1000000);
                 $this->addError('latitude', 'Koordinat peta tidak berada di dalam wilayah Kecamatan yang dipilih.');
                 return;
             }
@@ -536,7 +536,7 @@ class EditKost extends Component
 
         $kost = $this->kost;
 
-        $kost->update([
+        $kost->fill([
             'name' => $this->name,
             'description' => $this->description,
             'gender_type' => $this->gender_type,
@@ -555,6 +555,16 @@ class EditKost extends Component
             'nearby_landmarks' => $this->nearby_landmarks !== '' ? $this->nearby_landmarks : null,
             'additional_rules_note' => $this->additional_rules_note !== '' ? $this->additional_rules_note : null,
         ]);
+
+        $hasChanges = $kost->isDirty() || count($this->photos) > 0 || count($this->removeExistingIds) > 0 || $this->primaryPhotoId !== null;
+
+        if ($hasChanges) {
+            usleep(1500000); // 1.5 detik jika ada perubahan
+        } else {
+            usleep(1000000); // 1 detik jika tidak ada yang diubah
+        }
+
+        $kost->save();
 
         // Delete removed existing photos
         if (! empty($this->removeExistingIds)) {

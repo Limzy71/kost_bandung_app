@@ -841,6 +841,9 @@
                 const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
                 const hasGoogleKey = config.googleMapsApiKey;
 
+                let leafletRetries = 0;
+                const LEAFLET_MAX_RETRIES = 5;
+
                 const initLeaflet = () => {
                     if (this.map || typeof L === 'undefined') return;
 
@@ -879,7 +882,12 @@
 
                 const loadLeafletAndInit = () => {
                     if (typeof L !== 'undefined') {
+                        leafletRetries = 0;
                         initLeaflet();
+                        return;
+                    }
+                    if (leafletRetries >= LEAFLET_MAX_RETRIES) {
+                        if (!this.map) window.dispatchEvent(new Event('map-load-error'));
                         return;
                     }
                     if (!document.getElementById('leaflet-detail-css')) {
@@ -893,9 +901,18 @@
                         const script = document.createElement('script');
                         script.id = 'leaflet-detail-js';
                         script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-                        script.onload = () => initLeaflet();
+                        script.onload = () => {
+                            leafletRetries = 0;
+                            initLeaflet();
+                        };
+                        script.onerror = () => {
+                            const el = document.getElementById('leaflet-detail-js');
+                            if (el) el.remove();
+                            window.dispatchEvent(new Event('map-load-error'));
+                        };
                         document.head.appendChild(script);
                     } else {
+                        leafletRetries++;
                         setTimeout(() => loadLeafletAndInit(), 200);
                     }
                 };

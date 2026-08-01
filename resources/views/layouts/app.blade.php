@@ -6,7 +6,8 @@
     <title>{{ $title ?? 'Kost Bandung - Cari Kost Hyper-Local' }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap"></noscript>
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/catalog-map.js'])
 </head>
 <body class="h-full flex flex-col font-sans antialiased text-gray-950 bg-[#f8f9fa]">

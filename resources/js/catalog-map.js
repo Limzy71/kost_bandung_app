@@ -7,6 +7,9 @@
  * mode and the container div is actually visible in the DOM. This prevents
  * "blank map" issues caused by initializing Google Maps inside a hidden div.
  */
+let catalogLeafletRetries = 0;
+const CATALOG_LEAFLET_MAX_RETRIES = 5;
+
 window.catalogMap = function (config) {
     return {
         viewMode: 'list',
@@ -99,7 +102,12 @@ window.catalogMap = function (config) {
 
         loadLeafletAndInit() {
             if (typeof L !== 'undefined') {
+                catalogLeafletRetries = 0;
                 this.setupLeafletMap();
+                return;
+            }
+            if (catalogLeafletRetries >= CATALOG_LEAFLET_MAX_RETRIES) {
+                if (!this.map) window.dispatchEvent(new Event('map-load-error'));
                 return;
             }
             if (!document.getElementById('leaflet-css')) {
@@ -113,10 +121,18 @@ window.catalogMap = function (config) {
                 const script = document.createElement('script');
                 script.id = 'leaflet-js';
                 script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-                script.onload = () => this.setupLeafletMap();
-                script.onerror = () => window.dispatchEvent(new Event('map-load-error'));
+                script.onload = () => {
+                    catalogLeafletRetries = 0;
+                    this.setupLeafletMap();
+                };
+                script.onerror = () => {
+                    const el = document.getElementById('leaflet-js');
+                    if (el) el.remove();
+                    window.dispatchEvent(new Event('map-load-error'));
+                };
                 document.head.appendChild(script);
             } else {
+                catalogLeafletRetries++;
                 setTimeout(() => this.loadLeafletAndInit(), 200);
             }
         },

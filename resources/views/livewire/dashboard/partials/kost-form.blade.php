@@ -453,7 +453,9 @@
                                         var lk = document.createElement('link'); lk.id = 'leaflet-css'; lk.rel = 'stylesheet'; lk.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'; document.head.appendChild(lk);
                                     }
                                     if (!document.getElementById('leaflet-js')) {
-                                        var ls = document.createElement('script'); ls.id = 'leaflet-js'; ls.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'; ls.onload = setupLeaflet; document.body.appendChild(ls);
+                                        var ls = document.createElement('script'); ls.id = 'leaflet-js'; ls.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'; ls.onload = setupLeaflet;
+                                        ls.onerror = function() { var el = document.getElementById('leaflet-js'); if (el) el.remove(); window.dispatchEvent(new Event('map-load-error')); };
+                                        document.body.appendChild(ls);
                                     } else { setupLeaflet(); }
                                 };
 

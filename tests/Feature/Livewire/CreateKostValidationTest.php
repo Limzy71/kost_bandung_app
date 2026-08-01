@@ -113,3 +113,36 @@ it('passes validation and stores prices when extra periods have valid prices', f
         'yearly' => '4800000.00',
     ]);
 });
+
+it('addLandmarks appends sanitized items and syncs the string', function () {
+    Livewire::test(CreateKost::class)
+        ->set('landmarkList', [])
+        ->call('addLandmarks', ['  Alfamidi  ', '120m Masjid Al-Ihsan', ''])
+        ->assertSet('landmarkList', ['Alfamidi', '120m Masjid Al-Ihsan'])
+        ->assertSet('nearby_landmarks', 'Alfamidi, 120m Masjid Al-Ihsan')
+        ->assertDispatched('landmarks-added', added: 2);
+});
+
+it('addLandmarks skips duplicates case-insensitively', function () {
+    Livewire::test(CreateKost::class)
+        ->set('landmarkList', ['Alfamidi'])
+        ->call('addLandmarks', ['alfamidi', 'ATM BCA'])
+        ->assertSet('landmarkList', ['Alfamidi', 'ATM BCA'])
+        ->assertDispatched('landmarks-added', added: 1);
+});
+
+it('addLandmarks dispatches zero count when nothing new is added', function () {
+    Livewire::test(CreateKost::class)
+        ->set('landmarkList', ['Alfamidi'])
+        ->call('addLandmarks', ['Alfamidi'])
+        ->assertDispatched('landmarks-added', added: 0);
+});
+
+it('addLandmarks caps the total landmark list at 12 items', function () {
+    $existing = array_map(fn ($i) => 'Landmark ' . $i, range(1, 10));
+    Livewire::test(CreateKost::class)
+        ->set('landmarkList', $existing)
+        ->call('addLandmarks', ['Landmark A', 'Landmark B', 'Landmark C', 'Landmark D', 'Landmark E'])
+        ->assertSet('landmarkList', array_merge($existing, ['Landmark A', 'Landmark B']))
+        ->assertDispatched('landmarks-added', added: 2);
+});

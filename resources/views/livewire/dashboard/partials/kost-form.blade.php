@@ -1165,7 +1165,80 @@
                 </div>
 
                 <!-- Landmark Terdekat (Multi-Item) -->
-                <div class="space-y-2">
+                <div class="space-y-2"
+                    x-data="{
+                        detecting: false,
+                        detectMsg: '',
+                        detectType: 'ok',
+                        msgTimer: null,
+                        lat: @entangle('latitude'),
+                        lng: @entangle('longitude'),
+                        showDetectMsg(msg, type = 'ok') {
+                            this.detectMsg = msg;
+                            this.detectType = type;
+                            clearTimeout(this.msgTimer);
+                            this.msgTimer = setTimeout(() => { this.detectMsg = ''; }, 6000);
+                        },
+                        haversine(lat1, lng1, lat2, lng2) {
+                            const toRad = (d) => (d * Math.PI) / 180;
+                            const R = 6371000;
+                            const dLat = toRad(lat2 - lat1);
+                            const dLng = toRad(lng2 - lng1);
+                            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+                            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                        },
+                        detect() {
+                            this.detectMsg = '';
+                            const lat = parseFloat(this.lat), lng = parseFloat(this.lng);
+                            if (isNaN(lat) || isNaN(lng)) {
+                                this.showDetectMsg('Letakkan pin lokasi di peta (Seksi 2) terlebih dahulu.', 'warn');
+                                return;
+                            }
+                            if (!window.google || !window.google.maps || !window.google.maps.places) {
+                                this.showDetectMsg('Deteksi otomatis membutuhkan Google Maps. Tambahkan landmark secara manual.', 'warn');
+                                return;
+                            }
+                            this.detecting = true;
+                            const allowed = new Set([
+                                'grocery_or_supermarket', 'supermarket', 'convenience_store', 'department_store', 'shopping_mall', 'store',
+                                'restaurant', 'meal_takeaway', 'cafe', 'bakery', 'food',
+                                'mosque', 'church', 'place_of_worship', 'hindu_temple', 'synagogue',
+                                'university', 'school', 'primary_school', 'secondary_school',
+                                'hospital', 'pharmacy', 'doctor', 'dentist', 'health',
+                                'gym', 'fitness_center', 'spa', 'beauty_salon',
+                                'atm', 'bank',
+                                'transit_station', 'bus_station', 'bus_stop', 'train_station', 'subway_station', 'light_rail_station', 'taxi_stand',
+                                'toll_station', 'toll_booth'
+                            ]);
+                            const brandRe = /alfamidi|alfamart|indomaret|circle.?k/i;
+                            const tollRe = /\btol\b|toll|gerbang.*tol/i;
+                            const service = new google.maps.places.PlacesService(document.createElement('div'));
+                            service.nearbySearch({
+                                location: { lat: lat, lng: lng },
+                                rankBy: google.maps.places.RankBy.DISTANCE
+                            }, (results, status) => {
+                                this.detecting = false;
+                                if (status !== 'OK' || !results || results.length === 0) {
+                                    this.showDetectMsg('Tidak ada titik terdekat dalam radius 500m dari pin lokasi.', 'warn');
+                                    return;
+                                }
+                                const items = results
+                                    .map((p) => ({ d: this.haversine(lat, lng, p.geometry.location.lat(), p.geometry.location.lng()), name: (p.name || '').trim(), types: p.types || [] }))
+                                    .filter((r) => r.d <= 500)
+                                    .filter((r) => r.types.some((t) => allowed.has(t)) || brandRe.test(r.name) || tollRe.test(r.name))
+                                    .sort((a, b) => a.d - b.d)
+                                    .slice(0, 8)
+                                    .map((r) => Math.round(r.d) + 'm ' + r.name);
+                                if (items.length === 0) {
+                                    this.showDetectMsg('Tidak ada titik strategis baru dalam 500m dari pin lokasi.', 'warn');
+                                    return;
+                                }
+                                this.$wire.addLandmarks(items);
+                            });
+                        }
+                    }"
+                    @landmarks-added.window="showDetectMsg($event.detail.added > 0 ? $event.detail.added + ' titik terdekat ditambahkan.' : 'Tidak ada titik baru ditambahkan (sudah ada atau batas 12 tercapai).', $event.detail.added > 0 ? 'ok' : 'warn')">
                     <label class="block text-xs font-black uppercase tracking-wider text-black">
                         Titik Terdekat / Landmark (Opsional - Bisa Banyak)
                     </label>
@@ -1180,8 +1253,18 @@
                             + Tambah
                         </button>
                     </div>
+                    <div class="flex flex-wrap items-center gap-2.5">
+                        <button type="button" @click="detect()" :disabled="detecting"
+                            class="px-5 py-3 bg-emerald-300 hover:bg-emerald-400 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer shrink-0 disabled:opacity-50 disabled:cursor-wait">
+                            <span x-text="detecting ? 'Mendeteksi...' : '📍 Deteksi Otomatis (500m)'"></span>
+                        </button>
+                        <p x-show="detectMsg !== ''" x-cloak x-text="detectMsg"
+                            class="text-xs font-black px-2.5 py-1 rounded-md border-2"
+                            :class="detectType === 'ok' ? 'bg-emerald-100 text-emerald-700 border-emerald-500' : 'bg-amber-100 text-amber-700 border-amber-500'"></p>
+                    </div>
                     <p class="text-[11px] font-bold italic text-zinc-500">
-                        Masukkan lokasi strategis terdekat satu per satu (kampus, rumah sakit, minimarket, tol, dll).
+                        Masukkan lokasi strategis terdekat satu per satu, atau klik "Deteksi Otomatis" untuk mengisi
+                        titik terdekat dalam 500m (minimarket, rumah makan, tempat ibadah, kampus, rumah sakit, gym, ATM, transportasi, tol).
                     </p>
                     @error('newLandmark')
                         <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>

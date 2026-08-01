@@ -180,7 +180,7 @@ class EditKost extends Component
             'total_rooms' => 'required|integer|min:1',
             'available_rooms' => 'required|integer|min:0|lte:total_rooms',
             'whatsapp_contact' => 'nullable|regex:/^[0-9+()\-\s]{9,16}$/',
-            'nearby_landmarks' => 'nullable|string|max:255',
+            'nearby_landmarks' => 'nullable|string|max:1000',
             'selectedFacilities' => 'nullable|array',
             'selectedFacilities.*' => 'exists:facilities,id',
             'customFacilities' => 'nullable|array',
@@ -406,6 +406,37 @@ class EditKost extends Component
         $this->landmarkList[] = $name;
         $this->newLandmark = '';
         $this->syncLandmarksString();
+    }
+
+    public function addLandmarks(array $items)
+    {
+        $added = 0;
+        foreach ($items as $item) {
+            $name = trim((string) $item);
+            $name = Str::limit($name, 60, '');
+            if ($name === '' || count($this->landmarkList) >= 12 || $this->landmarkExists($name)) {
+                continue;
+            }
+            $this->landmarkList[] = $name;
+            $added++;
+        }
+
+        if ($added > 0) {
+            $this->syncLandmarksString();
+        }
+
+        $this->dispatch('landmarks-added', added: $added);
+    }
+
+    private function landmarkExists(string $name): bool
+    {
+        foreach ($this->landmarkList as $existing) {
+            if (Str::lower($existing) === Str::lower($name)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function removeLandmark($index)

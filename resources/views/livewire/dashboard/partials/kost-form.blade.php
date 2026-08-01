@@ -39,31 +39,31 @@
                         Tipe Penghuni Kost <span class="text-rose-600">*</span>
                     </label>
                     <div class="grid grid-cols-3 gap-3">
-                        <label class="cursor-pointer">
+                        <label class="cursor-pointer h-full">
                             <input type="radio" wire:model="gender_type" value="campur" class="peer sr-only">
                             <div
-                                class="px-4 py-3.5 rounded-lg border-2 border-black text-center font-black text-xs md:text-sm text-black bg-zinc-50 hover:bg-yellow-100 peer-checked:bg-yellow-400 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-center gap-2">
+                                class="h-full min-h-[68px] px-2 py-3 rounded-lg border-2 border-black text-center font-black text-xs md:text-sm text-black bg-zinc-50 hover:bg-yellow-100 peer-checked:bg-yellow-400 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex flex-col items-center justify-center gap-1.5">
                                 <x-icon name="lucide-users"
-                                    class="w-4 h-4 md:w-5 md:h-5 text-black stroke-[2.5]" />
-                                <span>Campur</span>
+                                    class="w-5 h-5 text-black stroke-[2.5] shrink-0" />
+                                <span class="leading-tight">Campur</span>
                             </div>
                         </label>
 
-                        <label class="cursor-pointer">
+                        <label class="cursor-pointer h-full">
                             <input type="radio" wire:model="gender_type" value="putri" class="peer sr-only">
                             <div
-                                class="px-4 py-3.5 rounded-lg border-2 border-black text-center font-black text-xs md:text-sm text-black bg-zinc-50 hover:bg-pink-100 peer-checked:bg-pink-400 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-center gap-2">
-                                <x-icon name="lucide-user" class="w-4 h-4 md:w-5 md:h-5 text-black stroke-[2.5]" />
-                                <span>Khusus Putri</span>
+                                class="h-full min-h-[68px] px-2 py-3 rounded-lg border-2 border-black text-center font-black text-xs md:text-sm text-black bg-zinc-50 hover:bg-pink-100 peer-checked:bg-pink-300 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex flex-col items-center justify-center gap-1.5">
+                                <x-icon name="lucide-user" class="w-5 h-5 text-black stroke-[2.5] shrink-0" />
+                                <span class="leading-tight">Khusus Putri</span>
                             </div>
                         </label>
 
-                        <label class="cursor-pointer">
+                        <label class="cursor-pointer h-full">
                             <input type="radio" wire:model="gender_type" value="putra" class="peer sr-only">
                             <div
-                                class="px-4 py-3.5 rounded-lg border-2 border-black text-center font-black text-xs md:text-sm text-black bg-zinc-50 hover:bg-cyan-100 peer-checked:bg-cyan-300 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-center gap-2">
-                                <x-icon name="lucide-user" class="w-4 h-4 md:w-5 md:h-5 text-black stroke-[2.5]" />
-                                <span>Khusus Putra</span>
+                                class="h-full min-h-[68px] px-2 py-3 rounded-lg border-2 border-black text-center font-black text-xs md:text-sm text-black bg-zinc-50 hover:bg-cyan-100 peer-checked:bg-cyan-300 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex flex-col items-center justify-center gap-1.5">
+                                <x-icon name="lucide-user" class="w-5 h-5 text-black stroke-[2.5] shrink-0" />
+                                <span class="leading-tight">Khusus Putra</span>
                             </div>
                         </label>
                     </div>
@@ -818,27 +818,33 @@
                                 <div
                                     @click="periods.includes('{{ $period }}') ? periods = periods.filter(p => p !== '{{ $period }}') : periods.push('{{ $period }}')"
                                     :class="periods.includes('{{ $period }}') ? 'bg-lime-300' : 'bg-zinc-50 hover:bg-yellow-100'"
-                                    class="rounded-lg border-2 border-black p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-colors duration-200 cursor-pointer select-none">
+                                    class="rounded-lg border-2 border-black p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-colors duration-300 cursor-pointer select-none">
                                     <input type="checkbox" id="extra-period-{{ $period }}" value="{{ $period }}"
                                         :checked="periods.includes('{{ $period }}')" tabindex="-1" class="sr-only">
                                     <span class="flex items-center justify-between gap-2 text-black font-black text-xs md:text-sm">
                                         <span>{{ $label }}</span>
                                         <span
                                             :class="periods.includes('{{ $period }}') ? 'bg-black text-lime-300' : ''"
-                                            class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black font-black text-xs shrink-0 transition-colors duration-200">✓</span>
+                                            class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black font-black text-xs shrink-0 transition-colors duration-300">✓</span>
                                     </span>
-                                    <div x-show="periods.includes('{{ $period }}')" x-collapse.duration.300ms x-cloak
-                                        @click.stop class="pt-2">
-                                        <div class="relative rounded-lg overflow-hidden flex border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                            <span class="bg-yellow-300 border-r-2 border-black px-3 flex items-center font-black text-xs text-black shrink-0">Rp</span>
-                                            <input type="number" wire:model="extraPeriodPrices.{{ $period }}"
-                                                placeholder="Total bayar {{ strtolower($label) }}"
-                                                min="0" oninput="var n = parseInt(this.value, 10); this.value = isNaN(n) ? '' : Math.max(0, n)"
-                                                class="w-full bg-white px-3 py-2 text-sm font-black text-black focus:outline-none focus:bg-yellow-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                    <div x-cloak @click.stop
+                                        class="grid grid-rows-[0fr] opacity-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                                        :class="periods.includes('{{ $period }}') ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'"
+                                        :inert="!periods.includes('{{ $period }}')">
+                                        <div class="overflow-hidden min-h-0">
+                                            <div class="pt-2">
+                                                <div class="relative rounded-lg overflow-hidden flex border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                    <span class="bg-yellow-300 border-r-2 border-black px-3 flex items-center font-black text-xs text-black shrink-0">Rp</span>
+                                                    <input type="number" wire:model="extraPeriodPrices.{{ $period }}"
+                                                        placeholder="Total bayar {{ strtolower($label) }}"
+                                                        min="0" oninput="var n = parseInt(this.value, 10); this.value = isNaN(n) ? '' : Math.max(0, n)"
+                                                        class="w-full bg-white px-3 py-2 text-sm font-black text-black focus:outline-none focus:bg-yellow-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                                </div>
+                                                @error('extraPeriodPrices.' . $period)
+                                                    <span class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</span>
+                                                @enderror
+                                            </div>
                                         </div>
-                                        @error('extraPeriodPrices.' . $period)
-                                            <span class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</span>
-                                        @enderror
                                     </div>
                                 </div>
                             @endforeach
@@ -850,27 +856,33 @@
                                 <div
                                     @click="periods.includes('{{ $period }}') ? periods = periods.filter(p => p !== '{{ $period }}') : periods.push('{{ $period }}')"
                                     :class="periods.includes('{{ $period }}') ? 'bg-lime-300' : 'bg-zinc-50 hover:bg-yellow-100'"
-                                    class="rounded-lg border-2 border-black p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-colors duration-200 cursor-pointer select-none">
+                                    class="rounded-lg border-2 border-black p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-colors duration-300 cursor-pointer select-none">
                                     <input type="checkbox" id="extra-period-{{ $period }}" value="{{ $period }}"
                                         :checked="periods.includes('{{ $period }}')" tabindex="-1" class="sr-only">
                                     <span class="flex items-center justify-between gap-2 text-black font-black text-xs md:text-sm">
                                         <span>{{ $label }}</span>
                                         <span
                                             :class="periods.includes('{{ $period }}') ? 'bg-black text-lime-300' : ''"
-                                            class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black font-black text-xs shrink-0 transition-colors duration-200">✓</span>
+                                            class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black font-black text-xs shrink-0 transition-colors duration-300">✓</span>
                                     </span>
-                                    <div x-show="periods.includes('{{ $period }}')" x-collapse.duration.300ms x-cloak
-                                        @click.stop class="pt-2">
-                                        <div class="relative rounded-lg overflow-hidden flex border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                            <span class="bg-yellow-300 border-r-2 border-black px-3 flex items-center font-black text-xs text-black shrink-0">Rp</span>
-                                            <input type="number" wire:model="extraPeriodPrices.{{ $period }}"
-                                                placeholder="Total bayar {{ strtolower($label) }}"
-                                                min="0" oninput="var n = parseInt(this.value, 10); this.value = isNaN(n) ? '' : Math.max(0, n)"
-                                                class="w-full bg-white px-3 py-2 text-sm font-black text-black focus:outline-none focus:bg-yellow-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                    <div x-cloak @click.stop
+                                        class="grid grid-rows-[0fr] opacity-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                                        :class="periods.includes('{{ $period }}') ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'"
+                                        :inert="!periods.includes('{{ $period }}')">
+                                        <div class="overflow-hidden min-h-0">
+                                            <div class="pt-2">
+                                                <div class="relative rounded-lg overflow-hidden flex border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                    <span class="bg-yellow-300 border-r-2 border-black px-3 flex items-center font-black text-xs text-black shrink-0">Rp</span>
+                                                    <input type="number" wire:model="extraPeriodPrices.{{ $period }}"
+                                                        placeholder="Total bayar {{ strtolower($label) }}"
+                                                        min="0" oninput="var n = parseInt(this.value, 10); this.value = isNaN(n) ? '' : Math.max(0, n)"
+                                                        class="w-full bg-white px-3 py-2 text-sm font-black text-black focus:outline-none focus:bg-yellow-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                                </div>
+                                                @error('extraPeriodPrices.' . $period)
+                                                    <span class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</span>
+                                                @enderror
+                                            </div>
                                         </div>
-                                        @error('extraPeriodPrices.' . $period)
-                                            <span class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</span>
-                                        @enderror
                                     </div>
                                 </div>
                             @endforeach

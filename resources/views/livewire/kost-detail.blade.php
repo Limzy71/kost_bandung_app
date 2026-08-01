@@ -380,7 +380,18 @@
                                 <div
                                     class="flex items-start gap-3 bg-zinc-100 border-2 border-black p-3.5 rounded-xl text-sm font-bold text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                                     <x-icon name="lucide-check" class="w-4 h-4 text-pink-600 shrink-0 stroke-[2.5] mt-0.5" />
-                                    <span>{{ $rule->name }}</span>
+                                    <div>
+                                        <span class="font-black">{{ $rule->name }}</span>
+                                        @if (Str::contains(strtolower($rule->name), 'pasutri'))
+                                            <span class="block text-[11px] font-black text-rose-600 mt-0.5">
+                                                (Wajib Sertakan Surat Nikah Saat Pengajuan Sewa)
+                                            </span>
+                                        @elseif (Str::contains(strtolower($rule->name), 'membawa anak') || Str::contains(strtolower($rule->name), 'bawa anak'))
+                                            <span class="block text-[11px] font-black text-blue-600 mt-0.5">
+                                                (Wajib Sertakan Kartu Keluarga Saat Pengajuan Sewa)
+                                            </span>
+                                        @endif
+                                    </div>
                                 </div>
                             @empty
                                 <p class="text-zinc-500 font-bold">Tidak ada aturan khusus.</p>

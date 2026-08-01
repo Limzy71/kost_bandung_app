@@ -53,9 +53,6 @@ class OwnerDashboard extends Component
 
     public function toggleAvailability(int $kostId): void
     {
-        // Add a smooth 500ms processing delay so loading feedback feels polished (like major apps)
-        usleep(500000);
-
         /** @var \App\Models\User $user */
         $user = Auth::user();
         $kost = $user->kosts()->find($kostId);

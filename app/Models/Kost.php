@@ -12,6 +12,8 @@ class Kost extends Model
 {
     use SoftDeletes;
 
+    public const RENT_PERIODS = ['daily', 'weekly', 'monthly', 'three_monthly', 'six_monthly', 'yearly'];
+
     protected static function booted()
     {
         static::forceDeleting(function ($kost) {
@@ -108,6 +110,23 @@ class Kost extends Model
             'three_monthly' => 'Per 3 Bulan',
             'six_monthly' => 'Per 6 Bulan',
             'yearly' => 'Per Tahun',
+        ];
+    }
+
+    public static function allowedRentPeriods(): array
+    {
+        return self::RENT_PERIODS;
+    }
+
+    public static function rentPeriodOrder(): array
+    {
+        return [
+            'daily' => 1,
+            'weekly' => 2,
+            'monthly' => 3,
+            'three_monthly' => 4,
+            'six_monthly' => 5,
+            'yearly' => 6,
         ];
     }
 

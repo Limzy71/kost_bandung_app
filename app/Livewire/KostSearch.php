@@ -149,7 +149,7 @@ class KostSearch extends Component
             'kosts'           => $kosts,
             'districts'       => $districts,
             'districtBounds'  => config('bandung.districts', []),
-            'googleMapsApiKey' => config('services.google.maps_api_key') ?: env('GOOGLE_MAPS_API_KEY'),
+            'googleMapsApiKey' => config('services.google.maps_api_key'),
         ]);
     }
 }

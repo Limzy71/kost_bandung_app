@@ -9,7 +9,7 @@
         $allImages = collect(['https://placehold.co/800x500/eeeeee/31343c?text=Foto+Utama']);
     }
 
-    $waNumber = preg_replace('/\D+/', '', $kost->user->phone_number ?? ($kost->whatsapp_contact ?? ''));
+    $waNumber = preg_replace('/\D+/', '', $kost->user?->phone_number ?: ($kost->whatsapp_contact ?? ''));
     if (Str::startsWith($waNumber, '0')) {
         $waNumber = '62' . Str::substr($waNumber, 1);
     } elseif ($waNumber !== '' && ! Str::startsWith($waNumber, '62')) {
@@ -25,7 +25,7 @@
     $rentPeriodUnit = \App\Models\Kost::rentPeriodUnit($kost->rent_period);
 
     $extraPeriodLabels = \App\Models\KostPrice::periodLabels();
-    $periodOrder = ['daily' => 1, 'weekly' => 2, 'three_monthly' => 3, 'six_monthly' => 4, 'yearly' => 5];
+    $periodOrder = \App\Models\Kost::rentPeriodOrder();
     $periodSummary = collect([$rentPeriodLabel])
         ->concat(
             $kost->prices

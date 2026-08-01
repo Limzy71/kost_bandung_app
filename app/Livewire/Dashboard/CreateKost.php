@@ -22,7 +22,6 @@ class CreateKost extends Component
     public string $district = '';
     public string $address = '';
     public string $price_monthly = '';
-    public string $rent_period = 'monthly';
     public string $price_deposit = '';
     public bool $include_utilities = false;
     public string $latitude = '';
@@ -112,7 +111,6 @@ class CreateKost extends Component
             'district' => ['required', 'string', \Illuminate\Validation\Rule::in(array_keys(config('bandung.districts', [])))],
             'address' => 'required|string|max:500',
             'price_monthly' => 'required|numeric|min:100000',
-            'rent_period' => 'required|in:daily,weekly,monthly,yearly',
             'price_deposit' => 'nullable|numeric|min:0',
             'include_utilities' => 'boolean',
             'latitude' => 'required|numeric',
@@ -180,8 +178,6 @@ class CreateKost extends Component
             'price_monthly.required' => 'Harga per bulan wajib diisi.',
             'price_monthly.numeric' => 'Harga per bulan harus berupa angka.',
             'price_monthly.min' => 'Harga per bulan minimal Rp 100.000.',
-            'rent_period.required' => 'Periode sewa wajib dipilih.',
-            'rent_period.in' => 'Periode sewa tidak valid.',
             'price_deposit.numeric' => 'Uang deposit harus berupa angka.',
             'price_deposit.min' => 'Uang deposit tidak boleh negatif.',
             'latitude.required' => 'Titik lokasi peta wajib ditentukan.',
@@ -418,7 +414,6 @@ class CreateKost extends Component
             'description' => $this->description,
             'gender_type' => $this->gender_type,
             'price_monthly' => $this->price_monthly,
-            'rent_period' => $this->rent_period,
             'price_deposit' => $this->price_deposit !== '' ? $this->price_deposit : null,
             'include_utilities' => $this->include_utilities,
             'address' => $this->address,
@@ -577,22 +572,11 @@ class CreateKost extends Component
         return view('livewire.dashboard.create-kost', [
             'facilities' => $facilities,
             'rules' => $rules,
-            'rentPeriods' => $this->rentPeriods(),
             'extraPeriodLabels' => KostPrice::periodLabels(),
             'districts' => $districts,
             'googleMapsApiKey' => config('services.google.maps_api_key') ?: env('GOOGLE_MAPS_API_KEY'),
         ])->layout('layouts.app', [
             'title' => 'Tambah Kost Baru — KostBandung.id',
         ]);
-    }
-
-    public function rentPeriods(): array
-    {
-        return [
-            'daily' => 'Per Hari',
-            'weekly' => 'Per Minggu',
-            'monthly' => 'Per Bulan',
-            'yearly' => 'Per Tahun',
-        ];
     }
 }

@@ -58,14 +58,6 @@ class DemoKostSeeder extends Seeder
             ['name' => 'Parkir Sepeda', 'type' => 'parking'],
         ];
 
-        // Cleanup any facility not in defaultFacilities
-        $allowedNames = collect($defaultFacilities)->pluck('name')->toArray();
-
-        \App\Models\Facility::whereNotIn('name', $allowedNames)->get()->each(function ($facility) {
-            $facility->kosts()->detach();
-            $facility->delete();
-        });
-
         foreach ($defaultFacilities as $facility) {
             \App\Models\Facility::updateOrCreate(
                 [
@@ -96,27 +88,8 @@ class DemoKostSeeder extends Seeder
             'Maks. 1 Orang/ Kamar',
         ];
 
-        // Cleanup any old rules not in defaultRules
-        \App\Models\Rule::whereNotIn('name', $defaultRules)->get()->each(function ($rule) {
-            $rule->kosts()->detach();
-            $rule->delete();
-        });
-
         foreach ($defaultRules as $ruleName) {
             \App\Models\Rule::firstOrCreate(['name' => $ruleName]);
         }
-
-        // Wipe existing kost properties so the app starts clean without dummy properties
-        \App\Models\Kost::query()->each(function (\App\Models\Kost $kost) {
-            $kost->facilities()->detach();
-            $kost->rules()->detach();
-            if (method_exists($kost, 'prices')) {
-                $kost->prices()->delete();
-            }
-            $kost->images()->delete();
-            $kost->delete();
-        });
-
-        $this->command->info('✅ Master Fasilitas & Aturan berhasil di-seed. Database kost sekarang bersih!');
     }
 }

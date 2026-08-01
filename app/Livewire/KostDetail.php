@@ -42,7 +42,7 @@ class KostDetail extends Component
             abort_if(!auth()->check() || (auth()->user()->role !== 'admin' && auth()->id() !== $this->kost->user_id), 404);
         }
 
-        $this->kost->load(['facilities', 'rules', 'images', 'user']);
+        $this->kost->load(['facilities', 'rules', 'images', 'user', 'prices']);
 
         // Determine back URL and label dynamically based on origin
         $previousUrl = url()->previous();
@@ -81,7 +81,7 @@ class KostDetail extends Component
         $facility->kosts()->detach();
         $facility->delete();
 
-        $this->kost->load(['facilities', 'rules', 'images', 'user']);
+        $this->kost->load(['facilities', 'rules', 'images', 'user', 'prices']);
 
         session()->flash('success', 'Fasilitas "' . $facility->name . '" telah dihapus dari kost.');
     }

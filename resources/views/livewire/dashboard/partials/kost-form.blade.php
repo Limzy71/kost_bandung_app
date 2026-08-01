@@ -944,7 +944,13 @@
                 <!-- Checkbox Fasilitas Kost -->
                 <div class="space-y-5 pt-2">
                     @php
+                        $utilityFacilityObj = (object)[
+                            'id' => 'include_utilities',
+                            'name' => 'Listrik & Air',
+                            'is_utility' => true,
+                        ];
                         $roomFacilities = $facilities->where('type', 'room');
+                        $combinedRoomFacilities = $roomFacilities->toBase()->push($utilityFacilityObj)->sortBy('name');
                         $buildingFacilities = $facilities->where('type', 'building');
                         $parkingFacilities = $facilities->where('type', 'parking');
                     @endphp
@@ -958,35 +964,34 @@
                             </label>
                             <span
                                 class="text-[10px] font-black uppercase bg-lime-200 border-2 border-black px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
-                                {{ $roomFacilities->count() + 1 }} pilihan
+                                {{ $combinedRoomFacilities->count() }} pilihan
                             </span>
                         </div>
                         <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                            {{-- Listrik & Air sebagai opsi pertama di Fasilitas Kamar --}}
-                            <label class="cursor-pointer">
-                                <input type="checkbox" wire:model="include_utilities" value="1"
-                                    class="peer sr-only">
-                                <div
-                                    class="px-4 py-3 rounded-lg border-2 border-black bg-zinc-50 text-black text-xs font-black flex items-center justify-between peer-checked:bg-lime-300 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-yellow-100 transition-all">
-                                    <span class="flex items-center gap-1.5">
-                                        <x-icon name="lucide-zap" class="w-3.5 h-3.5 stroke-[2.5] shrink-0" />
-                                        Listrik & Air
-                                    </span>
-                                    <span
-                                        class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs shrink-0">✓</span>
-                                </div>
-                            </label>
-                            @forelse ($roomFacilities as $facility)
-                                <label class="cursor-pointer">
-                                    <input type="checkbox" wire:model="selectedFacilities" value="{{ $facility->id }}"
-                                        class="peer sr-only">
-                                    <div
-                                        class="px-4 py-3 rounded-lg border-2 border-black bg-zinc-50 text-black text-xs font-black flex items-center justify-between peer-checked:bg-lime-300 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-yellow-100 transition-all">
-                                        <span>{{ $facility->name }}</span>
-                                        <span
-                                            class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs">✓</span>
-                                    </div>
-                                </label>
+                            @forelse ($combinedRoomFacilities as $facility)
+                                @if (isset($facility->is_utility) && $facility->is_utility)
+                                    <label class="cursor-pointer">
+                                        <input type="checkbox" wire:model="include_utilities" value="1"
+                                            class="peer sr-only">
+                                        <div
+                                            class="px-4 py-3 rounded-lg border-2 border-black bg-zinc-50 text-black text-xs font-black flex items-center justify-between peer-checked:bg-lime-300 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-yellow-100 transition-all">
+                                            <span>Listrik & Air</span>
+                                            <span
+                                                class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs shrink-0">✓</span>
+                                        </div>
+                                    </label>
+                                @else
+                                    <label class="cursor-pointer">
+                                        <input type="checkbox" wire:model="selectedFacilities" value="{{ $facility->id }}"
+                                            class="peer sr-only">
+                                        <div
+                                            class="px-4 py-3 rounded-lg border-2 border-black bg-zinc-50 text-black text-xs font-black flex items-center justify-between peer-checked:bg-lime-300 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-yellow-100 transition-all">
+                                            <span>{{ $facility->name }}</span>
+                                            <span
+                                                class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs">✓</span>
+                                        </div>
+                                    </label>
+                                @endif
                             @empty
                                 <p class="text-zinc-500 font-bold text-sm col-span-full">Belum ada fasilitas kamar.</p>
                             @endforelse

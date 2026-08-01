@@ -52,6 +52,7 @@ class EditKost extends Component
     public array $extraPeriodPrices = [
         'daily' => '',
         'weekly' => '',
+        'monthly' => '',
         'three_monthly' => '',
         'six_monthly' => '',
         'yearly' => '',

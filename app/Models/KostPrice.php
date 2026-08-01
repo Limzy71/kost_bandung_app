@@ -27,6 +27,7 @@ class KostPrice extends Model
         return [
             'daily' => 'Per Hari',
             'weekly' => 'Per Minggu',
+            'monthly' => 'Per Bulan',
             'three_monthly' => 'Per 3 Bulan',
             'six_monthly' => 'Per 6 Bulan',
             'yearly' => 'Per Tahun',

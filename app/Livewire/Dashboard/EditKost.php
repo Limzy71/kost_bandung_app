@@ -49,6 +49,7 @@ class EditKost extends Component
     public ?int $primaryPhotoId = null;
     public ?string $district_auto_message = null;
     public array $extraPeriods = [];
+    public array $removedCustomFacilityIds = [];
     public array $extraPeriodPrices = [
         'daily' => '',
         'weekly' => '',
@@ -93,7 +94,7 @@ class EditKost extends Component
             ->where('facilities.status', 'pending')
             ->where('facilities.user_id', auth()->id())
             ->get()
-            ->map(fn (Facility $f) => ['name' => $f->name, 'type' => $f->type])
+            ->map(fn (Facility $f) => ['id' => $f->id, 'name' => $f->name, 'type' => $f->type])
             ->values()
             ->toArray();
 
@@ -174,6 +175,7 @@ class EditKost extends Component
 
     public function updatedExtraPeriods($value)
     {
+        $value = $value ?? [];
         foreach (array_keys($this->extraPeriodPrices) as $period) {
             if (! in_array($period, $value)) {
                 $this->extraPeriodPrices[$period] = '';
@@ -190,7 +192,7 @@ class EditKost extends Component
             'district' => ['required', 'string', \Illuminate\Validation\Rule::in(array_keys(config('bandung.districts', [])))],
             'address' => 'required|string|max:500',
             'price_monthly' => 'required|numeric|min:100000',
-            'rent_period' => 'required|in:daily,weekly,monthly,three_monthly,six_monthly,yearly',
+            'rent_period' => ['required', \Illuminate\Validation\Rule::in(Kost::allowedRentPeriods())],
             'price_deposit' => 'nullable|numeric|min:0',
             'include_utilities' => 'boolean',
             'latitude' => 'required|numeric',
@@ -240,7 +242,7 @@ class EditKost extends Component
             'photos' => 'nullable|array|max:10',
             'photos.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
             'extraPeriods' => 'nullable|array',
-            'extraPeriods.*' => 'in:daily,weekly,monthly,three_monthly,six_monthly,yearly',
+            'extraPeriods.*' => \Illuminate\Validation\Rule::in(Kost::allowedRentPeriods()),
         ];
     }
 
@@ -363,6 +365,11 @@ class EditKost extends Component
     public function removeCustomFacility($index)
     {
         if (isset($this->customFacilities[$index])) {
+            $item = $this->customFacilities[$index];
+            if (! empty($item['id'])) {
+                $this->removedCustomFacilityIds[] = (int) $item['id'];
+                $this->removedCustomFacilityIds = array_values(array_unique($this->removedCustomFacilityIds));
+            }
             unset($this->customFacilities[$index]);
             $this->customFacilities = array_values($this->customFacilities);
         }
@@ -507,14 +514,17 @@ class EditKost extends Component
         try {
             $this->validate();
         } catch (\Illuminate\Validation\ValidationException $e) {
-            usleep(1000000); // 1 detik jika formulir tidak valid/ada kesalahan
+            usleep(1000000);
             throw $e;
         }
 
         $totalPhotos = count($this->existingPhotos) + count($this->photos);
         if ($totalPhotos < 4) {
-            usleep(1000000);
             $this->addError('photos', 'MINIMAL 4 FOTO KOST WAJIB ADA.');
+            return;
+        }
+        if ($totalPhotos > 10) {
+            $this->addError('photos', 'MAKSIMAL 10 FOTO KOST DAPAT DIUNGGAH.');
             return;
         }
 
@@ -528,7 +538,6 @@ class EditKost extends Component
                 $lat < $bounds['lat_min'] || $lat > $bounds['lat_max'] ||
                 $lng < $bounds['lng_min'] || $lng > $bounds['lng_max']
             ) {
-                usleep(1000000);
                 $this->addError('latitude', 'Koordinat peta tidak berada di dalam wilayah Kecamatan yang dipilih.');
                 return;
             }
@@ -631,6 +640,15 @@ class EditKost extends Component
         }
         $kost->facilities()->sync(array_unique($facilityIds));
 
+        if (! empty($this->removedCustomFacilityIds)) {
+            Facility::where('status', 'pending')
+                ->where('user_id', auth()->id())
+                ->whereIn('id', $this->removedCustomFacilityIds)
+                ->whereDoesntHave('kosts')
+                ->delete();
+            $this->removedCustomFacilityIds = [];
+        }
+
         // Sync rules
         $ruleIds = $this->selectedRules;
         foreach ($this->customRules as $customRuleName) {
@@ -672,7 +690,7 @@ class EditKost extends Component
             'rules' => $rules,
             'extraPeriodLabels' => KostPrice::periodLabels(),
             'districts' => $districts,
-            'googleMapsApiKey' => config('services.google.maps_api_key') ?: env('GOOGLE_MAPS_API_KEY'),
+            'googleMapsApiKey' => config('services.google.maps_api_key'),
         ])->layout('layouts.app', [
             'title' => 'Edit Kost — KostBandung.id',
         ]);

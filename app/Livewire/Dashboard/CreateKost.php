@@ -106,6 +106,7 @@ class CreateKost extends Component
 
     public function updatedExtraPeriods($value)
     {
+        $value = $value ?? [];
         foreach (array_keys($this->extraPeriodPrices) as $period) {
             if (! in_array($period, $value)) {
                 $this->extraPeriodPrices[$period] = '';
@@ -122,7 +123,7 @@ class CreateKost extends Component
             'district' => ['required', 'string', \Illuminate\Validation\Rule::in(array_keys(config('bandung.districts', [])))],
             'address' => 'required|string|max:500',
             'price_monthly' => 'required|numeric|min:100000',
-            'rent_period' => 'required|in:daily,weekly,monthly,three_monthly,six_monthly,yearly',
+            'rent_period' => ['required', \Illuminate\Validation\Rule::in(Kost::allowedRentPeriods())],
             'price_deposit' => 'nullable|numeric|min:0',
             'include_utilities' => 'boolean',
             'latitude' => 'required|numeric',
@@ -172,7 +173,7 @@ class CreateKost extends Component
             'photos' => 'required|array|min:4|max:10',
             'photos.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
             'extraPeriods' => 'nullable|array',
-            'extraPeriods.*' => 'in:daily,weekly,monthly,three_monthly,six_monthly,yearly',
+            'extraPeriods.*' => \Illuminate\Validation\Rule::in(Kost::allowedRentPeriods()),
         ];
     }
 
@@ -425,6 +426,21 @@ class CreateKost extends Component
 
         usleep(1500000); // 1.5 detik jika berhasil (durasi UX ideal)
 
+        $lat = (float) $this->latitude;
+        $lng = (float) $this->longitude;
+
+        $districts = config('bandung.districts', []);
+        $bounds = $districts[$this->district]['bounds'] ?? null;
+        if ($bounds) {
+            if (
+                $lat < $bounds['lat_min'] || $lat > $bounds['lat_max'] ||
+                $lng < $bounds['lng_min'] || $lng > $bounds['lng_max']
+            ) {
+                $this->addError('latitude', 'Koordinat peta tidak berada di dalam wilayah Kecamatan yang dipilih.');
+                return;
+            }
+        }
+
         $key = 'create_kost_' . request()->ip() . '_' . Auth::id();
 
         if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($key, 5)) {
@@ -438,21 +454,6 @@ class CreateKost extends Component
         }
 
         \Illuminate\Support\Facades\RateLimiter::hit($key, 3600);
-
-        $lat = (float) $this->latitude;
-        $lng = (float) $this->longitude;
-        
-        $districts = config('bandung.districts', []);
-        $bounds = $districts[$this->district]['bounds'] ?? null;
-        if ($bounds) {
-            if (
-                $lat < $bounds['lat_min'] || $lat > $bounds['lat_max'] ||
-                $lng < $bounds['lng_min'] || $lng > $bounds['lng_max']
-            ) {
-                $this->addError('latitude', 'Koordinat peta tidak berada di dalam wilayah Kecamatan yang dipilih.');
-                return;
-            }
-        }
 
         $slug = Str::slug($this->name);
         $originalSlug = $slug;
@@ -565,7 +566,7 @@ class CreateKost extends Component
             'rules' => $rules,
             'extraPeriodLabels' => KostPrice::periodLabels(),
             'districts' => $districts,
-            'googleMapsApiKey' => config('services.google.maps_api_key') ?: env('GOOGLE_MAPS_API_KEY'),
+            'googleMapsApiKey' => config('services.google.maps_api_key'),
         ])->layout('layouts.app', [
             'title' => 'Tambah Kost Baru — KostBandung.id',
         ]);

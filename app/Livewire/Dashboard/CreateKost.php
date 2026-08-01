@@ -5,6 +5,7 @@ namespace App\Livewire\Dashboard;
 use App\Models\Facility;
 use App\Models\Kost;
 use App\Models\KostImage;
+use App\Models\KostPrice;
 use App\Models\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -42,6 +43,14 @@ class CreateKost extends Component
     public array $existingPhotos = [];
     public ?int $primaryPhotoId = null;
     public ?string $district_auto_message = null;
+    public array $extraPeriods = [];
+    public array $extraPeriodPrices = [
+        'daily' => '',
+        'weekly' => '',
+        'three_monthly' => '',
+        'six_monthly' => '',
+        'yearly' => '',
+    ];
 
     public function updatedDistrict($value)
     {
@@ -80,6 +89,15 @@ class CreateKost extends Component
     {
         if (is_numeric($value) && $value < 0) {
             $this->available_rooms = '0';
+        }
+    }
+
+    public function updatedExtraPeriods($value)
+    {
+        foreach (array_keys($this->extraPeriodPrices) as $period) {
+            if (! in_array($period, $value)) {
+                $this->extraPeriodPrices[$period] = '';
+            }
         }
     }
 
@@ -141,6 +159,8 @@ class CreateKost extends Component
             'additional_rules_note' => 'nullable|string|max:500',
             'photos' => 'required|array|min:4|max:10',
             'photos.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+            'extraPeriods' => 'nullable|array',
+            'extraPeriods.*' => 'in:daily,weekly,three_monthly,six_monthly,yearly',
         ];
     }
 
@@ -178,6 +198,7 @@ class CreateKost extends Component
             'photos.*.image' => 'File harus berupa gambar (JPG, PNG, WEBP).',
             'photos.*.mimes' => 'File harus berupa gambar dengan format JPG, PNG, atau WEBP.',
             'photos.*.max' => 'Ukuran setiap foto tidak boleh melebihi 2MB.',
+            'extraPeriods.*.in' => 'Periode sewa tidak valid.',
         ];
     }
 
@@ -288,6 +309,28 @@ class CreateKost extends Component
         }
     }
 
+    public function boot()
+    {
+        $this->withValidator(function ($validator) {
+            $validator->after(function ($validator) {
+                foreach ($this->extraPeriods as $period) {
+                    $price = trim((string) ($this->extraPeriodPrices[$period] ?? ''));
+                    if ($price === '') {
+                        $validator->errors()->add(
+                            'extraPeriodPrices.' . $period,
+                            'Harga periode ini wajib diisi karena sudah dipilih.'
+                        );
+                    } elseif (! is_numeric($price) || $price < 10000) {
+                        $validator->errors()->add(
+                            'extraPeriodPrices.' . $period,
+                            'Harga periode ini tidak valid (minimal Rp 10.000).'
+                        );
+                    }
+                }
+            });
+        });
+    }
+
     public function save()
     {
         $this->validate();
@@ -367,6 +410,15 @@ class CreateKost extends Component
             ]);
         }
         $this->photos = [];
+
+        // Store extra period prices
+        foreach ($this->extraPeriods as $period) {
+            KostPrice::create([
+                'kost_id' => $kost->id,
+                'period' => $period,
+                'price' => (float) $this->extraPeriodPrices[$period],
+            ]);
+        }
 
         // Attach facilities if selected
         $facilityIds = $this->selectedFacilities;
@@ -486,6 +538,7 @@ class CreateKost extends Component
             'facilities' => $facilities,
             'rules' => $rules,
             'rentPeriods' => $this->rentPeriods(),
+            'extraPeriodLabels' => KostPrice::periodLabels(),
             'districts' => $districts,
             'googleMapsApiKey' => config('services.google.maps_api_key') ?: env('GOOGLE_MAPS_API_KEY'),
         ])->layout('layouts.app', [

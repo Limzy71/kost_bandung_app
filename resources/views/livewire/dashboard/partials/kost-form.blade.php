@@ -1,7 +1,7 @@
 <!-- ============================================================
     SHARED FORM FIELDS — digunakan oleh CreateKost & EditKost
-    Variabel: $isEdit (bool), $facilities, $rules, $rentPeriods,
-              $districts, $googleMapsApiKey
+    Variabel: $isEdit (bool), $facilities, $rules,
+              $extraPeriodLabels, $districts, $googleMapsApiKey
     ============================================================ -->
 
             <!-- Seksi 1: Informasi Dasar -->
@@ -683,30 +683,6 @@
                     </div>
                 </div>
 
-                <!-- Periode Sewa -->
-                <div class="space-y-2">
-                    <label class="block text-xs font-black uppercase tracking-wider text-black">
-                        Periode Sewa <span class="text-rose-600">*</span>
-                    </label>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        @foreach ($rentPeriods as $value => $label)
-                            <label class="cursor-pointer">
-                                <input type="radio" wire:model="rent_period" value="{{ $value }}"
-                                    class="peer sr-only">
-                                <div
-                                    class="px-4 py-3 rounded-lg border-2 border-black text-center font-black text-xs md:text-sm text-black bg-zinc-50 hover:bg-yellow-100 peer-checked:bg-yellow-400 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
-                                    {{ $label }}
-                                </div>
-                            </label>
-                        @endforeach
-                    </div>
-                    @error('rent_period')
-                        <p
-                            class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
-                            {{ $message }}</p>
-                    @enderror
-                </div>
-
                 <!-- Harga & Jumlah Kamar Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <!-- Harga Sewa per Bulan -->
@@ -811,6 +787,51 @@
                                 class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
                                 {{ $message }}</p>
                         @enderror
+                    </div>
+                </div>
+
+                <!-- Harga Sewa Periode Lain (Opsional) -->
+                <div class="space-y-3 pt-2 border-t-2 border-black">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                        <label class="block text-xs font-black uppercase tracking-wider text-black">
+                            Harga Sewa Periode Lain <span class="text-[10px] font-bold normal-case text-zinc-500">(Opsional)</span>
+                        </label>
+                        <span class="text-[11px] font-bold italic text-zinc-600">
+                            Centang lalu isi total bayar untuk periode tersebut. Wajib diisi jika dicentang.
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        @foreach ($extraPeriodLabels as $period => $label)
+                            <div class="rounded-lg border-2 border-black bg-zinc-50 p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-colors has-checked:bg-lime-300">
+                                <input type="checkbox" id="extra-period-{{ $period }}" value="{{ $period }}"
+                                    wire:model="extraPeriods" class="sr-only">
+                                <label for="extra-period-{{ $period }}"
+                                    class="flex items-center justify-between gap-2 cursor-pointer text-black font-black text-xs md:text-sm transition-all rounded px-2 py-1.5 hover:bg-yellow-100">
+                                    <span>{{ $label }}</span>
+                                    <span
+                                        class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black opacity-0 has-checked:opacity-100 font-black text-xs shrink-0">✓</span>
+                                </label>
+
+                                <div class="hidden has-checked:block mt-2">
+                                    <div class="relative rounded-lg overflow-hidden flex border-2 border-black">
+                                        <div
+                                            class="bg-yellow-300 border-r-2 border-black px-3 flex items-center font-black text-xs text-black shrink-0">
+                                            Rp
+                                        </div>
+                                        <input type="number" wire:model="extraPeriodPrices.{{ $period }}"
+                                            placeholder="Total bayar {{ strtolower($label) }}"
+                                            min="0" oninput="if(this.value < 0) this.value = 0"
+                                            class="w-full bg-white px-3 py-2 text-sm font-black text-black focus:outline-none focus:bg-yellow-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                    </div>
+                                    @error('extraPeriodPrices.' . $period)
+                                        <p
+                                            class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                                            {{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
 

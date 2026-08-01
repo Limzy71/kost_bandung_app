@@ -88,4 +88,14 @@ class Kost extends Model
     {
         return $this->hasMany(Inquiry::class);
     }
+
+    public function prices(): HasMany
+    {
+        return $this->hasMany(KostPrice::class);
+    }
+
+    public function pricesByPeriod(): array
+    {
+        return $this->prices()->get()->pluck('price', 'period')->map(fn ($p) => (string) $p)->all();
+    }
 }

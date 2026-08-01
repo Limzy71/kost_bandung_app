@@ -27,6 +27,26 @@
         'yearly' => 'Per Tahun',
     ];
     $rentPeriodLabel = $rentPeriodLabels[$kost->rent_period] ?? 'Per Bulan';
+
+    $extraPeriodLabels = \App\Models\KostPrice::periodLabels();
+    $periodOrder = ['daily' => 1, 'weekly' => 2, 'three_monthly' => 3, 'six_monthly' => 4, 'yearly' => 5];
+    $periodSummary = collect(['Per Bulan'])
+        ->concat(
+            $kost->prices
+                ->sortBy(fn ($p) => $periodOrder[$p->period] ?? 99)
+                ->map(fn ($p) => $extraPeriodLabels[$p->period] ?? ucfirst($p->period)),
+        )
+        ->values();
+    $priceOptions = collect([['label' => 'Per Bulan', 'price' => $kost->price_monthly]])
+        ->concat(
+            $kost->prices
+                ->sortBy(fn ($p) => $periodOrder[$p->period] ?? 99)
+                ->map(fn ($p) => [
+                    'label' => $extraPeriodLabels[$p->period] ?? ucfirst($p->period),
+                    'price' => $p->price,
+                ]),
+        )
+        ->values();
 @endphp
 
 <div class="min-h-screen bg-[#f8f9fa] bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:24px_24px] pb-28 lg:pb-16 pt-8"
@@ -198,7 +218,7 @@
                     <!-- Info Properti -->
                     @php
                         $infoItems = [];
-                        $infoItems[] = ['label' => 'Periode Sewa', 'value' => $rentPeriodLabel];
+                        $infoItems[] = ['label' => 'Periode Sewa', 'value' => $periodSummary->join(', ')];
                         if ($kost->price_deposit !== null) {
                             $infoItems[] = ['label' => 'Uang Deposit', 'value' => 'Rp ' . number_format((float) $kost->price_deposit, 0, ',', '.')];
                         }
@@ -402,6 +422,24 @@
                             <span class="text-xs font-black text-black">/ bulan</span>
                         </div>
                     </div>
+
+                    <!-- Opsi Harga Sewa -->
+                    @if ($priceOptions->count() > 1)
+                        <div class="space-y-1.5">
+                            <p class="text-xs font-black uppercase tracking-wider text-black">Opsi Harga Sewa</p>
+                            <div class="border-2 border-black rounded-lg divide-y-2 divide-black bg-zinc-50 overflow-hidden">
+                                @foreach ($priceOptions as $option)
+                                    <div class="flex items-center justify-between gap-3 px-3 py-2">
+                                        <span class="text-xs font-black uppercase text-zinc-700">{{ $option['label'] }}</span>
+                                        <span class="text-sm font-black text-black">
+                                            Rp {{ number_format((float) $option['price'], 0, ',', '.') }}
+                                        </span>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <p class="text-[10px] font-bold italic text-zinc-500">Harga di atas adalah total bayar untuk masing-masing periode.</p>
+                        </div>
+                    @endif
 
                     <!-- CTA Buttons -->
                     <div class="space-y-3">

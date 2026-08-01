@@ -416,8 +416,14 @@ class CreateKost extends Component
 
     public function save()
     {
-        sleep(5);
-        $this->validate();
+        try {
+            $this->validate();
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            usleep(1000000); // 1 detik jika formulir tidak valid/ada kesalahan
+            throw $e;
+        }
+
+        usleep(1500000); // 1.5 detik jika berhasil (durasi UX ideal)
 
         $key = 'create_kost_' . request()->ip() . '_' . Auth::id();
 

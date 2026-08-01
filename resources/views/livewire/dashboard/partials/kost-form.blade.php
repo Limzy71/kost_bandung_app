@@ -827,13 +827,7 @@
                                             :class="periods.includes('{{ $period }}') ? 'bg-black text-lime-300' : ''"
                                             class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black font-black text-xs shrink-0 transition-colors duration-200">✓</span>
                                     </span>
-                                    <div x-show="periods.includes('{{ $period }}')" x-collapse x-cloak
-                                        x-transition:enter="transition opacity ease-out duration-300"
-                                        x-transition:enter-start="opacity-0"
-                                        x-transition:enter-end="opacity-100"
-                                        x-transition:leave="transition opacity ease-in duration-200"
-                                        x-transition:leave-start="opacity-100"
-                                        x-transition:leave-end="opacity-0"
+                                    <div x-show="periods.includes('{{ $period }}')" x-collapse.duration.300ms x-cloak
                                         @click.stop class="pt-2">
                                         <div class="relative rounded-lg overflow-hidden flex border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                                             <span class="bg-yellow-300 border-r-2 border-black px-3 flex items-center font-black text-xs text-black shrink-0">Rp</span>
@@ -865,13 +859,7 @@
                                             :class="periods.includes('{{ $period }}') ? 'bg-black text-lime-300' : ''"
                                             class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black font-black text-xs shrink-0 transition-colors duration-200">✓</span>
                                     </span>
-                                    <div x-show="periods.includes('{{ $period }}')" x-collapse x-cloak
-                                        x-transition:enter="transition opacity ease-out duration-300"
-                                        x-transition:enter-start="opacity-0"
-                                        x-transition:enter-end="opacity-100"
-                                        x-transition:leave="transition opacity ease-in duration-200"
-                                        x-transition:leave-start="opacity-100"
-                                        x-transition:leave-end="opacity-0"
+                                    <div x-show="periods.includes('{{ $period }}')" x-collapse.duration.300ms x-cloak
                                         @click.stop class="pt-2">
                                         <div class="relative rounded-lg overflow-hidden flex border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                                             <span class="bg-yellow-300 border-r-2 border-black px-3 flex items-center font-black text-xs text-black shrink-0">Rp</span>

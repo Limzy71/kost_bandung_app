@@ -81,6 +81,8 @@ class Register extends Component
 
         $user = User::create($userData);
 
+        event(new \Illuminate\Auth\Events\Registered($user));
+
         Auth::login($user);
 
         if ($user->role === 'owner') {

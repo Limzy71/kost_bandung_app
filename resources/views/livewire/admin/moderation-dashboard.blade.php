@@ -111,7 +111,7 @@
                 class="text-left p-5 border-3 border-black rounded-xl shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer {{ $activeTab === 'all' ? 'bg-cyan-300 ring-4 ring-black translate-x-0.5 translate-y-0.5' : 'bg-cyan-100 hover:bg-cyan-200' }}"
             >
                 <p class="text-xs font-black uppercase tracking-wider text-black flex items-center gap-1.5">
-                    <x-icon name="lucide-database" class="w-4 h-4 text-black stroke-[2.5]" />
+                    <x-icon name="lucide-building-2" class="w-4 h-4 text-black stroke-[2.5]" />
                     <span>Total Properti</span>
                 </p>
                 <h3 class="text-3xl sm:text-4xl font-black text-black mt-2 tracking-tight">{{ $totalCount }}</h3>
@@ -125,7 +125,7 @@
                 class="text-left p-5 border-3 border-black rounded-xl shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer {{ $activeTab === 'facilities' ? 'bg-violet-300 ring-4 ring-black translate-x-0.5 translate-y-0.5' : 'bg-violet-100 hover:bg-violet-200' }}"
             >
                 <p class="text-xs font-black uppercase tracking-wider text-black flex items-center gap-1.5">
-                    <x-icon name="lucide-box" class="w-4 h-4 text-black stroke-[2.5]" />
+                    <x-icon name="lucide-layers" class="w-4 h-4 text-black stroke-[2.5]" />
                     <span>Fasilitas Menunggu</span>
                 </p>
                 <h3 class="text-3xl sm:text-4xl font-black text-black mt-2 tracking-tight">{{ $pendingFacilityCount }}</h3>
@@ -330,7 +330,7 @@
                             <div class="p-5 space-y-4">
                                 <div>
                                     <h3 class="text-xl font-black text-black leading-snug line-clamp-1 hover:underline">
-                                        <a href="{{ route('kost.show', $kost->slug) }}?from=moderation" target="_blank">
+                                        <a href="{{ route('kost.show', $kost->slug) }}?from=moderation">
                                             {{ $kost->name }}
                                         </a>
                                     </h3>
@@ -372,7 +372,6 @@
                             <!-- View Full Detail Button for Admin -->
                             <a 
                                 href="{{ route('kost.show', $kost->slug) }}?from=moderation" 
-                                target="_blank"
                                 class="w-full py-2.5 bg-cyan-300 hover:bg-cyan-200 active:bg-cyan-400 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl cursor-pointer flex items-center justify-center gap-1.5"
                             >
                                 <x-icon name="lucide-eye" class="w-4 h-4 stroke-[2.5]" />

@@ -15,12 +15,12 @@ class DemoKostSeeder extends Seeder
         // Ensure Admin and Owner exist
         $admin = \App\Models\User::firstOrCreate(
             ['email' => 'admin@kostbandung.id'],
-            ['name' => 'Administrator', 'password' => \Illuminate\Support\Facades\Hash::make('password'), 'role' => 'admin']
+            ['name' => 'Administrator', 'password' => \Illuminate\Support\Facades\Hash::make('password'), 'role' => 'admin', 'email_verified_at' => now()]
         );
 
         $owner = \App\Models\User::firstOrCreate(
             ['email' => 'owner@kostbandung.id'],
-            ['name' => 'Owner Kost', 'password' => \Illuminate\Support\Facades\Hash::make('password'), 'role' => 'owner']
+            ['name' => 'Owner Kost', 'password' => \Illuminate\Support\Facades\Hash::make('password'), 'role' => 'owner', 'email_verified_at' => now()]
         );
 
         // Ensure standard facilities exist (grouped by room/building)

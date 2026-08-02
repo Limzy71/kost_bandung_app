@@ -69,7 +69,7 @@
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-600 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-700"></span>
                     </span>
-                    <x-icon name="lucide-clock" class="w-4 h-4 text-black stroke-[2.5]" />
+                    <x-icon name="lucide-hourglass" class="w-4 h-4 text-black stroke-[2.5]" />
                     <span>Menunggu Review</span>
                 </p>
                 <h3 class="text-3xl sm:text-4xl font-black text-black mt-2 tracking-tight">{{ $pendingCount }}</h3>
@@ -82,7 +82,10 @@
                 wire:click="setTab('published')" 
                 class="text-left p-5 border-3 border-black rounded-xl shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer {{ $activeTab === 'published' ? 'bg-emerald-300 ring-4 ring-black translate-x-0.5 translate-y-0.5' : 'bg-emerald-100 hover:bg-emerald-200' }}"
             >
-                <p class="text-xs font-black uppercase tracking-wider text-black">✓ Tayang Publik</p>
+                <p class="text-xs font-black uppercase tracking-wider text-black flex items-center gap-1.5">
+                    <x-icon name="lucide-check-circle-2" class="w-4 h-4 text-black stroke-[2.5]" />
+                    <span>Tayang Publik</span>
+                </p>
                 <h3 class="text-3xl sm:text-4xl font-black text-black mt-2 tracking-tight">{{ $publishedCount }}</h3>
                 <p class="text-[10px] font-bold text-black/70 mt-1 uppercase">Disetujui Admin</p>
             </button>
@@ -93,7 +96,10 @@
                 wire:click="setTab('rejected')" 
                 class="text-left p-5 border-3 border-black rounded-xl shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer {{ $activeTab === 'rejected' ? 'bg-rose-300 ring-4 ring-black translate-x-0.5 translate-y-0.5' : 'bg-rose-100 hover:bg-rose-200' }}"
             >
-                <p class="text-xs font-black uppercase tracking-wider text-black">✕ Ditolak</p>
+                <p class="text-xs font-black uppercase tracking-wider text-black flex items-center gap-1.5">
+                    <x-icon name="lucide-x-circle" class="w-4 h-4 text-black stroke-[2.5]" />
+                    <span>Ditolak</span>
+                </p>
                 <h3 class="text-3xl sm:text-4xl font-black text-black mt-2 tracking-tight">{{ $rejectedCount }}</h3>
                 <p class="text-[10px] font-bold text-black/70 mt-1 uppercase">Tidak Memenuhi Syarat</p>
             </button>
@@ -104,7 +110,10 @@
                 wire:click="setTab('all')" 
                 class="text-left p-5 border-3 border-black rounded-xl shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer {{ $activeTab === 'all' ? 'bg-cyan-300 ring-4 ring-black translate-x-0.5 translate-y-0.5' : 'bg-cyan-100 hover:bg-cyan-200' }}"
             >
-                <p class="text-xs font-black uppercase tracking-wider text-black">📊 Total Properti</p>
+                <p class="text-xs font-black uppercase tracking-wider text-black flex items-center gap-1.5">
+                    <x-icon name="lucide-database" class="w-4 h-4 text-black stroke-[2.5]" />
+                    <span>Total Properti</span>
+                </p>
                 <h3 class="text-3xl sm:text-4xl font-black text-black mt-2 tracking-tight">{{ $totalCount }}</h3>
                 <p class="text-[10px] font-bold text-black/70 mt-1 uppercase">Seluruh Database</p>
             </button>
@@ -321,7 +330,7 @@
                             <div class="p-5 space-y-4">
                                 <div>
                                     <h3 class="text-xl font-black text-black leading-snug line-clamp-1 hover:underline">
-                                        <a href="{{ route('kost.show', $kost->slug) }}" target="_blank">
+                                        <a href="{{ route('kost.show', $kost->slug) }}?from=moderation" target="_blank">
                                             {{ $kost->name }}
                                         </a>
                                     </h3>
@@ -335,7 +344,10 @@
                                 <div class="bg-yellow-50 border-2 border-black p-3 rounded-xl space-y-1">
                                     <p class="text-[10px] font-black uppercase text-zinc-500">Pemilik Kost (Landlord)</p>
                                     <div class="flex items-center justify-between text-xs font-black text-black">
-                                        <span>👤 {{ $kost->user->name ?? 'Pemilik Tanpa Nama' }}</span>
+                                        <span class="inline-flex items-center gap-1.5">
+                                            <x-icon name="lucide-user" class="w-3.5 h-3.5 stroke-[2.5]" />
+                                            {{ $kost->user->name ?? 'Pemilik Tanpa Nama' }}
+                                        </span>
                                         <span class="text-[11px] font-bold text-zinc-600 truncate max-w-[140px]">{{ $kost->user->email ?? '-' }}</span>
                                     </div>
                                 </div>
@@ -359,7 +371,7 @@
                         <div class="p-4 bg-zinc-100 border-t-4 border-black flex flex-col gap-2.5">
                             <!-- View Full Detail Button for Admin -->
                             <a 
-                                href="{{ route('kost.show', $kost->slug) }}" 
+                                href="{{ route('kost.show', $kost->slug) }}?from=moderation" 
                                 target="_blank"
                                 class="w-full py-2.5 bg-cyan-300 hover:bg-cyan-200 active:bg-cyan-400 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl cursor-pointer flex items-center justify-center gap-1.5"
                             >

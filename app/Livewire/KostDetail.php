@@ -46,10 +46,12 @@ class KostDetail extends Component
 
         // Determine back URL and label dynamically based on origin
         $previousUrl = url()->previous();
-        if (request()->has('from') && request('from') === 'dashboard') {
-            $this->backUrl = route('dashboard');
-            $this->backLabel = 'Kembali ke Dashboard Pemilik';
-        } elseif ($previousUrl && str_contains($previousUrl, '/dashboard')) {
+        $from = request('from');
+
+        if ($from === 'moderation') {
+            $this->backUrl = route('admin.moderation');
+            $this->backLabel = 'Kembali ke Panel Moderasi';
+        } elseif ($from === 'dashboard' || str_contains($previousUrl ?? '', '/dashboard')) {
             $this->backUrl = route('dashboard');
             $this->backLabel = 'Kembali ke Dashboard Pemilik';
         } elseif ($previousUrl && $previousUrl !== url()->current()) {

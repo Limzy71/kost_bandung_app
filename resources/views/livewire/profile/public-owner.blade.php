@@ -3,10 +3,10 @@
 
         <!-- Back -->
         <div>
-            <a href="{{ url()->previous() !== url()->current() ? url()->previous() : route('home') }}"
-                class="inline-flex items-center gap-1.5 text-black font-black text-xs uppercase hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all">
-                <x-icon name="lucide-arrow-left" class="w-4 h-4 stroke-[2.5]" />
-                <span>Kembali</span>
+            <a href="{{ $backUrl }}"
+                class="inline-flex items-center gap-2 bg-white text-black border-3 border-black font-black text-xs uppercase px-4 py-2.5 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer">
+                <x-icon name="lucide-chevron-left" class="w-4 h-4 stroke-[3]" />
+                <span>{{ $backLabel }}</span>
             </a>
         </div>
 

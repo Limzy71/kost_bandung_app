@@ -10,12 +10,25 @@ use Livewire\Component;
 class PublicOwner extends Component
 {
     public User $user;
+    public string $backUrl   = '';
+    public string $backLabel = '';
 
     public function mount(User $user): void
     {
         abort_if($user->role !== 'owner', 404);
 
         $this->user = $user;
+
+        $from     = request('from');
+        $kostSlug = request('kost');
+
+        if ($from === 'kost' && $kostSlug) {
+            $this->backUrl   = route('kost.show', $kostSlug);
+            $this->backLabel = 'Kembali ke Detail Kost';
+        } else {
+            $this->backUrl   = route('home');
+            $this->backLabel = 'Kembali ke Beranda Utama';
+        }
     }
 
     public function render()

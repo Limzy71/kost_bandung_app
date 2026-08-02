@@ -5,7 +5,7 @@
     <x-stat-card label="Kost Ditolak" :value="$stats['rejectedKosts']" hint="Pengajuan yang ditolak" icon="lucide-x-circle" color="bg-rose-400" />
     <x-stat-card label="Total Pencari Kost" :value="$stats['totalUsers']" hint="Akun pengguna terdaftar" icon="lucide-users" color="bg-cyan-300" />
     <x-stat-card label="Total Pemilik Kost" :value="$stats['totalOwners']" hint="Akun owner terdaftar" icon="lucide-building-2" color="bg-violet-300" />
-    <x-stat-card label="Fasilitas Menunggu" :value="$stats['pendingFacilities']" hint="Fasilitas custom belum disetujui" icon="lucide-package-check" color="bg-pink-300" />
+    <x-stat-card label="Fasilitas Menunggu" :value="$stats['pendingFacilities']" hint="Fasilitas custom belum disetujui" icon="lucide-layers" color="bg-pink-300" />
 </div>
 
 <!-- Moderation Link -->

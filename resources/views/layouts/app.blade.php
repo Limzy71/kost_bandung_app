@@ -23,30 +23,35 @@
             <div class="flex items-center gap-3 md:gap-4">
                 @auth
                     @if(auth()->user()->role === 'admin')
-                        <a href="{{ route('admin.moderation') }}" class="text-xs font-black uppercase text-black bg-lime-300 hover:bg-lime-200 px-3.5 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
-                            <x-icon name="lucide-circle-check" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
-                            <span class="max-sm:hidden">Moderasi Admin</span>
-                        </a>
-                    @endif
-
-                    @if(auth()->user()->role === 'owner')
-                        @if(request()->routeIs('dashboard*'))
+                        @if(request()->routeIs('admin*') || request()->routeIs('profile.show'))
                             <a href="{{ route('home') }}" class="text-xs font-black uppercase text-black bg-cyan-300 hover:bg-cyan-200 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
                                 <x-icon name="lucide-house" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
                                 <span class="max-sm:hidden">Beranda Utama</span>
                             </a>
-                            @if(!request()->routeIs('dashboard'))
-                                <a href="{{ route('dashboard') }}" class="text-xs font-black uppercase text-black bg-yellow-300 hover:bg-yellow-200 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
-                                    <x-icon name="lucide-layout-grid" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
-                                    <span class="max-sm:hidden">Dashboard Pemilik</span>
-                                </a>
-                            @endif
-                        @else
+                        @endif
+                        @unless(request()->routeIs('admin.moderation'))
+                            <a href="{{ route('admin.moderation') }}" class="text-xs font-black uppercase text-black bg-lime-300 hover:bg-lime-200 px-3.5 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
+                                <x-icon name="lucide-circle-check" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
+                                <span class="max-sm:hidden">Moderasi Admin</span>
+                            </a>
+                        @endunless
+                    @endif
+
+                    @if(auth()->user()->role === 'owner')
+                        @if(request()->routeIs('dashboard*') || request()->routeIs('profile.show'))
+                            <a href="{{ route('home') }}" class="text-xs font-black uppercase text-black bg-cyan-300 hover:bg-cyan-200 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
+                                <x-icon name="lucide-house" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
+                                <span class="max-sm:hidden">Beranda Utama</span>
+                            </a>
+                        @endif
+
+                        @unless(request()->routeIs('dashboard'))
                             <a href="{{ route('dashboard') }}" class="text-xs font-black uppercase text-black bg-yellow-300 hover:bg-yellow-200 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
                                 <x-icon name="lucide-layout-grid" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
                                 <span class="max-sm:hidden">Dashboard Pemilik</span>
                             </a>
-                        @endif
+                        @endunless
+
                         @php
                             $unreadInquiriesCount = \App\Models\Inquiry::where('status', 'unread')->whereHas('kost', function($q) {
                                 $q->where('user_id', auth()->id());
@@ -60,10 +65,23 @@
                             @endif
                         </a>
                     @endif
-                    <span class="text-xs font-black uppercase text-black bg-zinc-100 border-2 border-black px-3 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] rounded max-sm:hidden inline-flex items-center gap-1.5">
-                        <x-icon name="lucide-user" class="w-4 h-4 text-black stroke-[2.5]" />
-                        <span>{{ auth()->user()->name }}</span>
-                    </span>
+
+                    @if(auth()->user()->role === 'user')
+                        @if(request()->routeIs('profile.show'))
+                            <a href="{{ route('home') }}" class="text-xs font-black uppercase text-black bg-cyan-300 hover:bg-cyan-200 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
+                                <x-icon name="lucide-house" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
+                                <span class="max-sm:hidden">Beranda Utama</span>
+                            </a>
+                        @endif
+                    @endif
+
+                    @unless(request()->routeIs('profile.show'))
+                        <a href="{{ route('profile.show') }}" class="text-xs font-black uppercase text-black bg-zinc-100 hover:bg-zinc-200 border-2 border-black px-3 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] rounded max-sm:hidden inline-flex items-center gap-1.5 cursor-pointer transition-all" title="Profil Saya">
+                            <x-icon name="lucide-user" class="w-4 h-4 text-black stroke-[2.5]" />
+                            <span>{{ auth()->user()->name }}</span>
+                        </a>
+                    @endunless
+
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
                         <button type="submit" class="text-xs font-black uppercase text-black bg-rose-400 hover:bg-rose-300 px-3.5 py-2 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded cursor-pointer">
@@ -161,6 +179,23 @@
                                         </a>
                                     </li>
                                 @endunless
+                            @elseif(auth()->user()->role === 'admin')
+                                @unless(request()->routeIs('home'))
+                                    <li>
+                                        <a href="{{ route('home') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
+                                            <x-icon name="lucide-house" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
+                                            <span>Beranda Utama</span>
+                                        </a>
+                                    </li>
+                                @endunless
+                                @unless(request()->routeIs('admin.moderation'))
+                                    <li>
+                                        <a href="{{ route('admin.moderation') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
+                                            <x-icon name="lucide-circle-check" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
+                                            <span>Moderasi Admin</span>
+                                        </a>
+                                    </li>
+                                @endunless
                             @else
                                 @unless(request()->routeIs('home'))
                                     <li>
@@ -171,6 +206,15 @@
                                     </li>
                                 @endunless
                             @endif
+
+                            @unless(request()->routeIs('profile.show'))
+                                <li>
+                                    <a href="{{ route('profile.show') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
+                                        <x-icon name="lucide-user" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
+                                        <span>Profil Saya</span>
+                                    </a>
+                                </li>
+                            @endunless
                         @else
                             @unless(request()->routeIs('home'))
                                 <li>

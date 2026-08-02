@@ -209,14 +209,6 @@
                                 </li>
                             @endunless
                         @else
-                            @unless(request()->routeIs('home'))
-                                <li>
-                                    <a href="{{ route('home') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
-                                        <x-icon name="lucide-house" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
-                                        <span>Beranda Utama</span>
-                                    </a>
-                                </li>
-                            @endunless
                             <li>
                                 <a href="{{ route('login') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
                                     <x-icon name="lucide-log-in" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
@@ -224,8 +216,14 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('register') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
+                                <a href="{{ route('register', ['role' => 'user']) }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
                                     <x-icon name="lucide-user-plus" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
+                                    <span>Daftar Pencari Kost</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('register', ['role' => 'owner']) }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
+                                    <x-icon name="lucide-building-2" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
                                     <span>Daftar Pemilik Kost</span>
                                 </a>
                             </li>

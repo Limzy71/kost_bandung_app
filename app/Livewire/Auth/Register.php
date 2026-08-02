@@ -19,6 +19,14 @@ class Register extends Component
     public string $phone_number          = '';
     public string $business_name         = '';
 
+    public function mount(): void
+    {
+        $roleParam = request()->query('role');
+        if ($roleParam && in_array($roleParam, ['user', 'owner'])) {
+            $this->role = $roleParam;
+        }
+    }
+
     protected function rules(): array
     {
         $rules = [

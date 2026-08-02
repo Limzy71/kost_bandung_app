@@ -155,14 +155,7 @@
                                         </a>
                                     </li>
                                 @endunless
-                                @unless(request()->routeIs('dashboard.kost.create'))
-                                    <li>
-                                        <a href="{{ route('dashboard.kost.create') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
-                                            <x-icon name="lucide-plus" class="w-4 h-4 text-black group-hover:rotate-90 transition-transform stroke-[2.5]" />
-                                            <span>Tambah Kost Baru</span>
-                                        </a>
-                                    </li>
-                                @endunless
+
                                 @unless(request()->routeIs('dashboard.inquiries'))
                                     @php
                                         $unreadInquiriesCountMobile = \App\Models\Inquiry::where('status', 'unread')->whereHas('kost', function($q) {

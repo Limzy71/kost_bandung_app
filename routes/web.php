@@ -47,3 +47,5 @@ Route::middleware('auth')->group(function () {
         return redirect('/');
     })->name('logout');
 });
+
+require __DIR__.'/settings.php';

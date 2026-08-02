@@ -8,13 +8,13 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
 
-    Route::livewire('settings/profile', Profile::class)->name('profile.edit');
+    Route::get('settings/profile', Profile::class)->name('profile.edit');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::livewire('settings/appearance', Appearance::class)->name('appearance.edit');
+    Route::get('settings/appearance', Appearance::class)->name('appearance.edit');
 
-    Route::livewire('settings/security', Security::class)
+    Route::get('settings/security', Security::class)
         ->middleware([
             'password.confirm',
         ])

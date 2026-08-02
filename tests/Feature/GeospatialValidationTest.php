@@ -36,7 +36,7 @@ class GeospatialValidationTest extends TestCase
             ->set('longitude', $invalidLng)
             ->set('total_rooms', 5)
             ->set('available_rooms', 5)
-            ->set('photos', [$image, $image, $image])
+            ->set('photos', [$image, $image, $image, $image])
             ->call('save')
             ->assertHasErrors(['latitude' => 'Koordinat peta tidak berada di dalam wilayah Kecamatan yang dipilih.']);
     }
@@ -63,7 +63,7 @@ class GeospatialValidationTest extends TestCase
             ->set('longitude', $validLng)
             ->set('total_rooms', 5)
             ->set('available_rooms', 5)
-            ->set('photos', [$image, $image, $image])
+            ->set('photos', [$image, $image, $image, $image])
             ->call('save')
             ->assertHasNoErrors(['latitude', 'district', 'longitude']);
     }
@@ -93,7 +93,7 @@ class GeospatialValidationTest extends TestCase
             ->set('longitude', $overlapLng)
             ->set('total_rooms', 5)
             ->set('available_rooms', 5)
-            ->set('photos', [$image, $image, $image])
+            ->set('photos', [$image, $image, $image, $image])
             ->call('save')
             ->assertHasNoErrors(['latitude', 'district']);
 
@@ -110,7 +110,7 @@ class GeospatialValidationTest extends TestCase
             ->set('longitude', $overlapLng)
             ->set('total_rooms', 5)
             ->set('available_rooms', 5)
-            ->set('photos', [$image, $image, $image])
+            ->set('photos', [$image, $image, $image, $image])
             ->call('save')
             ->assertHasNoErrors(['latitude', 'district']);
     }
@@ -137,7 +137,7 @@ class GeospatialValidationTest extends TestCase
             ->set('longitude', $boundaryLng)
             ->set('total_rooms', 5)
             ->set('available_rooms', 5)
-            ->set('photos', [$image, $image, $image])
+            ->set('photos', [$image, $image, $image, $image])
             ->call('save')
             ->assertHasNoErrors(['latitude', 'longitude']);
     }
@@ -163,7 +163,7 @@ class GeospatialValidationTest extends TestCase
             ->set('longitude', $validLng)
             ->set('total_rooms', 5)
             ->set('available_rooms', 5)
-            ->set('photos', [$image, $image, $image])
+            ->set('photos', [$image, $image, $image, $image])
             ->call('save')
             ->assertHasNoErrors(['latitude', 'district', 'longitude']);
     }

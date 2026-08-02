@@ -1,0 +1,188 @@
+<div
+    x-data
+    @show-toast.window="..."
+    class="min-h-screen bg-[#f8f9fa] bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:24px_24px]"
+>
+    @php
+        $roleConfig = [
+            'user' => ['label' => 'Pencari Kost', 'badge' => 'bg-cyan-300', 'icon' => 'lucide-search'],
+            'owner' => ['label' => 'Pemilik Kost', 'badge' => 'bg-lime-400', 'icon' => 'lucide-building-2'],
+            'admin' => ['label' => 'Administrator', 'badge' => 'bg-yellow-300', 'icon' => 'lucide-shield-check'],
+        ][$user->role] ?? ['label' => 'Pengguna', 'badge' => 'bg-zinc-200', 'icon' => 'lucide-user'];
+    @endphp
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-8">
+
+        <!-- Header Section -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 bg-white p-6 md:p-8 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rounded-xl">
+            <div class="space-y-2">
+                <div class="flex flex-wrap items-center gap-2">
+                    <span class="px-3 py-1 {{ $roleConfig['badge'] }} text-black border-2 border-black font-extrabold text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1.5">
+                        <x-icon :name="$roleConfig['icon']" class="w-3.5 h-3.5 stroke-[2.5]" />
+                        <span>{{ $roleConfig['label'] }}</span>
+                    </span>
+                    @if ($user->role === 'owner')
+                        <span class="px-3 py-1 bg-white text-black border-2 border-black font-extrabold text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                            Akun Terverifikasi
+                        </span>
+                    @endif
+                </div>
+                <h1 class="text-3xl md:text-5xl font-black text-black tracking-tight uppercase">
+                    Profil Saya
+                </h1>
+                <p class="text-zinc-700 text-sm md:text-base font-bold">
+                    Kelola identitas akun Anda di <span class="bg-yellow-200 border-b-2 border-black px-1">KostBandung.id</span>.
+                </p>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button type="button" wire:click="toggleEdit"
+                    class="bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black font-black text-sm uppercase px-6 py-3.5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all inline-flex items-center gap-2 rounded-lg group cursor-pointer">
+                    <x-icon name="lucide-pencil" class="w-5 h-5 text-black stroke-[2.5]" />
+                    <span>{{ $editing ? 'Batal' : 'Edit Profil' }}</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div
+            x-data="{
+                show: false,
+                message: '',
+                timer: null,
+                trigger(msg) {
+                    this.message = msg;
+                    this.show = true;
+                    if (this.timer) clearTimeout(this.timer);
+                    this.timer = setTimeout(() => { this.show = false; }, 3000);
+                }
+            }"
+            x-on:show-toast.window="trigger($event.detail.message)"
+            x-show="show"
+            x-cloak
+            x-transition:enter="transition ease-out duration-300 transform"
+            x-transition:enter-start="opacity-0 translate-y-4 scale-95"
+            x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+            x-transition:leave="transition ease-in duration-200 transform"
+            x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+            x-transition:leave-end="opacity-0 translate-y-4 scale-95"
+            class="fixed bottom-6 right-6 z-50 bg-lime-300 border-3 border-black p-4 rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] text-black flex items-center gap-3 max-w-md"
+        >
+            <div class="w-7 h-7 rounded-full bg-black text-lime-300 flex items-center justify-center text-xs font-black shrink-0">✓</div>
+            <p class="text-xs font-bold text-black leading-relaxed">
+                <span x-text="message"></span>
+            </p>
+            <button type="button" @click="show = false" class="ml-auto text-black hover:bg-black/10 p-1 rounded font-black text-xs cursor-pointer transition-colors">✕</button>
+        </div>
+
+        <!-- Profile Card -->
+        <div class="bg-white border-4 border-black p-6 md:p-8 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                <div class="w-24 h-24 md:w-28 md:h-28 rounded-2xl bg-yellow-300 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center shrink-0">
+                    <span class="text-3xl md:text-4xl font-black text-black uppercase">{{ $user->initials() }}</span>
+                </div>
+
+                <div class="flex-1 text-center sm:text-left space-y-2">
+                    <h2 class="text-2xl md:text-3xl font-black text-black uppercase tracking-tight">{{ $user->name }}</h2>
+                    <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                        <span class="px-2.5 py-1 {{ $roleConfig['badge'] }} border-2 border-black text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1">
+                            <x-icon :name="$roleConfig['icon']" class="w-3 h-3 stroke-[2.5]" />
+                            <span>{{ $roleConfig['label'] }}</span>
+                        </span>
+                        <span class="text-[10px] font-black uppercase text-zinc-500">Terdaftar sejak {{ $user->created_at?->translatedFormat('d F Y') }}</span>
+                    </div>
+                    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 pt-2 text-sm">
+                        <div class="flex items-center gap-2 text-zinc-700 font-bold">
+                            <x-icon name="lucide-mail" class="w-4 h-4 text-black shrink-0 stroke-[2.5]" />
+                            <span class="truncate">{{ $user->email }}</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-zinc-700 font-bold">
+                            <x-icon name="lucide-phone" class="w-4 h-4 text-black shrink-0 stroke-[2.5]" />
+                            <span>{{ $user->phone_number ?: 'Belum diisi' }}</span>
+                        </div>
+                        @if ($user->role === 'owner')
+                            <div class="flex items-center gap-2 text-zinc-700 font-bold sm:col-span-2">
+                                <x-icon name="lucide-building-2" class="w-4 h-4 text-black shrink-0 stroke-[2.5]" />
+                                <span>Nama Usaha: <span class="text-black">{{ $user->business_name ?: '-' }}</span></span>
+                            </div>
+                        @endif
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Profile Form -->
+        @if ($editing)
+            <div class="bg-white border-4 border-black p-6 md:p-8 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+                <div class="flex items-center gap-3 border-b-3 border-black pb-4 mb-6">
+                    <div class="w-10 h-10 bg-yellow-300 border-2 border-black rounded-lg flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                        <x-icon name="lucide-pencil" class="w-5 h-5 stroke-[2.5]" />
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-black text-black uppercase tracking-tight">Edit Data Profil</h2>
+                        <p class="text-xs font-bold text-zinc-600">Perbarui identitas akun Anda.</p>
+                    </div>
+                </div>
+
+                <form wire:submit="updateProfile" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="name" class="block text-xs font-black uppercase text-black mb-1.5">Nama Lengkap</label>
+                        <input type="text" id="name" wire:model="name"
+                            class="w-full px-4 py-3 text-sm bg-white border-3 border-black rounded-lg text-black font-bold placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+                            placeholder="Nama lengkap Anda">
+                        @error('name') <p class="text-xs font-black text-rose-500 mt-1 uppercase">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div>
+                        <label for="email" class="block text-xs font-black uppercase text-black mb-1.5">Email</label>
+                        <input type="email" id="email" wire:model="email"
+                            class="w-full px-4 py-3 text-sm bg-white border-3 border-black rounded-lg text-black font-bold placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+                            placeholder="nama@email.com">
+                        @error('email') <p class="text-xs font-black text-rose-500 mt-1 uppercase">{{ $message }}</p> @enderror
+                    </div>
+
+                    @if ($user->role !== 'admin')
+                        <div>
+                            <label for="phone_number" class="block text-xs font-black uppercase text-black mb-1.5">Nomor WhatsApp</label>
+                            <input type="text" id="phone_number" wire:model="phone_number"
+                                class="w-full px-4 py-3 text-sm bg-white border-3 border-black rounded-lg text-black font-bold placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+                                placeholder="Contoh: 081234567890">
+                            @error('phone_number') <p class="text-xs font-black text-rose-500 mt-1 uppercase">{{ $message }}</p> @enderror
+                        </div>
+                    @endif
+
+                    @if ($user->role === 'owner')
+                        <div>
+                            <label for="business_name" class="block text-xs font-black uppercase text-black mb-1.5">Nama Usaha / Properti</label>
+                            <input type="text" id="business_name" wire:model="business_name"
+                                class="w-full px-4 py-3 text-sm bg-white border-3 border-black rounded-lg text-black font-bold placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+                                placeholder="Contoh: Kost Putra Sejahtera">
+                            @error('business_name') <p class="text-xs font-black text-rose-500 mt-1 uppercase">{{ $message }}</p> @enderror
+                        </div>
+                    @endif
+
+                    <div class="md:col-span-2 flex flex-wrap items-center gap-3 pt-2">
+                        <button type="submit"
+                            class="bg-lime-400 hover:bg-lime-300 text-black border-3 border-black font-black text-sm uppercase px-6 py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all inline-flex items-center gap-2 rounded-lg cursor-pointer">
+                            <x-icon name="lucide-check" class="w-5 h-5 stroke-[2.5]" />
+                            <span>Simpan Perubahan</span>
+                        </button>
+                        <button type="button" wire:click="toggleEdit"
+                            class="bg-zinc-100 hover:bg-zinc-200 text-black border-3 border-black font-black text-sm uppercase px-6 py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all rounded-lg cursor-pointer">
+                            Batal
+                        </button>
+                    </div>
+                </form>
+            </div>
+        @endif
+
+        <!-- Role-specific Content -->
+        @if ($user->role === 'owner')
+            @include('livewire.profile.partials.owner', ['user' => $user, 'stats' => $stats])
+        @elseif ($user->role === 'admin')
+            @include('livewire.profile.partials.admin', ['user' => $user, 'stats' => $stats])
+        @else
+            @include('livewire.profile.partials.user', ['user' => $user, 'stats' => $stats])
+        @endif
+    </div>
+</div>

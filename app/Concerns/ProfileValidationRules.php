@@ -48,4 +48,28 @@ trait ProfileValidationRules
                 : Rule::unique(User::class)->ignore($userId),
         ];
     }
+
+    /**
+     * Get the validation rules used to validate a phone number.
+     *
+     * @return array<int, ValidationRule|array<mixed>|string>
+     */
+    protected function phoneNumberRules(bool $required = false): array
+    {
+        return $required
+            ? ['required', 'string', 'min:10', 'max:15']
+            : ['nullable', 'string', 'min:10', 'max:15'];
+    }
+
+    /**
+     * Get the validation rules used to validate an owner business name.
+     *
+     * @return array<int, ValidationRule|array<mixed>|string>
+     */
+    protected function businessNameRules(bool $required = false): array
+    {
+        return $required
+            ? ['required', 'string', 'max:255']
+            : ['nullable', 'string', 'max:255'];
+    }
 }

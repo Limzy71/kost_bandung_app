@@ -169,5 +169,7 @@ return [
         'TV' => 'tv',
         'Kulkas' => 'refrigerator',
         'Water Heater (Air Hangat)' => 'thermometer-sun',
+        'Seprai' => 'bed-double',
+        'Wastafel' => 'droplets',
     ],
 ];

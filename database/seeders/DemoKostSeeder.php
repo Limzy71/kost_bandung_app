@@ -40,6 +40,8 @@ class DemoKostSeeder extends Seeder
             ['name' => 'Cermin', 'type' => 'room'],
             ['name' => 'Jendela', 'type' => 'room'],
             ['name' => 'TV', 'type' => 'room'],
+            ['name' => 'Seprai', 'type' => 'room'],
+            ['name' => 'Wastafel', 'type' => 'room'],
 
             // Fasilitas Umum
             ['name' => 'Wi-Fi', 'type' => 'building'],

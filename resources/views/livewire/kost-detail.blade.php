@@ -69,17 +69,12 @@
 
         <!-- Admin Review Notice Banner -->
         @if (auth()->check() && auth()->user()->role === 'admin' && $kost->status !== 'published')
-            <div class="bg-amber-300 border-4 border-black p-4 sm:p-5 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div class="flex items-center gap-3">
-                    <x-icon name="lucide-shield-alert" class="w-7 h-7 text-black stroke-[2.5] shrink-0" />
-                    <div>
-                        <p class="text-xs sm:text-sm font-black uppercase text-black">Mode Peninjauan Admin</p>
-                        <p class="text-xs font-bold text-black/80">Properti ini berstatus <span class="uppercase font-black text-rose-800">'{{ $kost->status }}'</span> dan belum ditayangkan secara publik.</p>
-                    </div>
+            <div class="bg-amber-300 border-4 border-black p-4 sm:p-5 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex items-center gap-3">
+                <x-icon name="lucide-shield-alert" class="w-7 h-7 text-black stroke-[2.5] shrink-0" />
+                <div>
+                    <p class="text-xs sm:text-sm font-black uppercase text-black">Mode Peninjauan Admin</p>
+                    <p class="text-xs font-bold text-black/80">Properti ini berstatus <span class="uppercase font-black text-rose-800">'{{ $kost->status }}'</span> dan belum ditayangkan secara publik.</p>
                 </div>
-                <a href="{{ route('admin.moderation') }}" class="px-4 py-2 bg-black text-amber-300 font-black text-xs uppercase rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-zinc-800 transition-all shrink-0">
-                    Kembali ke Panel Moderasi
-                </a>
             </div>
         @endif
 

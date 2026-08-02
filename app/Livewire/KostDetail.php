@@ -56,7 +56,7 @@ class KostDetail extends Component
             $this->backLabel = 'Kembali ke Dashboard Pemilik';
         } elseif ($previousUrl && $previousUrl !== url()->current()) {
             $this->backUrl = $previousUrl;
-            $this->backLabel = 'Kembali ke Pencarian';
+            $this->backLabel = 'Kembali ke Beranda Utama';
         } else {
             $this->backUrl = route('home');
             $this->backLabel = 'Kembali ke Beranda Utama';

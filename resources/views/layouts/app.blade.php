@@ -209,6 +209,14 @@
                                 </li>
                             @endunless
                         @else
+                            @unless(request()->routeIs('home'))
+                                <li>
+                                    <a href="{{ route('home') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
+                                        <x-icon name="lucide-house" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
+                                        <span>Beranda Utama</span>
+                                    </a>
+                                </li>
+                            @endunless
                             <li>
                                 <a href="{{ route('login') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
                                     <x-icon name="lucide-log-in" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />

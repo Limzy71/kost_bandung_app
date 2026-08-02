@@ -206,8 +206,9 @@
                                             <span class="text-[10px] font-black uppercase text-zinc-500">Tipe: {{ $facility->type === 'room' ? 'Kamar' : 'Umum' }}</span>
                                         </div>
                                     </div>
-                                    <span class="px-2.5 py-1 bg-amber-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] animate-pulse shrink-0">
-                                        ⏳ Pending
+                                    <span class="px-2.5 py-1 bg-amber-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1 animate-pulse shrink-0">
+                                        <x-icon name="lucide-hourglass" class="w-3 h-3 stroke-[2.5]" />
+                                        <span>Pending</span>
                                     </span>
                                 </div>
 
@@ -298,16 +299,19 @@
                                 <!-- Top Right Moderation Status Badge -->
                                 <div class="absolute top-3 right-3">
                                     @if($kost->status === 'pending')
-                                        <span class="px-3 py-1 bg-amber-400 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] animate-pulse">
-                                            ⏳ Pending Review
+                                        <span class="px-3 py-1 bg-amber-400 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1.5 animate-pulse">
+                                            <x-icon name="lucide-hourglass" class="w-3.5 h-3.5 stroke-[2.5]" />
+                                            <span>Pending Review</span>
                                         </span>
                                     @elseif($kost->status === 'published')
-                                        <span class="px-3 py-1 bg-emerald-400 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                            ✓ Published
+                                        <span class="px-3 py-1 bg-emerald-400 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1.5">
+                                            <x-icon name="lucide-check-circle-2" class="w-3.5 h-3.5 stroke-[2.5]" />
+                                            <span>Disetujui</span>
                                         </span>
                                     @else
-                                        <span class="px-3 py-1 bg-rose-400 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                            ✕ Rejected
+                                        <span class="px-3 py-1 bg-rose-400 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1.5">
+                                            <x-icon name="lucide-x-circle" class="w-3.5 h-3.5 stroke-[2.5]" />
+                                            <span>Ditolak</span>
                                         </span>
                                     @endif
                                 </div>
@@ -352,7 +356,17 @@
                         </div>
 
                         <!-- Card Action Buttons (Tactile Neo-Brutalist Actions) -->
-                        <div class="p-4 bg-zinc-100 border-t-4 border-black flex flex-col gap-2">
+                        <div class="p-4 bg-zinc-100 border-t-4 border-black flex flex-col gap-2.5">
+                            <!-- View Full Detail Button for Admin -->
+                            <a 
+                                href="{{ route('kost.show', $kost->slug) }}" 
+                                target="_blank"
+                                class="w-full py-2.5 bg-cyan-300 hover:bg-cyan-200 active:bg-cyan-400 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl cursor-pointer flex items-center justify-center gap-1.5"
+                            >
+                                <x-icon name="lucide-eye" class="w-4 h-4 stroke-[2.5]" />
+                                <span>Lihat Detail & Pratinjau Lengkap</span>
+                            </a>
+
                             @if($kost->status === 'pending')
                                 <div class="grid grid-cols-2 gap-2">
                                     <!-- Approve Button -->

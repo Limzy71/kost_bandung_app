@@ -53,6 +53,8 @@ class DemoKostSeeder extends Seeder
             ['name' => 'Penjaga Kost', 'type' => 'building'],
             ['name' => 'Mesin Cuci', 'type' => 'building'],
             ['name' => 'Ruang Tamu', 'type' => 'building'],
+            ['name' => 'Rooftop', 'type' => 'building'],
+            ['name' => 'Dispenser', 'type' => 'building'],
 
             // Fasilitas Parkir
             ['name' => 'Parkir Mobil', 'type' => 'parking'],

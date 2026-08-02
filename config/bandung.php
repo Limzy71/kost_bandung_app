@@ -171,5 +171,7 @@ return [
         'Water Heater (Air Hangat)' => 'thermometer-sun',
         'Seprai' => 'bed-double',
         'Wastafel' => 'droplets',
+        'Rooftop' => 'sun',
+        'Dispenser' => 'cup-soda',
     ],
 ];

@@ -528,13 +528,20 @@
                     </div>
 
                     <!-- Owner Info Card -->
-                    <div class="pt-4 border-t-3 border-black text-center space-y-1">
+                    <div class="pt-4 border-t-3 border-black text-center space-y-2">
                         <p class="text-xs font-black uppercase text-zinc-500">Disewakan Oleh</p>
                         <p
                             class="text-sm font-black text-black bg-zinc-100 border-2 border-black py-1.5 px-3 rounded-lg inline-flex items-center gap-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                             <x-icon name="lucide-user" class="w-4 h-4 text-black stroke-[2.5]" />
                             <span>{{ $kost->user->name ?? 'Pemilik Kost' }}</span>
                         </p>
+                        @if ($kost->user)
+                            <a href="{{ route('profile.owner', $kost->user) }}"
+                                class="inline-flex items-center gap-1.5 text-black font-black text-xs uppercase bg-white hover:bg-zinc-100 border-2 border-black px-3 py-1.5 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all">
+                                <x-icon name="lucide-building-2" class="w-3.5 h-3.5 stroke-[2.5]" />
+                                <span>Lihat Profil Pemilik</span>
+                            </a>
+                        @endif
                     </div>
 
                 </div>

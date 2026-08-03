@@ -28,25 +28,28 @@ function makePublishedKost(string $name, string $slug, float $price, string $per
     ]);
 }
 
-it('filters price by monthly-equivalent across primary rent periods', function () {
-    makePublishedKost('Kost Bulanan', 'kost-bulanan', 1000000, 'monthly');
-    makePublishedKost('Kost Tahunan', 'kost-tahunan', 12000000, 'yearly');
-    makePublishedKost('Kost 3 Bulanan', 'kost-3-bulanan', 3000000, 'three_monthly');
-    makePublishedKost('Kost 6 Bulanan', 'kost-6-bulanan', 6000000, 'six_monthly');
-    makePublishedKost('Kost Harian Murah', 'kost-harian-murah', 30000, 'daily');
-    makePublishedKost('Kost Mingguan', 'kost-mingguan', 230770, 'weekly');
-    makePublishedKost('Kost Harian Mahal', 'kost-harian-mahal', 200000, 'daily');
+it('filters price by nominal amount per rent period', function () {
+    makePublishedKost('Kost Bulanan Murah', 'kost-bulanan-murah', 900000, 'monthly');
+    makePublishedKost('Kost Bulanan Mahal', 'kost-bulanan-mahal', 3000000, 'monthly');
+    makePublishedKost('Kost Tahunan', 'kost-tahunan', 10000000, 'yearly');
+    makePublishedKost('Kost Harian', 'kost-harian', 100000, 'daily');
 
+    // Test nominal price filter without rent period (searches all periods by nominal amount)
     Livewire::test(KostSearch::class)
-        ->set('price_min', 900000)
-        ->set('price_max', 1100000)
-        ->assertSee('Kost Bulanan')
+        ->set('price_min', 800000)
+        ->set('price_max', 2000000)
+        ->assertSee('Kost Bulanan Murah') // 900k is within 800k - 2M
+        ->assertDontSee('Kost Bulanan Mahal') // 3M > 2M
+        ->assertDontSee('Kost Tahunan') // 10M > 2M
+        ->assertDontSee('Kost Harian'); // 100k < 800k
+
+    // Test rent period filter
+    Livewire::test(KostSearch::class)
+        ->set('rent_period', 'yearly')
+        ->set('price_min', 5000000)
+        ->set('price_max', 15000000)
         ->assertSee('Kost Tahunan')
-        ->assertSee('Kost 3 Bulanan')
-        ->assertSee('Kost 6 Bulanan')
-        ->assertSee('Kost Harian Murah')
-        ->assertSee('Kost Mingguan')
-        ->assertDontSee('Kost Harian Mahal');
+        ->assertDontSee('Kost Bulanan Murah');
 });
 
 it('shows the actual rent period price on the search card and map', function () {

@@ -22,6 +22,8 @@ class KostSearch extends Component
 
     public $district = '';
 
+    public $rent_period = '';
+
     // Stored as a Livewire public property so Alpine can read it via $wire.mapItems
     // without needing x-effect or inline JSON in HTML attributes.
     public array $mapItems = [];
@@ -46,6 +48,11 @@ class KostSearch extends Component
         $this->resetPage();
     }
 
+    public function updatedRentPeriod(): void
+    {
+        $this->resetPage();
+    }
+
     public function updatedPriceMax(): void
     {
         $this->resetPage();
@@ -61,6 +68,7 @@ class KostSearch extends Component
         $this->search = '';
         $this->gender = '';
         $this->district = '';
+        $this->rent_period = '';
         $this->price_min = '';
         $this->price_max = '';
         $this->resetPage();
@@ -97,18 +105,16 @@ class KostSearch extends Component
             $query->where('gender_type', $this->gender);
         }
 
-        // Normalize the price filter to a monthly-equivalent so costs with a
-        // different primary rent period (daily/weekly/3m/6m/yearly) stay
-        // comparable against a monthly min/max range. Short periods (daily/
-        // weekly) must be multiplied, longer periods (3m/6m/yearly) divided.
-        $monthlyRefExpr = "price_monthly * CASE rent_period WHEN 'daily' THEN 30 WHEN 'weekly' THEN 4.333 WHEN 'three_monthly' THEN (1.0 / 3) WHEN 'six_monthly' THEN (1.0 / 6) WHEN 'yearly' THEN (1.0 / 12) ELSE 1 END";
+        if ($this->rent_period) {
+            $query->where('rent_period', $this->rent_period);
+        }
 
         if ($this->price_min) {
-            $query->whereRaw("{$monthlyRefExpr} >= ?", [(int) $this->price_min]);
+            $query->where('price_monthly', '>=', (int) $this->price_min);
         }
 
         if ($this->price_max) {
-            $query->whereRaw("{$monthlyRefExpr} <= ?", [(int) $this->price_max]);
+            $query->where('price_monthly', '<=', (int) $this->price_max);
         }
 
         // Compute district counts before applying the district filter

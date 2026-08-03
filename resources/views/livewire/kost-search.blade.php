@@ -47,7 +47,7 @@
         <!-- Filter Inputs Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4">
             <!-- Search Text -->
-            <div class="lg:col-span-5 relative">
+            <div class="lg:col-span-3 relative">
                 <label class="block text-xs font-black uppercase text-black mb-1.5">Cari Nama / Jalan</label>
                 <div class="relative flex items-center" x-data="{ query: @entangle('search') }">
                     <input
@@ -95,10 +95,21 @@
                 </select>
             </div>
 
+            <!-- Rent Period -->
+            <div class="lg:col-span-2">
+                <label class="block text-xs font-black uppercase text-black mb-1.5 tracking-wide">Periode Sewa</label>
+                <select x-ref="periodSelect" wire:model="rent_period"
+                    class="w-full bg-white border-3 border-black rounded-xl px-2.5 py-2.5 text-xs font-black uppercase tracking-wide text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_8px_center] pr-7">
+                    <option value="" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Semua Periode</option>
+                    @foreach (\App\Models\Kost::rentPeriodLabels() as $val => $label)
+                        <option value="{{ $val }}" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
+
             <!-- Price Range -->
             <div class="lg:col-span-3">
-                <label class="block text-xs font-black uppercase text-black mb-1.5 tracking-wide">Batas Harga Sewa
-                    <span class="text-[10px] font-bold normal-case text-zinc-500">(setara per bulan)</span></label>
+                <label class="block text-xs font-black uppercase text-black mb-1.5 tracking-wide">Batas Harga Sewa <span class="text-zinc-500 font-bold normal-case text-[10px] ml-1">(per tipe)</span></label>
                 <div class="grid grid-cols-2 gap-2">
                     <select x-ref="minSelect" wire:model="price_min"
                         class="w-full bg-white border-3 border-black rounded-xl px-2 py-2.5 text-xs font-black uppercase tracking-wide text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-no-repeat bg-[right_6px_center] pr-5">

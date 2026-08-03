@@ -59,7 +59,7 @@
                         @keydown.enter="wasApplied = true"
                         @input="checkFilter()"
                         type="text"
-                        placeholder="Contoh: Dago, Tamansari, Setiabudi..."
+                        placeholder="Contoh: Dago, Setiabudi..."
                         class="w-full bg-white border-3 border-black rounded-xl pl-10 pr-10 py-2.5 text-xs font-black uppercase text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
                     >
                     <x-icon name="lucide-search" class="w-5 h-5 text-black absolute left-3 pointer-events-none" />

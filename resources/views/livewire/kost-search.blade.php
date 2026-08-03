@@ -23,6 +23,7 @@
         x-init="checkFilter()"
         @input="checkFilter()"
         @change="checkFilter()"
+        @reset-filters.window="hasFilter = false; wasApplied = false; checkFilter()"
         class="bg-white border-4 border-black p-6 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-4"
     >
         <!-- Header -->
@@ -282,7 +283,7 @@
                     </p>
                 </div>
                 <button type="button" wire:click="resetFilters"
-                    @click="hasFilter=false; wasApplied=false; if(viewMode==='map') { $nextTick(() => window.dispatchEvent(new Event('resize'))); }"
+                    @click="$dispatch('reset-filters'); if(viewMode==='map') { $nextTick(() => window.dispatchEvent(new Event('resize'))); }"
                     class="px-6 py-3 bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl inline-flex items-center gap-2 cursor-pointer">
                     <x-icon name="lucide-refresh-cw" class="w-4 h-4 stroke-[3]" />
                     @if($search && !$gender && !$district && !$price_min && !$price_max)

@@ -53,7 +53,7 @@
                         {{ $kost->address }}, Kec. {{ $kost->district }}
                     </p>
                     <p class="text-xs font-black uppercase text-black bg-yellow-200 border-2 border-black px-2 py-0.5 rounded inline-block">
-                        Rp {{ number_format($kost->price_monthly, 0, ',', '.') }} / bulan
+                        Rp {{ number_format($kost->price_monthly, 0, ',', '.') }}{{ \App\Models\Kost::rentPeriodUnit($kost->rent_period) }}
                     </p>
                 </div>
 

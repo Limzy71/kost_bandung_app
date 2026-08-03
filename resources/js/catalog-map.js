@@ -343,7 +343,7 @@ window.catalogMap = function (config) {
                 '<div style="background:#FACC15;border:1.5px solid #000;padding:4px 8px;border-radius:6px;' +
                     'font-weight:900;font-size:12px;margin-bottom:8px;box-shadow:2px 2px 0 #000">' +
                     item.price_full +
-                    '<span style="font-size:9px">/bln</span>' +
+                    '<span style="font-size:9px">' + item.price_unit + '</span>' +
                 '</div>' +
                 '<a href="' + item.url + '" ' +
                     'style="display:block;text-align:center;background:#FB923C;color:#000;' +

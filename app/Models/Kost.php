@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Kost extends Model
 {
@@ -19,7 +20,7 @@ class Kost extends Model
         static::forceDeleting(function ($kost) {
             foreach ($kost->images as $image) {
                 if ($image->image_path) {
-                    \Illuminate\Support\Facades\Storage::disk('public')->delete($image->image_path);
+                    Storage::disk('public')->delete($image->image_path);
                 }
             }
         });
@@ -99,6 +100,22 @@ class Kost extends Model
     public function pricesByPeriod(): array
     {
         return $this->prices()->get()->pluck('price', 'period')->map(fn ($p) => (string) $p)->all();
+    }
+
+    public function getMonthlyEquivalentAttribute(): float
+    {
+        $period = (string) ($this->rent_period ?? 'monthly');
+
+        $factor = match ($period) {
+            'daily' => 30,
+            'weekly' => 4.333,
+            'three_monthly' => 1 / 3,
+            'six_monthly' => 1 / 6,
+            'yearly' => 1 / 12,
+            default => 1,
+        };
+
+        return round((float) $this->price_monthly * $factor);
     }
 
     public static function rentPeriodLabels(): array

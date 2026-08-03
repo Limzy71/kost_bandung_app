@@ -273,9 +273,9 @@
                 <div>
                     <h3 class="text-3xl font-black text-black uppercase">Tidak Ada Hunian Ditemukan</h3>
                     <p class="text-sm font-bold text-zinc-700 max-w-md mx-auto mt-2">
-                        @if($search && !$gender && !$district && !$price_min && !$price_max)
+                        @if($search && !$gender && !$district && !$rent_period && !$price_min && !$price_max)
                             Tidak ada kost yang cocok dengan kata kunci "{{ $search }}". Coba hapus pencarian atau gunakan kata kunci lain.
-                        @elseif($search || $gender || $district || $price_min || $price_max)
+                        @elseif($search || $gender || $district || $rent_period || $price_min || $price_max)
                             Tidak ada kost yang cocok dengan kriteria filter Anda. Coba ubah atau reset filter pencarian.
                         @else
                             Belum ada daftar kost yang terdaftar saat ini.
@@ -286,7 +286,7 @@
                     @click="$dispatch('reset-filters'); if(viewMode==='map') { $nextTick(() => window.dispatchEvent(new Event('resize'))); }"
                     class="px-6 py-3 bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl inline-flex items-center gap-2 cursor-pointer">
                     <x-icon name="lucide-refresh-cw" class="w-4 h-4 stroke-[3]" />
-                    @if($search && !$gender && !$district && !$price_min && !$price_max)
+                    @if($search && !$gender && !$district && !$rent_period && !$price_min && !$price_max)
                         <span>Hapus Pencarian</span>
                     @else
                         <span>Tampilkan Semua Kost</span>

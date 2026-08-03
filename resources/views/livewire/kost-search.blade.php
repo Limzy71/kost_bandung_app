@@ -264,8 +264,8 @@
                 </div>
             </div>
         @else
-            <!-- Empty State: Show only when viewMode is list, no x-init override -->
-            <div wire:key="empty-state" x-show="viewMode === 'list'" x-cloak class="bg-yellow-100 border-4 border-black rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] space-y-4">
+            <!-- Empty State: Always show when there are 0 results -->
+            <div wire:key="empty-state" x-cloak class="bg-yellow-100 border-4 border-black rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] space-y-4">
                 <div class="w-20 h-20 bg-white border-3 border-black rounded-2xl flex items-center justify-center mx-auto text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -rotate-3">
                     <x-icon name="lucide-search" class="w-10 h-10" />
                 </div>
@@ -295,7 +295,7 @@
         @endif
 
         <!-- Full-Width Immersive Map View Mode (Always in DOM to preserve Map instance) -->
-        <div wire:key="map-view" wire:ignore x-show="viewMode === 'map' && (items.length > 0 || districtBounds[$wire.district])" x-cloak class="w-full" @map-load-error.window="mapFailed = true">
+        <div wire:key="map-view" wire:ignore x-show="viewMode === 'map' && items.length > 0" x-cloak class="w-full" @map-load-error.window="mapFailed = true">
             <!-- Map Container -->
             <div x-show="!mapFailed" class="relative w-full rounded-2xl border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden bg-white">
                 <div class="p-4 bg-yellow-300 border-b-3 border-black flex items-center justify-between">
@@ -307,15 +307,6 @@
                     </span>
                 </div>
                 <div x-ref="catalogMapElement" class="w-full h-[450px] lg:h-[500px] bg-zinc-100 z-0"></div>
-                
-                <!-- Overlay Pesan Kecamatan Kosong -->
-                <div x-show="items.length === 0" x-cloak class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-yellow-300 border-4 border-black p-4 sm:p-6 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] z-[400] text-center w-11/12 max-w-sm pointer-events-none">
-                    <div class="w-12 h-12 bg-white border-3 border-black rounded-full flex items-center justify-center mx-auto mb-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                        <x-icon name="lucide-info" class="w-6 h-6 text-black stroke-[3]" />
-                    </div>
-                    <h4 class="text-lg font-black text-black uppercase mb-1">Kecamatan Kosong</h4>
-                    <p class="text-sm font-bold text-zinc-800">Belum ada kost terdaftar di kecamatan ini.</p>
-                </div>
             </div>
 
             <!-- Fallback Neo-Brutalist Error Card -->

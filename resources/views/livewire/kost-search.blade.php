@@ -13,10 +13,11 @@
             checkFilter() {
                 const g = this.$refs.genderSelect   ? this.$refs.genderSelect.value   : '';
                 const d = this.$refs.districtSelect ? this.$refs.districtSelect.value : '';
+                const p = this.$refs.periodSelect   ? this.$refs.periodSelect.value   : '';
                 const n = this.$refs.minSelect      ? this.$refs.minSelect.value      : '';
                 const x = this.$refs.maxSelect      ? this.$refs.maxSelect.value      : '';
                 const s = this.$refs.searchInput    ? this.$refs.searchInput.value    : '';
-                this.hasFilter = Boolean(g || d || n || x || s);
+                this.hasFilter = Boolean(g || d || p || n || x || s);
             }
         }"
         x-init="checkFilter()"

@@ -23,7 +23,7 @@
         x-init="checkFilter()"
         @input="checkFilter()"
         @change="checkFilter()"
-        @reset-filters.window="hasFilter = false; wasApplied = false; checkFilter()"
+        @reset-filters.window="hasFilter = false; wasApplied = false"
         class="bg-white border-4 border-black p-6 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-4"
     >
         <!-- Header -->

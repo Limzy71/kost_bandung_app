@@ -1,9 +1,14 @@
 @php
-    $allImages = $kost->images->map(function ($img) {
-        return Str::startsWith($img->image_path ?? '', 'http')
-            ? $img->image_path
-            : Storage::url($img->image_path);
-    })->values();
+    $allImages = $kost->images
+        ->filter(fn ($img) => filled($img->image_path))
+        ->map(function ($img) {
+            return Str::startsWith($img->image_path, 'http')
+                ? $img->image_path
+                : Storage::url($img->image_path);
+        })
+        ->values()
+        ->unique()
+        ->values();
 
     if ($allImages->isEmpty()) {
         $allImages = collect(['https://placehold.co/800x500/eeeeee/31343c?text=Foto+Utama']);
@@ -50,17 +55,30 @@
         showModal: false, 
         showGalleryModal: false, 
         activeIndex: 0, 
-        totalImages: {{ $allImages->count() }}, 
         images: {{ Js::from($allImages) }},
         nextImage() {
-            let current = parseInt(this.activeIndex, 10);
-            let total   = parseInt(this.totalImages, 10);
-            this.activeIndex = (current >= total - 1) ? 0 : (current + 1);
+            const total = this.images.length;
+            if (total <= 1) return;
+            const cur = this.images[this.activeIndex];
+            for (let step = 1; step <= total; step++) {
+                const i = (this.activeIndex + step) % total;
+                if (this.images[i] !== cur) {
+                    this.activeIndex = i;
+                    return;
+                }
+            }
         },
         prevImage() {
-            let current = parseInt(this.activeIndex, 10);
-            let total   = parseInt(this.totalImages, 10);
-            this.activeIndex = (current <= 0) ? (total - 1) : (current - 1);
+            const total = this.images.length;
+            if (total <= 1) return;
+            const cur = this.images[this.activeIndex];
+            for (let step = 1; step <= total; step++) {
+                const i = (this.activeIndex - step + total) % total;
+                if (this.images[i] !== cur) {
+                    this.activeIndex = i;
+                    return;
+                }
+            }
         }
     }" 
     x-effect="document.body.style.overflow = (showGalleryModal || showModal) ? 'hidden' : ''"
@@ -145,10 +163,10 @@
                                 <img src="{{ $thumbSrc }}"
                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                     alt="Foto {{ $i + 2 }}">
-                                @if ($i === 2 && $kost->images->count() > 4)
+                                @if ($i === 2 && $allImages->count() > 4)
                                     <div class="absolute inset-0 bg-black/60 flex items-center justify-center">
                                         <span
-                                            class="text-white font-black text-2xl">+{{ $kost->images->count() - 4 }}</span>
+                                            class="text-white font-black text-2xl">+{{ $allImages->count() - 4 }}</span>
                                     </div>
                                 @endif
                             </div>
@@ -765,7 +783,7 @@
         <div class="w-full h-16 px-6 bg-zinc-900 border-b-2 border-zinc-800 flex items-center justify-between z-50 shrink-0">
             <!-- Left: Badge Counter -->
             <div class="bg-[#FFE500] text-black px-3 py-1 font-black border-2 border-black text-sm uppercase rounded shadow-[2px_2px_0px_0px_rgba(255,255,255,1)]">
-                FOTO <span x-text="Number(activeIndex) + 1"></span> DARI <span x-text="totalImages"></span>
+                FOTO <span x-text="Number(activeIndex) + 1"></span> DARI <span x-text="images.length"></span>
             </div>
 
             <!-- Right: Close Button -->

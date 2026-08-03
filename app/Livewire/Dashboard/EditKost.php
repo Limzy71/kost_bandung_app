@@ -9,6 +9,7 @@ use App\Models\KostPrice;
 use App\Models\Rule;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -19,37 +20,69 @@ class EditKost extends Component
     public Kost $kost;
 
     public string $name = '';
+
     public string $gender_type = 'campur';
+
     public string $description = '';
+
     public string $district = '';
+
     public string $address = '';
+
     public string $price_monthly = '';
+
     public string $rent_period = 'monthly';
+
     public string $price_deposit = '';
+
     public bool $include_utilities = false;
+
     public string $latitude = '';
+
     public string $longitude = '';
+
     public string $total_rooms = '1';
+
     public string $available_rooms = '1';
+
     public string $whatsapp_contact = '';
+
     public string $nearby_landmarks = '';
+
     public array $selectedFacilities = [];
+
     public array $customFacilities = [];
+
     public string $newRoomFacility = '';
+
     public string $newBuildingFacility = '';
+
     public array $selectedRules = [];
+
     public array $customRules = [];
+
     public string $newRule = '';
+
     public string $newLandmark = '';
+
     public array $landmarkList = [];
+
     public string $additional_rules_note = '';
+
     public array $photos = [];
+
     public array $existingPhotos = [];
+
     public array $removeExistingIds = [];
+
     public ?int $primaryPhotoId = null;
+
     public ?string $district_auto_message = null;
+
     public array $extraPeriods = [];
+
     public array $removedCustomFacilityIds = [];
+
     public array $extraPeriodPrices = [
         'daily' => '',
         'weekly' => '',
@@ -212,10 +245,11 @@ class EditKost extends Component
                     $name = trim((string) $value);
                     if ($name === '') {
                         $fail('Nama fasilitas tidak boleh kosong.');
+
                         return;
                     }
                     if (Facility::whereRaw('LOWER(name) = ?', [Str::lower($name)])->where('status', 'approved')->exists()) {
-                        $fail('Fasilitas "' . $name . '" sudah tersedia di daftar utama (Silakan pilih dari daftar).');
+                        $fail('Fasilitas "'.$name.'" sudah tersedia di daftar utama (Silakan pilih dari daftar).');
                     }
                 },
             ],
@@ -231,10 +265,11 @@ class EditKost extends Component
                     $name = trim((string) $value);
                     if ($name === '') {
                         $fail('Nama aturan tidak boleh kosong.');
+
                         return;
                     }
                     if (Rule::whereRaw('LOWER(name) = ?', [Str::lower($name)])->where('status', 'approved')->exists()) {
-                        $fail('Aturan "' . $name . '" sudah tersedia di daftar utama (Silakan pilih dari daftar).');
+                        $fail('Aturan "'.$name.'" sudah tersedia di daftar utama (Silakan pilih dari daftar).');
                     }
                 },
             ],
@@ -334,23 +369,27 @@ class EditKost extends Component
 
         if ($name === '') {
             $this->addError($property, 'Nama fasilitas tidak boleh kosong.');
+
             return;
         }
 
         if (mb_strlen($name) > 50) {
             $this->addError($property, 'Fasilitas lain maksimal 50 karakter.');
+
             return;
         }
 
         $duplicateInDb = Facility::whereRaw('LOWER(name) = ?', [Str::lower($name)])->exists();
         if ($duplicateInDb) {
-            $this->addError($property, 'Fasilitas "' . $name . '" sudah tersedia di daftar fasilitas.');
+            $this->addError($property, 'Fasilitas "'.$name.'" sudah tersedia di daftar fasilitas.');
+
             return;
         }
 
         foreach ($this->customFacilities as $existing) {
             if (Str::lower($existing['name']) === Str::lower($name)) {
-                $this->addError($property, 'Fasilitas "' . $name . '" sudah ditambahkan.');
+                $this->addError($property, 'Fasilitas "'.$name.'" sudah ditambahkan.');
+
                 return;
             }
         }
@@ -383,23 +422,27 @@ class EditKost extends Component
 
         if ($name === '') {
             $this->addError('newRule', 'Nama aturan tidak boleh kosong.');
+
             return;
         }
 
         if (mb_strlen($name) > 50) {
             $this->addError('newRule', 'Aturan lain maksimal 50 karakter.');
+
             return;
         }
 
         $duplicateInDb = Rule::whereRaw('LOWER(name) = ?', [Str::lower($name)])->exists();
         if ($duplicateInDb) {
-            $this->addError('newRule', 'Aturan "' . $name . '" sudah tersedia di daftar aturan.');
+            $this->addError('newRule', 'Aturan "'.$name.'" sudah tersedia di daftar aturan.');
+
             return;
         }
 
         foreach ($this->customRules as $existing) {
             if (Str::lower($existing) === Str::lower($name)) {
-                $this->addError('newRule', 'Aturan "' . $name . '" sudah ditambahkan.');
+                $this->addError('newRule', 'Aturan "'.$name.'" sudah ditambahkan.');
+
                 return;
             }
         }
@@ -425,7 +468,8 @@ class EditKost extends Component
 
         foreach ($this->landmarkList as $existing) {
             if (Str::lower($existing) === Str::lower($name)) {
-                $this->addError('newLandmark', 'Landmark "' . $name . '" sudah ditambahkan.');
+                $this->addError('newLandmark', 'Landmark "'.$name.'" sudah ditambahkan.');
+
                 return;
             }
         }
@@ -488,12 +532,12 @@ class EditKost extends Component
                     $price = trim((string) ($this->extraPeriodPrices[$period] ?? ''));
                     if ($price === '') {
                         $validator->errors()->add(
-                            'extraPeriodPrices.' . $period,
+                            'extraPeriodPrices.'.$period,
                             'Harga periode ini wajib diisi karena sudah dipilih.'
                         );
                     } elseif (! is_numeric($price) || $price < 10000) {
                         $validator->errors()->add(
-                            'extraPeriodPrices.' . $period,
+                            'extraPeriodPrices.'.$period,
                             'Harga periode ini tidak valid (minimal Rp 10.000).'
                         );
                     }
@@ -513,8 +557,8 @@ class EditKost extends Component
     {
         try {
             $this->validate();
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            if (!app()->runningUnitTests()) {
+        } catch (ValidationException $e) {
+            if (! app()->runningUnitTests()) {
                 usleep(1000000);
             }
             throw $e;
@@ -522,14 +566,16 @@ class EditKost extends Component
 
         $totalPhotos = count($this->existingPhotos) + count($this->photos);
         if ($totalPhotos < 4) {
-            if (!app()->runningUnitTests()) {
+            if (! app()->runningUnitTests()) {
                 usleep(1000000);
             }
             $this->addError('photos', 'MINIMAL 4 FOTO KOST WAJIB ADA.');
+
             return;
         }
         if ($totalPhotos > 10) {
             $this->addError('photos', 'MAKSIMAL 10 FOTO KOST DAPAT DIUNGGAH.');
+
             return;
         }
 
@@ -543,10 +589,11 @@ class EditKost extends Component
                 $lat < $bounds['lat_min'] || $lat > $bounds['lat_max'] ||
                 $lng < $bounds['lng_min'] || $lng > $bounds['lng_max']
             ) {
-                if (!app()->runningUnitTests()) {
+                if (! app()->runningUnitTests()) {
                     usleep(1000000);
                 }
                 $this->addError('latitude', 'Koordinat peta tidak berada di dalam wilayah Kecamatan yang dipilih.');
+
                 return;
             }
         }
@@ -575,7 +622,7 @@ class EditKost extends Component
 
         $hasChanges = $kost->isDirty() || count($this->photos) > 0 || count($this->removeExistingIds) > 0 || $this->primaryPhotoId !== null;
 
-        if (!app()->runningUnitTests()) {
+        if (! app()->runningUnitTests()) {
             if ($hasChanges) {
                 usleep(1500000); // 1.5 detik jika ada perubahan
             } else {
@@ -623,14 +670,32 @@ class EditKost extends Component
         }
 
         // Store new photos
+        $existingHashes = KostImage::where('kost_id', $kost->id)
+            ->whereNotIn('id', $this->removeExistingIds)
+            ->get()
+            ->map(fn (KostImage $img) => $img->image_path
+                ? @md5_file(Storage::disk('public')->path($img->image_path))
+                : null)
+            ->filter()
+            ->values()
+            ->all();
+
+        $newPrimarySet = false;
         foreach ($this->photos as $index => $photo) {
+            $hash = @md5_file($photo->getRealPath());
+            if ($hash === false || in_array($hash, $existingHashes, true)) {
+                continue;
+            }
+            $existingHashes[] = $hash;
+
             $path = $photo->store('kosts', 'public');
 
             KostImage::create([
                 'kost_id' => $kost->id,
                 'image_path' => $path,
-                'is_primary' => $newPhotosPrimary && $index === 0,
+                'is_primary' => $newPhotosPrimary && ! $newPrimarySet,
             ]);
+            $newPrimarySet = true;
         }
         $this->photos = [];
 
@@ -682,7 +747,7 @@ class EditKost extends Component
             ]);
         }
 
-        session()->flash('status', 'Properti kost "' . $kost->name . '" berhasil diperbarui!');
+        session()->flash('status', 'Properti kost "'.$kost->name.'" berhasil diperbarui!');
 
         return redirect()->route('dashboard');
     }

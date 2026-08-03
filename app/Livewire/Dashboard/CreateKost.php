@@ -7,8 +7,11 @@ use App\Models\Kost;
 use App\Models\KostImage;
 use App\Models\KostPrice;
 use App\Models\Rule;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -17,35 +20,65 @@ class CreateKost extends Component
     use WithFileUploads;
 
     public string $name = '';
+
     public string $gender_type = 'campur';
+
     public string $description = '';
+
     public string $district = '';
+
     public string $address = '';
+
     public string $price_monthly = '';
+
     public string $rent_period = 'monthly';
+
     public string $price_deposit = '';
+
     public bool $include_utilities = false;
+
     public string $latitude = '';
+
     public string $longitude = '';
+
     public string $total_rooms = '1';
+
     public string $available_rooms = '1';
+
     public string $whatsapp_contact = '';
+
     public string $nearby_landmarks = '';
+
     public array $selectedFacilities = [];
+
     public array $customFacilities = [];
+
     public string $newRoomFacility = '';
+
     public string $newBuildingFacility = '';
+
     public array $selectedRules = [];
+
     public array $customRules = [];
+
     public string $newRule = '';
+
     public string $newLandmark = '';
+
     public array $landmarkList = [];
+
     public string $additional_rules_note = '';
+
     public array $photos = [];
+
     public array $existingPhotos = [];
+
     public ?int $primaryPhotoId = null;
+
     public ?string $district_auto_message = null;
+
     public array $extraPeriods = [];
+
     public array $extraPeriodPrices = [
         'daily' => '',
         'weekly' => '',
@@ -65,7 +98,6 @@ class CreateKost extends Component
             }
         }
     }
-
 
     public function updatedPriceMonthly($value)
     {
@@ -143,10 +175,11 @@ class CreateKost extends Component
                     $name = trim((string) $value);
                     if ($name === '') {
                         $fail('Nama fasilitas tidak boleh kosong.');
+
                         return;
                     }
                     if (Facility::whereRaw('LOWER(name) = ?', [Str::lower($name)])->where('status', 'approved')->exists()) {
-                        $fail('Fasilitas "' . $name . '" sudah tersedia di daftar utama (Silakan pilih dari daftar).');
+                        $fail('Fasilitas "'.$name.'" sudah tersedia di daftar utama (Silakan pilih dari daftar).');
                     }
                 },
             ],
@@ -162,10 +195,11 @@ class CreateKost extends Component
                     $name = trim((string) $value);
                     if ($name === '') {
                         $fail('Nama aturan tidak boleh kosong.');
+
                         return;
                     }
                     if (Rule::whereRaw('LOWER(name) = ?', [Str::lower($name)])->where('status', 'approved')->exists()) {
-                        $fail('Aturan "' . $name . '" sudah tersedia di daftar utama (Silakan pilih dari daftar).');
+                        $fail('Aturan "'.$name.'" sudah tersedia di daftar utama (Silakan pilih dari daftar).');
                     }
                 },
             ],
@@ -245,23 +279,27 @@ class CreateKost extends Component
 
         if ($name === '') {
             $this->addError($property, 'Nama fasilitas tidak boleh kosong.');
+
             return;
         }
 
         if (mb_strlen($name) > 50) {
             $this->addError($property, 'Fasilitas lain maksimal 50 karakter.');
+
             return;
         }
 
         $duplicateInDb = Facility::whereRaw('LOWER(name) = ?', [Str::lower($name)])->exists();
         if ($duplicateInDb) {
-            $this->addError($property, 'Fasilitas "' . $name . '" sudah tersedia di daftar fasilitas.');
+            $this->addError($property, 'Fasilitas "'.$name.'" sudah tersedia di daftar fasilitas.');
+
             return;
         }
 
         foreach ($this->customFacilities as $existing) {
             if (Str::lower($existing['name']) === Str::lower($name)) {
-                $this->addError($property, 'Fasilitas "' . $name . '" sudah ditambahkan.');
+                $this->addError($property, 'Fasilitas "'.$name.'" sudah ditambahkan.');
+
                 return;
             }
         }
@@ -289,23 +327,27 @@ class CreateKost extends Component
 
         if ($name === '') {
             $this->addError('newRule', 'Nama aturan tidak boleh kosong.');
+
             return;
         }
 
         if (mb_strlen($name) > 50) {
             $this->addError('newRule', 'Aturan lain maksimal 50 karakter.');
+
             return;
         }
 
         $duplicateInDb = Rule::whereRaw('LOWER(name) = ?', [Str::lower($name)])->exists();
         if ($duplicateInDb) {
-            $this->addError('newRule', 'Aturan "' . $name . '" sudah tersedia di daftar aturan.');
+            $this->addError('newRule', 'Aturan "'.$name.'" sudah tersedia di daftar aturan.');
+
             return;
         }
 
         foreach ($this->customRules as $existing) {
             if (Str::lower($existing) === Str::lower($name)) {
-                $this->addError('newRule', 'Aturan "' . $name . '" sudah ditambahkan.');
+                $this->addError('newRule', 'Aturan "'.$name.'" sudah ditambahkan.');
+
                 return;
             }
         }
@@ -331,7 +373,8 @@ class CreateKost extends Component
 
         foreach ($this->landmarkList as $existing) {
             if (Str::lower($existing) === Str::lower($name)) {
-                $this->addError('newLandmark', 'Landmark "' . $name . '" sudah ditambahkan.');
+                $this->addError('newLandmark', 'Landmark "'.$name.'" sudah ditambahkan.');
+
                 return;
             }
         }
@@ -394,12 +437,12 @@ class CreateKost extends Component
                     $price = trim((string) ($this->extraPeriodPrices[$period] ?? ''));
                     if ($price === '') {
                         $validator->errors()->add(
-                            'extraPeriodPrices.' . $period,
+                            'extraPeriodPrices.'.$period,
                             'Harga periode ini wajib diisi karena sudah dipilih.'
                         );
                     } elseif (! is_numeric($price) || $price < 10000) {
                         $validator->errors()->add(
-                            'extraPeriodPrices.' . $period,
+                            'extraPeriodPrices.'.$period,
                             'Harga periode ini tidak valid (minimal Rp 10.000).'
                         );
                     }
@@ -419,14 +462,14 @@ class CreateKost extends Component
     {
         try {
             $this->validate();
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            if (!app()->runningUnitTests()) {
+        } catch (ValidationException $e) {
+            if (! app()->runningUnitTests()) {
                 usleep(1000000); // 1 detik jika formulir tidak valid/ada kesalahan
             }
             throw $e;
         }
 
-        if (!app()->runningUnitTests()) {
+        if (! app()->runningUnitTests()) {
             usleep(1500000); // 1.5 detik jika berhasil (durasi UX ideal)
         }
 
@@ -440,27 +483,29 @@ class CreateKost extends Component
                 $lat < $bounds['lat_min'] || $lat > $bounds['lat_max'] ||
                 $lng < $bounds['lng_min'] || $lng > $bounds['lng_max']
             ) {
-                if (!app()->runningUnitTests()) {
+                if (! app()->runningUnitTests()) {
                     usleep(1000000);
                 }
                 $this->addError('latitude', 'Koordinat peta tidak berada di dalam wilayah Kecamatan yang dipilih.');
+
                 return;
             }
         }
 
-        $key = 'create_kost_' . request()->ip() . '_' . Auth::id();
+        $key = 'create_kost_'.request()->ip().'_'.Auth::id();
 
-        if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($key, 5)) {
-            $seconds = \Illuminate\Support\Facades\RateLimiter::availableIn($key);
+        if (RateLimiter::tooManyAttempts($key, 5)) {
+            $seconds = RateLimiter::availableIn($key);
             if ($seconds < 60) {
-                $this->addError('name', 'Terlalu banyak permintaan pembuatan kost. Silakan tunggu ' . $seconds . ' detik lagi.');
+                $this->addError('name', 'Terlalu banyak permintaan pembuatan kost. Silakan tunggu '.$seconds.' detik lagi.');
             } else {
-                $this->addError('name', 'Terlalu banyak permintaan pembuatan kost. Silakan tunggu ' . ceil($seconds/60) . ' menit lagi.');
+                $this->addError('name', 'Terlalu banyak permintaan pembuatan kost. Silakan tunggu '.ceil($seconds / 60).' menit lagi.');
             }
+
             return;
         }
 
-        \Illuminate\Support\Facades\RateLimiter::hit($key, 3600);
+        RateLimiter::hit($key, 3600);
 
         $slug = Str::slug($this->name);
         $originalSlug = $slug;
@@ -470,7 +515,7 @@ class CreateKost extends Component
             $count++;
         }
 
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         // Create Kost record with dynamically selected coordinates
@@ -488,19 +533,26 @@ class CreateKost extends Component
             'district' => $this->district,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
-            'is_available' => ((int)$this->available_rooms > 0),
+            'is_available' => ((int) $this->available_rooms > 0),
             'status' => 'pending', // Draft / Pending Admin review
-            'total_rooms' => (int)$this->total_rooms,
-            'available_rooms' => (int)$this->available_rooms,
+            'total_rooms' => (int) $this->total_rooms,
+            'available_rooms' => (int) $this->available_rooms,
             'whatsapp_contact' => $this->whatsapp_contact !== '' ? $this->whatsapp_contact : null,
             'nearby_landmarks' => $this->nearby_landmarks !== '' ? $this->nearby_landmarks : null,
             'additional_rules_note' => $this->additional_rules_note !== '' ? $this->additional_rules_note : null,
         ]);
 
         // Store photos in public storage and create KostImage records
+        $storedHashes = [];
         foreach ($this->photos as $index => $photo) {
+            $hash = @md5_file($photo->getRealPath());
+            if ($hash === false || in_array($hash, $storedHashes, true)) {
+                continue;
+            }
+            $storedHashes[] = $hash;
+
             $path = $photo->store('kosts', 'public');
-            
+
             KostImage::create([
                 'kost_id' => $kost->id,
                 'image_path' => $path,
@@ -555,7 +607,7 @@ class CreateKost extends Component
             $kost->rules()->attach(array_unique($ruleIds));
         }
 
-        session()->flash('status', 'Properti kost "' . $kost->name . '" berhasil diajukan dan sedang dalam peninjauan Admin!');
+        session()->flash('status', 'Properti kost "'.$kost->name.'" berhasil diajukan dan sedang dalam peninjauan Admin!');
 
         return redirect()->route('dashboard');
     }

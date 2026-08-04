@@ -48,7 +48,7 @@ class GeospatialValidationTest extends TestCase
         // Coblong Bounds: lat -6.910 to -6.850, lng 107.590 to 107.640
         $validLat = -6.8830;
         $validLng = 107.6160;
-        
+
         $image = UploadedFile::fake()->image('test.jpg');
 
         Livewire::actingAs($user)

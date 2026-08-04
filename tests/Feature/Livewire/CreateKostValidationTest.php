@@ -1,6 +1,9 @@
 <?php
 
 use App\Livewire\Dashboard\CreateKost;
+use App\Models\Kost;
+use App\Models\User;
+use Illuminate\Http\UploadedFile;
 use Livewire\Livewire;
 
 it('fails validation when available_rooms is greater than total_rooms', function () {
@@ -80,10 +83,10 @@ it('fails validation when an extra period price is below the minimum', function 
 });
 
 it('passes validation and stores prices when extra periods have valid prices', function () {
-    $user = \App\Models\User::factory()->create();
+    $user = User::factory()->create();
     $this->actingAs($user);
 
-    $image = \Illuminate\Http\UploadedFile::fake()->image('test.jpg');
+    $image = UploadedFile::fake()->image('test.jpg');
 
     Livewire::test(CreateKost::class)
         ->set('name', 'Kost Test')
@@ -104,7 +107,7 @@ it('passes validation and stores prices when extra periods have valid prices', f
         ->assertHasNoErrors(['extraPeriodPrices.six_monthly', 'extraPeriodPrices.yearly'])
         ->assertRedirect(route('dashboard'));
 
-    $kost = \App\Models\Kost::where('name', 'Kost Test')->first();
+    $kost = Kost::where('name', 'Kost Test')->first();
     expect($kost)->not->toBeNull();
 
     $prices = $kost->prices()->pluck('price', 'period')->map(fn ($p) => (string) $p)->all();
@@ -158,7 +161,7 @@ it('addLandmarks dispatches zero count when nothing new is added', function () {
 });
 
 it('addLandmarks caps the total landmark list at 12 items', function () {
-    $existing = array_map(fn ($i) => 'Landmark ' . $i, range(1, 10));
+    $existing = array_map(fn ($i) => 'Landmark '.$i, range(1, 10));
     Livewire::test(CreateKost::class)
         ->set('landmarkList', $existing)
         ->call('addLandmarks', ['Landmark A', 'Landmark B', 'Landmark C', 'Landmark D', 'Landmark E'])
@@ -192,10 +195,10 @@ it('removes the selected primary period from the extra periods', function () {
 });
 
 it('persists a yearly primary period and its price', function () {
-    $user = \App\Models\User::factory()->create();
+    $user = User::factory()->create();
     $this->actingAs($user);
 
-    $image = \Illuminate\Http\UploadedFile::fake()->image('test.jpg');
+    $image = UploadedFile::fake()->image('test.jpg');
 
     Livewire::test(CreateKost::class)
         ->set('name', 'Kost Tahunan')
@@ -214,7 +217,7 @@ it('persists a yearly primary period and its price', function () {
         ->assertHasNoErrors(['rent_period', 'price_monthly'])
         ->assertRedirect(route('dashboard'));
 
-    $kost = \App\Models\Kost::where('name', 'Kost Tahunan')->first();
+    $kost = Kost::where('name', 'Kost Tahunan')->first();
     expect($kost)->not->toBeNull();
     expect($kost->rent_period)->toBe('yearly');
     expect((float) $kost->price_monthly)->toBe(12000000.0);

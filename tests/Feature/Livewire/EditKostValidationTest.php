@@ -13,8 +13,8 @@ function makeOwnerKost(User $user, int $imageCount = 4): Kost
 {
     $kost = Kost::create([
         'user_id' => $user->id,
-        'name' => 'Kost Owner ' . $user->id,
-        'slug' => 'kost-owner-' . $user->id . '-' . Str::random(6),
+        'name' => 'Kost Owner '.$user->id,
+        'slug' => 'kost-owner-'.$user->id.'-'.Str::random(6),
         'description' => 'Deskripsi kost yang cukup panjang minimal sepuluh',
         'gender_type' => 'campur',
         'price_monthly' => 1000000,
@@ -31,7 +31,7 @@ function makeOwnerKost(User $user, int $imageCount = 4): Kost
     for ($i = 0; $i < $imageCount; $i++) {
         KostImage::create([
             'kost_id' => $kost->id,
-            'image_path' => 'kosts/test-' . $kost->id . '-' . $i . '.jpg',
+            'image_path' => 'kosts/test-'.$kost->id.'-'.$i.'.jpg',
             'is_primary' => $i === 0,
         ]);
     }

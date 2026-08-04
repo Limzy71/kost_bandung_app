@@ -23,7 +23,7 @@ test('after 5 failed login attempts the 6th returns rate limit error', function 
     foreach (range(1, 5) as $attempt) {
         $component
             ->set('email', $user->email)
-            ->set('password', 'wrong-password-' . $attempt)
+            ->set('password', 'wrong-password-'.$attempt)
             ->call('login');
     }
 

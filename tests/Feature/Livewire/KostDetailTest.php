@@ -62,3 +62,25 @@ it('stores an inquiry when an authenticated user sends one', function () {
         ->and(Inquiry::first()->kost_id)->toBe($kost->id)
         ->and(Inquiry::first()->user_id)->toBe($seeker->id);
 });
+
+it('prefills the inquiry name and phone from the logged in profile', function () {
+    $owner = User::factory()->create(['role' => 'owner']);
+    $seeker = User::factory()->create(['role' => 'user', 'phone_number' => '081234567890']);
+    $kost = kostDetailTestKost($owner);
+
+    Livewire::actingAs($seeker)
+        ->test(KostDetail::class, ['kost' => $kost])
+        ->assertSet('inquiry_name', $seeker->name)
+        ->assertSet('inquiry_phone', '081234567890');
+});
+
+it('leaves the inquiry phone empty when the profile has no phone number', function () {
+    $owner = User::factory()->create(['role' => 'owner']);
+    $seeker = User::factory()->create(['role' => 'user', 'phone_number' => null]);
+    $kost = kostDetailTestKost($owner);
+
+    Livewire::actingAs($seeker)
+        ->test(KostDetail::class, ['kost' => $kost])
+        ->assertSet('inquiry_name', $seeker->name)
+        ->assertSet('inquiry_phone', '');
+});

@@ -80,3 +80,31 @@ test('user can login with remember me checked', function () {
     expect(Auth::check())->toBeTrue();
     expect(Auth::id())->toBe($user->id);
 });
+
+test('login redirects back to the requested page after a redirect param', function () {
+    $user = User::factory()->create([
+        'role' => 'user',
+        'password' => bcrypt('password123'),
+    ]);
+
+    Livewire::withQueryParams(['redirect' => '/kost/contoh-kost'])
+        ->test(Login::class)
+        ->set('email', $user->email)
+        ->set('password', 'password123')
+        ->call('login')
+        ->assertRedirect('/kost/contoh-kost');
+});
+
+test('login ignores external redirect parameters', function () {
+    $user = User::factory()->create([
+        'role' => 'user',
+        'password' => bcrypt('password123'),
+    ]);
+
+    Livewire::withQueryParams(['redirect' => 'https://evil.example.com'])
+        ->test(Login::class)
+        ->set('email', $user->email)
+        ->set('password', 'password123')
+        ->call('login')
+        ->assertRedirect(route('home'));
+});

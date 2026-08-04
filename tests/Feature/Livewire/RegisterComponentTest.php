@@ -5,15 +5,16 @@ use App\Models\User;
 use Livewire\Livewire;
 
 // ---------------------------------------------------------------------------
-// 1. Registrasi role 'user' (default) berhasil tanpa phone_number/business_name
+// 1. Registrasi role 'user' berhasil dengan phone_number, tanpa business_name
 // ---------------------------------------------------------------------------
-test('user role registration succeeds without owner fields', function () {
+test('user role registration succeeds with phone number and no business name', function () {
     Livewire::test(Register::class)
         ->set('name', 'Budi Santoso')
         ->set('email', 'budi@example.com')
         ->set('password', 'password1')
         ->set('password_confirmation', 'password1')
         ->set('role', 'user')
+        ->set('phone_number', '081234567890')
         ->call('register')
         ->assertHasNoErrors()
         ->assertRedirect(route('home'));
@@ -22,8 +23,22 @@ test('user role registration succeeds without owner fields', function () {
 
     expect($user)->not->toBeNull()
         ->and($user->role)->toBe('user')     // harus 'user', bukan 'seeker'
-        ->and($user->phone_number)->toBeNull()
+        ->and($user->phone_number)->toBe('081234567890')
         ->and($user->business_name)->toBeNull();
+});
+
+// ---------------------------------------------------------------------------
+// 1b. Registrasi role 'user' TANPA phone_number → validasi gagal
+// ---------------------------------------------------------------------------
+test('user role registration fails without a phone number', function () {
+    Livewire::test(Register::class)
+        ->set('name', 'Budi Santoso')
+        ->set('email', 'budi@example.com')
+        ->set('password', 'password1')
+        ->set('password_confirmation', 'password1')
+        ->set('role', 'user')
+        ->call('register')
+        ->assertHasErrors(['phone_number']);
 });
 
 // ---------------------------------------------------------------------------
@@ -67,9 +82,9 @@ test('owner role registration succeeds with all required fields and saves to dat
 
 // ---------------------------------------------------------------------------
 // 4. Toggle role dari 'owner' ke 'user' → updatedRole() mengosongkan
-//    phone_number & business_name
+//    business_name, phone_number tetap dipertahankan
 // ---------------------------------------------------------------------------
-test('switching role from owner back to user clears owner-only fields', function () {
+test('switching role from owner back to user clears business name but keeps phone number', function () {
     $component = Livewire::test(Register::class)
         ->set('role', 'owner')
         ->set('phone_number', '081234567890')
@@ -79,10 +94,10 @@ test('switching role from owner back to user clears owner-only fields', function
     $component->assertSet('phone_number', '081234567890')
         ->assertSet('business_name', 'Kost Test');
 
-    // Ganti role ke 'user' — harus trigger updatedRole()
+    // Ganti role ke 'user' — business_name harus dikosongkan, phone_number tetap
     $component->set('role', 'user');
 
-    $component->assertSet('phone_number', '')
+    $component->assertSet('phone_number', '081234567890')
         ->assertSet('business_name', '');
 });
 

@@ -2,11 +2,10 @@
 
 namespace App\Livewire\Dashboard;
 
+use App\Models\Inquiry;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Inquiry;
-use App\Models\Kost;
-use Illuminate\Support\Facades\Auth;
 
 class InquiryIndex extends Component
 {
@@ -14,16 +13,63 @@ class InquiryIndex extends Component
 
     public $filter = 'all'; // all, unread, read, archived
 
+    public $replyingToId = null;
+
+    public $replyMessage = '';
+
     public function updatedFilter()
     {
         $this->resetPage();
     }
 
-    public function markAsRead($id)
+    public function openReplyModal($id)
     {
-        $inquiry = Inquiry::whereHas('kost', function($q) {
+        $inquiry = $this->findOwnedInquiry($id);
+
+        if ($inquiry) {
+            $this->replyingToId = $inquiry->id;
+            $this->replyMessage = $inquiry->owner_reply ?? '';
+        }
+    }
+
+    public function closeReplyModal()
+    {
+        $this->reset(['replyingToId', 'replyMessage']);
+    }
+
+    public function replyInquiry()
+    {
+        $this->validate([
+            'replyMessage' => 'required|string|max:1000',
+        ]);
+
+        $inquiry = $this->findOwnedInquiry($this->replyingToId);
+
+        if (! $inquiry) {
+            abort(403);
+        }
+
+        $inquiry->update([
+            'owner_reply' => $this->replyMessage,
+            'replied_at' => now(),
+            'status' => 'read',
+        ]);
+
+        $this->reset(['replyingToId', 'replyMessage']);
+
+        session()->flash('success', 'Balasan berhasil dikirim ke pencari kost.');
+    }
+
+    protected function findOwnedInquiry($id)
+    {
+        return Inquiry::whereHas('kost', function ($q) {
             $q->where('user_id', Auth::id());
         })->find($id);
+    }
+
+    public function markAsRead($id)
+    {
+        $inquiry = $this->findOwnedInquiry($id);
 
         if ($inquiry && $inquiry->status === 'unread') {
             $inquiry->update(['status' => 'read']);
@@ -32,9 +78,7 @@ class InquiryIndex extends Component
 
     public function toggleArchive($id)
     {
-        $inquiry = Inquiry::whereHas('kost', function($q) {
-            $q->where('user_id', Auth::id());
-        })->find($id);
+        $inquiry = $this->findOwnedInquiry($id);
 
         if ($inquiry) {
             $inquiry->update(['status' => $inquiry->status === 'archived' ? 'read' : 'archived']);
@@ -45,7 +89,7 @@ class InquiryIndex extends Component
     {
         // Get inquiries for kosts owned by this user
         $query = Inquiry::with(['kost'])
-            ->whereHas('kost', function($q) {
+            ->whereHas('kost', function ($q) {
                 $q->where('user_id', Auth::id());
             })
             ->orderBy('created_at', 'desc');
@@ -63,7 +107,7 @@ class InquiryIndex extends Component
         $inquiries = $query->paginate(10);
 
         return view('livewire.dashboard.inquiry-index', [
-            'inquiries' => $inquiries
+            'inquiries' => $inquiries,
         ])->layout('layouts.app', ['title' => 'Inbox Pesan — KostBandung.id']);
     }
 }

@@ -16,11 +16,20 @@
         </div>
     </div>
 
+    @if (session()->has('success'))
+        <div class="bg-lime-300 border-4 border-black rounded-2xl p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-sm font-black text-black">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <!-- Inbox List -->
     <div class="space-y-6">
         @forelse ($inquiries as $inquiry)
-            <div class="bg-white border-4 border-black rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] overflow-hidden transition-all {{ $inquiry->status === 'unread' ? 'border-l-8 border-l-yellow-400' : '' }}">
-                <div class="p-6 md:p-8 flex flex-col md:flex-row gap-6">
+            <div class="bg-white border-4 border-black rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] overflow-hidden transition-all flex">
+                @if($inquiry->status === 'unread')
+                    <div class="w-1.5 shrink-0 bg-yellow-400"></div>
+                @endif
+                <div class="flex-1 p-6 md:p-8 flex flex-col md:flex-row gap-6">
                     
                     <!-- Left: Sender Info -->
                     <div class="md:w-1/3 shrink-0 space-y-4">
@@ -57,6 +66,16 @@
                             <p class="text-sm font-bold text-black whitespace-pre-wrap">{{ $inquiry->message }}</p>
                         </div>
                         
+                        @if($inquiry->owner_reply)
+                            <div class="bg-lime-50 border-2 border-black p-4 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] relative">
+                                <div class="absolute -top-3 left-4 bg-lime-300 px-2 text-[10px] font-black uppercase border-2 border-black rounded text-black">Balasan Anda</div>
+                                <p class="text-sm font-bold text-black whitespace-pre-wrap">{{ $inquiry->owner_reply }}</p>
+                                @if($inquiry->replied_at)
+                                    <p class="text-[10px] font-black text-zinc-500 uppercase mt-2">Dibalas {{ $inquiry->replied_at->diffForHumans() }}</p>
+                                @endif
+                            </div>
+                        @endif
+                        
                         <div class="flex flex-wrap items-center gap-3">
                             @php
                                 $waText = rawurlencode("Halo " . $inquiry->name . ", saya pemilik kost " . $inquiry->kost->name . ". Membalas pesan Anda: \n\n\"" . Str::limit($inquiry->message, 50) . "\"");
@@ -73,6 +92,11 @@
                                 <x-icon name="lucide-send" class="w-4 h-4 stroke-[2.5]" />
                                 Hubungi via WhatsApp &rarr;
                             </a>
+
+                            <button wire:click="openReplyModal({{ $inquiry->id }})" class="px-4 py-2.5 bg-cyan-300 hover:bg-cyan-200 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-2">
+                                <x-icon name="lucide-reply" class="w-4 h-4 stroke-[2.5]" />
+                                {{ $inquiry->owner_reply ? 'Ubah Balasan' : 'Balas Pesan' }}
+                            </button>
                             
                             @if($inquiry->status === 'unread')
                                 <button wire:click="markAsRead({{ $inquiry->id }})" class="px-4 py-2.5 bg-white hover:bg-zinc-100 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg">
@@ -109,5 +133,39 @@
     <div>
         {{ $inquiries->links() }}
     </div>
+
+    <!-- Reply Modal -->
+    @if($replyingToId)
+        <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div class="absolute inset-0 bg-black/60" wire:click="closeReplyModal"></div>
+            <div class="relative bg-white border-4 border-black rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] w-full max-w-lg p-6 space-y-4">
+                <div class="flex items-center justify-between gap-4">
+                    <h2 class="text-xl font-black text-black uppercase">Balas Pesan</h2>
+                    <button wire:click="closeReplyModal" class="p-1.5 bg-zinc-200 hover:bg-zinc-300 border-2 border-black rounded text-black cursor-pointer">
+                        <x-icon name="lucide-x" class="w-4 h-4 stroke-[2.5]" />
+                    </button>
+                </div>
+                <div class="bg-zinc-100 border-2 border-black p-3 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-xs font-bold text-zinc-600">
+                    <p class="text-[10px] font-black uppercase text-zinc-500 mb-1">Balasan akan tampil di halaman "Pesan Terkirim" pencari kost.</p>
+                </div>
+                <div>
+                    <label for="replyMessage" class="block text-[10px] font-black uppercase text-black mb-1">Isi Balasan</label>
+                    <textarea id="replyMessage" wire:model="replyMessage" rows="5" class="w-full border-2 border-black rounded-lg p-3 text-sm font-bold text-black focus:outline-none focus:ring-2 focus:ring-cyan-300 resize-none" placeholder="Ketik balasan untuk pencari kost..."></textarea>
+                    @error('replyMessage')
+                        <p class="mt-1 text-xs font-black text-rose-600">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div class="flex flex-wrap items-center justify-end gap-3 pt-2">
+                    <button wire:click="closeReplyModal" class="px-4 py-2.5 bg-white hover:bg-zinc-100 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg">
+                        Batal
+                    </button>
+                    <button wire:click="replyInquiry" class="px-5 py-2.5 bg-emerald-400 hover:bg-emerald-300 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-2">
+                        <x-icon name="lucide-send" class="w-4 h-4 stroke-[2.5]" />
+                        Kirim Balasan
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>
 </div>

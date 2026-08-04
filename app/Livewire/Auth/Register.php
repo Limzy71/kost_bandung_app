@@ -48,10 +48,10 @@ class Register extends Component
             'email' => 'required|email|max:255|unique:users,email',
             'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()],
             'role' => ['required', Rule::in(['user', 'owner'])],
+            'phone_number' => 'required|string|min:10|max:15',
         ];
 
         if ($this->role === 'owner') {
-            $rules['phone_number'] = 'required|string|min:10|max:15';
             $rules['business_name'] = 'required|string|max:255';
         }
 
@@ -73,7 +73,7 @@ class Register extends Component
         'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
         'role.required' => 'Tipe akun wajib dipilih.',
         'role.in' => 'Tipe akun tidak valid.',
-        'phone_number.required' => 'Nomor WhatsApp wajib diisi untuk Pemilik Kost.',
+        'phone_number.required' => 'Nomor WhatsApp wajib diisi.',
         'phone_number.min' => 'Nomor WhatsApp minimal 10 digit.',
         'phone_number.max' => 'Nomor WhatsApp maksimal 15 digit.',
         'business_name.required' => 'Nama properti/usaha kost wajib diisi untuk Pemilik Kost.',
@@ -83,7 +83,6 @@ class Register extends Component
     public function updatedRole(): void
     {
         if ($this->role !== 'owner') {
-            $this->phone_number = '';
             $this->business_name = '';
         }
     }
@@ -108,10 +107,10 @@ class Register extends Component
             'email' => $this->email,
             'password' => Hash::make($this->password),
             'role' => $this->role,
+            'phone_number' => $this->phone_number,
         ];
 
         if ($this->role === 'owner') {
-            $userData['phone_number'] = $this->phone_number;
             $userData['business_name'] = $this->business_name;
         }
 

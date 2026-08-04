@@ -115,6 +115,19 @@
                 </div>
             </div>
 
+            {{-- Nomor WhatsApp / Telepon --}}
+            <div>
+                <label for="phone_number" class="block text-xs font-black uppercase tracking-wider text-black mb-2">
+                    Nomor WhatsApp <span class="text-rose-500">*</span>
+                </label>
+                <input wire:model="phone_number" type="tel" id="phone_number"
+                    class="w-full px-4 py-3 text-sm bg-zinc-50 border-3 border-black rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:bg-[#FFE500]/10 focus:border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                    placeholder="Contoh: 081234567890">
+                @error('phone_number')
+                    <p class="mt-2 text-xs font-bold text-rose-600">✕ {{ $message }}</p>
+                @enderror
+            </div>
+
             {{-- ===== Dynamic Owner Fields ===== --}}
             @if ($role === 'owner')
                 <div class="rounded-lg border-4 border-black bg-zinc-50 p-5 space-y-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
@@ -125,19 +138,6 @@
                     <div class="flex items-center gap-2 pb-1 border-b-2 border-black text-black">
                         <x-icon name="lucide-house" class="w-5 h-5 text-black" />
                         <p class="text-xs font-black uppercase tracking-wider text-black">Data Pemilik Kost</p>
-                    </div>
-
-                    {{-- Nomor WhatsApp / Telepon Bisnis --}}
-                    <div>
-                        <label for="phone_number" class="block text-xs font-black uppercase tracking-wider text-black mb-2">
-                            Nomor WhatsApp / Telepon Bisnis <span class="text-rose-500">*</span>
-                        </label>
-                        <input wire:model="phone_number" type="tel" id="phone_number"
-                            class="w-full px-4 py-3 text-sm bg-white border-3 border-black rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:bg-[#FFE500]/10 focus:border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
-                            placeholder="Contoh: 081234567890">
-                        @error('phone_number')
-                            <p class="mt-2 text-xs font-bold text-rose-600">✕ {{ $message }}</p>
-                        @enderror
                     </div>
 
                     {{-- Nama Properti / Usaha Kost --}}

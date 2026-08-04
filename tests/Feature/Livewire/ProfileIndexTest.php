@@ -56,7 +56,7 @@ it('shows inquiry history and stats for a pencari kost', function () {
         'name' => $user->name,
         'phone_number' => '081234567890',
         'message' => 'Apakah masih ada kamar?',
-        'status' => 'pending',
+        'status' => 'unread',
     ]);
 
     $this->actingAs($user)

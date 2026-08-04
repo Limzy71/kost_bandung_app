@@ -141,7 +141,7 @@
                     <template x-if="query || ($refs.searchInput && $refs.searchInput.value)">
                         <button 
                             type="button" 
-                            @click="$refs.searchInput.value = ''; $wire.resetSearch()"
+                            @click="$refs.searchInput.value = ''; $refs.searchInput.dispatchEvent(new Event('input')); $wire.resetSearch()"
                             class="absolute right-2.5 top-2.5 w-6 h-6 bg-rose-400 hover:bg-rose-300 border-2 border-black rounded text-black font-black text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center cursor-pointer"
                             title="Hapus kata kunci pencarian"
                         >
@@ -203,7 +203,7 @@
 
                                         @if($kost->is_available)
                                             <span class="px-2.5 py-0.5 bg-lime-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                                Sisa {{ $kost->available_rooms ?? 1 }} Kamar
+                                                Sisa {{ $kost->available_rooms }} Kamar
                                             </span>
                                         @else
                                             <span class="px-2.5 py-0.5 bg-rose-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
@@ -315,7 +315,7 @@
                         </p>
                     </div>
                     @if($search)
-                        <button wire:click="$set('search', '')" class="px-5 py-2.5 bg-white hover:bg-zinc-50 text-black font-black text-xs uppercase border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded">
+                        <button wire:click="resetSearch()" class="px-5 py-2.5 bg-white hover:bg-zinc-50 text-black font-black text-xs uppercase border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded">
                             Reset Pencarian
                         </button>
                     @else

@@ -34,6 +34,15 @@ class Login extends Component
         'password.required' => 'Kata sandi wajib diisi.',
     ];
 
+    public function mount(): void
+    {
+        $redirect = request('redirect');
+
+        if (is_string($redirect) && $redirect !== '' && str_starts_with($redirect, '/') && ! str_starts_with($redirect, '//')) {
+            session()->put('url.intended', $redirect);
+        }
+    }
+
     public function login(): Redirector|RedirectResponse|null
     {
         $this->validate();

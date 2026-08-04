@@ -31,7 +31,7 @@ Route::middleware(['auth', 'verified', 'owner'])->group(function () {
     Route::get('/dashboard/inquiries', InquiryIndex::class)->name('dashboard.inquiries');
 });
 
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/admin/moderation', ModerationDashboard::class)->name('admin.moderation');
 });
 

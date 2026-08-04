@@ -1,19 +1,19 @@
 <?php
 
 use App\Http\Controllers\KostController;
-use App\Livewire\KostDetail;
+use App\Livewire\Admin\ModerationDashboard;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-
-use App\Livewire\Dashboard\OwnerDashboard;
 use App\Livewire\Dashboard\CreateKost;
 use App\Livewire\Dashboard\EditKost;
 use App\Livewire\Dashboard\InquiryIndex;
-use App\Livewire\Admin\ModerationDashboard;
+use App\Livewire\Dashboard\OwnerDashboard;
+use App\Livewire\Dashboard\SeekerInquiries;
+use App\Livewire\KostDetail;
 use App\Livewire\Profile\Index as ProfileIndex;
 use App\Livewire\Profile\PublicOwner as PublicOwnerProfile;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', [KostController::class, 'index'])->name('home');
 Route::get('/kost/{kost:slug}', KostDetail::class)->name('kost.show');
@@ -37,6 +37,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profil', ProfileIndex::class)->name('profile.show');
+    Route::get('/dashboard/user/inquiries', SeekerInquiries::class)->name('user.inquiries');
 });
 
 Route::middleware('auth')->group(function () {

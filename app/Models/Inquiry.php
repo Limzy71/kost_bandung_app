@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Inquiry extends Model
 {
@@ -16,12 +16,17 @@ class Inquiry extends Model
         'name',
         'phone_number',
         'message',
+        'owner_reply',
+        'replied_at',
+        'seeker_seen_reply_at',
         'status',
         'contacted_at',
     ];
 
     protected $casts = [
-        'contacted_at' => 'datetime',
+        'contacted_at'          => 'datetime',
+        'replied_at'            => 'datetime',
+        'seeker_seen_reply_at'  => 'datetime',
     ];
 
     public function kost(): BelongsTo

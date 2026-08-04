@@ -18,7 +18,7 @@ class KostImage extends Model
     {
         static::deleting(function ($image) {
             if ($image->image_path) {
-                Storage::disk('public')->delete($image->image_path);
+                Storage::delete($image->image_path);
             }
         });
     }

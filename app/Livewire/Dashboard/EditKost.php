@@ -687,7 +687,7 @@ class EditKost extends Component
                 ->get()
                 ->each(function (KostImage $image) {
                     if ($image->image_path) {
-                        Storage::disk('public')->delete($image->image_path);
+                        Storage::delete($image->image_path);
                     }
                     $image->delete();
                 });
@@ -722,7 +722,7 @@ class EditKost extends Component
             ->whereNotIn('id', $this->removeExistingIds)
             ->get()
             ->map(fn (KostImage $img) => $img->image_path
-                ? @md5_file(Storage::disk('public')->path($img->image_path))
+                ? $this->photoHash($img->image_path)
                 : null)
             ->filter()
             ->values()
@@ -736,7 +736,7 @@ class EditKost extends Component
             }
             $existingHashes[] = $hash;
 
-            $path = $photo->store('kosts', 'public');
+            $path = $photo->store('kosts');
 
             KostImage::create([
                 'kost_id' => $kost->id,
@@ -817,5 +817,12 @@ class EditKost extends Component
         ])->layout('layouts.app', [
             'title' => 'Edit Kost — KostBandung.web.id',
         ]);
+    }
+
+    private function photoHash(string $path): ?string
+    {
+        $content = Storage::get($path);
+
+        return $content === null ? null : md5($content);
     }
 }

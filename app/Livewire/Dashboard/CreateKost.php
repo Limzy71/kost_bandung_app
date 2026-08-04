@@ -584,7 +584,7 @@ class CreateKost extends Component
             'additional_rules_note' => $this->additional_rules_note !== '' ? $this->additional_rules_note : null,
         ]);
 
-        // Store photos in public storage and create KostImage records
+        // Store photos in the default storage disk and create KostImage records
         $storedHashes = [];
         foreach ($this->photos as $index => $photo) {
             $hash = @md5_file($photo->getRealPath());
@@ -593,7 +593,7 @@ class CreateKost extends Component
             }
             $storedHashes[] = $hash;
 
-            $path = $photo->store('kosts', 'public');
+            $path = $photo->store('kosts');
 
             KostImage::create([
                 'kost_id' => $kost->id,

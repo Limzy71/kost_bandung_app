@@ -21,7 +21,7 @@ class Kost extends Model
         static::forceDeleting(function ($kost) {
             foreach ($kost->images as $image) {
                 if ($image->image_path) {
-                    Storage::disk('public')->delete($image->image_path);
+                    Storage::delete($image->image_path);
                 }
             }
         });

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 
@@ -72,6 +73,9 @@ class Kost extends Model
         return $this->hasMany(KostImage::class);
     }
 
+    /**
+     * @return HasOne<KostImage, $this>
+     */
     public function primaryImage()
     {
         return $this->hasOne(KostImage::class)->where('is_primary', true);

@@ -25,6 +25,9 @@ return new class extends Migration
         }
     }
 
+    /**
+     * @param  array<int, string>  $values
+     */
     protected function rebuildTable(array $values, string $default): void
     {
         Schema::create('inquiries_temp', function (Blueprint $table) use ($values, $default) {

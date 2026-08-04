@@ -2,8 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Facility;
+use App\Models\Rule;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DemoKostSeeder extends Seeder
 {
@@ -13,14 +16,14 @@ class DemoKostSeeder extends Seeder
     public function run(): void
     {
         // Ensure Admin and Owner exist
-        $admin = \App\Models\User::firstOrCreate(
+        $admin = User::firstOrCreate(
             ['email' => 'admin@kostbandung.id'],
-            ['name' => 'Administrator', 'password' => \Illuminate\Support\Facades\Hash::make('password'), 'role' => 'admin', 'email_verified_at' => now()]
+            ['name' => 'Administrator', 'password' => Hash::make('password'), 'role' => 'admin', 'email_verified_at' => now()]
         );
 
-        $owner = \App\Models\User::firstOrCreate(
+        $owner = User::firstOrCreate(
             ['email' => 'owner@kostbandung.id'],
-            ['name' => 'Owner Kost', 'password' => \Illuminate\Support\Facades\Hash::make('password'), 'role' => 'owner', 'email_verified_at' => now()]
+            ['name' => 'Owner Kost', 'password' => Hash::make('password'), 'role' => 'owner', 'email_verified_at' => now()]
         );
 
         // Ensure standard facilities exist (grouped by room/building)
@@ -63,13 +66,13 @@ class DemoKostSeeder extends Seeder
         ];
 
         foreach ($defaultFacilities as $facility) {
-            \App\Models\Facility::updateOrCreate(
+            Facility::updateOrCreate(
                 [
                     'name' => $facility['name'],
                     'type' => $facility['type'],
                 ],
                 [
-                    'icon' => \App\Models\Facility::resolveIcon($facility['name']),
+                    'icon' => Facility::resolveIcon($facility['name']),
                     'status' => 'approved',
                 ],
             );
@@ -93,7 +96,7 @@ class DemoKostSeeder extends Seeder
         ];
 
         foreach ($defaultRules as $ruleName) {
-            \App\Models\Rule::firstOrCreate(['name' => $ruleName]);
+            Rule::firstOrCreate(['name' => $ruleName]);
         }
     }
 }

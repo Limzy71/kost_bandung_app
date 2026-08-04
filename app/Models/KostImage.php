@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 
 class KostImage extends Model
 {
@@ -17,11 +18,14 @@ class KostImage extends Model
     {
         static::deleting(function ($image) {
             if ($image->image_path) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($image->image_path);
+                Storage::disk('public')->delete($image->image_path);
             }
         });
     }
 
+    /**
+     * @return BelongsTo<Kost, $this>
+     */
     public function kost(): BelongsTo
     {
         return $this->belongsTo(Kost::class);

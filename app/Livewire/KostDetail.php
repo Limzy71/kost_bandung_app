@@ -2,21 +2,28 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
-use App\Models\Kost;
-use App\Models\Inquiry;
 use App\Models\Facility;
+use App\Models\Inquiry;
+use App\Models\Kost;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
+use Livewire\Component;
 
 class KostDetail extends Component
 {
     public Kost $kost;
 
     public string $inquiry_name = '';
+
     public string $inquiry_phone = '';
+
     public string $inquiry_message = '';
 
-    protected function rules()
+    /**
+     * @return array<string, mixed>
+     */
+    protected function rules(): array
     {
         return [
             'inquiry_name' => 'required|string|max:255',
@@ -25,21 +32,25 @@ class KostDetail extends Component
         ];
     }
 
-    protected $messages = [
+    /**
+     * @var array<string, string>
+     */
+    protected array $messages = [
         'inquiry_name.required' => 'Nama lengkap wajib diisi.',
         'inquiry_phone.required' => 'Nomor WhatsApp wajib diisi.',
         'inquiry_message.required' => 'Pesan tidak boleh kosong.',
     ];
 
     public string $backUrl = '';
+
     public string $backLabel = '';
 
-    public function mount(Kost $kost)
+    public function mount(Kost $kost): void
     {
         $this->kost = $kost;
-        
+
         if ($this->kost->status !== 'published') {
-            abort_if(!auth()->check() || (auth()->user()->role !== 'admin' && auth()->id() !== $this->kost->user_id), 404);
+            abort_if(! auth()->check() || (auth()->user()->role !== 'admin' && auth()->id() !== $this->kost->user_id), 404);
         }
 
         $this->kost->load(['facilities', 'rules', 'images', 'user', 'prices']);
@@ -51,7 +62,7 @@ class KostDetail extends Component
         if ($from === 'moderation') {
             $this->backUrl = route('admin.moderation');
             $this->backLabel = 'Kembali ke Panel Moderasi';
-        } elseif ($from === 'dashboard' || str_contains($previousUrl ?? '', '/dashboard')) {
+        } elseif ($from === 'dashboard' || str_contains($previousUrl, '/dashboard')) {
             $this->backUrl = route('dashboard');
             $this->backLabel = 'Kembali ke Dashboard Pemilik';
         } else {
@@ -60,7 +71,7 @@ class KostDetail extends Component
         }
     }
 
-    public function removeFacility(int $facilityId)
+    public function removeFacility(int $facilityId): void
     {
         if (auth()->id() !== $this->kost->user_id) {
             abort(403);
@@ -73,7 +84,8 @@ class KostDetail extends Component
         }
 
         if ($facility->status !== 'pending' || $facility->user_id !== auth()->id()) {
-            session()->flash('success', 'Fasilitas "' . $facility->name . '" tidak dapat dihapus.');
+            session()->flash('success', 'Fasilitas "'.$facility->name.'" tidak dapat dihapus.');
+
             return;
         }
 
@@ -82,22 +94,30 @@ class KostDetail extends Component
 
         $this->kost->load(['facilities', 'rules', 'images', 'user', 'prices']);
 
-        session()->flash('success', 'Fasilitas "' . $facility->name . '" telah dihapus dari kost.');
+        session()->flash('success', 'Fasilitas "'.$facility->name.'" telah dihapus dari kost.');
     }
 
-    public function sendInquiry()
+    public function sendInquiry(): void
     {
-        $this->validate();
+        if (auth()->guest()) {
+            session()->put('url.intended', route('kost.show', $this->kost));
+            $this->redirect(route('login'));
 
-        $key = 'inquiry_' . request()->ip();
-
-        if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($key, 3)) {
-            $seconds = \Illuminate\Support\Facades\RateLimiter::availableIn($key);
-            $this->addError('inquiry_message', 'TERLALU BANYAK MENGIRIM PESAN. TUNGGU ' . $seconds . ' DETIK.');
             return;
         }
 
-        \Illuminate\Support\Facades\RateLimiter::hit($key, 60);
+        $this->validate();
+
+        $key = 'inquiry_'.request()->ip();
+
+        if (RateLimiter::tooManyAttempts($key, 3)) {
+            $seconds = RateLimiter::availableIn($key);
+            $this->addError('inquiry_message', 'TERLALU BANYAK MENGIRIM PESAN. TUNGGU '.$seconds.' DETIK.');
+
+            return;
+        }
+
+        RateLimiter::hit($key, 60);
 
         Inquiry::create([
             'kost_id' => $this->kost->id,
@@ -109,12 +129,12 @@ class KostDetail extends Component
         ]);
 
         $this->reset(['inquiry_message']);
-        
+
         $this->dispatch('inquiry-sent');
         session()->flash('success', 'Pesan Anda berhasil dikirim ke pemilik kost!');
     }
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.kost-detail', [
             'googleMapsApiKey' => config('services.google.maps_api_key'),

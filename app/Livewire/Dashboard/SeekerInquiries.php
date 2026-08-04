@@ -3,6 +3,7 @@
 namespace App\Livewire\Dashboard;
 
 use App\Models\Inquiry;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -11,7 +12,7 @@ class SeekerInquiries extends Component
 {
     use WithPagination;
 
-    public $filter = 'all'; // all, replied, waiting
+    public string $filter = 'all'; // all, replied, waiting
 
     public function mount(): void
     {
@@ -23,12 +24,12 @@ class SeekerInquiries extends Component
             ->update(['seeker_seen_reply_at' => now()]);
     }
 
-    public function updatedFilter()
+    public function updatedFilter(): void
     {
         $this->resetPage();
     }
 
-    public function render()
+    public function render(): View
     {
         $query = Inquiry::with(['kost'])
             ->where('user_id', Auth::id())

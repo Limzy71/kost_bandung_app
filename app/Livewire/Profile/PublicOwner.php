@@ -3,6 +3,7 @@
 namespace App\Livewire\Profile;
 
 use App\Models\User;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -10,7 +11,9 @@ use Livewire\Component;
 class PublicOwner extends Component
 {
     public User $user;
-    public string $backUrl   = '';
+
+    public string $backUrl = '';
+
     public string $backLabel = '';
 
     public function mount(User $user): void
@@ -19,19 +22,19 @@ class PublicOwner extends Component
 
         $this->user = $user;
 
-        $from     = request('from');
+        $from = request('from');
         $kostSlug = request('kost');
 
         if ($from === 'kost' && $kostSlug) {
-            $this->backUrl   = route('kost.show', $kostSlug);
+            $this->backUrl = route('kost.show', $kostSlug);
             $this->backLabel = 'Kembali ke Detail Kost';
         } else {
-            $this->backUrl   = route('home');
+            $this->backUrl = route('home');
             $this->backLabel = 'Kembali ke Beranda Utama';
         }
     }
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.profile.public-owner', [
             'user' => $this->user,

@@ -9,6 +9,9 @@ class Rule extends Model
 {
     protected $fillable = ['name'];
 
+    /**
+     * @return BelongsToMany<Kost, $this>
+     */
     public function kosts(): BelongsToMany
     {
         return $this->belongsToMany(Kost::class);

@@ -7,10 +7,14 @@ use App\Models\Kost;
 use App\Models\KostImage;
 use App\Models\KostPrice;
 use App\Models\Rule;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 
 class EditKost extends Component
@@ -49,40 +53,73 @@ class EditKost extends Component
 
     public string $nearby_landmarks = '';
 
+    /**
+     * @var array<int, int|string>
+     */
     public array $selectedFacilities = [];
 
+    /**
+     * @var array<int, array{id?: int, name: string, type: string}>
+     */
     public array $customFacilities = [];
 
     public string $newRoomFacility = '';
 
     public string $newBuildingFacility = '';
 
+    /**
+     * @var array<int, int|string>
+     */
     public array $selectedRules = [];
 
+    /**
+     * @var array<int, string>
+     */
     public array $customRules = [];
 
     public string $newRule = '';
 
     public string $newLandmark = '';
 
+    /**
+     * @var array<int, string>
+     */
     public array $landmarkList = [];
 
     public string $additional_rules_note = '';
 
+    /**
+     * @var array<int, TemporaryUploadedFile>
+     */
     public array $photos = [];
 
+    /**
+     * @var array<int, array{id: int, url: string, is_primary: bool}>
+     */
     public array $existingPhotos = [];
 
+    /**
+     * @var array<int, int>
+     */
     public array $removeExistingIds = [];
 
     public ?int $primaryPhotoId = null;
 
     public ?string $district_auto_message = null;
 
+    /**
+     * @var array<int, string>
+     */
     public array $extraPeriods = [];
 
+    /**
+     * @var array<int, int>
+     */
     public array $removedCustomFacilityIds = [];
 
+    /**
+     * @var array<string, string>
+     */
     public array $extraPeriodPrices = [
         'daily' => '',
         'weekly' => '',
@@ -92,7 +129,7 @@ class EditKost extends Component
         'yearly' => '',
     ];
 
-    public function mount(Kost $kost)
+    public function mount(Kost $kost): void
     {
         abort_unless(auth()->id() === $kost->user_id, 403);
 
@@ -158,7 +195,7 @@ class EditKost extends Component
         ));
     }
 
-    public function updatedDistrict($value)
+    public function updatedDistrict(string $value): void
     {
         if ($this->latitude === '' && $this->longitude === '') {
             $districtsConfig = config('bandung.districts', []);
@@ -169,21 +206,21 @@ class EditKost extends Component
         }
     }
 
-    public function updatedPriceMonthly($value)
+    public function updatedPriceMonthly(string $value): void
     {
         if (is_numeric($value) && $value < 0) {
             $this->price_monthly = '0';
         }
     }
 
-    public function updatedPriceDeposit($value)
+    public function updatedPriceDeposit(string $value): void
     {
         if (is_numeric($value) && $value < 0) {
             $this->price_deposit = '0';
         }
     }
 
-    public function updatedRentPeriod($value)
+    public function updatedRentPeriod(string $value): void
     {
         $this->extraPeriods = array_values(array_filter(
             $this->extraPeriods,
@@ -192,23 +229,25 @@ class EditKost extends Component
         $this->extraPeriodPrices[$value] = '';
     }
 
-    public function updatedTotalRooms($value)
+    public function updatedTotalRooms(string $value): void
     {
         if (is_numeric($value) && $value < 0) {
             $this->total_rooms = '0';
         }
     }
 
-    public function updatedAvailableRooms($value)
+    public function updatedAvailableRooms(string $value): void
     {
         if (is_numeric($value) && $value < 0) {
             $this->available_rooms = '0';
         }
     }
 
-    public function updatedExtraPeriods($value)
+    /**
+     * @param  array<int, string>  $value
+     */
+    public function updatedExtraPeriods(array $value): void
     {
-        $value = $value ?? [];
         foreach (array_keys($this->extraPeriodPrices) as $period) {
             if (! in_array($period, $value)) {
                 $this->extraPeriodPrices[$period] = '';
@@ -216,6 +255,9 @@ class EditKost extends Component
         }
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function rules(): array
     {
         return [
@@ -281,6 +323,9 @@ class EditKost extends Component
         ];
     }
 
+    /**
+     * @return array<string, string>
+     */
     protected function messages(): array
     {
         return [
@@ -317,7 +362,7 @@ class EditKost extends Component
         ];
     }
 
-    public function removePhoto($index)
+    public function removePhoto(int $index): void
     {
         if (isset($this->photos[$index])) {
             unset($this->photos[$index]);
@@ -325,7 +370,7 @@ class EditKost extends Component
         }
     }
 
-    public function setPrimaryPhoto($index)
+    public function setPrimaryPhoto(int $index): void
     {
         if (! isset($this->photos[$index])) {
             return;
@@ -339,7 +384,7 @@ class EditKost extends Component
         $this->primaryPhotoId = null;
     }
 
-    public function removeExistingPhoto($imageId)
+    public function removeExistingPhoto(int $imageId): void
     {
         $this->existingPhotos = array_values(array_filter(
             $this->existingPhotos,
@@ -355,12 +400,12 @@ class EditKost extends Component
         }
     }
 
-    public function setExistingPrimary($imageId)
+    public function setExistingPrimary(int $imageId): void
     {
         $this->primaryPhotoId = (int) $imageId;
     }
 
-    public function addFacility(string $type)
+    public function addFacility(string $type): void
     {
         $property = $type === 'room' ? 'newRoomFacility' : 'newBuildingFacility';
         $this->resetErrorBag($property);
@@ -401,7 +446,7 @@ class EditKost extends Component
         $this->$property = '';
     }
 
-    public function removeCustomFacility($index)
+    public function removeCustomFacility(int $index): void
     {
         if (isset($this->customFacilities[$index])) {
             $item = $this->customFacilities[$index];
@@ -414,7 +459,7 @@ class EditKost extends Component
         }
     }
 
-    public function addRule()
+    public function addRule(): void
     {
         $this->resetErrorBag('newRule');
 
@@ -451,7 +496,7 @@ class EditKost extends Component
         $this->newRule = '';
     }
 
-    public function removeCustomRule($index)
+    public function removeCustomRule(int $index): void
     {
         if (isset($this->customRules[$index])) {
             unset($this->customRules[$index]);
@@ -459,7 +504,7 @@ class EditKost extends Component
         }
     }
 
-    public function addLandmark()
+    public function addLandmark(): void
     {
         $name = trim($this->newLandmark);
         if ($name === '') {
@@ -479,7 +524,10 @@ class EditKost extends Component
         $this->syncLandmarksString();
     }
 
-    public function addLandmarks(array $items)
+    /**
+     * @param  array<int, string>  $items
+     */
+    public function addLandmarks(array $items): void
     {
         $added = 0;
         foreach ($items as $item) {
@@ -510,7 +558,7 @@ class EditKost extends Component
         return false;
     }
 
-    public function removeLandmark($index)
+    public function removeLandmark(int $index): void
     {
         if (isset($this->landmarkList[$index])) {
             unset($this->landmarkList[$index]);
@@ -519,12 +567,12 @@ class EditKost extends Component
         }
     }
 
-    private function syncLandmarksString()
+    private function syncLandmarksString(): void
     {
         $this->nearby_landmarks = implode(', ', $this->landmarkList);
     }
 
-    public function boot()
+    public function boot(): void
     {
         $this->withValidator(function ($validator) {
             $validator->after(function ($validator) {
@@ -553,7 +601,7 @@ class EditKost extends Component
         });
     }
 
-    public function save()
+    public function save(): Redirector|RedirectResponse|null
     {
         try {
             $this->validate();
@@ -571,12 +619,12 @@ class EditKost extends Component
             }
             $this->addError('photos', 'MINIMAL 4 FOTO KOST WAJIB ADA.');
 
-            return;
+            return null;
         }
         if ($totalPhotos > 10) {
             $this->addError('photos', 'MAKSIMAL 10 FOTO KOST DAPAT DIUNGGAH.');
 
-            return;
+            return null;
         }
 
         $lat = (float) $this->latitude;
@@ -594,7 +642,7 @@ class EditKost extends Component
                 }
                 $this->addError('latitude', 'Koordinat peta tidak berada di dalam wilayah Kecamatan yang dipilih.');
 
-                return;
+                return null;
             }
         }
 
@@ -702,11 +750,11 @@ class EditKost extends Component
         // Sync facilities
         $facilityIds = $this->selectedFacilities;
         foreach ($this->customFacilities as $custom) {
-            $name = trim((string) ($custom['name'] ?? ''));
+            $name = trim($custom['name']);
             if ($name === '') {
                 continue;
             }
-            $type = in_array($custom['type'] ?? 'building', ['room', 'building']) ? $custom['type'] : 'building';
+            $type = in_array($custom['type'], ['room', 'building']) ? $custom['type'] : 'building';
             $facility = Facility::firstOrCreate(
                 ['name' => $name],
                 ['type' => $type, 'status' => 'pending', 'user_id' => auth()->id()]
@@ -752,7 +800,7 @@ class EditKost extends Component
         return redirect()->route('dashboard');
     }
 
-    public function render()
+    public function render(): View
     {
         $facilities = Facility::where('status', 'approved')->orderBy('name')->get();
 

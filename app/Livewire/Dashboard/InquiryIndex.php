@@ -3,6 +3,7 @@
 namespace App\Livewire\Dashboard;
 
 use App\Models\Inquiry;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -11,18 +12,18 @@ class InquiryIndex extends Component
 {
     use WithPagination;
 
-    public $filter = 'all'; // all, unread, read, archived
+    public string $filter = 'all'; // all, unread, read, archived
 
-    public $replyingToId = null;
+    public ?int $replyingToId = null;
 
-    public $replyMessage = '';
+    public string $replyMessage = '';
 
-    public function updatedFilter()
+    public function updatedFilter(): void
     {
         $this->resetPage();
     }
 
-    public function openReplyModal($id)
+    public function openReplyModal(int $id): void
     {
         $inquiry = $this->findOwnedInquiry($id);
 
@@ -32,12 +33,12 @@ class InquiryIndex extends Component
         }
     }
 
-    public function closeReplyModal()
+    public function closeReplyModal(): void
     {
         $this->reset(['replyingToId', 'replyMessage']);
     }
 
-    public function replyInquiry()
+    public function replyInquiry(): void
     {
         $this->validate([
             'replyMessage' => 'required|string|max:1000',
@@ -60,14 +61,14 @@ class InquiryIndex extends Component
         session()->flash('success', 'Balasan berhasil dikirim ke pencari kost.');
     }
 
-    protected function findOwnedInquiry($id)
+    protected function findOwnedInquiry(int $id): ?Inquiry
     {
         return Inquiry::whereHas('kost', function ($q) {
             $q->where('user_id', Auth::id());
         })->find($id);
     }
 
-    public function markAsRead($id)
+    public function markAsRead(int $id): void
     {
         $inquiry = $this->findOwnedInquiry($id);
 
@@ -76,7 +77,7 @@ class InquiryIndex extends Component
         }
     }
 
-    public function toggleArchive($id)
+    public function toggleArchive(int $id): void
     {
         $inquiry = $this->findOwnedInquiry($id);
 
@@ -85,7 +86,7 @@ class InquiryIndex extends Component
         }
     }
 
-    public function render()
+    public function render(): View
     {
         // Get inquiries for kosts owned by this user
         $query = Inquiry::with(['kost'])

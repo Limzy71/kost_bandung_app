@@ -7,6 +7,7 @@ use App\Models\Facility;
 use App\Models\Inquiry;
 use App\Models\Kost;
 use App\Models\User;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -26,6 +27,9 @@ class Index extends Component
 
     public bool $editing = false;
 
+    /**
+     * @var array<string, string>
+     */
     protected array $messages = [
         'name.required' => 'Nama lengkap wajib diisi.',
         'email.required' => 'Email wajib diisi.',
@@ -84,7 +88,7 @@ class Index extends Component
         $this->dispatch('show-toast', message: 'Profil Anda berhasil diperbarui.');
     }
 
-    public function render()
+    public function render(): View
     {
         $user = $this->currentUser();
 

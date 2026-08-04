@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Kost;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -12,20 +13,23 @@ class KostSearch extends Component
 {
     use WithPagination;
 
-    public $search = '';
+    public string $search = '';
 
-    public $gender = '';
+    public string $gender = '';
 
-    public $price_min = '';
+    public string $price_min = '';
 
-    public $price_max = '';
+    public ?string $price_max = '';
 
-    public $district = '';
+    public string $district = '';
 
-    public $rent_period = '';
+    public string $rent_period = '';
 
     // Stored as a Livewire public property so Alpine can read it via $wire.mapItems
     // without needing x-effect or inline JSON in HTML attributes.
+    /**
+     * @var array<int, array<string, mixed>>
+     */
     public array $mapItems = [];
 
     public function updatedSearch(): void
@@ -79,7 +83,7 @@ class KostSearch extends Component
         $this->dispatch('scroll-to-home-list');
     }
 
-    public function render()
+    public function render(): View
     {
         if (is_numeric($this->price_min) && is_numeric($this->price_max)) {
             if ((int) $this->price_min > (int) $this->price_max) {

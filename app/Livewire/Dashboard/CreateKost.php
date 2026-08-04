@@ -8,11 +8,15 @@ use App\Models\KostImage;
 use App\Models\KostPrice;
 use App\Models\Rule;
 use App\Models\User;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 
 class CreateKost extends Component
@@ -49,36 +53,63 @@ class CreateKost extends Component
 
     public string $nearby_landmarks = '';
 
+    /**
+     * @var array<int, int>
+     */
     public array $selectedFacilities = [];
 
+    /**
+     * @var array<int, array{name: string, type: string}>
+     */
     public array $customFacilities = [];
 
     public string $newRoomFacility = '';
 
     public string $newBuildingFacility = '';
 
+    /**
+     * @var array<int, int>
+     */
     public array $selectedRules = [];
 
+    /**
+     * @var array<int, string>
+     */
     public array $customRules = [];
 
     public string $newRule = '';
 
     public string $newLandmark = '';
 
+    /**
+     * @var array<int, string>
+     */
     public array $landmarkList = [];
 
     public string $additional_rules_note = '';
 
+    /**
+     * @var array<int, TemporaryUploadedFile>
+     */
     public array $photos = [];
 
+    /**
+     * @var array<int, mixed>
+     */
     public array $existingPhotos = [];
 
     public ?int $primaryPhotoId = null;
 
     public ?string $district_auto_message = null;
 
+    /**
+     * @var array<int, string>
+     */
     public array $extraPeriods = [];
 
+    /**
+     * @var array<string, string>
+     */
     public array $extraPeriodPrices = [
         'daily' => '',
         'weekly' => '',
@@ -88,7 +119,7 @@ class CreateKost extends Component
         'yearly' => '',
     ];
 
-    public function updatedDistrict($value)
+    public function updatedDistrict(string $value): void
     {
         if ($this->latitude === '' && $this->longitude === '') {
             $districtsConfig = config('bandung.districts', []);
@@ -99,21 +130,21 @@ class CreateKost extends Component
         }
     }
 
-    public function updatedPriceMonthly($value)
+    public function updatedPriceMonthly(string $value): void
     {
         if (is_numeric($value) && $value < 0) {
             $this->price_monthly = '0';
         }
     }
 
-    public function updatedPriceDeposit($value)
+    public function updatedPriceDeposit(string $value): void
     {
         if (is_numeric($value) && $value < 0) {
             $this->price_deposit = '0';
         }
     }
 
-    public function updatedRentPeriod($value)
+    public function updatedRentPeriod(string $value): void
     {
         $this->extraPeriods = array_values(array_filter(
             $this->extraPeriods,
@@ -122,23 +153,25 @@ class CreateKost extends Component
         $this->extraPeriodPrices[$value] = '';
     }
 
-    public function updatedTotalRooms($value)
+    public function updatedTotalRooms(string $value): void
     {
         if (is_numeric($value) && $value < 0) {
             $this->total_rooms = '0';
         }
     }
 
-    public function updatedAvailableRooms($value)
+    public function updatedAvailableRooms(string $value): void
     {
         if (is_numeric($value) && $value < 0) {
             $this->available_rooms = '0';
         }
     }
 
-    public function updatedExtraPeriods($value)
+    /**
+     * @param  array<int, string>  $value
+     */
+    public function updatedExtraPeriods(array $value): void
     {
-        $value = $value ?? [];
         foreach (array_keys($this->extraPeriodPrices) as $period) {
             if (! in_array($period, $value)) {
                 $this->extraPeriodPrices[$period] = '';
@@ -146,6 +179,9 @@ class CreateKost extends Component
         }
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function rules(): array
     {
         return [
@@ -211,6 +247,9 @@ class CreateKost extends Component
         ];
     }
 
+    /**
+     * @return array<string, string>
+     */
     protected function messages(): array
     {
         return [
@@ -249,7 +288,7 @@ class CreateKost extends Component
         ];
     }
 
-    public function removePhoto($index)
+    public function removePhoto(int $index): void
     {
         if (isset($this->photos[$index])) {
             unset($this->photos[$index]);
@@ -258,7 +297,7 @@ class CreateKost extends Component
         }
     }
 
-    public function setPrimaryPhoto($index)
+    public function setPrimaryPhoto(int $index): void
     {
         if (! isset($this->photos[$index])) {
             return;
@@ -270,7 +309,7 @@ class CreateKost extends Component
         $this->photos = array_values($this->photos);
     }
 
-    public function addFacility(string $type)
+    public function addFacility(string $type): void
     {
         $property = $type === 'room' ? 'newRoomFacility' : 'newBuildingFacility';
         $this->resetErrorBag($property);
@@ -311,7 +350,7 @@ class CreateKost extends Component
         $this->$property = '';
     }
 
-    public function removeCustomFacility($index)
+    public function removeCustomFacility(int $index): void
     {
         if (isset($this->customFacilities[$index])) {
             unset($this->customFacilities[$index]);
@@ -319,7 +358,7 @@ class CreateKost extends Component
         }
     }
 
-    public function addRule()
+    public function addRule(): void
     {
         $this->resetErrorBag('newRule');
 
@@ -356,7 +395,7 @@ class CreateKost extends Component
         $this->newRule = '';
     }
 
-    public function removeCustomRule($index)
+    public function removeCustomRule(int $index): void
     {
         if (isset($this->customRules[$index])) {
             unset($this->customRules[$index]);
@@ -364,7 +403,7 @@ class CreateKost extends Component
         }
     }
 
-    public function addLandmark()
+    public function addLandmark(): void
     {
         $name = trim($this->newLandmark);
         if ($name === '') {
@@ -384,7 +423,10 @@ class CreateKost extends Component
         $this->syncLandmarksString();
     }
 
-    public function addLandmarks(array $items)
+    /**
+     * @param  array<int, string>  $items
+     */
+    public function addLandmarks(array $items): void
     {
         $added = 0;
         foreach ($items as $item) {
@@ -415,7 +457,7 @@ class CreateKost extends Component
         return false;
     }
 
-    public function removeLandmark($index)
+    public function removeLandmark(int $index): void
     {
         if (isset($this->landmarkList[$index])) {
             unset($this->landmarkList[$index]);
@@ -424,12 +466,12 @@ class CreateKost extends Component
         }
     }
 
-    private function syncLandmarksString()
+    private function syncLandmarksString(): void
     {
         $this->nearby_landmarks = implode(', ', $this->landmarkList);
     }
 
-    public function boot()
+    public function boot(): void
     {
         $this->withValidator(function ($validator) {
             $validator->after(function ($validator) {
@@ -458,7 +500,7 @@ class CreateKost extends Component
         });
     }
 
-    public function save()
+    public function save(): Redirector|RedirectResponse|null
     {
         try {
             $this->validate();
@@ -488,7 +530,7 @@ class CreateKost extends Component
                 }
                 $this->addError('latitude', 'Koordinat peta tidak berada di dalam wilayah Kecamatan yang dipilih.');
 
-                return;
+                return null;
             }
         }
 
@@ -502,7 +544,7 @@ class CreateKost extends Component
                 $this->addError('name', 'Terlalu banyak permintaan pembuatan kost. Silakan tunggu '.ceil($seconds / 60).' menit lagi.');
             }
 
-            return;
+            return null;
         }
 
         RateLimiter::hit($key, 3600);
@@ -575,11 +617,11 @@ class CreateKost extends Component
         $facilityIds = $this->selectedFacilities;
 
         foreach ($this->customFacilities as $custom) {
-            $name = trim((string) ($custom['name'] ?? ''));
+            $name = trim($custom['name']);
             if ($name === '') {
                 continue;
             }
-            $type = in_array($custom['type'] ?? 'building', ['room', 'building']) ? $custom['type'] : 'building';
+            $type = in_array($custom['type'], ['room', 'building']) ? $custom['type'] : 'building';
             $facility = Facility::firstOrCreate(
                 ['name' => $name],
                 ['type' => $type, 'status' => 'pending', 'user_id' => $user->id]
@@ -612,7 +654,7 @@ class CreateKost extends Component
         return redirect()->route('dashboard');
     }
 
-    public function render()
+    public function render(): View
     {
         $facilities = Facility::where('status', 'approved')->orderBy('name')->get();
 

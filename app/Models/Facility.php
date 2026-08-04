@@ -10,11 +10,17 @@ class Facility extends Model
 {
     protected $fillable = ['name', 'type', 'status', 'user_id', 'icon'];
 
+    /**
+     * @return BelongsToMany<Kost, $this>
+     */
     public function kosts(): BelongsToMany
     {
         return $this->belongsToMany(Kost::class);
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -22,6 +28,6 @@ class Facility extends Model
 
     public static function resolveIcon(string $name): ?string
     {
-        return config('bandung.facility_icons.' . $name);
+        return config('bandung.facility_icons.'.$name);
     }
 }

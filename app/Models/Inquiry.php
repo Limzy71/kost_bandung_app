@@ -24,16 +24,22 @@ class Inquiry extends Model
     ];
 
     protected $casts = [
-        'contacted_at'          => 'datetime',
-        'replied_at'            => 'datetime',
-        'seeker_seen_reply_at'  => 'datetime',
+        'contacted_at' => 'datetime',
+        'replied_at' => 'datetime',
+        'seeker_seen_reply_at' => 'datetime',
     ];
 
+    /**
+     * @return BelongsTo<Kost, $this>
+     */
     public function kost(): BelongsTo
     {
         return $this->belongsTo(Kost::class);
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

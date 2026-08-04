@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Models\Facility;
 use App\Models\Kost;
+use Illuminate\Contracts\View\View;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -12,6 +13,7 @@ class ModerationDashboard extends Component
     use WithPagination;
 
     public string $search = '';
+
     public string $activeTab = 'pending'; // 'pending', 'published', 'rejected', 'all', 'facilities'
 
     public function updatingSearch(): void
@@ -33,7 +35,7 @@ class ModerationDashboard extends Component
             $kost->status = 'published';
             $kost->save();
 
-            $this->dispatch('show-toast', message: 'Properti "' . $kost->name . '" telah DISETUJUI & TAYANG PUBLIK!');
+            $this->dispatch('show-toast', message: 'Properti "'.$kost->name.'" telah DISETUJUI & TAYANG PUBLIK!');
         }
     }
 
@@ -45,7 +47,7 @@ class ModerationDashboard extends Component
             $kost->status = 'rejected';
             $kost->save();
 
-            $this->dispatch('show-toast', message: 'Properti "' . $kost->name . '" telah DITOLAK.');
+            $this->dispatch('show-toast', message: 'Properti "'.$kost->name.'" telah DITOLAK.');
         }
     }
 
@@ -57,7 +59,7 @@ class ModerationDashboard extends Component
             $facility->status = 'approved';
             $facility->save();
 
-            $this->dispatch('show-toast', message: 'Fasilitas "' . $facility->name . '" telah DISETUJUI & Tersedia untuk Semua Pemilik!');
+            $this->dispatch('show-toast', message: 'Fasilitas "'.$facility->name.'" telah DISETUJUI & Tersedia untuk Semua Pemilik!');
         }
     }
 
@@ -70,11 +72,11 @@ class ModerationDashboard extends Component
             $facility->status = 'rejected';
             $facility->save();
 
-            $this->dispatch('show-toast', message: 'Fasilitas "' . $facility->name . '" telah DITOLAK dan DILEPAS dari seluruh kost.');
+            $this->dispatch('show-toast', message: 'Fasilitas "'.$facility->name.'" telah DITOLAK dan DILEPAS dari seluruh kost.');
         }
     }
 
-    public function render()
+    public function render(): View
     {
         $pendingCount = Kost::where('status', 'pending')->count();
         $publishedCount = Kost::where('status', 'published')->count();
@@ -107,12 +109,12 @@ class ModerationDashboard extends Component
             })
             ->when($this->search, function ($q) {
                 $q->where(function ($sub) {
-                    $sub->where('name', 'like', '%' . $this->search . '%')
-                        ->orWhere('district', 'like', '%' . $this->search . '%')
-                        ->orWhere('address', 'like', '%' . $this->search . '%')
+                    $sub->where('name', 'like', '%'.$this->search.'%')
+                        ->orWhere('district', 'like', '%'.$this->search.'%')
+                        ->orWhere('address', 'like', '%'.$this->search.'%')
                         ->orWhereHas('user', function ($u) {
-                            $u->where('name', 'like', '%' . $this->search . '%')
-                              ->orWhere('email', 'like', '%' . $this->search . '%');
+                            $u->where('name', 'like', '%'.$this->search.'%')
+                                ->orWhere('email', 'like', '%'.$this->search.'%');
                         });
                 });
             })

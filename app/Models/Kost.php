@@ -63,11 +63,17 @@ class Kost extends Model
         'boosted_at' => 'datetime',
     ];
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * @return HasMany<KostImage, $this>
+     */
     public function images(): HasMany
     {
         return $this->hasMany(KostImage::class);
@@ -81,29 +87,44 @@ class Kost extends Model
         return $this->hasOne(KostImage::class)->where('is_primary', true);
     }
 
+    /**
+     * @return BelongsToMany<Facility, $this>
+     */
     public function facilities(): BelongsToMany
     {
         return $this->belongsToMany(Facility::class);
     }
 
+    /**
+     * @return BelongsToMany<Rule, $this>
+     */
     public function rules(): BelongsToMany
     {
         return $this->belongsToMany(Rule::class);
     }
 
+    /**
+     * @return HasMany<Inquiry, $this>
+     */
     public function inquiries(): HasMany
     {
         return $this->hasMany(Inquiry::class);
     }
 
+    /**
+     * @return HasMany<KostPrice, $this>
+     */
     public function prices(): HasMany
     {
         return $this->hasMany(KostPrice::class);
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function pricesByPeriod(): array
     {
-        return $this->prices()->get()->pluck('price', 'period')->map(fn ($p) => (string) $p)->all();
+        return $this->prices()->pluck('price', 'period')->map(fn ($p) => (string) $p)->all();
     }
 
     public function getMonthlyEquivalentAttribute(): float
@@ -122,6 +143,9 @@ class Kost extends Model
         return round((float) $this->price_monthly * $factor);
     }
 
+    /**
+     * @return array<string, string>
+     */
     public static function rentPeriodLabels(): array
     {
         return [
@@ -134,11 +158,17 @@ class Kost extends Model
         ];
     }
 
+    /**
+     * @return array<int, string>
+     */
     public static function allowedRentPeriods(): array
     {
         return self::RENT_PERIODS;
     }
 
+    /**
+     * @return array<string, int>
+     */
     public static function rentPeriodOrder(): array
     {
         return [

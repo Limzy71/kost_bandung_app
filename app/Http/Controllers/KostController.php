@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Kost;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class KostController extends Controller
 {
     // Halaman Utama (Daftar Kost)
-    public function index(Request $request)
+    public function index(Request $request): View|RedirectResponse
     {
         // Redirect hard-refresh with ?page= param to clean URL so Livewire
         // WithPagination handles paging state instead of query strings.
@@ -17,13 +18,5 @@ class KostController extends Controller
         }
 
         return view('kosts.index');
-    }
-
-    // Halaman Detail Kost
-    public function show(Kost $kost)
-    {
-        $kost->load(['facilities', 'rules', 'images', 'owner']);
-
-        return view('kosts.show', compact('kost'));
     }
 }

@@ -17,16 +17,25 @@ class KostPrice extends Model
         'price' => 'decimal:2',
     ];
 
+    /**
+     * @return BelongsTo<Kost, $this>
+     */
     public function kost(): BelongsTo
     {
         return $this->belongsTo(Kost::class);
     }
 
+    /**
+     * @return array<string, string>
+     */
     public static function periodLabels(): array
     {
         return Kost::rentPeriodLabels();
     }
 
+    /**
+     * @return array<int, string>
+     */
     public static function allowedPeriods(): array
     {
         return array_keys(self::periodLabels());

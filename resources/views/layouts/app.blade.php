@@ -67,12 +67,30 @@
                     @endif
 
                     @if(auth()->user()->role === 'user')
-                        @if(request()->routeIs('profile.show'))
+                        @if(request()->routeIs('user.inquiries') || request()->routeIs('profile.show'))
                             <a href="{{ route('home') }}" class="text-xs font-black uppercase text-black bg-cyan-300 hover:bg-cyan-200 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
                                 <x-icon name="lucide-house" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
                                 <span class="max-sm:hidden">Beranda Utama</span>
                             </a>
                         @endif
+
+                        @php
+                            $newRepliesCount = \App\Models\Inquiry::where('user_id', auth()->id())
+                                ->whereNotNull('owner_reply')
+                                ->where('status', '!=', 'archived')
+                                ->whereNull('seeker_seen_reply_at')
+                                ->count();
+                        @endphp
+
+                        @unless(request()->routeIs('user.inquiries'))
+                            <a href="{{ route('user.inquiries') }}" class="text-xs font-black uppercase text-black bg-white hover:bg-zinc-100 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
+                                <x-icon name="lucide-send" class="w-4 h-4 text-black group-hover:scale-110 transition-transform stroke-[2.5]" />
+                                <span class="max-sm:hidden">Pesan Terkirim</span>
+                                @if($newRepliesCount > 0)
+                                    <span class="bg-rose-500 text-white border-2 border-black rounded-full px-1.5 py-0.5 text-[9px] min-w-[20px] text-center ml-1">{{ $newRepliesCount }}</span>
+                                @endif
+                            </a>
+                        @endunless
                     @endif
 
                     @unless(request()->routeIs('profile.show'))
@@ -195,6 +213,14 @@
                                         <a href="{{ route('home') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
                                             <x-icon name="lucide-house" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
                                             <span>Beranda Utama</span>
+                                        </a>
+                                    </li>
+                                @endunless
+                                @unless(request()->routeIs('user.inquiries'))
+                                    <li>
+                                        <a href="{{ route('user.inquiries') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
+                                            <x-icon name="lucide-send" class="w-4 h-4 text-black group-hover:scale-110 transition-transform stroke-[2.5]" />
+                                            <span>Pesan Terkirim</span>
                                         </a>
                                     </li>
                                 @endunless

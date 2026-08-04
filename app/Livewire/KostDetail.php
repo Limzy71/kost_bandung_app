@@ -53,6 +53,11 @@ class KostDetail extends Component
             abort_if(! auth()->check() || (auth()->user()->role !== 'admin' && auth()->id() !== $this->kost->user_id), 404);
         }
 
+        if (auth()->check()) {
+            $this->inquiry_name = auth()->user()->name;
+            $this->inquiry_phone = auth()->user()->phone_number ?? '';
+        }
+
         $this->kost->load(['facilities', 'rules', 'images', 'user', 'prices']);
 
         // Determine back URL and label dynamically based on origin

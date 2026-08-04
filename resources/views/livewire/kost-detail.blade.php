@@ -56,6 +56,13 @@
         showGalleryModal: false, 
         activeIndex: 0, 
         images: {{ Js::from($allImages) }},
+        openInquiryModal() {
+            @auth
+                this.showModal = true;
+            @else
+                window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
+            @endauth
+        },
         nextImage() {
             const total = this.images.length;
             if (total <= 1) return;
@@ -547,7 +554,7 @@
                             </div>
                         @endif
 
-                        <button type="button" @click="showModal = true"
+                        <button type="button" @click="openInquiryModal()"
                             class="w-full py-4 bg-cyan-300 hover:bg-cyan-200 text-black border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 cursor-pointer">
                             <x-icon name="lucide-mail" class="w-5 h-5 stroke-[2.5]" />
                             <span>Kirim Pesan Internal</span>
@@ -663,7 +670,7 @@
                 );
             @endphp
             <div class="flex items-center gap-2">
-                <button type="button" @click="showModal = true"
+                <button type="button" @click="openInquiryModal()"
                     class="px-4 py-3 bg-cyan-300 hover:bg-cyan-200 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl whitespace-nowrap cursor-pointer">
                     Pesan
                 </button>
@@ -716,21 +723,38 @@
                 <form wire:submit.prevent="sendInquiry" class="space-y-4">
                     <div>
                         <label class="block text-sm font-black uppercase text-black mb-1.5">Nama Lengkap</label>
-                        <input type="text" wire:model="inquiry_name"
-                            class="w-full bg-zinc-100 border-3 border-black rounded-xl px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:bg-white focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
-                            placeholder="Masukkan nama Anda">
-                        @error('inquiry_name')
-                            <span class="text-xs font-bold text-rose-500 mt-1 block">{{ $message }}</span>
-                        @enderror
+                        @if ($inquiry_name)
+                            <div class="w-full bg-white border-3 border-black rounded-xl px-4 py-3 text-sm font-bold text-black flex items-center justify-between gap-3">
+                                <span class="truncate">{{ $inquiry_name }}</span>
+                                <span class="text-[10px] font-black uppercase text-zinc-500 shrink-0">Dari profil Anda</span>
+                            </div>
+                        @else
+                            <input type="text" wire:model="inquiry_name"
+                                class="w-full bg-zinc-100 border-3 border-black rounded-xl px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:bg-white focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
+                                placeholder="Masukkan nama Anda">
+                            @error('inquiry_name')
+                                <span class="text-xs font-bold text-rose-500 mt-1 block">{{ $message }}</span>
+                            @enderror
+                        @endif
                     </div>
                     <div>
                         <label class="block text-sm font-black uppercase text-black mb-1.5">Nomor WhatsApp</label>
-                        <input type="text" wire:model="inquiry_phone"
-                            class="w-full bg-zinc-100 border-3 border-black rounded-xl px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:bg-white focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
-                            placeholder="Contoh: 081234567890">
-                        @error('inquiry_phone')
-                            <span class="text-xs font-bold text-rose-500 mt-1 block">{{ $message }}</span>
-                        @enderror
+                        @if ($inquiry_phone)
+                            <div class="w-full bg-white border-3 border-black rounded-xl px-4 py-3 text-sm font-bold text-black flex items-center justify-between gap-3">
+                                <span>{{ $inquiry_phone }}</span>
+                                <span class="text-[10px] font-black uppercase text-zinc-500 shrink-0">Dari profil Anda</span>
+                            </div>
+                        @else
+                            <input type="text" wire:model="inquiry_phone"
+                                class="w-full bg-zinc-100 border-3 border-black rounded-xl px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:bg-white focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
+                                placeholder="Contoh: 081234567890">
+                            @error('inquiry_phone')
+                                <span class="text-xs font-bold text-rose-500 mt-1 block">{{ $message }}</span>
+                            @enderror
+                            <p class="text-[10px] font-bold text-zinc-500 mt-1">
+                                Simpan nomor di <a href="{{ route('profile.show') }}" class="font-black underline">Profil</a> agar terisi otomatis.
+                            </p>
+                        @endif
                     </div>
                     <div>
                         <label class="block text-sm font-black uppercase text-black mb-1.5">Pesan Anda</label>

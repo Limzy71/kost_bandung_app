@@ -815,7 +815,7 @@ class EditKost extends Component
             'districts' => $districts,
             'googleMapsApiKey' => config('services.google.maps_api_key'),
         ])->layout('layouts.app', [
-            'title' => 'Edit Kost — KostBandung.id',
+            'title' => 'Edit Kost — KostBandung.web.id',
         ]);
     }
 }

@@ -107,7 +107,7 @@ class OwnerDashboard extends Component
             'pesanMasuk' => $this->pesanMasuk,
             'kosts' => $kosts,
         ])->layout('layouts.app', [
-            'title' => 'Dashboard Pemilik Kost — KostBandung.id',
+            'title' => 'Dashboard Pemilik Kost — KostBandung.web.id',
         ]);
     }
 

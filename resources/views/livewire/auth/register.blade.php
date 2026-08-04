@@ -11,7 +11,7 @@
                 Bergabung Sekarang!
             </h1>
             <p class="mt-2 text-sm font-bold text-zinc-600">
-                Cari kost impian atau publikasikan properti Anda di KostBandung.id
+                Cari kost impian atau publikasikan properti Anda di KostBandung.web.id
             </p>
         </div>
 

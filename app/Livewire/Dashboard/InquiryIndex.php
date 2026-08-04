@@ -109,6 +109,6 @@ class InquiryIndex extends Component
 
         return view('livewire.dashboard.inquiry-index', [
             'inquiries' => $inquiries,
-        ])->layout('layouts.app', ['title' => 'Inbox Pesan — KostBandung.id']);
+        ])->layout('layouts.app', ['title' => 'Inbox Pesan — KostBandung.web.id']);
     }
 }

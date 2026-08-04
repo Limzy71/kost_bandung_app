@@ -45,6 +45,6 @@ class SeekerInquiries extends Component
 
         return view('livewire.dashboard.seeker-inquiries', [
             'inquiries' => $inquiries,
-        ])->layout('layouts.app', ['title' => 'Pesan Terkirim — KostBandung.id']);
+        ])->layout('layouts.app', ['title' => 'Pesan Terkirim — KostBandung.web.id']);
     }
 }

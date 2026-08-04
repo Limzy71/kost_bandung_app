@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('Profil Saya — KostBandung.id')]
+#[Title('Profil Saya — KostBandung.web.id')]
 class Index extends Component
 {
     use ProfileValidationRules;
@@ -96,7 +96,7 @@ class Index extends Component
             'user' => $user,
             'stats' => $this->statsFor($user),
         ])->layout('layouts.app', [
-            'title' => 'Profil Saya — KostBandung.id',
+            'title' => 'Profil Saya — KostBandung.web.id',
         ]);
     }
 

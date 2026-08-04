@@ -31,7 +31,7 @@
                     Profil Saya
                 </h1>
                 <p class="text-zinc-700 text-sm md:text-base font-bold">
-                    Kelola identitas akun Anda di <span class="bg-yellow-200 border-b-2 border-black px-1">KostBandung.id</span>.
+                    Kelola identitas akun Anda di <span class="bg-yellow-200 border-b-2 border-black px-1">KostBandung.web.id</span>.
                 </p>
             </div>
 

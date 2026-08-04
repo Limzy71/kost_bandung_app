@@ -11,7 +11,7 @@
                 Selamat Datang Kembali!
             </h1>
             <p class="mt-2 text-sm font-bold text-zinc-600">
-                Masuk ke akun KostBandung.id Anda untuk melanjutkan.
+                Masuk ke akun KostBandung.web.id Anda untuk melanjutkan.
             </p>
         </div>
 

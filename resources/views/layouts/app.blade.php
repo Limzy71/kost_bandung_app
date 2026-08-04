@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'Kost Bandung - Cari Kost Hyper-Local' }}</title>
+    <title>{{ $title ?? 'KostBandung.web.id - Cari Kost Hyper-Local' }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -17,7 +17,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <a href="{{ route('home') }}" class="flex items-center gap-2">
                 <span class="text-xl font-black text-black uppercase tracking-tight flex items-center">
-                    KostBandung<span class="bg-yellow-300 border-2 border-black px-1.5 py-0.5 rounded text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ml-1 font-black text-black">.id</span>
+                    KostBandung<span class="bg-yellow-300 border-2 border-black px-1.5 py-0.5 rounded text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ml-1 font-black text-black">.web.id</span>
                 </span>
             </a>
             <div class="flex items-center gap-3 md:gap-4">
@@ -131,7 +131,7 @@
                 <div class="space-y-3">
                     <a href="{{ route('home') }}" class="inline-flex items-center gap-1.5">
                         <span class="text-2xl font-black text-black uppercase tracking-tight flex items-center">
-                            KostBandung<span class="bg-yellow-300 border-2 border-black px-2 py-0.5 rounded text-base shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ml-1 font-black text-black">.id</span>
+                            KostBandung<span class="bg-yellow-300 border-2 border-black px-2 py-0.5 rounded text-base shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ml-1 font-black text-black">.web.id</span>
                         </span>
                     </a>
                     <p class="text-xs font-bold text-zinc-700 max-w-md leading-relaxed">
@@ -268,7 +268,7 @@
 
             <!-- Bottom Copyright Line -->
             <div class="pt-6 text-center sm:text-left text-xs font-black text-black uppercase tracking-wider">
-                <p>&copy; {{ date('Y') }} KostBandung.id. Hak Cipta Dilindungi.</p>
+                <p>&copy; {{ date('Y') }} KostBandung.web.id. Hak Cipta Dilindungi.</p>
             </div>
         </div>
     </footer>

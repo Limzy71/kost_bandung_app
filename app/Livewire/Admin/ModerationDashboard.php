@@ -98,7 +98,7 @@ class ModerationDashboard extends Component
                 'totalCount' => $totalCount,
                 'pendingFacilityCount' => $pendingFacilityCount,
             ])->layout('layouts.app', [
-                'title' => 'Moderation Dashboard — Admin KostBandung.id',
+                'title' => 'Moderation Dashboard — Admin KostBandung.web.id',
             ]);
         }
 
@@ -129,7 +129,7 @@ class ModerationDashboard extends Component
             'totalCount' => $totalCount,
             'pendingFacilityCount' => $pendingFacilityCount,
         ])->layout('layouts.app', [
-            'title' => 'Moderation Dashboard — Admin KostBandung.id',
+            'title' => 'Moderation Dashboard — Admin KostBandung.web.id',
         ]);
     }
 }

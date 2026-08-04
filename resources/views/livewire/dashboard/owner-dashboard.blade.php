@@ -28,10 +28,10 @@
             </div>
             
             <div class="flex items-center gap-3">
-                <a href="{{ route('dashboard.kost.create') }}" class="bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black font-black text-sm uppercase px-6 py-3.5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all inline-flex items-center gap-2 rounded-lg group">
+                <x-brutal-button :href="route('dashboard.kost.create')" class="hover:-translate-x-0.5 hover:-translate-y-0.5 group">
                     <x-icon name="lucide-plus" class="w-5 h-5 text-black stroke-[2.5] group-hover:rotate-90 transition-transform duration-300" />
                     <span>Tambah Kost Baru</span>
-                </a>
+                </x-brutal-button>
             </div>
         </div>
 
@@ -319,10 +319,10 @@
                             Reset Pencarian
                         </button>
                     @else
-                        <a href="{{ route('dashboard.kost.create') }}" class="px-6 py-3 bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all inline-flex items-center gap-2 rounded-lg">
+                        <x-brutal-button :href="route('dashboard.kost.create')" class="hover:-translate-x-0.5 hover:-translate-y-0.5">
                             <x-icon name="lucide-plus" class="w-4 h-4 stroke-[3]" />
                             <span>Tambah Properti Pertama</span>
-                        </a>
+                        </x-brutal-button>
                     @endif
                 </div>
             @endif

@@ -5,8 +5,7 @@
     ============================================================ -->
 
             <!-- Seksi 1: Informasi Dasar -->
-            <div
-                class="bg-white rounded-xl p-6 md:p-8 border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6">
+            <x-brutal-card class="space-y-6">
                 <div class="flex items-center gap-3 border-b-3 border-black pb-4">
                     <div
                         class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
@@ -113,7 +112,7 @@
                             {{ $message }}</p>
                     @enderror
                 </div>
-            </div>
+            </x-brutal-card>
 
             <!-- Seksi 2: Lokasi & Geofencing -->
             <script>
@@ -671,8 +670,7 @@
             </div>
 
             <!-- Seksi 3: Harga, Periode & Fasilitas -->
-            <div
-                class="bg-white rounded-xl p-6 md:p-8 border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6">
+            <x-brutal-card class="space-y-6">
                 <div class="flex items-center gap-3 border-b-3 border-black pb-4">
                     <div
                         class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
@@ -1127,11 +1125,10 @@
                             {{ $message }}</p>
                     @enderror
                 </div>
-            </div>
+            </x-brutal-card>
 
             <!-- Seksi 4: Aturan Kost -->
-            <div
-                class="bg-white rounded-xl p-6 md:p-8 border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6">
+            <x-brutal-card class="space-y-6">
                 <div class="flex items-center gap-3 border-b-3 border-black pb-4">
                     <div
                         class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
@@ -1213,11 +1210,10 @@
                         </div>
                     @endif
                 </div>
-            </div>
+            </x-brutal-card>
 
             <!-- Seksi 5: Sekitar Kost -->
-            <div
-                class="bg-white rounded-xl p-6 md:p-8 border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6">
+            <x-brutal-card class="space-y-6">
                 <div class="flex items-center gap-3 border-b-3 border-black pb-4">
                     <div
                         class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
@@ -1370,11 +1366,10 @@
                         </div>
                     @endif
                 </div>
-            </div>
+            </x-brutal-card>
 
             <!-- Seksi 6: Foto Utama Properti -->
-            <div
-                class="bg-white rounded-xl p-6 md:p-8 border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6">
+            <x-brutal-card class="space-y-6">
                 <div class="flex items-center gap-3 border-b-3 border-black pb-4">
                     <div
                         class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
@@ -1595,4 +1590,4 @@
                         @endif
                     </div>
                 </div>
-            </div>
+            </x-brutal-card>

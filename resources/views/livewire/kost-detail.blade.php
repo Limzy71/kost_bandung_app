@@ -193,15 +193,13 @@
                             </span>
 
                             @if ($kost->is_available)
-                                <span
-                                    class="px-3.5 py-1 bg-lime-400 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider">
+                                <x-brutal-badge color="lime">
                                     ✓ Kamar Tersedia
-                                </span>
+                                </x-brutal-badge>
                             @else
-                                <span
-                                    class="px-3.5 py-1 bg-rose-400 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider">
+                                <x-brutal-badge color="rose">
                                     ✕ Kamar Penuh
-                                </span>
+                                </x-brutal-badge>
                             @endif
 
                             @if ($kost->boosted_at)
@@ -701,6 +699,20 @@
             </div>
 
             <div class="p-6 overflow-y-auto">
+                @guest
+                    <div class="text-center space-y-4">
+                        <div
+                            class="mx-auto w-16 h-16 bg-amber-300 border-3 border-black rounded-2xl flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                            <x-icon name="lucide-lock" class="w-8 h-8 text-black" />
+                        </div>
+                        <p class="text-sm font-bold text-black">
+                            Anda harus masuk untuk mengirim pesan ke pemilik kost.
+                        </p>
+                        <x-brutal-button color="cyan" :href="route('login')" class="rounded-xl">
+                            Masuk Sekarang
+                        </x-brutal-button>
+                    </div>
+                @else
                 <form wire:submit.prevent="sendInquiry" class="space-y-4">
                     <div>
                         <label class="block text-sm font-black uppercase text-black mb-1.5">Nama Lengkap</label>
@@ -730,16 +742,16 @@
                         @enderror
                     </div>
 
-                    <button type="submit" wire:loading.attr="disabled" wire:target="sendInquiry"
-                        wire:loading.class="opacity-50 cursor-not-allowed"
-                        class="w-full mt-4 py-3.5 bg-cyan-400 hover:bg-cyan-300 text-black border-3 border-black font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 cursor-pointer">
+                    <x-brutal-button type="submit" color="cyan" wire:loading.attr="disabled" wire:target="sendInquiry"
+                        wire:loading.class="opacity-50 cursor-not-allowed" class="w-full mt-4 rounded-xl">
                         <span wire:loading.remove wire:target="sendInquiry">Kirim Sekarang</span>
                         <span wire:loading wire:target="sendInquiry" class="flex items-center gap-2">
                             <x-icon name="lucide-loader-circle" class="animate-spin h-5 w-5 text-black" />
                             Mengirim...
                         </span>
-                    </button>
+                    </x-brutal-button>
                 </form>
+                @endguest
             </div>
         </div>
     </div>

@@ -70,7 +70,7 @@
             <div class="lg:col-span-2 space-y-4">
                 <div class="flex flex-wrap items-center gap-2">
                     <button wire:click="$set('tab', 'active')" class="px-4 py-2 border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg {{ $tab === 'active' ? 'bg-cyan-400 text-black' : 'bg-white text-black hover:bg-cyan-100' }}">
-                        <x-icon name="lucide-circle" class="w-3.5 h-3.5 inline -mt-0.5 mr-1 {{ $tab === 'active' ? 'fill-black' : '' }}" />
+                        <x-icon name="lucide-message-circle" class="w-3.5 h-3.5 inline -mt-0.5 mr-1 {{ $tab === 'active' ? 'fill-black' : '' }}" />
                         Percakapan Aktif
                     </button>
                     <button wire:click="$set('tab', 'history')" class="px-4 py-2 border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg {{ $tab === 'history' ? 'bg-zinc-400 text-black' : 'bg-white text-black hover:bg-zinc-100' }}">
@@ -258,10 +258,10 @@
                 <div>
                     <label class="block text-[10px] font-black uppercase text-black mb-1">Kategori</label>
                     <select wire:model="category"
-                        class="w-full bg-zinc-100 border-3 border-black rounded-xl px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:bg-white transition-all cursor-pointer">
-                        <option value="">Pilih kategori...</option>
+                        class="w-full bg-zinc-100 border-3 border-black rounded-xl px-4 py-3 text-sm font-black uppercase text-black focus:outline-none focus:ring-0 focus:bg-white transition-all cursor-pointer">
+                        <option value="" class="font-black uppercase">PILIH KATEGORI...</option>
                         @foreach (\App\Models\AdminConversation::CATEGORIES as $cat)
-                            <option value="{{ $cat }}">{{ \App\Models\AdminConversation::categoryLabel($cat) }}</option>
+                            <option value="{{ $cat }}" class="font-black uppercase">{{ mb_strtoupper(\App\Models\AdminConversation::categoryLabel($cat)) }}</option>
                         @endforeach
                     </select>
                     @error('category')

@@ -94,11 +94,14 @@ class OwnerDashboard extends Component
         $this->deleteTargetId = $kostId;
         $this->deleteTargetName = $kost->name;
         $this->deleteConfirmText = '';
+        $this->resetErrorBag('deleteConfirmText');
+
+        $this->dispatch('delete-modal-opened');
     }
 
     public function closeDeleteModal(): void
     {
-        $this->reset(['deleteTargetId', 'deleteTargetName', 'deleteConfirmText']);
+        $this->reset(['deleteTargetId', 'deleteConfirmText']);
     }
 
     public function deleteKost(): void
@@ -108,6 +111,7 @@ class OwnerDashboard extends Component
         $kost = $user->kosts()->find($this->deleteTargetId);
 
         if (! $kost) {
+            $this->dispatch('delete-modal-closed');
             $this->closeDeleteModal();
 
             return;
@@ -123,6 +127,7 @@ class OwnerDashboard extends Component
 
         $kost->forceDelete();
 
+        $this->dispatch('delete-modal-closed');
         $this->closeDeleteModal();
 
         $this->dispatch('show-toast', message: 'Properti "'.$name.'" telah DIHAPUS PERMANEN.');

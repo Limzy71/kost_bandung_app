@@ -176,7 +176,7 @@
                         <div>
                             <label for="phone_number" class="block text-xs font-black uppercase text-black mb-1.5">Nomor WhatsApp</label>
                             <input type="text" id="phone_number" wire:model="phone_number"
-                                inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                inputmode="numeric" oninput="let v = this.value.replace(/[^0-9]/g, ''); if(v.startsWith('8')) v = '0' + v; this.value = v;"
                                 maxlength="16"
                                 class="w-full px-4 py-3 text-sm bg-white border-3 border-black rounded-lg text-black font-bold placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
                                 placeholder="Contoh: 081234567890">

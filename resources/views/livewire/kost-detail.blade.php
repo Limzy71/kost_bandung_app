@@ -530,7 +530,7 @@
                     <!-- CTA Buttons -->
                     <div class="space-y-3">
                         @if (auth()->check() && auth()->id() === $kost->user_id)
-                            <a href="{{ route('dashboard.edit-kost', $kost->id) }}"
+                            <a href="{{ route('dashboard.kost.edit', $kost->slug) }}"
                                 class="w-full py-4 bg-yellow-300 hover:bg-yellow-200 text-black border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 cursor-pointer">
                                 <x-icon name="lucide-pencil" class="w-5 h-5 stroke-[2.5]" />
                                 <span>Kelola Properti Ini</span>
@@ -670,7 +670,7 @@
 
             @if (auth()->check() && auth()->id() === $kost->user_id)
                 <div class="flex items-center gap-2">
-                    <a href="{{ route('dashboard.edit-kost', $kost->id) }}"
+                    <a href="{{ route('dashboard.kost.edit', $kost->slug) }}"
                         class="px-5 py-3 bg-yellow-300 hover:bg-yellow-200 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl whitespace-nowrap inline-flex items-center gap-1.5 cursor-pointer">
                         <x-icon name="lucide-pencil" class="w-4 h-4 stroke-[2.5]" />
                         <span>Kelola Properti</span>

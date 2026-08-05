@@ -796,7 +796,7 @@
                         <label class="block text-sm font-black uppercase text-black mb-1.5">Nama Lengkap</label>
                         @if ($inquiry_name)
                             <div class="w-full bg-white border-3 border-black rounded-xl px-4 py-3 text-sm font-bold text-black flex items-center justify-between gap-3">
-                                <span class="truncate">{{ $inquiry_name }}</span>
+                                <span class="truncate" title="{{ $inquiry_name }}">{{ Str::limit($inquiry_name, 30) }}</span>
                                 <span class="text-[10px] font-black uppercase text-zinc-500 shrink-0">Dari profil Anda</span>
                             </div>
                         @else
@@ -812,12 +812,13 @@
                         <label class="block text-sm font-black uppercase text-black mb-1.5">Nomor WhatsApp</label>
                         @if ($inquiry_phone)
                             <div class="w-full bg-white border-3 border-black rounded-xl px-4 py-3 text-sm font-bold text-black flex items-center justify-between gap-3">
-                                <span>{{ $inquiry_phone }}</span>
+                                <span class="truncate">{{ $inquiry_phone }}</span>
                                 <span class="text-[10px] font-black uppercase text-zinc-500 shrink-0">Dari profil Anda</span>
                             </div>
                         @else
                             <input type="text" wire:model="inquiry_phone"
                                 inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                maxlength="16"
                                 class="w-full bg-zinc-100 border-3 border-black rounded-xl px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:bg-white focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
                                 placeholder="Contoh: 081234567890">
                             @error('inquiry_phone')

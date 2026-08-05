@@ -708,11 +708,12 @@ class EditKost extends Component
 
         // Re-upload verification documents (ownership proof)
         if ($this->ownership_doc) {
-            $newOwnershipPath = $this->ownership_doc->store('verification-docs/ownership', config('filesystems.default'));
+            $newOwnershipPath = $this->ownership_doc->store('verification-docs/ownership', 'verification_docs');
             $kost->deleteOwnershipDocumentFile();
             $kost->forceFill([
                 'ownership_doc_path' => $newOwnershipPath,
                 'ownership_verification_status' => 'pending',
+                'ownership_verified_at' => null,
                 'ownership_rejection_note' => null,
             ])->save();
             $this->ownership_doc = null;

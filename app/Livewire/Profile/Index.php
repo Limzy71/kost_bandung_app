@@ -165,13 +165,14 @@ class Index extends Component
         ]);
 
         if ($this->identity_doc) {
-            $user->deleteIdentityDocumentFile();
+            $path = $this->identity_doc->store('verification-docs/identity', 'verification_docs');
 
-            $path = $this->identity_doc->store('verification-docs/identity', config('filesystems.default'));
+            $user->deleteIdentityDocumentFile();
 
             $user->forceFill([
                 'identity_doc_path' => $path,
                 'identity_verification_status' => 'pending',
+                'identity_verified_at' => null,
                 'identity_rejection_note' => null,
             ])->save();
 

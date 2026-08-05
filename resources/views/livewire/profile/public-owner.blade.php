@@ -28,6 +28,11 @@
                                 <x-icon name="lucide-badge-check" class="w-3.5 h-3.5 stroke-[2.5]" />
                                 <span>Pemilik Terverifikasi</span>
                             </span>
+                        @else
+                            <span class="px-3 py-1 bg-rose-400 text-black border-2 border-black font-extrabold text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1.5" title="Identitas pemilik kost ini belum diverifikasi oleh admin">
+                                <x-icon name="lucide-shield-alert" class="w-3.5 h-3.5 stroke-[2.5]" />
+                                <span>Pemilik Belum Terverifikasi</span>
+                            </span>
                         @endif
                     </div>
 

@@ -35,12 +35,12 @@
                             : 0;
                     @endphp
                     @if(auth()->user()->role === 'admin')
-                        @if(request()->routeIs('admin*') || request()->routeIs('profile.show'))
+                        @unless(request()->routeIs('home'))
                             <a href="{{ route('home') }}" class="text-xs font-black uppercase text-black bg-cyan-300 hover:bg-cyan-200 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
                                 <x-icon name="lucide-house" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
                                 <span class="max-sm:hidden">Beranda Utama</span>
                             </a>
-                        @endif
+                        @endunless
                         @unless(request()->routeIs('admin.moderation'))
                             <a href="{{ route('admin.moderation') }}" class="text-xs font-black uppercase text-black bg-lime-300 hover:bg-lime-200 px-3.5 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
                                 <x-icon name="lucide-circle-check" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
@@ -60,12 +60,12 @@
                     @endif
 
                     @if(auth()->user()->role === 'owner')
-                        @if(request()->routeIs('dashboard*') || request()->routeIs('profile.show'))
+                        @unless(request()->routeIs('home'))
                             <a href="{{ route('home') }}" class="text-xs font-black uppercase text-black bg-cyan-300 hover:bg-cyan-200 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
                                 <x-icon name="lucide-house" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
                                 <span class="max-sm:hidden">Beranda Utama</span>
                             </a>
-                        @endif
+                        @endunless
 
                         @unless(request()->routeIs('dashboard'))
                             <a href="{{ route('dashboard') }}" class="text-xs font-black uppercase text-black bg-yellow-300 hover:bg-yellow-200 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
@@ -99,12 +99,12 @@
                     @endif
 
                     @if(auth()->user()->role === 'user')
-                        @if(request()->routeIs('user.inquiries') || request()->routeIs('profile.show'))
+                        @unless(request()->routeIs('home'))
                             <a href="{{ route('home') }}" class="text-xs font-black uppercase text-black bg-cyan-300 hover:bg-cyan-200 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
                                 <x-icon name="lucide-house" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
                                 <span class="max-sm:hidden">Beranda Utama</span>
                             </a>
-                        @endif
+                        @endunless
 
                         @php
                             $newRepliesCount = \App\Models\Inquiry::where('user_id', auth()->id())

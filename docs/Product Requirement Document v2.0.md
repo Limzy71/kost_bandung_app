@@ -48,6 +48,10 @@ Sistem dikembangkan menggunakan perpaduan teknologi yang mengutamakan kecepatan 
 
 - Sebagai admin, saya ingin meninjau draf pendaftaran kost baru dan menyetujuinya sebelum tampil di halaman utama untuk menjaga keamanan platform. 
 
+- Sebagai pencari kost / pemilik kost, saya ingin mengirim komplain, pertanyaan, atau masukan ke Admin melalui halaman "Hubungi Admin" agar kendala saya ditangani langsung oleh tim internal. 
+
+- Sebagai admin, saya ingin melihat inbox percakapan bantuan yang belum dibalas agar dapat merespons pengguna dalam maksimal 1x24 jam. 
+
 ## **5. Spesifikasi Fungsional Utama** 
 
 ## **Modul Pemetaan & Geofencing** 
@@ -75,6 +79,16 @@ Sistem dikembangkan menggunakan perpaduan teknologi yang mengutamakan kecepatan 
 - **Mekanisme** **_Boost_ :** Sistem memperbarui data _timestamp_ khusus di database saat pemilik kost berhasil mengaktifkan paket iklan. 
 
 - **Logika Pengurutan Pencarian:** _Query builder_ Laravel akan secara otomatis memprioritaskan properti dengan status _boost_ aktif untuk tampil di urutan teratas hasil pencarian Livewire. 
+
+## **Modul Layanan Bantuan & Pengaduan (Hubungi Admin)** 
+
+- **Thread Percakapan:** Pencari kost dan pemilik kost yang sudah login dapat membuka percakapan baru dengan kategori Komplain, Pertanyaan, Masukan / Saran, atau Lainnya. Admin tidak dapat memulai percakapan sebagai pengirim (dilindungi guard 403). 
+
+- **SLA 1x24 Jam:** Setiap pesan pengguna memperbarui kolom `awaiting_reply_at`. Percakapan yang tidak dibalas Admin dalam 24 jam sejak pesan terakhir pengguna otomatis ditutup (_expired_ ) dan berpindah ke tab Riwayat pengguna. 
+
+- **Inbox Bantuan Admin:** Dashboard admin menampilkan tab Belum Dibalas / Aktif / Riwayat dengan jumlah percakapan. Admin dapat membalas (hanya percakapan terbuka), menutup, dan menghapus percakapan yang telah ditutup. Percakapan yang dihapus tersimpan ( _soft delete_ ) selama 30 hari sebelum dibersihkan permanen beserta pesannya. 
+
+- **Notifikasi Badge:** Badge jumlah balasan admin belum dibaca untuk pengguna, serta badge jumlah percakapan yang menunggu balasan untuk admin, ditampilkan pada navbar. Tidak menggunakan notifikasi email/queue. 
 
 ## **6. Persyaratan Non-Fungsional & SEO** 
 

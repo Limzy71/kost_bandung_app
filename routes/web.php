@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\KostController;
+use App\Livewire\Admin\AdminMessages;
 use App\Livewire\Admin\ModerationDashboard;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
+use App\Livewire\Contact\AdminChat;
 use App\Livewire\Dashboard\CreateKost;
 use App\Livewire\Dashboard\EditKost;
 use App\Livewire\Dashboard\InquiryIndex;
@@ -33,11 +35,13 @@ Route::middleware(['auth', 'verified', 'owner'])->group(function () {
 
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/admin/moderation', ModerationDashboard::class)->name('admin.moderation');
+    Route::get('/admin/messages', AdminMessages::class)->name('admin.messages');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profil', ProfileIndex::class)->name('profile.show');
     Route::get('/dashboard/user/inquiries', SeekerInquiries::class)->name('user.inquiries');
+    Route::get('/hubungi-admin', AdminChat::class)->name('hubungi.admin');
 });
 
 Route::middleware('auth')->group(function () {

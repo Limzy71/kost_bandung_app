@@ -122,6 +122,8 @@ Untuk mencatat riwayat pesan/pengajuan _booking_ internal dari pencari kost.
 
    - `hasMany(Inquiry::class)` 
 
+   - `hasMany(AdminConversation::class)`
+
 - **`Kost`** 
 
    - `belongsTo(User::class)` 
@@ -145,6 +147,41 @@ Untuk mencatat riwayat pesan/pengajuan _booking_ internal dari pencari kost.
 
 
 
+## **9. Tabel** **`admin_conversations`** (Thread CS / Hubungi Admin)
+
+Menyimpan thread percakapan antara pengguna (Pencari Kost / Pemilik Kost) dengan Admin (fitur Hubungi Admin / CS & pengaduan).
+
+|**Nama Kolom**|**Tipe Data / Key**|**Keterangan**|
+|---|---|---|
+|`id`|Primary Key, BigInt||
+|`user_id`|Foreign Key, Nullable|Merujuk ke`users.id` (nullOnDelete)|
+|`sender_role`|Enum/String|’user’, ’owner’ — peran pengirim saat membuka thread|
+|`category`|Enum/String|’komplain’, ’pertanyaan’, ’masukan’, ’lainnya’|
+|`status`|Enum/String|’open’, ’closed’ (default: ’open’)|
+|`closed_reason`|String, Nullable|’admin’ atau ’expired’|
+|`awaiting_reply_at`|Timestamp, Nullable|Batas SLA 1x24 jam; direset setiap user mengirim pesan|
+|`closed_at`|Timestamp, Nullable||
+|`deleted_at`|SoftDeletes|Retensi 30 hari sebelum dihapus permanen|
+|`timestamps`|Timestamps|created_at, updated_at|
+|Index|Composite|(status, awaiting_reply_at), (user_id, status)|
+
+## **10. Tabel** **`admin_messages`**
+
+Menyimpan pesan per thread percakapan CS (Relasi _One-to-Many_ ke `admin_conversations`).
+
+|**Nama Kolom**|**Tipe Data / Key**|**Keterangan**|
+|---|---|---|
+|`id`|Primary Key, BigInt||
+|`conversation_id`|Foreign Key|Merujuk ke`admin_conversations.id` (cascadeOnDelete)|
+|`sender_type`|Enum/String|’user’, ’admin’|
+|`sender_id`|Foreign Key, Nullable|Merujuk ke`users.id` (nullOnDelete)|
+|`body`|Text|Maksimal 2.000 karakter|
+|`read_at`|Timestamp, Nullable|Ditandai saat penerima membuka thread|
+|`timestamps`|Timestamps|created_at, updated_at|
+|Index|Composite|(conversation_id, created_at)|
+
+
+
    - `belongsToMany(Rule::class)` _(Melalui tabel pivot:_ _`kost_rule` )_ 
 
 - **`Facility`** 
@@ -154,6 +191,18 @@ Untuk mencatat riwayat pesan/pengajuan _booking_ internal dari pencari kost.
 - **`Rule`** 
 
    - `belongsToMany(Kost::class)` 
+
+- **`AdminConversation`** 
+
+   - `belongsTo(User::class)` 
+
+   - `hasMany(AdminMessage::class)` 
+
+- **`AdminMessage`** 
+
+   - `belongsTo(AdminConversation::class)` 
+
+   - `belongsTo(User::class)` _(Melalui_ _`sender_id` )_ 
 
 4 
 

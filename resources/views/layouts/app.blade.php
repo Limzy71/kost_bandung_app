@@ -22,6 +22,18 @@
             </a>
             <div class="flex items-center gap-3 md:gap-4">
                 @auth
+                    @php
+                        $unreadAdminRepliesCount = \App\Models\AdminMessage::where('sender_type', 'admin')
+                            ->whereNull('read_at')
+                            ->whereHas('conversation', function($q) {
+                                $q->where('user_id', auth()->id());
+                            })
+                            ->count();
+
+                        $adminUnansweredCount = auth()->user()->role === 'admin'
+                            ? \App\Models\AdminConversation::where('status', 'open')->whereNotNull('awaiting_reply_at')->count()
+                            : 0;
+                    @endphp
                     @if(auth()->user()->role === 'admin')
                         @if(request()->routeIs('admin*') || request()->routeIs('profile.show'))
                             <a href="{{ route('home') }}" class="text-xs font-black uppercase text-black bg-cyan-300 hover:bg-cyan-200 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
@@ -33,6 +45,16 @@
                             <a href="{{ route('admin.moderation') }}" class="text-xs font-black uppercase text-black bg-lime-300 hover:bg-lime-200 px-3.5 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
                                 <x-icon name="lucide-circle-check" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
                                 <span class="max-sm:hidden">Moderasi Admin</span>
+                            </a>
+                        @endunless
+
+                        @unless(request()->routeIs('admin.messages'))
+                            <a href="{{ route('admin.messages') }}" class="text-xs font-black uppercase text-black bg-white hover:bg-zinc-100 px-3.5 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
+                                <x-icon name="lucide-message-square-text" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
+                                <span class="max-sm:hidden">Inbox Bantuan</span>
+                                @if($adminUnansweredCount > 0)
+                                    <span class="bg-rose-500 text-white border-2 border-black rounded-full px-1.5 py-0.5 text-[9px] min-w-[20px] text-center ml-1">{{ $adminUnansweredCount }}</span>
+                                @endif
                             </a>
                         @endunless
                     @endif
@@ -64,6 +86,16 @@
                                 <span class="bg-rose-500 text-white border-2 border-black rounded-full px-1.5 py-0.5 text-[9px] min-w-[20px] text-center ml-1">{{ $unreadInquiriesCount }}</span>
                             @endif
                         </a>
+
+                        @unless(request()->routeIs('hubungi.admin'))
+                            <a href="{{ route('hubungi.admin') }}" class="text-xs font-black uppercase text-black bg-white hover:bg-zinc-100 px-3.5 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
+                                <x-icon name="lucide-message-circle" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
+                                <span class="max-sm:hidden">Hubungi Admin</span>
+                                @if($unreadAdminRepliesCount > 0)
+                                    <span class="bg-rose-500 text-white border-2 border-black rounded-full px-1.5 py-0.5 text-[9px] min-w-[20px] text-center ml-1">{{ $unreadAdminRepliesCount }}</span>
+                                @endif
+                            </a>
+                        @endunless
                     @endif
 
                     @if(auth()->user()->role === 'user')
@@ -88,6 +120,16 @@
                                 <span class="max-sm:hidden">Pesan Terkirim</span>
                                 @if($newRepliesCount > 0)
                                     <span class="bg-rose-500 text-white border-2 border-black rounded-full px-1.5 py-0.5 text-[9px] min-w-[20px] text-center ml-1">{{ $newRepliesCount }}</span>
+                                @endif
+                            </a>
+                        @endunless
+
+                        @unless(request()->routeIs('hubungi.admin'))
+                            <a href="{{ route('hubungi.admin') }}" class="text-xs font-black uppercase text-black bg-white hover:bg-zinc-100 px-3.5 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
+                                <x-icon name="lucide-message-circle" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
+                                <span class="max-sm:hidden">Hubungi Admin</span>
+                                @if($unreadAdminRepliesCount > 0)
+                                    <span class="bg-rose-500 text-white border-2 border-black rounded-full px-1.5 py-0.5 text-[9px] min-w-[20px] text-center ml-1">{{ $unreadAdminRepliesCount }}</span>
                                 @endif
                             </a>
                         @endunless
@@ -190,6 +232,14 @@
                                         </a>
                                     </li>
                                 @endunless
+                                @unless(request()->routeIs('hubungi.admin'))
+                                    <li>
+                                        <a href="{{ route('hubungi.admin') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
+                                            <x-icon name="lucide-message-circle" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
+                                            <span>Hubungi Admin</span>
+                                        </a>
+                                    </li>
+                                @endunless
                             @elseif(auth()->user()->role === 'admin')
                                 @unless(request()->routeIs('home'))
                                     <li>
@@ -207,6 +257,14 @@
                                         </a>
                                     </li>
                                 @endunless
+                                @unless(request()->routeIs('admin.messages'))
+                                    <li>
+                                        <a href="{{ route('admin.messages') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
+                                            <x-icon name="lucide-message-square-text" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
+                                            <span>Inbox Bantuan</span>
+                                        </a>
+                                    </li>
+                                @endunless
                             @else
                                 @unless(request()->routeIs('home'))
                                     <li>
@@ -221,6 +279,14 @@
                                         <a href="{{ route('user.inquiries') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
                                             <x-icon name="lucide-send" class="w-4 h-4 text-black group-hover:scale-110 transition-transform stroke-[2.5]" />
                                             <span>Pesan Terkirim</span>
+                                        </a>
+                                    </li>
+                                @endunless
+                                @unless(request()->routeIs('hubungi.admin'))
+                                    <li>
+                                        <a href="{{ route('hubungi.admin') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
+                                            <x-icon name="lucide-message-circle" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
+                                            <span>Hubungi Admin</span>
                                         </a>
                                     </li>
                                 @endunless

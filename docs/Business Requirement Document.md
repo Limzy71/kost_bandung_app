@@ -98,6 +98,18 @@ yangkan kepada publik sebelum melalui pemeriksaan manual dan persetujuan ( _Appr
 
 - **Manajemen Fitur Sundul / Iklan Premium:** Pengelolaan persetujuan manual atau otomatis atas pengajuan fitur “Sundul” agar posisi kost berada pada urutan teratas hasil pencarian. 
 
+## **4.4 Modul Layanan Bantuan & Pengaduan (Hubungi Admin)** 
+
+Modul komunikasi langsung antara pengguna (Pencari Kost & Pemilik Kost) dengan tim Admin untuk menangani komplain, pertanyaan, dan masukan: 
+
+- **Hubungi Admin (CS / Pengaduan):** Pencari kost dan pemilik kost yang telah masuk (login) dapat membuka percakapan baru dengan Admin. Kategori tersedia: Komplain, Pertanyaan, Masukan / Saran, dan Lainnya. Admin tidak dapat memulai percakapan sebagai pengirim. 
+
+- **Kanal & Balasan:** Percakapan berbentuk thread berkelanjutan. Setiap pesan pengguna memperbarui tenggat balasan maksimal 1x24 jam (SLA). Percakapan yang tidak dibalas Admin dalam 24 jam sejak pesan terakhir pengguna akan otomatis ditutup (_expired_ ) dan muncul pada riwayat pengguna. 
+
+- **Inbox Bantuan Admin (Admin Panel):** Admin memiliki inbox khusus untuk melihat percakapan yang belum dibalas, yang sedang berlangsung, serta riwayat yang telah ditutup. Admin dapat membalas, menutup, dan menghapus percakapan yang telah ditutup (riwayat tersimpan 30 hari sebelum dibersihkan otomatis). 
+
+- **Notifikasi:** Badge jumlah pesan belum dibalas untuk pengguna dan jumlah percakapan yang menunggu balasan untuk Admin ditampilkan pada navbar. 
+
 ## **5. Model Bisnis & Fitur Monetisasi (Monetization Strategy)** 
 
 Platform ini mengadopsi model pendapatan hibrida yang mengutamakan akuisisi data di tahap awal: 

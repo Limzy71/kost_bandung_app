@@ -13,156 +13,7 @@
 <body class="h-full flex flex-col font-sans antialiased text-gray-950 bg-[#f8f9fa]">
 
     <!-- Header / Navbar -->
-    <header class="bg-white border-b-3 border-black sticky top-0 z-50 shadow-[0_4px_0_0_rgba(0,0,0,1)]">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <a href="{{ route('home') }}" class="flex items-center gap-2">
-                <span class="text-xl font-black text-black uppercase tracking-tight flex items-center">
-                    KostBandung<span class="bg-yellow-300 border-2 border-black px-1.5 py-0.5 rounded text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ml-1 font-black text-black">.web.id</span>
-                </span>
-            </a>
-            <div class="flex items-center gap-3 md:gap-4">
-                @auth
-                    @php
-                        $unreadAdminRepliesCount = \App\Models\AdminMessage::where('sender_type', 'admin')
-                            ->whereNull('read_at')
-                            ->whereHas('conversation', function($q) {
-                                $q->where('user_id', auth()->id());
-                            })
-                            ->count();
-
-                        $adminUnansweredCount = auth()->user()->role === 'admin'
-                            ? \App\Models\AdminConversation::where('status', 'open')->whereNotNull('awaiting_reply_at')->count()
-                            : 0;
-                    @endphp
-                    @if(auth()->user()->role === 'admin')
-                        @unless(request()->routeIs('home'))
-                            <a href="{{ route('home') }}" class="text-xs font-black uppercase text-black bg-cyan-300 hover:bg-cyan-200 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
-                                <x-icon name="lucide-house" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
-                                <span class="max-sm:hidden">Beranda Utama</span>
-                            </a>
-                        @endunless
-                        @unless(request()->routeIs('admin.moderation'))
-                            <a href="{{ route('admin.moderation') }}" class="text-xs font-black uppercase text-black bg-lime-300 hover:bg-lime-200 px-3.5 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
-                                <x-icon name="lucide-circle-check" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
-                                <span class="max-sm:hidden">Moderasi Admin</span>
-                            </a>
-                        @endunless
-
-                        @unless(request()->routeIs('admin.messages'))
-                            <a href="{{ route('admin.messages') }}" class="text-xs font-black uppercase text-black bg-white hover:bg-zinc-100 px-3.5 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
-                                <x-icon name="lucide-message-square-text" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
-                                <span class="max-sm:hidden">Inbox Bantuan</span>
-                                @if($adminUnansweredCount > 0)
-                                    <span class="bg-rose-500 text-white border-2 border-black rounded-full px-1.5 py-0.5 text-[9px] min-w-[20px] text-center ml-1">{{ $adminUnansweredCount }}</span>
-                                @endif
-                            </a>
-                        @endunless
-                    @endif
-
-                    @if(auth()->user()->role === 'owner')
-                        @unless(request()->routeIs('home'))
-                            <a href="{{ route('home') }}" class="text-xs font-black uppercase text-black bg-cyan-300 hover:bg-cyan-200 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
-                                <x-icon name="lucide-house" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
-                                <span class="max-sm:hidden">Beranda Utama</span>
-                            </a>
-                        @endunless
-
-                        @unless(request()->routeIs('dashboard'))
-                            <a href="{{ route('dashboard') }}" class="text-xs font-black uppercase text-black bg-yellow-300 hover:bg-yellow-200 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
-                                <x-icon name="lucide-layout-grid" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
-                                <span class="max-sm:hidden">Dashboard Pemilik</span>
-                            </a>
-                        @endunless
-
-                        @php
-                            $unreadInquiriesCount = \App\Models\Inquiry::where('status', 'unread')->whereHas('kost', function($q) {
-                                $q->where('user_id', auth()->id());
-                            })->count();
-                        @endphp
-                        <a href="{{ route('dashboard.inquiries') }}" class="text-xs font-black uppercase text-black bg-white hover:bg-zinc-100 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
-                            <x-icon name="lucide-inbox" class="w-4 h-4 text-black group-hover:scale-110 transition-transform stroke-[2.5]" />
-                            <span class="max-sm:hidden">Inbox Pesan</span>
-                            @if($unreadInquiriesCount > 0)
-                                <span class="bg-rose-500 text-white border-2 border-black rounded-full px-1.5 py-0.5 text-[9px] min-w-[20px] text-center ml-1">{{ $unreadInquiriesCount }}</span>
-                            @endif
-                        </a>
-
-                        @unless(request()->routeIs('hubungi.admin'))
-                            <a href="{{ route('hubungi.admin') }}" class="text-xs font-black uppercase text-black bg-white hover:bg-zinc-100 px-3.5 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
-                                <x-icon name="lucide-message-circle" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
-                                <span class="max-sm:hidden">Hubungi Admin</span>
-                                @if($unreadAdminRepliesCount > 0)
-                                    <span class="bg-rose-500 text-white border-2 border-black rounded-full px-1.5 py-0.5 text-[9px] min-w-[20px] text-center ml-1">{{ $unreadAdminRepliesCount }}</span>
-                                @endif
-                            </a>
-                        @endunless
-                    @endif
-
-                    @if(auth()->user()->role === 'user')
-                        @unless(request()->routeIs('home'))
-                            <a href="{{ route('home') }}" class="text-xs font-black uppercase text-black bg-cyan-300 hover:bg-cyan-200 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
-                                <x-icon name="lucide-house" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
-                                <span class="max-sm:hidden">Beranda Utama</span>
-                            </a>
-                        @endunless
-
-                        @php
-                            $newRepliesCount = \App\Models\Inquiry::where('user_id', auth()->id())
-                                ->whereNotNull('owner_reply')
-                                ->where('status', '!=', 'archived')
-                                ->whereNull('seeker_seen_reply_at')
-                                ->count();
-                        @endphp
-
-                        @unless(request()->routeIs('user.inquiries'))
-                            <a href="{{ route('user.inquiries') }}" class="text-xs font-black uppercase text-black bg-white hover:bg-zinc-100 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
-                                <x-icon name="lucide-send" class="w-4 h-4 text-black group-hover:scale-110 transition-transform stroke-[2.5]" />
-                                <span class="max-sm:hidden">Pesan Terkirim</span>
-                                @if($newRepliesCount > 0)
-                                    <span class="bg-rose-500 text-white border-2 border-black rounded-full px-1.5 py-0.5 text-[9px] min-w-[20px] text-center ml-1">{{ $newRepliesCount }}</span>
-                                @endif
-                            </a>
-                        @endunless
-
-                        @unless(request()->routeIs('hubungi.admin'))
-                            <a href="{{ route('hubungi.admin') }}" class="text-xs font-black uppercase text-black bg-white hover:bg-zinc-100 px-3.5 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded inline-flex items-center gap-1.5 group">
-                                <x-icon name="lucide-message-circle" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
-                                <span class="max-sm:hidden">Hubungi Admin</span>
-                                @if($unreadAdminRepliesCount > 0)
-                                    <span class="bg-rose-500 text-white border-2 border-black rounded-full px-1.5 py-0.5 text-[9px] min-w-[20px] text-center ml-1">{{ $unreadAdminRepliesCount }}</span>
-                                @endif
-                            </a>
-                        @endunless
-                    @endif
-
-                    @unless(request()->routeIs('profile.show'))
-                        <a href="{{ route('profile.show') }}" class="text-xs font-black uppercase text-black bg-zinc-100 hover:bg-zinc-200 border-2 border-black px-3.5 py-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] rounded max-sm:hidden inline-flex items-center gap-1.5 cursor-pointer transition-all" title="Profil Saya">
-                            @if(auth()->user()->avatar_url)
-                                <img src="{{ auth()->user()->avatar_url }}" alt="" class="w-5 h-5 rounded-md object-cover border border-black shrink-0" />
-                            @else
-                                <x-icon name="lucide-user" class="w-4 h-4 text-black stroke-[2.5]" />
-                            @endif
-                            <span>Profil Saya</span>
-                        </a>
-                    @endunless
-
-                    <form method="POST" action="{{ route('logout') }}" class="inline">
-                        @csrf
-                        <button type="submit" class="text-xs font-black uppercase text-black bg-rose-400 hover:bg-rose-300 px-3.5 py-2 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded cursor-pointer">
-                            Keluar
-                        </button>
-                    </form>
-                @else
-                    <a href="{{ route('login') }}" class="text-xs md:text-sm font-black uppercase text-black bg-white hover:bg-zinc-100 px-3.5 py-2 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded">
-                        Masuk
-                    </a>
-                    <a href="{{ route('register', ['role' => 'owner']) }}" class="text-xs md:text-sm font-black uppercase text-black bg-yellow-400 hover:bg-yellow-300 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded">
-                        Pasang Iklan
-                    </a>
-                @endauth
-            </div>
-        </div>
-    </header>
+    <x-site-navbar />
 
     <!-- Main Content -->
     <main class="flex-1">
@@ -203,24 +54,19 @@
                     <ul class="space-y-2.5 text-xs font-black uppercase">
                         @auth
                             @if(auth()->user()->role === 'owner')
-                                @unless(request()->routeIs('home'))
                                     <li>
                                         <a href="{{ route('home') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
                                             <x-icon name="lucide-house" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
                                             <span>Beranda Utama</span>
                                         </a>
                                     </li>
-                                @endunless
-                                @unless(request()->routeIs('dashboard'))
                                     <li>
                                         <a href="{{ route('dashboard') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
                                             <x-icon name="lucide-layout-grid" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
                                             <span>Dashboard Pemilik</span>
                                         </a>
                                     </li>
-                                @endunless
 
-                                @unless(request()->routeIs('dashboard.inquiries'))
                                     @php
                                         $unreadInquiriesCountMobile = \App\Models\Inquiry::where('status', 'unread')->whereHas('kost', function($q) {
                                             $q->where('user_id', auth()->id());
@@ -235,68 +81,52 @@
                                             @endif
                                         </a>
                                     </li>
-                                @endunless
-                                @unless(request()->routeIs('hubungi.admin'))
                                     <li>
                                         <a href="{{ route('hubungi.admin') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
                                             <x-icon name="lucide-message-circle" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
                                             <span>Hubungi Admin</span>
                                         </a>
                                     </li>
-                                @endunless
                             @elseif(auth()->user()->role === 'admin')
-                                @unless(request()->routeIs('home'))
                                     <li>
                                         <a href="{{ route('home') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
                                             <x-icon name="lucide-house" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
                                             <span>Beranda Utama</span>
                                         </a>
                                     </li>
-                                @endunless
-                                @unless(request()->routeIs('admin.moderation'))
                                     <li>
                                         <a href="{{ route('admin.moderation') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
                                             <x-icon name="lucide-circle-check" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
                                             <span>Moderasi Admin</span>
                                         </a>
                                     </li>
-                                @endunless
-                                @unless(request()->routeIs('admin.messages'))
                                     <li>
                                         <a href="{{ route('admin.messages') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
                                             <x-icon name="lucide-message-square-text" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
                                             <span>Inbox Bantuan</span>
                                         </a>
                                     </li>
-                                @endunless
                             @else
-                                @unless(request()->routeIs('home'))
                                     <li>
                                         <a href="{{ route('home') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
                                             <x-icon name="lucide-house" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
                                             <span>Beranda Utama</span>
                                         </a>
                                     </li>
-                                @endunless
-                                @unless(request()->routeIs('user.inquiries'))
                                     <li>
                                         <a href="{{ route('user.inquiries') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
                                             <x-icon name="lucide-send" class="w-4 h-4 text-black group-hover:scale-110 transition-transform stroke-[2.5]" />
                                             <span>Pesan Terkirim</span>
                                         </a>
                                     </li>
-                                @endunless
-                                @unless(request()->routeIs('hubungi.admin'))
                                     <li>
                                         <a href="{{ route('hubungi.admin') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
                                             <x-icon name="lucide-message-circle" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
                                             <span>Hubungi Admin</span>
                                         </a>
                                     </li>
-                                @endunless
                             @endif
 
-                            @unless(request()->routeIs('profile.show'))
                                 <li>
                                     <a href="{{ route('profile.show') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
                                         @if(auth()->user()->avatar_url)
@@ -307,16 +137,13 @@
                                         <span>Profil Saya</span>
                                     </a>
                                 </li>
-                            @endunless
                         @else
-                            @unless(request()->routeIs('home'))
                                 <li>
                                     <a href="{{ route('home') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
                                         <x-icon name="lucide-house" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
                                         <span>Beranda Utama</span>
                                     </a>
                                 </li>
-                            @endunless
                             <li>
                                 <a href="{{ route('login') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
                                     <x-icon name="lucide-log-in" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />

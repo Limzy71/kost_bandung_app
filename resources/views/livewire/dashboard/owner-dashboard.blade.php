@@ -105,7 +105,7 @@
                             @click="$wire.closeDeleteModal()"
                             class="text-black hover:bg-black/10 p-1.5 rounded font-black cursor-pointer transition-colors"
                         >
-                            ✕
+                            <x-icon name="lucide-x" class="w-4 h-4 stroke-[2.5]" />
                         </button>
                     </div>
 
@@ -115,47 +115,59 @@
                         <span class="bg-rose-100 border-b-2 border-rose-400 px-1 font-black">"{{ $deleteTargetName }}"</span>.
                     </p>
 
-                    <div class="mt-4 border-2 border-black bg-rose-50 p-3 rounded-lg">
+                    <div class="mt-4 border-2 border-black bg-rose-50 p-3 rounded-lg flex items-start gap-2">
+                        <x-icon name="lucide-triangle-alert" class="w-4 h-4 text-rose-700 stroke-[2.5] shrink-0 mt-0.5" />
                         <p class="text-[11px] font-black uppercase text-rose-700 leading-relaxed">
-                            ⚠ Tindakan ini PERMANEN. Seluruh foto, harga sewa, dan pesan masuk terkait kost ini akan dihapus dari sistem dan TIDAK dapat dipulihkan.
+                            Tindakan ini PERMANEN. Seluruh foto, harga sewa, dan pesan masuk terkait kost ini akan dihapus dari sistem dan TIDAK dapat dipulihkan.
                         </p>
                     </div>
 
-                    <div class="mt-4">
+                    <div class="mt-4" x-data="{ showConfirmError: false }">
                         <label for="delete-confirm-text" class="text-[10px] font-black uppercase text-zinc-500 tracking-wider">Ketik "HAPUS" untuk mengonfirmasi</label>
                         <input 
                             id="delete-confirm-text"
                             type="text"
                             wire:model.live="deleteConfirmText"
+                            @input="showConfirmError = false"
                             placeholder="HAPUS"
                             class="mt-1 w-full bg-white border-2 border-black rounded-lg px-3 py-2.5 text-xs font-black uppercase text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                         >
+                        <p x-show="showConfirmError" x-transition class="text-[11px] font-black text-rose-600 mt-1.5 flex items-center gap-1">
+                            <x-icon name="lucide-circle-alert" class="w-3.5 h-3.5 stroke-[2.5] shrink-0" />
+                            Anda wajib mengetik HAPUS untuk melanjutkan.
+                        </p>
                         @error('deleteConfirmText')
                             <p class="text-[11px] font-black text-rose-600 mt-1">{{ $message }}</p>
                         @enderror
-                    </div>
 
-                    <div class="flex items-center gap-2 mt-6">
-                        <button 
-                            type="button"
-                            wire:click="closeDeleteModal"
-                            class="flex-1 h-10 px-3 bg-zinc-100 hover:bg-zinc-200 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer"
-                        >
-                            Batal
-                        </button>
-                        <button 
-                            type="button"
-                            wire:click="deleteKost"
-                            wire:loading.attr="disabled"
-                            @if(mb_strtoupper($deleteConfirmText) !== 'HAPUS') disabled @endif
-                            class="flex-1 h-10 px-3 bg-rose-500 hover:bg-rose-400 disabled:bg-zinc-300 disabled:cursor-not-allowed disabled:shadow-none disabled:hover:bg-zinc-300 text-white border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer"
-                        >
-                            <span wire:loading.remove wire:target="deleteKost">Hapus Permanen</span>
-                            <span wire:loading.inline-flex wire:target="deleteKost" class="items-center gap-1.5 whitespace-nowrap">
-                                <x-icon name="lucide-loader-circle" class="animate-spin h-4 w-4 text-white shrink-0" />
-                                <span>Menghapus...</span>
-                            </span>
-                        </button>
+                        <div class="flex items-center gap-2 mt-6">
+                            <button 
+                                type="button"
+                                wire:click="closeDeleteModal"
+                                class="flex-1 h-10 px-3 bg-zinc-100 hover:bg-zinc-200 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer"
+                            >
+                                Batal
+                            </button>
+                            <button 
+                                type="button"
+                                @click="
+                                    if ($wire.deleteConfirmText.trim().toUpperCase() !== 'HAPUS') {
+                                        showConfirmError = true;
+                                    } else {
+                                        showConfirmError = false;
+                                        $wire.deleteKost();
+                                    }
+                                "
+                                wire:loading.attr="disabled"
+                                class="flex-1 h-10 px-3 bg-rose-500 hover:bg-rose-400 text-white border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer"
+                            >
+                                <span wire:loading.remove wire:target="deleteKost">Hapus Permanen</span>
+                                <span wire:loading.inline-flex wire:target="deleteKost" class="items-center gap-1.5 whitespace-nowrap">
+                                    <x-icon name="lucide-loader-circle" class="animate-spin h-4 w-4 text-white shrink-0" />
+                                    <span>Menghapus...</span>
+                                </span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

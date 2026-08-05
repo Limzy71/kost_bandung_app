@@ -252,12 +252,15 @@
         <div
             x-data="{ deleteAccountModalOpen: @entangle('deleteAccountModalOpen') }"
             @open-delete-account-modal.window="deleteAccountModalOpen = true"
-            x-show="deleteAccountModalOpen"
-            x-cloak
-            x-transition.opacity.duration.200ms
-            class="fixed inset-0 z-[60] flex items-center justify-center p-4"
         >
-            <div class="absolute inset-0 bg-black/70" @click="deleteAccountModalOpen = false"></div>
+            <template x-teleport="body">
+                <div
+                    x-show="deleteAccountModalOpen"
+                    x-cloak
+                    x-transition.opacity.duration.200ms
+                    class="fixed inset-0 z-[100] flex items-center justify-center p-4"
+                >
+                    <div class="absolute inset-0 bg-black/70" @click="deleteAccountModalOpen = false"></div>
             <div
                 x-show="deleteAccountModalOpen"
                 x-transition:enter="transition ease-out duration-200"
@@ -303,18 +306,23 @@
                     </button>
                 </div>
             </div>
+            </template>
         </div>
         @endif
 
         <!-- Delete Avatar Modal -->
+        <!-- Delete Avatar Modal -->
         <div 
             x-data="{ open: false }"
             @open-delete-avatar-modal.window="open = true"
-            x-show="open"
-            x-cloak
-            x-transition.opacity.duration.200ms
-            class="fixed inset-0 z-50 flex items-center justify-center p-4"
         >
+            <template x-teleport="body">
+                <div
+                    x-show="open"
+                    x-cloak
+                    x-transition.opacity.duration.200ms
+                    class="fixed inset-0 z-[100] flex items-center justify-center p-4"
+                >
             <div class="absolute inset-0 bg-black/70" @click="open = false"></div>
             <div 
                 x-show="open"
@@ -351,6 +359,8 @@
                     </button>
                 </div>
             </div>
+                </div>
+            </template>
         </div>
     </div>
 </div>

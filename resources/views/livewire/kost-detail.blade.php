@@ -762,8 +762,9 @@
     </div>
 
     <!-- Neo-Brutalist Inquiry Modal -->
-    <div x-show="showModal" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-0">
-        <!-- Backdrop -->
+    <template x-teleport="body">
+        <div x-show="showModal" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-0">
+            <!-- Backdrop -->
         <div x-show="showModal" x-transition.opacity class="fixed inset-0 bg-black/60 backdrop-blur-sm"
             @click="showModal = false"></div>
 
@@ -868,7 +869,7 @@
                 @endguest
             </div>
         </div>
-    </div>
+    </template>
 
     <!-- Success Toast Notification Neo-Brutalist -->
     @if (session()->has('success'))
@@ -893,66 +894,68 @@
     @endif
 
     <!-- Neo-Brutalist Photo Lightbox Modal -->
-    <div x-show="showGalleryModal" x-cloak
-        x-transition:enter="transition ease-out duration-200"
-        x-transition:enter-start="opacity-0"
-        x-transition:enter-end="opacity-100"
-        x-transition:leave="transition ease-in duration-150"
-        x-transition:leave-start="opacity-100"
-        x-transition:leave-end="opacity-0"
-        class="fixed inset-0 z-[100] bg-zinc-950/98 backdrop-blur-md flex flex-col justify-between select-none"
-        @keydown.escape.window="showGalleryModal = false"
-        @keydown.left.window="if(showGalleryModal) prevImage()"
-        @keydown.right.window="if(showGalleryModal) nextImage()">
+    <template x-teleport="body">
+        <div x-show="showGalleryModal" x-cloak
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            class="fixed inset-0 z-[100] bg-zinc-950/98 backdrop-blur-md flex flex-col justify-between select-none"
+            @keydown.escape.window="showGalleryModal = false"
+            @keydown.left.window="if(showGalleryModal) prevImage()"
+            @keydown.right.window="if(showGalleryModal) nextImage()">
 
-        <!-- Top Bar -->
-        <div class="w-full h-16 px-6 bg-zinc-900 border-b-2 border-zinc-800 flex items-center justify-between z-50 shrink-0">
-            <!-- Left: Badge Counter -->
-            <div class="bg-[#FFE500] text-black px-3 py-1 font-black border-2 border-black text-sm uppercase rounded shadow-[2px_2px_0px_0px_rgba(255,255,255,1)]">
-                FOTO <span x-text="Number(activeIndex) + 1"></span> DARI <span x-text="images.length"></span>
+            <!-- Top Bar -->
+            <div class="w-full h-16 px-6 bg-zinc-900 border-b-2 border-zinc-800 flex items-center justify-between z-50 shrink-0">
+                <!-- Left: Badge Counter -->
+                <div class="bg-[#FFE500] text-black px-3 py-1 font-black border-2 border-black text-sm uppercase rounded shadow-[2px_2px_0px_0px_rgba(255,255,255,1)]">
+                    FOTO <span x-text="Number(activeIndex) + 1"></span> DARI <span x-text="images.length"></span>
+                </div>
+
+                <!-- Right: Close Button -->
+                <button type="button" @click="showGalleryModal = false"
+                    class="px-4 py-2 bg-[#FFE500] hover:bg-yellow-400 text-black border-3 border-black font-black text-xs uppercase shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center gap-2 cursor-pointer">
+                    <x-icon name="lucide-x" class="w-4 h-4 stroke-[3]" />
+                    <span>TUTUP GALERI</span>
+                </button>
             </div>
 
-            <!-- Right: Close Button -->
-            <button type="button" @click="showGalleryModal = false"
-                class="px-4 py-2 bg-[#FFE500] hover:bg-yellow-400 text-black border-3 border-black font-black text-xs uppercase shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center gap-2 cursor-pointer">
-                <x-icon name="lucide-x" class="w-4 h-4 stroke-[3]" />
-                <span>TUTUP GALERI</span>
-            </button>
-        </div>
-
-        <!-- Main Image Container -->
-        <div class="flex-1 flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
-            <!-- Left Arrow -->
-            <button type="button" @click.stop="prevImage()"
-                class="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 p-4 bg-white hover:bg-[#FFE500] text-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer z-50 rounded-xl"
-                title="Foto Sebelumnya (Panah Kiri)">
-                <x-icon name="lucide-chevron-left" class="w-6 h-6 stroke-[3]" />
-            </button>
-
-            <!-- Active Heroic Image -->
-            <img :src="images[activeIndex]"
-                class="max-h-[72vh] max-w-[85vw] w-auto h-auto object-contain border-4 border-black bg-zinc-900 shadow-[8px_8px_0px_0px_#FFE500] transition-all duration-300 rounded-xl"
-                :alt="'Foto Kost ' + (Number(activeIndex) + 1)">
-
-            <!-- Right Arrow -->
-            <button type="button" @click.stop="nextImage()"
-                class="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 p-4 bg-white hover:bg-[#FFE500] text-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer z-50 rounded-xl"
-                title="Foto Selanjutnya (Panah Kanan)">
-                <x-icon name="lucide-chevron-right" class="w-6 h-6 stroke-[3]" />
-            </button>
-        </div>
-
-        <!-- Dedicated Bottom Thumbnail Dock -->
-        <div class="w-full h-24 bg-zinc-900 border-t-2 border-zinc-800 flex items-center justify-center gap-3 px-6 overflow-x-auto shrink-0 z-50">
-            <template x-for="(img, idx) in images" :key="idx">
-                <button type="button" @click="activeIndex = Number(idx)"
-                    :class="Number(activeIndex) === Number(idx) ? 'border-[#FFE500] border-4 scale-105 shadow-[4px_4px_0px_0px_#FFE500] opacity-100' : 'border-zinc-700 opacity-50 hover:opacity-80'"
-                    class="h-16 w-24 shrink-0 cursor-pointer overflow-hidden border-2 transition-all duration-200 rounded-lg bg-zinc-800">
-                    <img :src="img" class="w-full h-full object-cover">
+            <!-- Main Image Container -->
+            <div class="flex-1 flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
+                <!-- Left Arrow -->
+                <button type="button" @click.stop="prevImage()"
+                    class="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 p-4 bg-white hover:bg-[#FFE500] text-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer z-50 rounded-xl"
+                    title="Foto Sebelumnya (Panah Kiri)">
+                    <x-icon name="lucide-chevron-left" class="w-6 h-6 stroke-[3]" />
                 </button>
-            </template>
+
+                <!-- Active Heroic Image -->
+                <img :src="images[activeIndex]"
+                    class="max-h-[72vh] max-w-[85vw] w-auto h-auto object-contain border-4 border-black bg-zinc-900 shadow-[8px_8px_0px_#FFE500] transition-all duration-300 rounded-xl"
+                    :alt="'Foto Kost ' + (Number(activeIndex) + 1)">
+
+                <!-- Right Arrow -->
+                <button type="button" @click.stop="nextImage()"
+                    class="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 p-4 bg-white hover:bg-[#FFE500] text-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer z-50 rounded-xl"
+                    title="Foto Selanjutnya (Panah Kanan)">
+                    <x-icon name="lucide-chevron-right" class="w-6 h-6 stroke-[3]" />
+                </button>
+            </div>
+
+            <!-- Dedicated Bottom Thumbnail Dock -->
+            <div class="w-full h-24 bg-zinc-900 border-t-2 border-zinc-800 flex items-center justify-center gap-3 px-6 overflow-x-auto shrink-0 z-50">
+                <template x-for="(img, idx) in images" :key="idx">
+                    <button type="button" @click="activeIndex = Number(idx)"
+                        :class="Number(activeIndex) === Number(idx) ? 'border-[#FFE500] border-4 scale-105 shadow-[4px_4px_0px_0px_#FFE500] opacity-100' : 'border-zinc-700 opacity-50 hover:opacity-80'"
+                        class="h-16 w-24 shrink-0 cursor-pointer overflow-hidden border-2 transition-all duration-200 rounded-lg bg-zinc-800">
+                        <img :src="img" class="w-full h-full object-cover">
+                    </button>
+                </template>
+            </div>
         </div>
-    </div>
+    </template>
 
 </div>
 

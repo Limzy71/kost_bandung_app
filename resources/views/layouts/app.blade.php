@@ -136,13 +136,13 @@
                     @endif
 
                     @unless(request()->routeIs('profile.show'))
-                        <a href="{{ route('profile.show') }}" class="text-xs font-black uppercase text-black bg-zinc-100 hover:bg-zinc-200 border-2 border-black px-3 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] rounded max-sm:hidden inline-flex items-center gap-1.5 cursor-pointer transition-all" title="Profil Saya">
+                        <a href="{{ route('profile.show') }}" class="text-xs font-black uppercase text-black bg-zinc-100 hover:bg-zinc-200 border-2 border-black px-3.5 py-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] rounded max-sm:hidden inline-flex items-center gap-1.5 cursor-pointer transition-all" title="Profil Saya">
                             @if(auth()->user()->avatar_url)
                                 <img src="{{ auth()->user()->avatar_url }}" alt="" class="w-5 h-5 rounded-md object-cover border border-black shrink-0" />
                             @else
                                 <x-icon name="lucide-user" class="w-4 h-4 text-black stroke-[2.5]" />
                             @endif
-                            <span class="truncate max-w-[120px] md:max-w-[150px] lg:max-w-[200px]" title="{{ auth()->user()->name }}">{{ Str::limit(auth()->user()->name, 30) }}</span>
+                            <span>Profil Saya</span>
                         </a>
                     @endunless
 

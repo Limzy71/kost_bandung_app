@@ -321,31 +321,42 @@ window.catalogMap = function (config) {
             }
         },
 
+        /** Escape HTML entities to prevent stored-XSS in map popups */
+        escapeHtml(value) {
+            return String(value ?? '')
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
+        },
+
         /** Build the popup/infoWindow HTML string for a single kost item */
         buildPopupHtml(item) {
+            const escape = (v) => this.escapeHtml(v);
             return (
                 '<div style="font-family:sans-serif;width:210px;padding:4px">' +
-                '<img src="' + item.image + '" ' +
+                '<img src="' + escape(item.image) + '" ' +
                     'style="width:100%;height:96px;object-fit:cover;border-radius:6px;' +
                     'border:2px solid #000;margin-bottom:6px" />' +
                 '<div style="display:flex;gap:4px;margin-bottom:4px">' +
                     '<span style="background:#F472B6;color:#000;font-size:9px;font-weight:900;' +
                         'text-transform:uppercase;padding:2px 6px;border:1.5px solid #000;border-radius:4px">' +
-                        item.gender + '</span>' +
+                        escape(item.gender) + '</span>' +
                     '<span style="background:#67E8F9;color:#000;font-size:9px;font-weight:900;' +
                         'text-transform:uppercase;padding:2px 6px;border:1.5px solid #000;border-radius:4px">' +
-                        item.district + '</span>' +
+                        escape(item.district) + '</span>' +
                 '</div>' +
                 '<h4 style="font-size:13px;font-weight:900;color:#000;text-transform:uppercase;' +
-                    'margin:4px 0 2px;line-height:1.2">' + item.name + '</h4>' +
+                    'margin:4px 0 2px;line-height:1.2">' + escape(item.name) + '</h4>' +
                 '<p style="font-size:10px;font-weight:700;color:#555;margin-bottom:6px;' +
-                    'white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + item.address + '</p>' +
+                    'white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + escape(item.address) + '</p>' +
                 '<div style="background:#FACC15;border:1.5px solid #000;padding:4px 8px;border-radius:6px;' +
                     'font-weight:900;font-size:12px;margin-bottom:8px;box-shadow:2px 2px 0 #000">' +
-                    item.price_full +
-                    '<span style="font-size:9px">' + item.price_unit + '</span>' +
+                    escape(item.price_full) +
+                    '<span style="font-size:9px">' + escape(item.price_unit) + '</span>' +
                 '</div>' +
-                '<a href="' + item.url + '" ' +
+                '<a href="' + escape(item.url) + '" ' +
                     'style="display:block;text-align:center;background:#FB923C;color:#000;' +
                     'border:1.5px solid #000;padding:6px;border-radius:6px;font-weight:900;' +
                     'font-size:11px;text-decoration:none;text-transform:uppercase;box-shadow:2px 2px 0 #000">' +

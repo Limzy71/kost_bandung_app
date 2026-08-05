@@ -45,6 +45,14 @@ test('hard refresh with page parameter redirects to base URL for kost search', f
     $response->assertRedirect('http://localhost');
 });
 
+test('hard refresh with page parameter keeps other filters for kost search', function () {
+    $user = User::factory()->create(['role' => 'owner']);
+    createTestKosts($user, 25);
+
+    $response = $this->get('/?search=dago&district=Coblong&page=2');
+    $response->assertRedirect('http://localhost/?search=dago&district=Coblong');
+});
+
 test('typing search in owner dashboard resets page to 1', function () {
     $user = User::factory()->create(['role' => 'owner']);
     createTestKosts($user, 25);

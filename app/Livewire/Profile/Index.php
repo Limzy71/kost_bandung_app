@@ -106,11 +106,11 @@ class Index extends Component
             $user = $this->currentUser();
             $oldAvatar = $user->avatar;
 
-            $path = $this->avatarUpload->store('avatars', 'public');
+            $path = $this->avatarUpload->store('avatars', config('filesystems.default'));
             $user->update(['avatar' => $path]);
 
             if ($oldAvatar) {
-                Storage::disk('public')->delete($oldAvatar);
+                Storage::disk(config('filesystems.default'))->delete($oldAvatar);
             }
 
             $this->avatarUpload = null;

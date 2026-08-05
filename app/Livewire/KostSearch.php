@@ -6,6 +6,7 @@ use App\Models\Kost;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -13,16 +14,22 @@ class KostSearch extends Component
 {
     use WithPagination;
 
+    #[Url]
     public string $search = '';
 
+    #[Url]
     public string $gender = '';
 
-    public string $price_min = '';
+    #[Url]
+    public ?string $price_min = '';
 
+    #[Url]
     public ?string $price_max = '';
 
+    #[Url]
     public string $district = '';
 
+    #[Url]
     public string $rent_period = '';
 
     // Stored as a Livewire public property so Alpine can read it via $wire.mapItems

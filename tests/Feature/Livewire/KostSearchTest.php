@@ -66,3 +66,30 @@ it('shows the actual rent period price on the search card and map', function () 
     $units = collect($test->get('mapItems'))->pluck('price_unit')->sort()->values()->all();
     expect($units)->toBe(['/bln', '/tahun']);
 });
+
+it('hydrates filters from the URL query string', function () {
+    $user = User::factory()->create();
+    Kost::create([
+        'user_id' => $user->id,
+        'name' => 'Kost Khusus Coblong',
+        'slug' => 'kost-khusus-coblong',
+        'description' => 'Deskripsi kost yang cukup panjang minimal sepuluh kata.',
+        'gender_type' => 'campur',
+        'price_monthly' => 1200000,
+        'rent_period' => 'monthly',
+        'district' => 'Coblong',
+        'address' => 'Jl. Coblong No. 1',
+        'latitude' => -6.89148,
+        'longitude' => 107.61066,
+        'is_available' => true,
+        'status' => 'published',
+        'total_rooms' => 5,
+        'available_rooms' => 2,
+    ]);
+    makePublishedKost('Kost Andir Raya', 'kost-andir-raya', 1000000, 'monthly');
+
+    $this->get('/?district=Coblong&price_min=1000000')
+        ->assertOk()
+        ->assertSee('Kost Khusus Coblong')
+        ->assertDontSee('Kost Andir Raya');
+});

@@ -167,7 +167,7 @@
     <!-- Main Content Area -->
     <div class="relative">
         <!-- Loading Overlay -->
-        <div wire:loading.delay wire:target="applyFilters, resetFilters"
+        <div wire:loading.delay wire:target="applyFilters, resetFilters, gender, district, rent_period, price_min, price_max"
             class="absolute inset-0 bg-white/70 backdrop-blur-xs z-30 flex items-center justify-center rounded-2xl border-4 border-black">
             <div class="bg-yellow-300 border-3 border-black px-6 py-4 rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex items-center gap-3">
                 <x-icon name="lucide-loader-circle" class="animate-spin h-6 w-6 text-black" />
@@ -184,7 +184,10 @@
                             <div>
                                 <!-- Image -->
                                 <div class="aspect-[4/3] bg-zinc-200 relative overflow-hidden border-b-3 border-black cursor-pointer"
-                                    onclick="window.location.href='{{ route('kost.show', $kost->slug) }}'">
+                                    role="link" tabindex="0" aria-label="Lihat detail {{ $kost->name }}"
+                                    onclick="window.location.href='{{ route('kost.show', $kost->slug) }}'"
+                                    @keydown.enter.prevent="window.location.href='{{ route('kost.show', $kost->slug) }}'"
+                                    @keydown.space.prevent="window.location.href='{{ route('kost.show', $kost->slug) }}'">
                                     @if ($kost->primaryImage)
                                         <img src="{{ Str::startsWith($kost->primaryImage->image_path, 'http') ? $kost->primaryImage->image_path : Storage::url($kost->primaryImage->image_path) }}"
                                             alt="{{ $kost->name }}"
@@ -266,7 +269,7 @@
             </div>
         @else
             <!-- Empty State: Always show when there are 0 results -->
-            <div wire:key="empty-state" x-cloak class="bg-yellow-100 border-4 border-black rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] space-y-4">
+            <div wire:key="empty-state" x-show="viewMode === 'list'" x-cloak class="bg-yellow-100 border-4 border-black rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] space-y-4">
                 <div class="w-20 h-20 bg-white border-3 border-black rounded-2xl flex items-center justify-center mx-auto text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -rotate-3">
                     <x-icon name="lucide-search" class="w-10 h-10" />
                 </div>
@@ -296,7 +299,7 @@
         @endif
 
         <!-- Full-Width Immersive Map View Mode (Always in DOM to preserve Map instance) -->
-        <div wire:key="map-view" wire:ignore x-show="viewMode === 'map' && items.length > 0" x-cloak class="w-full" @map-load-error.window="mapFailed = true">
+        <div wire:key="map-view" wire:ignore x-show="viewMode === 'map' && (items.length > 0 || $wire.district)" x-cloak class="w-full" @map-load-error.window="mapFailed = true">
             <!-- Map Container -->
             <div x-show="!mapFailed" class="relative w-full rounded-2xl border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden bg-white">
                 <div class="p-4 bg-yellow-300 border-b-3 border-black flex items-center justify-between">

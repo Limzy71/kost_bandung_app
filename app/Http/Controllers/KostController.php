@@ -11,10 +11,10 @@ class KostController extends Controller
     // Halaman Utama (Daftar Kost)
     public function index(Request $request): View|RedirectResponse
     {
-        // Redirect hard-refresh with ?page= param to clean URL so Livewire
-        // WithPagination handles paging state instead of query strings.
+        // Redirect hard-refresh with ?page= param to a clean URL (keeping other
+        // filters) so Livewire WithPagination handles paging state, not query strings.
         if ($request->has('page')) {
-            return redirect()->to(url('/'));
+            return redirect()->to($request->fullUrlWithoutQuery('page'));
         }
 
         return view('kosts.index');

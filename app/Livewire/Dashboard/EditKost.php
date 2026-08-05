@@ -736,7 +736,7 @@ class EditKost extends Component
             }
             $existingHashes[] = $hash;
 
-            $path = $photo->store('kosts');
+            $path = $photo->store('kosts', config('filesystems.default'));
 
             KostImage::create([
                 'kost_id' => $kost->id,

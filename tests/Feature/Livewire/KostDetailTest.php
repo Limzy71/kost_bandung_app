@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
 
-function kostDetailTestKost(User $owner, string $status = 'published', string $name = ''): Kost
+function kostDetailTestKost(User $owner, string $status = 'published', string $name = '', bool $isAvailable = true): Kost
 {
     $name = $name ?: 'Kost '.Str::random(6);
 
@@ -23,7 +23,7 @@ function kostDetailTestKost(User $owner, string $status = 'published', string $n
         'district' => 'Andir',
         'latitude' => -6.918,
         'longitude' => 107.584,
-        'is_available' => true,
+        'is_available' => $isAvailable,
         'status' => $status,
         'total_rooms' => 5,
         'available_rooms' => 2,
@@ -83,4 +83,61 @@ it('leaves the inquiry phone empty when the profile has no phone number', functi
         ->test(KostDetail::class, ['kost' => $kost])
         ->assertSet('inquiry_name', $seeker->name)
         ->assertSet('inquiry_phone', '');
+});
+
+it('blocks the inquiry when the kost is full', function () {
+    $owner = User::factory()->create(['role' => 'owner']);
+    $seeker = User::factory()->create(['role' => 'user']);
+    $kost = kostDetailTestKost($owner, isAvailable: false);
+
+    Livewire::actingAs($seeker)
+        ->test(KostDetail::class, ['kost' => $kost])
+        ->set('inquiry_name', 'Budi')
+        ->set('inquiry_phone', '081234567890')
+        ->set('inquiry_message', 'Apakah kamar masih tersedia?')
+        ->call('sendInquiry')
+        ->assertHasErrors('inquiry_message');
+
+    expect(Inquiry::count())->toBe(0);
+});
+
+it('blocks the inquiry when the kost becomes unpublished after the page loaded', function () {
+    $owner = User::factory()->create(['role' => 'owner']);
+    $seeker = User::factory()->create(['role' => 'user']);
+    $kost = kostDetailTestKost($owner);
+
+    $component = Livewire::actingAs($seeker)
+        ->test(KostDetail::class, ['kost' => $kost])
+        ->set('inquiry_name', 'Budi')
+        ->set('inquiry_phone', '081234567890')
+        ->set('inquiry_message', 'Apakah kamar masih tersedia?');
+
+    $kost->update(['status' => 'rejected']);
+
+    $component->call('sendInquiry')
+        ->assertHasErrors('inquiry_message');
+
+    expect(Inquiry::count())->toBe(0);
+});
+
+it('shows a notice when the kost was deleted after the page loaded', function () {
+    $owner = User::factory()->create(['role' => 'owner']);
+    $seeker = User::factory()->create(['role' => 'user']);
+    $kost = kostDetailTestKost($owner);
+
+    $component = Livewire::actingAs($seeker)
+        ->test(KostDetail::class, ['kost' => $kost])
+        ->set('inquiry_name', 'Budi')
+        ->set('inquiry_phone', '081234567890')
+        ->set('inquiry_message', 'Apakah kamar masih tersedia?');
+
+    $kost->forceDelete();
+
+    $component->call('sendInquiry')
+        ->assertSet('kostUnavailable', true)
+        ->assertDispatched('kost-unavailable')
+        ->assertSee('Kost Tidak Tersedia')
+        ->assertDontSee('Kirim Pesan ke Pemilik');
+
+    expect(Inquiry::count())->toBe(0);
 });

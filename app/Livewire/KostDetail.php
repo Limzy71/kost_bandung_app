@@ -6,6 +6,7 @@ use App\Models\Facility;
 use App\Models\Inquiry;
 use App\Models\Kost;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Component;
@@ -13,6 +14,8 @@ use Livewire\Component;
 class KostDetail extends Component
 {
     public Kost $kost;
+
+    public bool $kostUnavailable = false;
 
     public string $inquiry_name = '';
 
@@ -104,8 +107,35 @@ class KostDetail extends Component
 
     public function sendInquiry(): void
     {
+        // The $kost property is re-fetched fresh from the database on every
+        // request (Livewire lazy proxy). If the owner deleted the kost after
+        // this page was loaded, resolving it throws a ModelNotFoundException.
+        try {
+            $kost = $this->kost;
+            $kostId = $kost->id;
+            $kostStatus = $kost->status;
+            $kostAvailable = $kost->is_available;
+        } catch (ModelNotFoundException) {
+            $this->kostUnavailable = true;
+            $this->dispatch('kost-unavailable');
+
+            return;
+        }
+
+        if ($kostStatus !== 'published') {
+            $this->addError('inquiry_message', 'Kost ini sedang tidak aktif dan tidak menerima pesan saat ini.');
+
+            return;
+        }
+
+        if (! $kostAvailable) {
+            $this->addError('inquiry_message', 'Kost ini sedang PENUH dan tidak menerima pesan baru saat ini.');
+
+            return;
+        }
+
         if (auth()->guest()) {
-            session()->put('url.intended', route('kost.show', $this->kost));
+            session()->put('url.intended', route('kost.show', $kost));
             $this->redirect(route('login'));
 
             return;
@@ -125,7 +155,7 @@ class KostDetail extends Component
         RateLimiter::hit($key, 60);
 
         Inquiry::create([
-            'kost_id' => $this->kost->id,
+            'kost_id' => $kostId,
             'user_id' => Auth::id(),
             'name' => $this->inquiry_name,
             'phone_number' => $this->inquiry_phone,

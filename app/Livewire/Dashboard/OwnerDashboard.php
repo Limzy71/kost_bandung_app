@@ -28,6 +28,12 @@ class OwnerDashboard extends Component
     #[Url]
     public string $search = '';
 
+    public ?int $deleteTargetId = null;
+
+    public ?string $deleteTargetName = null;
+
+    public string $deleteConfirmText = '';
+
     /**
      * @return RedirectResponse|Redirector|null
      */
@@ -73,6 +79,53 @@ class OwnerDashboard extends Component
 
         $statusText = $kost->is_available ? 'TERSEDIA' : 'PENUH';
         $this->dispatch('show-toast', message: 'Status ketersediaan "'.$kost->name.'" diubah ke '.$statusText);
+    }
+
+    public function openDeleteModal(int $kostId): void
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        $kost = $user->kosts()->find($kostId);
+
+        if (! $kost) {
+            return;
+        }
+
+        $this->deleteTargetId = $kostId;
+        $this->deleteTargetName = $kost->name;
+        $this->deleteConfirmText = '';
+    }
+
+    public function closeDeleteModal(): void
+    {
+        $this->reset(['deleteTargetId', 'deleteTargetName', 'deleteConfirmText']);
+    }
+
+    public function deleteKost(): void
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        $kost = $user->kosts()->find($this->deleteTargetId);
+
+        if (! $kost) {
+            $this->closeDeleteModal();
+
+            return;
+        }
+
+        if (mb_strtoupper($this->deleteConfirmText) !== 'HAPUS') {
+            $this->addError('deleteConfirmText', 'Ketik "HAPUS" untuk mengonfirmasi penghapusan permanen.');
+
+            return;
+        }
+
+        $name = $kost->name;
+
+        $kost->forceDelete();
+
+        $this->closeDeleteModal();
+
+        $this->dispatch('show-toast', message: 'Properti "'.$name.'" telah DIHAPUS PERMANEN.');
     }
 
     #[Computed]

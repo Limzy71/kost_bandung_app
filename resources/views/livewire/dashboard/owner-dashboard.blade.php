@@ -70,6 +70,97 @@
             <button type="button" @click="show = false" class="ml-auto text-black hover:bg-black/10 p-1 rounded font-black text-xs cursor-pointer transition-colors">✕</button>
         </div>
 
+        <!-- Delete Confirmation Modal -->
+        @if($deleteTargetId !== null)
+            <div 
+                x-data="{ open: false }"
+                x-init="setTimeout(() => open = true, 10)"
+                x-cloak
+                class="fixed inset-0 z-50 flex items-center justify-center p-4"
+                role="dialog"
+                aria-modal="true"
+            >
+                <!-- Backdrop -->
+                <div 
+                    x-show="open"
+                    x-transition.opacity
+                    class="absolute inset-0 bg-black/70"
+                    @click="$wire.closeDeleteModal()"
+                ></div>
+
+                <!-- Modal Card -->
+                <div 
+                    x-show="open"
+                    x-transition:enter="transition ease-out duration-200"
+                    x-transition:enter-start="opacity-0 scale-95"
+                    x-transition:enter-end="opacity-100 scale-100"
+                    class="relative w-full max-w-md bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-2xl p-6"
+                >
+                    <div class="flex items-start justify-between gap-4">
+                        <div class="w-12 h-12 bg-rose-500 border-2 border-black rounded-lg flex items-center justify-center text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] shrink-0">
+                            <x-icon name="lucide-trash-2" class="w-6 h-6 stroke-[2.5]" />
+                        </div>
+                        <button 
+                            type="button"
+                            @click="$wire.closeDeleteModal()"
+                            class="text-black hover:bg-black/10 p-1.5 rounded font-black cursor-pointer transition-colors"
+                        >
+                            ✕
+                        </button>
+                    </div>
+
+                    <h3 class="text-xl font-black text-black uppercase tracking-tight mt-4">Hapus Kost Permanen?</h3>
+                    <p class="text-xs font-bold text-zinc-600 mt-2 leading-relaxed">
+                        Anda akan menghapus kost 
+                        <span class="bg-rose-100 border-b-2 border-rose-400 px-1 font-black">"{{ $deleteTargetName }}"</span>.
+                    </p>
+
+                    <div class="mt-4 border-2 border-black bg-rose-50 p-3 rounded-lg">
+                        <p class="text-[11px] font-black uppercase text-rose-700 leading-relaxed">
+                            ⚠ Tindakan ini PERMANEN. Seluruh foto, harga sewa, dan pesan masuk terkait kost ini akan dihapus dari sistem dan TIDAK dapat dipulihkan.
+                        </p>
+                    </div>
+
+                    <div class="mt-4">
+                        <label for="delete-confirm-text" class="text-[10px] font-black uppercase text-zinc-500 tracking-wider">Ketik "HAPUS" untuk mengonfirmasi</label>
+                        <input 
+                            id="delete-confirm-text"
+                            type="text"
+                            wire:model.live="deleteConfirmText"
+                            placeholder="HAPUS"
+                            class="mt-1 w-full bg-white border-2 border-black rounded-lg px-3 py-2.5 text-xs font-black uppercase text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                        >
+                        @error('deleteConfirmText')
+                            <p class="text-[11px] font-black text-rose-600 mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="flex items-center gap-2 mt-6">
+                        <button 
+                            type="button"
+                            wire:click="closeDeleteModal"
+                            class="flex-1 h-10 px-3 bg-zinc-100 hover:bg-zinc-200 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer"
+                        >
+                            Batal
+                        </button>
+                        <button 
+                            type="button"
+                            wire:click="deleteKost"
+                            wire:loading.attr="disabled"
+                            @if(mb_strtoupper($deleteConfirmText) !== 'HAPUS') disabled @endif
+                            class="flex-1 h-10 px-3 bg-rose-500 hover:bg-rose-400 disabled:bg-zinc-300 disabled:cursor-not-allowed disabled:shadow-none disabled:hover:bg-zinc-300 text-white border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer"
+                        >
+                            <span wire:loading.remove wire:target="deleteKost">Hapus Permanen</span>
+                            <span wire:loading.inline-flex wire:target="deleteKost" class="items-center gap-1.5 whitespace-nowrap">
+                                <x-icon name="lucide-loader-circle" class="animate-spin h-4 w-4 text-white shrink-0" />
+                                <span>Menghapus...</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <!-- Quick Stats Overview Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Card 1: Total Properti -->
@@ -289,6 +380,22 @@
                                         <x-icon name="lucide-arrow-right" class="w-3.5 h-3.5 stroke-[3]" />
                                     </a>
                                 </div>
+
+                                <!-- Delete Button -->
+                                <button 
+                                    wire:click="openDeleteModal({{ $kost->id }})" 
+                                    wire:loading.attr="disabled"
+                                    class="w-full h-10 px-3.5 bg-rose-500 hover:bg-rose-400 text-white border-2 border-black text-xs font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer flex items-center justify-center gap-1.5"
+                                >
+                                    <span wire:loading.remove wire:target="openDeleteModal({{ $kost->id }})" class="inline-flex items-center gap-1.5 whitespace-nowrap">
+                                        <x-icon name="lucide-trash-2" class="w-4 h-4 stroke-[2.5] shrink-0" />
+                                        <span>Hapus Kost</span>
+                                    </span>
+                                    <span wire:loading.inline-flex wire:target="openDeleteModal({{ $kost->id }})" class="items-center gap-1.5 whitespace-nowrap">
+                                        <x-icon name="lucide-loader-circle" class="animate-spin h-4 w-4 text-white shrink-0" />
+                                        <span>Memproses...</span>
+                                    </span>
+                                </button>
                             </div>
                         </div>
                     @endforeach

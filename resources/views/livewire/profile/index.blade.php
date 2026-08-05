@@ -110,7 +110,7 @@
                 </div>
 
                 <div class="flex-1 text-center sm:text-left space-y-2">
-                    <h2 class="text-2xl md:text-3xl font-black text-black uppercase tracking-tight">{{ $user->name }}</h2>
+                    <h2 class="text-2xl md:text-3xl font-black text-black uppercase tracking-tight break-all">{{ $user->name }}</h2>
                     <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
                         <span class="px-2.5 py-1 {{ $roleConfig['badge'] }} border-2 border-black text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1">
                             <x-icon :name="$roleConfig['icon']" class="w-3 h-3 stroke-[2.5]" />

@@ -29,11 +29,15 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property string|null $two_factor_recovery_codes
  * @property Carbon|null $two_factor_confirmed_at
  * @property string|null $remember_token
+ * @property Carbon|null $identity_verified_at
+ * @property string|null $identity_doc_path
+ * @property string $identity_verification_status
+ * @property string|null $identity_rejection_note
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read string|null $avatar_url
  */
-#[Fillable(['name', 'email', 'avatar', 'phone_number', 'business_name', 'password', 'role'])]
+#[Fillable(['name', 'email', 'avatar', 'phone_number', 'business_name', 'password', 'role', 'identity_doc_path', 'identity_verification_status', 'identity_verified_at', 'identity_rejection_note'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
@@ -49,8 +53,30 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     {
         return [
             'email_verified_at' => 'datetime',
+            'identity_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Check whether the owner's identity (KTP) has been verified by admin.
+     */
+    public function isIdentityVerified(): bool
+    {
+        return $this->identity_verification_status === 'verified';
+    }
+
+    /**
+     * Human-readable label for the identity verification status.
+     */
+    public function identityStatusLabel(): string
+    {
+        return [
+            'unverified' => 'Belum Diverifikasi',
+            'pending' => 'Menunggu Verifikasi',
+            'verified' => 'Identitas Terverifikasi',
+            'rejected' => 'Dokumen Ditolak',
+        ][$this->identity_verification_status] ?? 'Belum Diverifikasi';
     }
 
     /**
@@ -70,6 +96,16 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     {
         if ($this->avatar) {
             Storage::disk(config('filesystems.default'))->delete($this->avatar);
+        }
+    }
+
+    /**
+     * Delete the identity document file from storage if present.
+     */
+    public function deleteIdentityDocumentFile(): void
+    {
+        if ($this->identity_doc_path) {
+            Storage::disk(config('filesystems.default'))->delete($this->identity_doc_path);
         }
     }
 

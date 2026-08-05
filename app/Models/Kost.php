@@ -49,6 +49,11 @@ class Kost extends Model
         'nearby_landmarks',
         'additional_rules_note',
         'boosted_at',
+        'ownership_doc_type',
+        'ownership_doc_path',
+        'ownership_verification_status',
+        'ownership_verified_at',
+        'ownership_rejection_note',
     ];
 
     protected $casts = [
@@ -61,7 +66,10 @@ class Kost extends Model
         'latitude' => 'decimal:8',
         'longitude' => 'decimal:8',
         'boosted_at' => 'datetime',
+        'ownership_verified_at' => 'datetime',
     ];
+
+    public const OWNERSHIP_DOC_TYPES = ['pbb', 'surat_kuasa'];
 
     /**
      * @return BelongsTo<User, $this>
@@ -191,5 +199,70 @@ class Kost extends Model
             'six_monthly' => '/6 bln',
             'yearly' => '/tahun',
         ][$period ?? ''] ?? '/bln';
+    }
+
+    /**
+     * Check whether the ownership proof of this kost has been verified by admin.
+     */
+    public function isOwnershipVerified(): bool
+    {
+        return $this->ownership_verification_status === 'verified';
+    }
+
+    /**
+     * A kost is fully verified when the owner identity (KTP) AND the
+     * per-property ownership proof have both been approved by admin.
+     */
+    public function isVerified(): bool
+    {
+        return $this->user !== null
+            && $this->user->isIdentityVerified()
+            && $this->isOwnershipVerified();
+    }
+
+    /**
+     * Human-readable label for the ownership verification status.
+     */
+    public function ownershipStatusLabel(): string
+    {
+        return [
+            'unverified' => 'Belum Diverifikasi',
+            'pending' => 'Menunggu Verifikasi',
+            'verified' => 'Kepemilikan Terverifikasi',
+            'rejected' => 'Dokumen Ditolak',
+        ][$this->ownership_verification_status] ?? 'Belum Diverifikasi';
+    }
+
+    /**
+     * Human-readable label for the ownership document type.
+     */
+    public function ownershipDocTypeLabel(): string
+    {
+        return [
+            'pbb' => 'Bukti Pembayaran Pajak (SPPT PBB)',
+            'shm' => 'Sertifikat Kepemilikan (SHM)',
+            'surat_kuasa' => 'Surat Kuasa dari Pemilik',
+        ][$this->ownership_doc_type] ?? 'Dokumen Kepemilikan';
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public static function ownershipDocTypeLabels(): array
+    {
+        return [
+            'pbb' => 'Bukti Pembayaran Pajak (SPPT PBB)',
+            'surat_kuasa' => 'Surat Kuasa dari Pemilik',
+        ];
+    }
+
+    /**
+     * Delete the ownership document file from storage if present.
+     */
+    public function deleteOwnershipDocumentFile(): void
+    {
+        if ($this->ownership_doc_path) {
+            Storage::disk(config('filesystems.default'))->delete($this->ownership_doc_path);
+        }
     }
 }

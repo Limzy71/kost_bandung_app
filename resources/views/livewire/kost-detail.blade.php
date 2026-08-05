@@ -817,6 +817,7 @@
                             </div>
                         @else
                             <input type="text" wire:model="inquiry_phone"
+                                inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                                 class="w-full bg-zinc-100 border-3 border-black rounded-xl px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:bg-white focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
                                 placeholder="Contoh: 081234567890">
                             @error('inquiry_phone')

@@ -176,6 +176,7 @@
                         <div>
                             <label for="phone_number" class="block text-xs font-black uppercase text-black mb-1.5">Nomor WhatsApp</label>
                             <input type="text" id="phone_number" wire:model="phone_number"
+                                inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                                 class="w-full px-4 py-3 text-sm bg-white border-3 border-black rounded-lg text-black font-bold placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
                                 placeholder="Contoh: 081234567890">
                             @error('phone_number') <p class="text-xs font-black text-rose-500 mt-1 uppercase">{{ $message }}</p> @enderror

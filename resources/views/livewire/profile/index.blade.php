@@ -21,9 +21,10 @@
                         <x-icon :name="$roleConfig['icon']" class="w-3.5 h-3.5 stroke-[2.5]" />
                         <span>{{ $roleConfig['label'] }}</span>
                     </span>
-                    @if ($user->role === 'owner')
-                        <span class="px-3 py-1 bg-white text-black border-2 border-black font-extrabold text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                            Akun Terverifikasi
+                    @if ($user->role === 'owner' && $user->isIdentityVerified())
+                        <span class="px-3 py-1 bg-emerald-300 text-black border-2 border-black font-extrabold text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1">
+                            <x-icon name="lucide-badge-check" class="w-3.5 h-3.5 stroke-[2.5]" />
+                            <span>Identitas Terverifikasi</span>
                         </span>
                     @endif
                 </div>

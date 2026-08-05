@@ -1594,10 +1594,7 @@
 
             <!-- Seksi 7: Verifikasi Kepemilikan -->
             @php
-                $verUser = auth()->user();
-                $identityVerified = $verUser ? $verUser->isIdentityVerified() : false;
-                $identityStatus = $verUser ? (string) $verUser->identity_verification_status : 'unverified';
-                $identityRejection = $verUser ? $verUser->identity_rejection_note : null;
+                $identityVerified = auth()->user()?->isIdentityVerified() ?? false;
                 $ownershipStatus = $isEdit ? $kost->ownership_verification_status : '';
                 $ownershipRejection = $isEdit ? $kost->ownership_rejection_note : null;
             @endphp
@@ -1626,7 +1623,6 @@
                         Dokumen berikut digunakan untuk memverifikasi keaslian kost dan status Anda sebagai pemilik/pengelola
                         secara sukarela. Setelah diverifikasi, properti Anda akan mendapatkan badge
                         <span class="font-black text-black">"Terverifikasi"</span> sebagai tanda kepercayaan bagi calon penghuni.
-                        Dokumen identitas (KTP) cukup diunggah sekali dan berlaku untuk semua kost Anda.
                     </p>
                     <p class="text-xs font-bold text-zinc-700 leading-relaxed flex items-start gap-1.5">
                         <x-icon name="lucide-lock-keyhole" class="w-4 h-4 text-zinc-600 stroke-[2] shrink-0 mt-0.5" />
@@ -1637,14 +1633,14 @@
                     </p>
                 </div>
 
-                <!-- 7a. Identitas Pemilik (KTP) -->
+                <!-- 7a. Verifikasi Identitas Pemilik (KTP) -->
                 <div class="space-y-3 pt-2 border-t-2 border-black">
                     <div class="flex items-center justify-between gap-2">
                         <label class="block text-xs font-black uppercase tracking-wider text-black flex items-center gap-2">
                             <x-icon name="lucide-id-card" class="w-4 h-4 stroke-[2.5] shrink-0" />
-                            Identitas Pemilik (KTP)
+                            Verifikasi Identitas Pemilik (KTP)
                         </label>
-                        <span class="text-[10px] font-bold italic text-zinc-500">Opsional &middot; cukup sekali, berlaku untuk semua kost Anda</span>
+                        <span class="text-[10px] font-bold italic text-zinc-500">Akun &middot; sekali unggah, berlaku untuk semua kost Anda</span>
                     </div>
 
                     @if ($identityVerified)
@@ -1658,69 +1654,20 @@
                             </div>
                         </div>
                     @else
-                        @if ($identityStatus === 'pending')
-                            <div class="p-4 bg-amber-100 border-2 border-black rounded-xl flex items-center gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                                <div class="w-10 h-10 rounded bg-amber-400 border-2 border-black flex items-center justify-center shrink-0">
-                                    <x-icon name="lucide-hourglass" class="w-5 h-5 text-black stroke-[2.5]" />
-                                </div>
-                                <div>
-                                    <p class="text-xs font-black text-black uppercase">Menunggu Verifikasi Admin</p>
-                                    <p class="text-xs font-bold text-amber-800">Dokumen KTP Anda sedang ditinjau oleh tim admin.</p>
-                                </div>
-                            </div>
-                        @elseif ($identityStatus === 'rejected' && $identityRejection)
-                            <div class="p-4 bg-rose-100 border-2 border-black rounded-xl flex items-start gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                                <div class="w-10 h-10 rounded bg-rose-400 border-2 border-black flex items-center justify-center shrink-0">
-                                    <x-icon name="lucide-x-circle" class="w-5 h-5 text-black stroke-[2.5]" />
-                                </div>
-                                <div class="space-y-1">
-                                    <p class="text-xs font-black text-black uppercase">Dokumen KTP Ditolak</p>
-                                    <p class="text-xs font-bold text-rose-800">Alasan: {{ $identityRejection }}</p>
-                                    <p class="text-xs font-bold text-zinc-700">Silakan unggah ulang KTP yang jelas di bawah ini.</p>
-                                </div>
-                            </div>
-                        @endif
-
-                        <div class="space-y-3"
-                            x-data="{ uploading: false, progress: 0 }"
-                            x-on:livewire-upload-start="uploading = true; progress = 0"
-                            x-on:livewire-upload-finish="uploading = false; progress = 100"
-                            x-on:livewire-upload-error="uploading = false; progress = 0"
-                            x-on:livewire-upload-progress="progress = $event.detail.progress">
-                            <div class="relative border-3 border-dashed border-black rounded-xl p-6 text-center bg-zinc-50 hover:bg-yellow-100/70 transition-all cursor-pointer shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                                <input type="file" wire:model="identity_doc" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
-                                <div class="space-y-2 pointer-events-none">
-                                    <div class="w-11 h-11 rounded-lg bg-white border-2 border-black flex items-center justify-center mx-auto text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                        <x-icon name="lucide-id-card" class="w-5 h-5 stroke-[2]" />
-                                    </div>
-                                    <p class="text-xs font-black text-black uppercase">
-                                        {{ $identityStatus === 'rejected' ? 'Unggah Ulang Foto KTP' : 'Klik atau seret foto KTP ke area ini' }}
-                                    </p>
-                                    <p class="text-xs font-bold text-zinc-600">Format: JPG, PNG, WEBP &middot; Maks 2MB</p>
-                                </div>
-                            </div>
-
-                            @if ($identity_doc)
-                                <div class="bg-lime-100 border-3 border-black p-3 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] space-y-2">
-                                    <p class="text-[10px] font-black uppercase text-black flex items-center gap-2">
-                                        <x-icon name="lucide-file-check" class="w-3.5 h-3.5 stroke-[2.5]" />
-                                        Pratinjau KTP Terpilih
-                                    </p>
-                                    <img src="{{ $identity_doc->temporaryUrl() }}" alt="Pratinjau KTP"
-                                        class="w-full max-h-52 object-contain rounded-lg border-2 border-black bg-white">
-                                </div>
-                            @endif
-
-                            <div x-show="uploading" x-cloak class="space-y-1.5">
-                                <div class="w-full bg-white border-2 border-black rounded-lg h-5 p-0.5 relative overflow-hidden">
-                                    <div class="bg-lime-400 border-r-2 border-black h-full transition-all duration-300" :style="'width: ' + progress + '%'"></div>
-                                </div>
-                                <p class="text-[10px] font-black uppercase text-zinc-600" x-text="'Mengunggah ' + progress + '%'"></p>
-                            </div>
-
-                            @error('identity_doc')
-                                <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md inline-block">{{ $message }}</p>
-                            @enderror
+                        <div class="p-4 bg-yellow-100 border-2 border-black rounded-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                            <p class="text-xs font-bold text-zinc-700 leading-relaxed flex items-start gap-1.5">
+                                <x-icon name="lucide-info" class="w-4 h-4 text-black stroke-[2.5] shrink-0 mt-0.5" />
+                                <span>
+                                    Upload foto KTP dilakukan di halaman
+                                    <span class="font-black text-black">Profil</span>, bukan di form ini. Dokumen
+                                    disimpan rahasia, hanya admin yang dapat melihatnya (sesuai UU PDP).
+                                </span>
+                            </p>
+                            <a href="{{ route('profile.show') }}"
+                                class="inline-flex items-center justify-center gap-1.5 bg-lime-400 hover:bg-lime-300 text-black border-2 border-black font-black text-xs uppercase px-4 py-2.5 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg shrink-0">
+                                <x-icon name="lucide-id-card" class="w-4 h-4 stroke-[2.5]" />
+                                Kelola di Profil
+                            </a>
                         </div>
                     @endif
                 </div>

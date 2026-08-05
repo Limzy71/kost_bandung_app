@@ -36,7 +36,7 @@
                 <span class="px-3 py-1 bg-yellow-300 text-black border-2 border-black font-black text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                     Control Panel Admin
                 </span>
-                <span class="px-3 py-1 bg-cyan-300 text-black border-2 border-black font-black text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1.5">
+                <span class="px-3 py-1 bg-emerald-300 text-black border-2 border-black font-black text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1.5">
                     <x-icon name="lucide-clock" class="w-3.5 h-3.5 stroke-[2.5]" />
                     Dibalas maksimal 1x24 jam
                 </span>
@@ -65,7 +65,7 @@
                         </span>
                         Belum Dibalas ({{ $counts['unanswered'] }})
                     </button>
-                    <button wire:click="setFilter('open')" class="px-4 py-2 border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg {{ $filter === 'open' ? 'bg-cyan-400 text-black' : 'bg-white text-black hover:bg-cyan-100' }}">
+                    <button wire:click="setFilter('open')" class="px-4 py-2 border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg {{ $filter === 'open' ? 'bg-emerald-400 text-black' : 'bg-white text-black hover:bg-emerald-100' }}">
                         <x-icon name="lucide-circle" class="w-3.5 h-3.5 inline -mt-0.5 mr-1 {{ $filter === 'open' ? 'fill-black' : '' }}" />
                         Aktif ({{ $counts['open'] }})
                     </button>
@@ -84,7 +84,7 @@
                         >
                             <div class="flex items-center justify-between gap-3">
                                 <div class="flex items-center gap-2 min-w-0">
-                                    <div class="w-8 h-8 shrink-0 rounded-lg border-2 border-black flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] {{ $conversation->sender_role === 'owner' ? 'bg-cyan-300' : 'bg-yellow-300' }}">
+                                    <div class="w-8 h-8 shrink-0 rounded-lg border-2 border-black flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] {{ $conversation->sender_role === 'owner' ? 'bg-emerald-300' : 'bg-yellow-300' }}">
                                         <x-icon name="{{ $conversation->sender_role === 'owner' ? 'lucide-building-2' : 'lucide-user' }}" class="w-4 h-4 text-black stroke-[2.5]" />
                                     </div>
                                     <div class="min-w-0">
@@ -104,7 +104,7 @@
                                     @if ($conversation->awaiting_reply_at)
                                         <span class="px-2 py-0.5 bg-amber-400 border-2 border-black text-[9px] font-black uppercase rounded animate-pulse">Menunggu Balasan</span>
                                     @else
-                                        <span class="px-2 py-0.5 bg-cyan-300 border-2 border-black text-[9px] font-black uppercase rounded">Menunggu User</span>
+                                        <span class="px-2 py-0.5 bg-emerald-300 border-2 border-black text-[9px] font-black uppercase rounded">Menunggu User</span>
                                     @endif
                                 @else
                                     <span class="px-2 py-0.5 bg-rose-300 border-2 border-black text-[9px] font-black uppercase rounded">
@@ -118,7 +118,7 @@
                         </button>
                     @empty
                         <div class="bg-white border-4 border-black rounded-2xl p-10 text-center shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-3">
-                            <div class="w-16 h-16 bg-cyan-200 border-3 border-black rounded-2xl flex items-center justify-center mx-auto shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                            <div class="w-16 h-16 bg-emerald-200 border-3 border-black rounded-2xl flex items-center justify-center mx-auto shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                                 <x-icon name="lucide-message-circle" class="w-8 h-8 text-black stroke-[2.5]" />
                             </div>
                             <div>
@@ -158,7 +158,7 @@
                         <div class="p-5 border-b-4 border-black bg-yellow-300 flex items-center justify-between gap-4">
                             <div class="min-w-0">
                                 <div class="flex items-center gap-2 min-w-0">
-                                    <div class="w-10 h-10 shrink-0 rounded-xl border-2 border-black flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] {{ $selected->sender_role === 'owner' ? 'bg-cyan-300' : 'bg-yellow-300' }}">
+                                    <div class="w-10 h-10 shrink-0 rounded-xl border-2 border-black flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] {{ $selected->sender_role === 'owner' ? 'bg-emerald-300' : 'bg-yellow-300' }}">
                                         <x-icon name="{{ $selected->sender_role === 'owner' ? 'lucide-building-2' : 'lucide-user' }}" class="w-5 h-5 text-black stroke-[2.5]" />
                                     </div>
                                     <div class="min-w-0">
@@ -179,7 +179,7 @@
                                                 Menunggu Balasan Admin
                                             </span>
                                         @else
-                                            <span class="px-2 py-0.5 bg-cyan-400 border-2 border-black text-[9px] font-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">Aktif</span>
+                                            <span class="px-2 py-0.5 bg-emerald-400 border-2 border-black text-[9px] font-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">Aktif</span>
                                         @endif
                                     @else
                                         <span class="px-2 py-0.5 bg-rose-400 border-2 border-black text-[9px] font-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
@@ -209,7 +209,7 @@
                                     </div>
                                 @else
                                     <div class="flex items-start gap-3">
-                                        <div class="w-9 h-9 shrink-0 border-2 border-black rounded-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] {{ $selected->sender_role === 'owner' ? 'bg-cyan-300' : 'bg-yellow-300' }}">
+                                        <div class="w-9 h-9 shrink-0 border-2 border-black rounded-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] {{ $selected->sender_role === 'owner' ? 'bg-emerald-300' : 'bg-yellow-300' }}">
                                             <x-icon name="{{ $selected->sender_role === 'owner' ? 'lucide-building-2' : 'lucide-user' }}" class="w-4 h-4 text-black stroke-[2.5]" />
                                         </div>
                                         <div class="max-w-[80%]">

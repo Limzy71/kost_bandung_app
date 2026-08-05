@@ -37,7 +37,7 @@
                     <span class="px-3 py-1 bg-yellow-300 text-black border-2 border-black font-black text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                         Hubungi Admin
                     </span>
-                    <span class="px-3 py-1 bg-cyan-300 text-black border-2 border-black font-black text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1.5">
+                    <span class="px-3 py-1 bg-emerald-300 text-black border-2 border-black font-black text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1.5">
                         <x-icon name="lucide-clock" class="w-3.5 h-3.5 stroke-[2.5]" />
                         Dibalas maksimal 1x24 jam
                     </span>
@@ -69,7 +69,7 @@
             <!-- Left: Conversation List -->
             <div class="lg:col-span-2 space-y-4">
                 <div class="flex flex-wrap items-center gap-2">
-                    <button wire:click="$set('tab', 'active')" class="px-4 py-2 border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg {{ $tab === 'active' ? 'bg-cyan-400 text-black' : 'bg-white text-black hover:bg-cyan-100' }}">
+                    <button wire:click="$set('tab', 'active')" class="px-4 py-2 border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg {{ $tab === 'active' ? 'bg-emerald-400 text-black' : 'bg-white text-black hover:bg-emerald-100' }}">
                         <x-icon name="lucide-message-circle" class="w-3.5 h-3.5 inline -mt-0.5 mr-1 {{ $tab === 'active' ? 'fill-black' : '' }}" />
                         Percakapan Aktif
                     </button>
@@ -92,7 +92,7 @@
                                         {{ \App\Models\AdminConversation::categoryLabel($conversation->category) }}
                                     </span>
                                     @if ($conversation->isOpen())
-                                        <span class="px-2 py-0.5 bg-cyan-300 border-2 border-black text-[9px] font-black uppercase rounded shrink-0">Aktif</span>
+                                        <span class="px-2 py-0.5 bg-emerald-300 border-2 border-black text-[9px] font-black uppercase rounded shrink-0">Aktif</span>
                                     @else
                                         <span class="px-2 py-0.5 bg-rose-300 border-2 border-black text-[9px] font-black uppercase rounded shrink-0">Ditutup</span>
                                     @endif
@@ -105,7 +105,7 @@
                         </button>
                     @empty
                         <div class="bg-white border-4 border-black rounded-2xl p-10 text-center shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-3">
-                            <div class="w-16 h-16 bg-cyan-200 border-3 border-black rounded-2xl flex items-center justify-center mx-auto shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                            <div class="w-16 h-16 bg-emerald-200 border-3 border-black rounded-2xl flex items-center justify-center mx-auto shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                                 <x-icon name="lucide-message-circle" class="w-8 h-8 text-black stroke-[2.5]" />
                             </div>
                             <div>
@@ -137,7 +137,7 @@
                                         {{ \App\Models\AdminConversation::categoryLabel($selected->category) }}
                                     </span>
                                     @if ($selected->isOpen())
-                                        <span class="px-2 py-0.5 bg-cyan-400 border-2 border-black text-[9px] font-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">Aktif</span>
+                                        <span class="px-2 py-0.5 bg-emerald-400 border-2 border-black text-[9px] font-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">Aktif</span>
                                     @else
                                         <span class="px-2 py-0.5 bg-rose-400 border-2 border-black text-[9px] font-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
                                             {{ $selected->closed_reason === 'expired' ? 'Ditutup Otomatis (1x24 jam)' : 'Ditutup Admin' }}
@@ -170,7 +170,7 @@
                                 @else
                                     <div class="flex items-start justify-end gap-3">
                                         <div class="max-w-[80%] text-right">
-                                            <div class="bg-cyan-300 border-2 border-black p-3 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                                            <div class="bg-emerald-300 border-2 border-black p-3 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                                                 <p class="text-sm font-bold text-black whitespace-pre-wrap">{{ $message->body }}</p>
                                             </div>
                                             <p class="text-[10px] font-black text-zinc-500 uppercase mt-1.5 mr-1">
@@ -213,7 +213,7 @@
                                         Percakapan ini sudah ditutup.
                                     </p>
                                     <button wire:click="openCompose"
-                                        class="inline-flex items-center gap-2 px-5 py-2.5 bg-cyan-300 hover:bg-cyan-200 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl cursor-pointer">
+                                        class="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-300 hover:bg-emerald-200 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl cursor-pointer">
                                         <x-icon name="lucide-message-circle-plus" class="w-4 h-4 stroke-[2.5]" />
                                         Buka Percakapan Baru
                                     </button>
@@ -283,7 +283,7 @@
                     <button wire:click="closeCompose" class="px-4 py-2.5 bg-white hover:bg-zinc-100 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer">
                         Batal
                     </button>
-                    <button wire:click="sendNewConversation" class="px-5 py-2.5 bg-cyan-400 hover:bg-cyan-300 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-2 cursor-pointer">
+                    <button wire:click="sendNewConversation" class="px-5 py-2.5 bg-emerald-400 hover:bg-emerald-300 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-2 cursor-pointer">
                         <x-icon name="lucide-send" class="w-4 h-4 stroke-[2.5]" />
                         Kirim ke Admin
                     </button>

@@ -357,10 +357,11 @@ window.catalogMap = function (config) {
                     '<span style="font-size:9px">' + escape(item.price_unit) + '</span>' +
                 '</div>' +
                 '<a href="' + escape(item.url) + '" ' +
-                    'style="display:block;text-align:center;background:#FB923C;color:#000;' +
+                    'style="display:flex;align-items:center;justify-content:center;gap:4px;background:#FB923C;color:#000;' +
                     'border:1.5px solid #000;padding:6px;border-radius:6px;font-weight:900;' +
                     'font-size:11px;text-decoration:none;text-transform:uppercase;box-shadow:2px 2px 0 #000">' +
-                    'Lihat Detail \u2192' +
+                    '<span>Lihat Detail</span>' +
+                    '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>' +
                 '</a>' +
                 '</div>'
             );

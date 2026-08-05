@@ -217,7 +217,95 @@
         @else
             @include('livewire.profile.partials.user', ['user' => $user, 'stats' => $stats])
         @endif
-        
+
+        @if ($this->showDeleteAccount)
+            @php
+                $deleteData = $user->role === 'owner'
+                    ? 'daftar kost, dokumen verifikasi (KTP dan bukti kepemilikan), foto kost, foto profil, dan riwayat pesan'
+                    : 'foto profil dan riwayat pesan';
+            @endphp
+
+            <!-- Delete Account Section -->
+            <div class="bg-white border-4 border-rose-500 p-6 md:p-8 rounded-2xl shadow-[6px_6px_0px_0px_rgba(190,18,60,1)]">
+                <div class="flex items-center gap-3 border-b-3 border-black pb-4 mb-4">
+                    <div class="w-10 h-10 bg-rose-500 border-2 border-black rounded-lg flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                        <x-icon name="lucide-trash-2" class="w-5 h-5 text-white stroke-[2.5]" />
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-black text-black uppercase tracking-tight">Hapus Akun</h2>
+                        <p class="text-xs font-bold text-zinc-600">Berhenti menggunakan KostBandung.web.id dan hapus seluruh data Anda.</p>
+                    </div>
+                </div>
+
+                <p class="text-xs font-bold text-zinc-600 leading-relaxed">
+                    Akun akan dihapus secara permanen beserta {{ $deleteData }}. Tindakan ini tidak dapat dibatalkan.
+                </p>
+
+                <button type="button" @click="$dispatch('open-delete-account-modal')"
+                    class="mt-5 bg-rose-500 hover:bg-rose-400 text-white border-3 border-black font-black text-sm uppercase px-6 py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all rounded-lg cursor-pointer inline-flex items-center gap-2">
+                    <x-icon name="lucide-trash-2" class="w-5 h-5 stroke-[2.5]" />
+                    <span>Hapus Akun</span>
+                </button>
+            </div>
+
+        <!-- Delete Account Modal -->
+        <div
+            x-data="{ deleteAccountModalOpen: @entangle('deleteAccountModalOpen') }"
+            @open-delete-account-modal.window="deleteAccountModalOpen = true"
+            x-show="deleteAccountModalOpen"
+            x-cloak
+            x-transition.opacity.duration.200ms
+            class="fixed inset-0 z-[60] flex items-center justify-center p-4"
+        >
+            <div class="absolute inset-0 bg-black/70" @click="deleteAccountModalOpen = false"></div>
+            <div
+                x-show="deleteAccountModalOpen"
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 scale-95"
+                x-transition:enter-end="opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-150"
+                x-transition:leave-start="opacity-100 scale-100"
+                x-transition:leave-end="opacity-0 scale-95"
+                class="relative w-full max-w-md bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-2xl p-6"
+            >
+                <div class="flex items-start justify-between gap-4">
+                    <div class="w-12 h-12 bg-rose-500 border-2 border-black rounded-lg flex items-center justify-center text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] shrink-0">
+                        <x-icon name="lucide-trash-2" class="w-6 h-6 stroke-[2.5]" />
+                    </div>
+                    <button type="button" @click="deleteAccountModalOpen = false" class="text-black hover:bg-black/10 p-1.5 rounded font-black cursor-pointer transition-colors">
+                        <x-icon name="lucide-x" class="w-4 h-4 stroke-[2.5]" />
+                    </button>
+                </div>
+
+                <div class="mt-4">
+                    <h3 class="text-xl font-black text-black uppercase tracking-tight">Hapus Akun Permanen?</h3>
+                    <p class="text-xs font-bold text-zinc-600 mt-2 leading-relaxed">
+                        Seluruh data akun Anda termasuk {{ $deleteData }} akan dihapus permanen dan tidak dapat dikembalikan. Masukkan password Anda untuk mengonfirmasi.
+                    </p>
+                </div>
+
+                <div class="mt-4">
+                    <label for="deletePassword" class="block text-xs font-black uppercase text-black mb-1.5">Password</label>
+                    <input type="password" id="deletePassword" wire:model="deletePassword" autocomplete="current-password"
+                        class="w-full px-4 py-3 text-sm bg-white border-3 border-black rounded-lg text-black font-bold placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+                        placeholder="Masukkan password Anda">
+                    @error('deletePassword') <p class="text-xs font-black text-rose-500 mt-1 uppercase">{{ $message }}</p> @enderror
+                </div>
+
+                <div class="flex items-center gap-2 mt-6">
+                    <button type="button" @click="deleteAccountModalOpen = false"
+                        class="flex-1 h-10 px-3 bg-zinc-100 hover:bg-zinc-200 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer">
+                        Batal
+                    </button>
+                    <button type="button" wire:click="deleteAccount"
+                        class="flex-1 h-10 px-3 bg-rose-500 hover:bg-rose-400 text-white border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer">
+                        Ya, Hapus Akun
+                    </button>
+                </div>
+            </div>
+        </div>
+        @endif
+
         <!-- Delete Avatar Modal -->
         <div 
             x-data="{ open: false }"

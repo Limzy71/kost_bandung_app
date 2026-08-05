@@ -3,6 +3,7 @@
 use App\Livewire\Profile\Index;
 use App\Models\Inquiry;
 use App\Models\Kost;
+use App\Models\KostImage;
 use App\Models\User;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Http\UploadedFile;
@@ -347,4 +348,113 @@ it('does not let a pencari kost delete an identity KTP document', function () {
     expect($user->identity_doc_path)->toBe($path);
     expect($user->identity_verification_status)->toBe('pending');
     expect(Storage::disk('verification_docs')->exists($path))->toBeTrue();
+});
+
+it('shows the delete account section to a pencari kost on the profile page', function () {
+    $user = User::factory()->create(['role' => 'user', 'email_verified_at' => now()]);
+
+    $this->actingAs($user)
+        ->get('/profil')
+        ->assertOk()
+        ->assertSee('Hapus Akun')
+        ->assertSee('foto profil dan riwayat pesan')
+        ->assertSee('open-delete-account-modal')
+        ->assertDontSee('KTP')
+        ->assertDontSee('bukti kepemilikan');
+});
+
+it('shows the delete account section to an owner on the profile page', function () {
+    $owner = User::factory()->create(['role' => 'owner', 'email_verified_at' => now()]);
+
+    $this->actingAs($owner)
+        ->get('/profil')
+        ->assertOk()
+        ->assertSee('Hapus Akun')
+        ->assertSee('KTP')
+        ->assertSee('bukti kepemilikan');
+});
+
+it('hides the delete account section from an admin', function () {
+    $admin = User::factory()->create(['role' => 'admin', 'email_verified_at' => now()]);
+
+    $this->actingAs($admin)
+        ->get('/profil')
+        ->assertOk()
+        ->assertDontSee('Hapus Akun');
+});
+
+it('lets an owner delete their account from the profile page and purges all files', function () {
+    Storage::fake('verification_docs');
+    Storage::fake('local');
+
+    $owner = User::factory()->create([
+        'role' => 'owner',
+        'email_verified_at' => now(),
+        'avatar' => 'avatars/owner.jpg',
+        'identity_doc_path' => 'verification-docs/identity/ktp.jpg',
+    ]);
+
+    Storage::disk('local')->put('avatars/owner.jpg', 'bytes');
+    Storage::disk('verification_docs')->put('verification-docs/identity/ktp.jpg', 'bytes');
+    Storage::disk('verification_docs')->put('verification-docs/ownership/pbb.jpg', 'bytes');
+
+    $kost = profileTestKost($owner);
+    $kost->update(['ownership_doc_path' => 'verification-docs/ownership/pbb.jpg']);
+
+    KostImage::create([
+        'kost_id' => $kost->id,
+        'image_path' => 'kosts/photo.jpg',
+        'is_primary' => true,
+    ]);
+    Storage::disk('local')->put('kosts/photo.jpg', 'bytes');
+
+    Livewire::actingAs($owner)
+        ->test(Index::class)
+        ->set('deletePassword', 'password')
+        ->call('deleteAccount')
+        ->assertHasNoErrors();
+
+    expect($owner->fresh())->toBeNull()
+        ->and(Kost::withTrashed()->count())->toBe(0);
+
+    Storage::disk('local')->assertMissing('avatars/owner.jpg');
+    Storage::disk('local')->assertMissing('kosts/photo.jpg');
+    Storage::disk('verification_docs')->assertMissing('verification-docs/identity/ktp.jpg');
+    Storage::disk('verification_docs')->assertMissing('verification-docs/ownership/pbb.jpg');
+});
+
+it('keeps the account and files when the wrong password is given', function () {
+    Storage::fake('verification_docs');
+    Storage::fake('local');
+
+    $owner = User::factory()->create([
+        'role' => 'owner',
+        'email_verified_at' => now(),
+        'avatar' => 'avatars/owner.jpg',
+    ]);
+    Storage::disk('local')->put('avatars/owner.jpg', 'bytes');
+    profileTestKost($owner);
+
+    Livewire::actingAs($owner)
+        ->test(Index::class)
+        ->set('deletePassword', 'wrong-password')
+        ->call('deleteAccount')
+        ->assertHasErrors(['deletePassword']);
+
+    expect($owner->fresh())->not->toBeNull()
+        ->and(Kost::count())->toBe(1);
+
+    Storage::disk('local')->assertExists('avatars/owner.jpg');
+});
+
+it('does not let an admin delete their account from the profile page', function () {
+    $admin = User::factory()->create(['role' => 'admin', 'email_verified_at' => now()]);
+
+    Livewire::actingAs($admin)
+        ->test(Index::class)
+        ->set('deletePassword', 'password')
+        ->call('deleteAccount')
+        ->assertHasNoErrors();
+
+    expect($admin->fresh())->not->toBeNull();
 });

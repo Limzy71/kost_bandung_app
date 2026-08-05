@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Profile;
 
+use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
+use App\Livewire\Actions\Logout;
 use App\Models\Facility;
 use App\Models\Inquiry;
 use App\Models\Kost;
@@ -11,6 +13,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -18,7 +21,7 @@ use Livewire\WithFileUploads;
 #[Title('Profil Saya — KostBandung.web.id')]
 class Index extends Component
 {
-    use ProfileValidationRules, WithFileUploads;
+    use PasswordValidationRules, ProfileValidationRules, WithFileUploads;
 
     public string $name = '';
 
@@ -33,6 +36,10 @@ class Index extends Component
     public mixed $avatarUpload = null;
 
     public $identity_doc = null;
+
+    public string $deletePassword = '';
+
+    public bool $deleteAccountModalOpen = false;
 
     /**
      * @var array<string, string>
@@ -199,6 +206,39 @@ class Index extends Component
         ])->save();
 
         $this->dispatch('show-toast', message: 'Dokumen KTP berhasil dihapus. Anda dapat mengunggah ulang kapan saja.');
+    }
+
+    /**
+     * Permanently delete the current account along with every uploaded file.
+     */
+    public function deleteAccount(Logout $logout): void
+    {
+        $user = $this->currentUser();
+
+        if ($user->role === 'admin') {
+            $this->deleteAccountModalOpen = false;
+
+            return;
+        }
+
+        $this->validate([
+            'deletePassword' => $this->currentPasswordRules(),
+        ], [
+            'deletePassword.required' => 'Password wajib diisi untuk menghapus akun.',
+            'deletePassword.current_password' => 'Password yang Anda masukkan salah.',
+        ]);
+
+        $user->purgeAllDataFiles();
+
+        tap($user, $logout(...))->delete();
+
+        $this->redirect('/', navigate: true);
+    }
+
+    #[Computed]
+    public function showDeleteAccount(): bool
+    {
+        return $this->currentUser()->role !== 'admin';
     }
 
     public function render(): View

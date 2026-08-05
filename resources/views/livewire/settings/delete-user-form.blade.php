@@ -16,7 +16,11 @@
                 <flux:heading size="lg">{{ __('Are you sure you want to delete your account?') }}</flux:heading>
 
                 <flux:subheading>
-                    {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
+                    @if(auth()->user()->role === 'owner')
+                        {{ __('Once your account is deleted, all of its resources and data will be permanently deleted, including your daftar kost, uploaded documents (KTP, bukti kepemilikan), foto kost, and foto profil. Please enter your password to confirm you would like to permanently delete your account.') }}
+                    @else
+                        {{ __('Once your account is deleted, all of its resources and data will be permanently deleted, including your foto profil and riwayat pesan. Please enter your password to confirm you would like to permanently delete your account.') }}
+                    @endif
                 </flux:subheading>
             </div>
 

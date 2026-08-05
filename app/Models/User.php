@@ -110,6 +110,22 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     }
 
     /**
+     * Permanently remove every file owned by this user from storage:
+     * avatar, identity document, and all kosts' ownership documents and images.
+     * Call before deleting the user record so no orphan files remain.
+     */
+    public function purgeAllDataFiles(): void
+    {
+        $this->deleteAvatarFile();
+        $this->deleteIdentityDocumentFile();
+
+        foreach (Kost::withTrashed()->where('user_id', $this->id)->get() as $kost) {
+            $kost->deleteOwnershipDocumentFile();
+            $kost->forceDelete();
+        }
+    }
+
+    /**
      * Get the user's initials
      */
     public function initials(): string

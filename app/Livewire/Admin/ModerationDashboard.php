@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Models\Facility;
 use App\Models\Kost;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -14,7 +15,7 @@ class ModerationDashboard extends Component
 
     public string $search = '';
 
-    public string $activeTab = 'pending'; // 'pending', 'published', 'rejected', 'all', 'facilities'
+    public string $activeTab = 'pending'; // 'pending', 'published', 'rejected', 'all', 'facilities', 'verification'
 
     public function updatingSearch(): void
     {
@@ -29,14 +30,16 @@ class ModerationDashboard extends Component
 
     public function approve(int $kostId): void
     {
-        $kost = Kost::find($kostId);
+        $kost = Kost::with('user')->find($kostId);
 
-        if ($kost) {
-            $kost->status = 'published';
-            $kost->save();
-
-            $this->dispatch('show-toast', message: 'Properti "'.$kost->name.'" telah DISETUJUI & TAYANG PUBLIK!');
+        if (! $kost) {
+            return;
         }
+
+        $kost->status = 'published';
+        $kost->save();
+
+        $this->dispatch('show-toast', message: 'Properti "'.$kost->name.'" telah DISETUJUI & TAYANG PUBLIK!');
     }
 
     public function reject(int $kostId): void
@@ -48,6 +51,68 @@ class ModerationDashboard extends Component
             $kost->save();
 
             $this->dispatch('show-toast', message: 'Properti "'.$kost->name.'" telah DITOLAK.');
+        }
+    }
+
+    public function approveIdentity(int $userId): void
+    {
+        $user = User::find($userId);
+
+        if ($user) {
+            $user->identity_verification_status = 'verified';
+            $user->identity_verified_at = now();
+            $user->identity_rejection_note = null;
+            $user->save();
+
+            $this->dispatch('show-toast', message: 'Identitas "'.$user->name.'" telah DISETUJUI & TERVERIFIKASI.');
+        }
+    }
+
+    public function approveOwnership(int $kostId): void
+    {
+        $kost = Kost::find($kostId);
+
+        if ($kost) {
+            $kost->ownership_verification_status = 'verified';
+            $kost->ownership_verified_at = now();
+            $kost->ownership_rejection_note = null;
+            $kost->save();
+
+            $this->dispatch('show-toast', message: 'Kepemilikan "'.$kost->name.'" telah DISETUJUI & TERVERIFIKASI.');
+        }
+    }
+
+    public function submitReject(string $type, int $id, ?string $reason = null): void
+    {
+        $note = trim((string) $reason);
+        $note = $note !== '' ? $note : 'Dokumen tidak terbaca atau tidak sesuai. Silakan unggah ulang dokumen yang jelas.';
+
+        if ($type === 'identity') {
+            $user = User::find($id);
+            if (! $user) {
+                return;
+            }
+            $user->identity_verification_status = 'rejected';
+            $user->identity_verified_at = null;
+            $user->identity_rejection_note = $note;
+            $user->save();
+
+            $this->dispatch('show-toast', message: 'Identitas "'.$user->name.'" telah DITOLAK.');
+
+            return;
+        }
+
+        if ($type === 'ownership') {
+            $kost = Kost::find($id);
+            if (! $kost) {
+                return;
+            }
+            $kost->ownership_verification_status = 'rejected';
+            $kost->ownership_verified_at = null;
+            $kost->ownership_rejection_note = $note;
+            $kost->save();
+
+            $this->dispatch('show-toast', message: 'Kepemilikan "'.$kost->name.'" telah DITOLAK.');
         }
     }
 
@@ -83,6 +148,17 @@ class ModerationDashboard extends Component
         $rejectedCount = Kost::where('status', 'rejected')->count();
         $totalCount = Kost::count();
         $pendingFacilityCount = Facility::where('status', 'pending')->count();
+        $verificationCount = User::where('identity_verification_status', 'pending')->count()
+            + Kost::where('ownership_verification_status', 'pending')->count();
+
+        $base = [
+            'pendingCount' => $pendingCount,
+            'publishedCount' => $publishedCount,
+            'rejectedCount' => $rejectedCount,
+            'totalCount' => $totalCount,
+            'pendingFacilityCount' => $pendingFacilityCount,
+            'verificationCount' => $verificationCount,
+        ];
 
         if ($this->activeTab === 'facilities') {
             $facilities = Facility::where('status', 'pending')
@@ -90,13 +166,26 @@ class ModerationDashboard extends Component
                 ->orderBy('name')
                 ->paginate(9);
 
-            return view('livewire.admin.moderation-dashboard', [
+            return view('livewire.admin.moderation-dashboard', $base + [
                 'facilities' => $facilities,
-                'pendingCount' => $pendingCount,
-                'publishedCount' => $publishedCount,
-                'rejectedCount' => $rejectedCount,
-                'totalCount' => $totalCount,
-                'pendingFacilityCount' => $pendingFacilityCount,
+            ])->layout('layouts.app', [
+                'title' => 'Moderation Dashboard — Admin KostBandung.web.id',
+            ]);
+        }
+
+        if ($this->activeTab === 'verification') {
+            $pendingIdentities = User::where('identity_verification_status', 'pending')
+                ->orderBy('updated_at')
+                ->get();
+
+            $pendingOwnerships = Kost::with(['user', 'primaryImage'])
+                ->where('ownership_verification_status', 'pending')
+                ->orderBy('updated_at')
+                ->get();
+
+            return view('livewire.admin.moderation-dashboard', $base + [
+                'pendingIdentities' => $pendingIdentities,
+                'pendingOwnerships' => $pendingOwnerships,
             ])->layout('layouts.app', [
                 'title' => 'Moderation Dashboard — Admin KostBandung.web.id',
             ]);
@@ -121,13 +210,8 @@ class ModerationDashboard extends Component
             ->orderByRaw("CASE WHEN status = 'pending' THEN 1 WHEN status = 'published' THEN 2 ELSE 3 END")
             ->latest();
 
-        return view('livewire.admin.moderation-dashboard', [
+        return view('livewire.admin.moderation-dashboard', $base + [
             'kosts' => $query->paginate(9),
-            'pendingCount' => $pendingCount,
-            'publishedCount' => $publishedCount,
-            'rejectedCount' => $rejectedCount,
-            'totalCount' => $totalCount,
-            'pendingFacilityCount' => $pendingFacilityCount,
         ])->layout('layouts.app', [
             'title' => 'Moderation Dashboard — Admin KostBandung.web.id',
         ]);

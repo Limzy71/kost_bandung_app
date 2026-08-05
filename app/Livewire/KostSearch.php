@@ -32,6 +32,9 @@ class KostSearch extends Component
     #[Url]
     public string $rent_period = '';
 
+    #[Url]
+    public bool $verified_only = false;
+
     // Stored as a Livewire public property so Alpine can read it via $wire.mapItems
     // without needing x-effect or inline JSON in HTML attributes.
     /**
@@ -69,6 +72,11 @@ class KostSearch extends Component
         $this->resetPage();
     }
 
+    public function updatedVerifiedOnly(): void
+    {
+        $this->resetPage();
+    }
+
     public function applyFilters(): void
     {
         $this->resetPage();
@@ -82,6 +90,7 @@ class KostSearch extends Component
         $this->rent_period = '';
         $this->price_min = '';
         $this->price_max = '';
+        $this->verified_only = false;
         $this->resetPage();
     }
 
@@ -99,7 +108,7 @@ class KostSearch extends Component
         }
 
         $query = Kost::query()
-            ->with(['primaryImage', 'facilities' => function ($q) {
+            ->with(['primaryImage', 'user', 'facilities' => function ($q) {
                 $q->where('status', 'approved');
             }])
             ->where('status', 'published')
@@ -126,6 +135,11 @@ class KostSearch extends Component
 
         if ($this->price_max) {
             $query->where('price_monthly', '<=', (int) $this->price_max);
+        }
+
+        if ($this->verified_only) {
+            $query->where('ownership_verification_status', 'verified')
+                ->whereHas('user', fn ($q) => $q->where('identity_verification_status', 'verified'));
         }
 
         // Compute district counts before applying the district filter

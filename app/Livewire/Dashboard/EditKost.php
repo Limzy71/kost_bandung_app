@@ -94,6 +94,18 @@ class EditKost extends Component
     public array $photos = [];
 
     /**
+     * @var TemporaryUploadedFile|null
+     */
+    public $identity_doc = null;
+
+    public string $ownership_doc_type = '';
+
+    /**
+     * @var TemporaryUploadedFile|null
+     */
+    public $ownership_doc = null;
+
+    /**
      * @var array<int, array{id: int, url: string, is_primary: bool}>
      */
     public array $existingPhotos = [];
@@ -154,6 +166,8 @@ class EditKost extends Component
             $this->landmarkList = array_values(array_filter(array_map('trim', explode(',', $this->nearby_landmarks))));
         }
         $this->additional_rules_note = (string) ($kost->additional_rules_note ?? '');
+
+        $this->ownership_doc_type = (string) ($kost->ownership_doc_type ?? '');
 
         $this->selectedFacilities = $kost->facilities()
             ->where('facilities.status', 'approved')
@@ -320,6 +334,9 @@ class EditKost extends Component
             'photos.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
             'extraPeriods' => 'nullable|array',
             'extraPeriods.*' => \Illuminate\Validation\Rule::in(Kost::allowedRentPeriods()),
+            'identity_doc' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'ownership_doc' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'ownership_doc_type' => ['required_with:ownership_doc', \Illuminate\Validation\Rule::in(Kost::OWNERSHIP_DOC_TYPES)],
         ];
     }
 
@@ -359,6 +376,14 @@ class EditKost extends Component
             'photos.*.mimes' => 'File harus berupa gambar dengan format JPG, PNG, atau WEBP.',
             'photos.*.max' => 'Ukuran setiap foto tidak boleh melebihi 2MB.',
             'extraPeriods.*.in' => 'Periode sewa tidak valid.',
+            'identity_doc.image' => 'File KTP harus berupa gambar.',
+            'identity_doc.mimes' => 'File KTP harus berformat JPG, PNG, atau WEBP.',
+            'identity_doc.max' => 'Ukuran foto KTP tidak boleh melebihi 2MB.',
+            'ownership_doc.image' => 'File dokumen harus berupa gambar.',
+            'ownership_doc.mimes' => 'File dokumen harus berformat JPG, PNG, atau WEBP.',
+            'ownership_doc.max' => 'Ukuran dokumen kepemilikan tidak boleh melebihi 2MB.',
+            'ownership_doc_type.required_with' => 'Jenis dokumen kepemilikan wajib dipilih saat mengunggah dokumen.',
+            'ownership_doc_type.in' => 'Jenis dokumen kepemilikan tidak valid.',
         ];
     }
 
@@ -668,6 +693,10 @@ class EditKost extends Component
             'additional_rules_note' => $this->additional_rules_note !== '' ? $this->additional_rules_note : null,
         ]);
 
+        if ($this->ownership_doc_type !== '') {
+            $kost->ownership_doc_type = $this->ownership_doc_type;
+        }
+
         $hasChanges = $kost->isDirty() || count($this->photos) > 0 || count($this->removeExistingIds) > 0 || $this->primaryPhotoId !== null;
 
         if (! app()->runningUnitTests()) {
@@ -679,6 +708,29 @@ class EditKost extends Component
         }
 
         $kost->save();
+
+        // Re-upload verification documents (identity KTP + ownership proof)
+        if ($this->identity_doc) {
+            $newIdentityPath = $this->identity_doc->store('verification-docs/identity', config('filesystems.default'));
+            auth()->user()->deleteIdentityDocumentFile();
+            auth()->user()->forceFill([
+                'identity_doc_path' => $newIdentityPath,
+                'identity_verification_status' => 'pending',
+                'identity_rejection_note' => null,
+            ])->save();
+            $this->identity_doc = null;
+        }
+
+        if ($this->ownership_doc) {
+            $newOwnershipPath = $this->ownership_doc->store('verification-docs/ownership', config('filesystems.default'));
+            $kost->deleteOwnershipDocumentFile();
+            $kost->forceFill([
+                'ownership_doc_path' => $newOwnershipPath,
+                'ownership_verification_status' => 'pending',
+                'ownership_rejection_note' => null,
+            ])->save();
+            $this->ownership_doc = null;
+        }
 
         // Delete removed existing photos
         if (! empty($this->removeExistingIds)) {

@@ -22,7 +22,7 @@
         @php $idStatus = $user->identity_verification_status; @endphp
 
         @if ($user->isIdentityVerified())
-            <div class="p-4 bg-emerald-100 border-2 border-black rounded-xl flex items-center gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] relative pr-32">
+            <div class="p-4 bg-emerald-100 border-2 border-black rounded-xl flex items-center gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                 <div class="w-10 h-10 rounded bg-emerald-400 border-2 border-black flex items-center justify-center shrink-0">
                     <x-icon name="lucide-badge-check" class="w-5 h-5 text-black stroke-[2.5]" />
                 </div>
@@ -31,7 +31,7 @@
                     <p class="text-xs font-bold text-emerald-800">KTP telah disetujui tim KostBandung. Properti Anda berhak atas badge "Terverifikasi".</p>
                 </div>
                 <button type="button" @click="showDeleteIdentity = true"
-                    class="absolute top-1/2 -translate-y-1/2 right-4 inline-flex items-center gap-1.5 bg-rose-100 hover:bg-rose-200 text-rose-700 border-2 border-rose-500 font-black text-[10px] uppercase px-3 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded cursor-pointer">
+                    class="ml-auto shrink-0 inline-flex items-center gap-1.5 bg-rose-500 hover:bg-rose-600 text-white border-2 border-black font-black text-[10px] uppercase px-3 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all rounded cursor-pointer">
                     <x-icon name="lucide-trash-2" class="w-3.5 h-3.5 stroke-[2.5]" />
                     Hapus
                 </button>
@@ -46,7 +46,7 @@
             </div>
         @else
             @if ($idStatus === 'pending')
-                <div class="p-4 bg-amber-100 border-2 border-black rounded-xl flex items-center gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] relative pr-32">
+                <div class="p-4 bg-amber-100 border-2 border-black rounded-xl flex items-center gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                     <div class="w-10 h-10 rounded bg-amber-400 border-2 border-black flex items-center justify-center shrink-0">
                         <x-icon name="lucide-hourglass" class="w-5 h-5 text-black stroke-[2.5]" />
                     </div>
@@ -55,13 +55,13 @@
                         <p class="text-xs font-bold text-amber-800">Dokumen KTP Anda sedang ditinjau oleh tim admin.</p>
                     </div>
                     <button type="button" @click="showDeleteIdentity = true"
-                        class="absolute top-1/2 -translate-y-1/2 right-4 inline-flex items-center gap-1.5 bg-rose-100 hover:bg-rose-200 text-rose-700 border-2 border-rose-500 font-black text-[10px] uppercase px-3 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded cursor-pointer">
+                        class="ml-auto shrink-0 inline-flex items-center gap-1.5 bg-rose-500 hover:bg-rose-600 text-white border-2 border-black font-black text-[10px] uppercase px-3 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all rounded cursor-pointer">
                         <x-icon name="lucide-trash-2" class="w-3.5 h-3.5 stroke-[2.5]" />
                         Hapus
                     </button>
                 </div>
             @elseif ($idStatus === 'rejected' && $user->identity_rejection_note)
-                <div class="p-4 bg-rose-100 border-2 border-black rounded-xl flex items-start gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] relative pr-32">
+                <div class="p-4 bg-rose-100 border-2 border-black rounded-xl flex items-start gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                     <div class="w-10 h-10 rounded bg-rose-400 border-2 border-black flex items-center justify-center shrink-0">
                         <x-icon name="lucide-x-circle" class="w-5 h-5 text-black stroke-[2.5]" />
                     </div>
@@ -71,7 +71,7 @@
                         <p class="text-xs font-bold text-zinc-700">Silakan unggah ulang KTP yang jelas di bawah ini.</p>
                     </div>
                     <button type="button" @click="showDeleteIdentity = true"
-                        class="absolute top-1/2 -translate-y-1/2 right-4 inline-flex items-center gap-1.5 bg-rose-100 hover:bg-rose-200 text-rose-700 border-2 border-rose-500 font-black text-[10px] uppercase px-3 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded cursor-pointer">
+                        class="ml-auto shrink-0 inline-flex items-center gap-1.5 bg-rose-500 hover:bg-rose-600 text-white border-2 border-black font-black text-[10px] uppercase px-3 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all rounded cursor-pointer">
                         <x-icon name="lucide-trash-2" class="w-3.5 h-3.5 stroke-[2.5]" />
                         Hapus
                     </button>

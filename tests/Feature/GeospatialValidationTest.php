@@ -37,6 +37,9 @@ class GeospatialValidationTest extends TestCase
             ->set('total_rooms', 5)
             ->set('available_rooms', 5)
             ->set('photos', [$image, $image, $image, $image])
+            ->set('identity_doc', UploadedFile::fake()->image('ktp.jpg'))
+            ->set('ownership_doc', UploadedFile::fake()->image('pbb.jpg'))
+            ->set('ownership_doc_type', 'pbb')
             ->call('save')
             ->assertHasErrors(['latitude' => 'Koordinat peta tidak berada di dalam wilayah Kecamatan yang dipilih.']);
     }
@@ -64,6 +67,9 @@ class GeospatialValidationTest extends TestCase
             ->set('total_rooms', 5)
             ->set('available_rooms', 5)
             ->set('photos', [$image, $image, $image, $image])
+            ->set('identity_doc', UploadedFile::fake()->image('ktp.jpg'))
+            ->set('ownership_doc', UploadedFile::fake()->image('pbb.jpg'))
+            ->set('ownership_doc_type', 'pbb')
             ->call('save')
             ->assertHasNoErrors(['latitude', 'district', 'longitude']);
     }
@@ -94,6 +100,9 @@ class GeospatialValidationTest extends TestCase
             ->set('total_rooms', 5)
             ->set('available_rooms', 5)
             ->set('photos', [$image, $image, $image, $image])
+            ->set('identity_doc', UploadedFile::fake()->image('ktp.jpg'))
+            ->set('ownership_doc', UploadedFile::fake()->image('pbb.jpg'))
+            ->set('ownership_doc_type', 'pbb')
             ->call('save')
             ->assertHasNoErrors(['latitude', 'district']);
 
@@ -111,6 +120,9 @@ class GeospatialValidationTest extends TestCase
             ->set('total_rooms', 5)
             ->set('available_rooms', 5)
             ->set('photos', [$image, $image, $image, $image])
+            ->set('identity_doc', UploadedFile::fake()->image('ktp.jpg'))
+            ->set('ownership_doc', UploadedFile::fake()->image('pbb.jpg'))
+            ->set('ownership_doc_type', 'pbb')
             ->call('save')
             ->assertHasNoErrors(['latitude', 'district']);
     }
@@ -138,6 +150,9 @@ class GeospatialValidationTest extends TestCase
             ->set('total_rooms', 5)
             ->set('available_rooms', 5)
             ->set('photos', [$image, $image, $image, $image])
+            ->set('identity_doc', UploadedFile::fake()->image('ktp.jpg'))
+            ->set('ownership_doc', UploadedFile::fake()->image('pbb.jpg'))
+            ->set('ownership_doc_type', 'pbb')
             ->call('save')
             ->assertHasNoErrors(['latitude', 'longitude']);
     }
@@ -164,6 +179,9 @@ class GeospatialValidationTest extends TestCase
             ->set('total_rooms', 5)
             ->set('available_rooms', 5)
             ->set('photos', [$image, $image, $image, $image])
+            ->set('identity_doc', UploadedFile::fake()->image('ktp.jpg'))
+            ->set('ownership_doc', UploadedFile::fake()->image('pbb.jpg'))
+            ->set('ownership_doc_type', 'pbb')
             ->call('save')
             ->assertHasNoErrors(['latitude', 'district', 'longitude']);
     }

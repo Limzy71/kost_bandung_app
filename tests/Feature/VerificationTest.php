@@ -91,7 +91,7 @@ it('marks an uploaded ownership document as pending and stores its path', functi
     expect($kost->ownership_verification_status)->toBe('pending');
     expect($kost->ownership_doc_type)->toBe('pbb');
     expect($kost->ownership_doc_path)->not->toBeNull();
-    expect(Storage::disk(config('filesystems.default'))->exists($kost->ownership_doc_path))->toBeTrue();
+    expect(Storage::disk('verification_docs')->exists($kost->ownership_doc_path))->toBeTrue();
 });
 
 it('requires ownership_doc_type when an ownership document is uploaded', function () {
@@ -221,13 +221,35 @@ it('restricts the verification document route to admins', function () {
         ->get(route('admin.verification.document', ['kind' => 'identity', 'id' => $user->id]))
         ->assertForbidden();
 
-    Storage::fake(config('filesystems.default'));
-    Storage::disk(config('filesystems.default'))->put('verification-docs/identity/ktp.jpg', 'image-bytes');
+    Storage::fake('verification_docs');
+    Storage::disk('verification_docs')->put('verification-docs/identity/ktp.jpg', 'image-bytes');
 
     $admin = User::factory()->create(['role' => 'admin']);
     $this->actingAs($admin)
         ->get(route('admin.verification.document', ['kind' => 'identity', 'id' => $user->id]))
         ->assertOk();
+});
+
+it('does not expose verification documents through the public storage route', function () {
+    Storage::fake('verification_docs');
+    Storage::disk('verification_docs')
+        ->put('verification-docs/identity/ktp.jpg', 'sensitive-ktp-bytes');
+
+    $this->get('/storage/verification-docs/identity/ktp.jpg')->assertNotFound();
+});
+
+it('returns 404 for a verification document with a disallowed extension', function () {
+    Storage::fake('verification_docs');
+    Storage::disk('verification_docs')->put('verification-docs/ownership/bukti.php', '<?php echo 1;');
+
+    $kost = verifTestKost(User::factory()->create());
+    $kost->ownership_doc_path = 'verification-docs/ownership/bukti.php';
+    $kost->save();
+
+    $admin = User::factory()->create(['role' => 'admin']);
+    $this->actingAs($admin)
+        ->get(route('admin.verification.document', ['kind' => 'ownership', 'id' => $kost->id]))
+        ->assertNotFound();
 });
 
 it('filters the search to verified-only kosts', function () {

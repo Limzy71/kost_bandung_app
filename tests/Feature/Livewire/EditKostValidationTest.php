@@ -139,9 +139,9 @@ it('keeps a pending facility that is still selected on save', function () {
 });
 
 it('lets the owner delete the ownership document and reset verification', function () {
-    Storage::fake(config('filesystems.default'));
+    Storage::fake('verification_docs');
     $path = 'verification-docs/ownership/pbb.jpg';
-    Storage::disk(config('filesystems.default'))->put($path, 'bytes');
+    Storage::disk('verification_docs')->put($path, 'bytes');
 
     $user = User::factory()->create();
     $kost = makeOwnerKost($user, 4);
@@ -161,5 +161,5 @@ it('lets the owner delete the ownership document and reset verification', functi
     expect($kost->ownership_verification_status)->toBe('unverified');
     expect($kost->ownership_doc_type)->toBeNull();
     expect($kost->ownership_doc_path)->toBeNull();
-    expect(Storage::disk(config('filesystems.default'))->exists($path))->toBeFalse();
+    expect(Storage::disk('verification_docs')->exists($path))->toBeFalse();
 });

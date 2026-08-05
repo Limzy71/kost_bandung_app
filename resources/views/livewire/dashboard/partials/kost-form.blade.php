@@ -693,12 +693,17 @@
                     <label for="rent_period" class="block text-xs font-black uppercase tracking-wider text-black">
                         Periode Sewa Utama <span class="text-rose-600">*</span>
                     </label>
-                    <select id="rent_period" wire:model.live="rent_period"
-                        class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-black text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer">
-                        @foreach ($rentPeriodOptions as $value => $label)
-                            <option value="{{ $value }}">{{ $label }}</option>
-                        @endforeach
-                    </select>
+                    <div class="relative w-full">
+                        <select id="rent_period" wire:model.live="rent_period"
+                            class="w-full bg-white border-2 border-black rounded-lg px-4 pr-10 py-3 text-sm font-black text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer appearance-none">
+                            @foreach ($rentPeriodOptions as $value => $label)
+                                <option value="{{ $value }}" class="font-bold text-sm text-black">{{ $label }}</option>
+                            @endforeach
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-black">
+                            <x-icon name="lucide-chevron-down" class="w-4 h-4 stroke-[3]" />
+                        </div>
+                    </div>
                     <p class="text-[11px] font-bold italic text-zinc-500">
                         Periode penyewaan utama kost. Harga utama di bawah mengikuti satuan periode ini.
                     </p>
@@ -1745,13 +1750,18 @@
                             <label for="ownership_doc_type" class="block text-xs font-black uppercase tracking-wider text-black">
                                 Jenis Dokumen
                             </label>
-                            <select id="ownership_doc_type" wire:model="ownership_doc_type"
-                                class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-black text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer">
-                                <option value="" disabled>-- Pilih Jenis Dokumen --</option>
-                                @foreach (\App\Models\Kost::ownershipDocTypeLabels() as $value => $label)
-                                    <option value="{{ $value }}">{{ $label }}</option>
-                                @endforeach
-                            </select>
+                            <div class="relative w-full">
+                                <select id="ownership_doc_type" wire:model="ownership_doc_type"
+                                    class="w-full bg-white border-2 border-black rounded-lg px-4 pr-10 py-3 text-sm font-black text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer appearance-none">
+                                    <option value="" disabled class="font-bold text-sm text-black">-- Pilih Jenis Dokumen --</option>
+                                    @foreach (\App\Models\Kost::ownershipDocTypeLabels() as $value => $label)
+                                        <option value="{{ $value }}" class="font-bold text-sm text-black">{{ $label }}</option>
+                                    @endforeach
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-black">
+                                    <x-icon name="lucide-chevron-down" class="w-4 h-4 stroke-[3]" />
+                                </div>
+                            </div>
                             @error('ownership_doc_type')
                                 <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md inline-block">{{ $message }}</p>
                             @enderror

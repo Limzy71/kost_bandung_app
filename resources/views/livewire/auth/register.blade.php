@@ -120,7 +120,7 @@
                 <label for="phone_number" class="block text-xs font-black uppercase tracking-wider text-black mb-2">
                     Nomor WhatsApp <span class="text-rose-500">*</span>
                 </label>
-                <input wire:model="phone_number" type="tel" id="phone_number" inputmode="numeric" oninput="let v = this.value.replace(/[^0-9]/g, ''); if(v.startsWith('8')) v = '0' + v; this.value = v;" maxlength="16"
+                <input wire:model="phone_number" type="tel" id="phone_number" inputmode="numeric" oninput="let v = this.value.replace(/[^0-9]/g, ''); if(v.startsWith('62')) v = '0' + v.slice(2); else if(v.length > 0 && v[0] !== '0') v = '0' + v; this.value = v;" maxlength="16"
                     class="w-full px-4 py-3 text-sm bg-zinc-50 border-3 border-black rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:bg-[#FFE500]/10 focus:border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
                     placeholder="Contoh: 081234567890">
                 @error('phone_number')

@@ -616,7 +616,7 @@
                         <div class="flex items-stretch justify-center gap-2">
                             <p class="text-sm font-black text-black bg-zinc-100 border-2 border-black py-1.5 px-3 rounded-lg inline-flex items-center gap-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] flex-1 min-w-0">
                                 <x-icon name="lucide-user" class="w-4 h-4 text-black stroke-[2.5] shrink-0" />
-                                <span class="truncate">{{ $kost->user->name ?? 'Pemilik Kost' }}</span>
+                                <span class="truncate" title="{{ $kost->user->name ?? 'Pemilik Kost' }}">{{ Str::limit($kost->user->name ?? 'Pemilik Kost', 20) }}</span>
                             </p>
                             @if ($kost->user)
                                 <a href="{{ route('profile.owner', $kost->user) }}?from=kost&kost={{ $kost->slug }}"

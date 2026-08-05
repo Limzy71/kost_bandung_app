@@ -94,7 +94,7 @@
                             <input type="file" wire:model="avatarUpload" accept="image/*" class="hidden" />
                         </label>
                         @if ($user->avatar_url)
-                            <button type="button" wire:click="deleteAvatar" wire:confirm="Apakah Anda yakin ingin menghapus foto profil ini?" class="px-2 py-1 bg-rose-400 hover:bg-rose-300 text-black border-2 border-black font-black text-[10px] uppercase rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer inline-flex items-center gap-1" title="Hapus Foto Profil">
+                            <button type="button" @click="$dispatch('open-delete-avatar-modal')" class="px-2 py-1 bg-rose-400 hover:bg-rose-300 text-black border-2 border-black font-black text-[10px] uppercase rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer inline-flex items-center gap-1" title="Hapus Foto Profil">
                                 <x-icon name="lucide-trash-2" class="w-3 h-3 stroke-[2.5]" />
                             </button>
                         @endif
@@ -211,5 +211,52 @@
         @else
             @include('livewire.profile.partials.user', ['user' => $user, 'stats' => $stats])
         @endif
+        
+        <!-- Delete Avatar Modal -->
+        <div 
+            x-data="{ open: false }"
+            @open-delete-avatar-modal.window="open = true"
+            x-show="open"
+            x-cloak
+            x-transition.opacity.duration.200ms
+            class="fixed inset-0 z-50 flex items-center justify-center p-4"
+        >
+            <div class="absolute inset-0 bg-black/70" @click="open = false"></div>
+            <div 
+                x-show="open"
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 scale-95"
+                x-transition:enter-end="opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-150"
+                x-transition:leave-start="opacity-100 scale-100"
+                x-transition:leave-end="opacity-0 scale-95"
+                class="relative w-full max-w-sm bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-2xl p-6"
+            >
+                <div class="flex items-start justify-between gap-4">
+                    <div class="w-12 h-12 bg-rose-500 border-2 border-black rounded-lg flex items-center justify-center text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] shrink-0">
+                        <x-icon name="lucide-trash-2" class="w-6 h-6 stroke-[2.5]" />
+                    </div>
+                    <button type="button" @click="open = false" class="text-black hover:bg-black/10 p-1.5 rounded font-black cursor-pointer transition-colors">
+                        <x-icon name="lucide-x" class="w-4 h-4 stroke-[2.5]" />
+                    </button>
+                </div>
+                
+                <div class="mt-4">
+                    <h3 class="text-xl font-black text-black uppercase tracking-tight">Hapus Foto Profil</h3>
+                    <p class="text-xs font-bold text-zinc-600 mt-2 leading-relaxed">
+                        Apakah Anda yakin ingin menghapus foto profil ini? Foto yang dihapus tidak dapat dikembalikan.
+                    </p>
+                </div>
+                
+                <div class="flex items-center gap-2 mt-6">
+                    <button type="button" @click="open = false" class="flex-1 h-10 px-3 bg-zinc-100 hover:bg-zinc-200 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer">
+                        Batal
+                    </button>
+                    <button type="button" @click="open = false; $wire.deleteAvatar()" class="flex-1 h-10 px-3 bg-rose-500 hover:bg-rose-400 text-white border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer">
+                        Ya, Hapus
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

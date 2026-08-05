@@ -8,7 +8,12 @@
             <flux:input wire:model="name" :label="__('Name')" type="text" required autofocus autocomplete="name" />
 
             <div>
-                <flux:input wire:model="email" :label="__('Email')" type="email" required autocomplete="email" />
+                @if(auth()->user()->role === 'admin')
+                    <flux:input wire:model="email" :label="__('Email')" type="email" disabled
+                        :hint="__('Email admin tidak dapat diubah.')" />
+                @else
+                    <flux:input wire:model="email" :label="__('Email')" type="email" required autocomplete="email" />
+                @endif
 
                 @if ($this->hasUnverifiedEmail)
                     <div>

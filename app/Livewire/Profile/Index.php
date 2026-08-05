@@ -70,6 +70,11 @@ class Index extends Component
 
         $rules = $this->profileRules($user->id);
 
+        if ($user->role === 'admin') {
+            unset($rules['email']);
+            $this->email = $user->email;
+        }
+
         if ($user->role === 'owner') {
             $rules['phone_number'] = $this->phoneNumberRules(required: true);
             $rules['business_name'] = $this->businessNameRules(required: true);
@@ -86,6 +91,10 @@ class Index extends Component
         }
 
         $user->save();
+
+        if ($user->wasChanged('email')) {
+            $user->sendEmailVerificationNotification();
+        }
 
         $this->editing = false;
 

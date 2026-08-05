@@ -2,6 +2,8 @@
 
 use App\Livewire\Settings\Profile;
 use App\Models\User;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Support\Facades\Notification;
 use Livewire\Livewire;
 
 test('profile page is displayed', function () {
@@ -42,6 +44,40 @@ test('email verification status is unchanged when email address is unchanged', f
     $response->assertHasNoErrors();
 
     expect($user->refresh()->email_verified_at)->not->toBeNull();
+});
+
+test('sends a verification notification when the email is changed', function () {
+    $user = User::factory()->create(['email_verified_at' => now()]);
+    Notification::fake();
+
+    $this->actingAs($user);
+
+    Livewire::test(Profile::class)
+        ->set('email', 'test@example.com')
+        ->call('updateProfileInformation')
+        ->assertHasNoErrors();
+
+    expect($user->fresh()->email_verified_at)->toBeNull();
+
+    Notification::assertSentTo($user, VerifyEmail::class);
+});
+
+test('prevents an admin from changing their email', function () {
+    $admin = User::factory()->create(['role' => 'admin', 'email_verified_at' => now()]);
+    Notification::fake();
+
+    $this->actingAs($admin);
+
+    Livewire::test(Profile::class)
+        ->set('name', 'Test Admin')
+        ->set('email', 'admin-hacked@example.com')
+        ->call('updateProfileInformation')
+        ->assertHasNoErrors();
+
+    expect($admin->fresh()->email)->toBe($admin->email);
+    expect($admin->fresh()->name)->toEqual('Test Admin');
+
+    Notification::assertNothingSent();
 });
 
 test('user can delete their account', function () {

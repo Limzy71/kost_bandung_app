@@ -35,7 +35,14 @@ class Profile extends Component
     {
         $user = Auth::user();
 
-        $validated = $this->validate($this->profileRules($user->id));
+        $rules = $this->profileRules($user->id);
+
+        if ($user->role === 'admin') {
+            unset($rules['email']);
+            $this->email = $user->email;
+        }
+
+        $validated = $this->validate($rules);
 
         $user->fill($validated);
 
@@ -44,6 +51,10 @@ class Profile extends Component
         }
 
         $user->save();
+
+        if ($user->wasChanged('email')) {
+            $user->sendEmailVerificationNotification();
+        }
 
         Flux::toast(variant: 'success', text: __('Profile updated.'));
     }

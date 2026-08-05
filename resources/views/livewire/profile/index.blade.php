@@ -162,9 +162,12 @@
 
                     <div>
                         <label for="email" class="block text-xs font-black uppercase text-black mb-1.5">Email</label>
-                        <input type="email" id="email" wire:model="email"
-                            class="w-full px-4 py-3 text-sm bg-white border-3 border-black rounded-lg text-black font-bold placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+                        <input type="email" id="email" wire:model="email" @disabled($user->role === 'admin')
+                            class="w-full px-4 py-3 text-sm bg-white border-3 border-black rounded-lg text-black font-bold placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all @if($user->role === 'admin') opacity-60 cursor-not-allowed @endif"
                             placeholder="nama@email.com">
+                        @if($user->role === 'admin')
+                            <p class="text-[10px] font-black text-zinc-500 mt-1 uppercase">Email admin tidak dapat diubah.</p>
+                        @endif
                         @error('email') <p class="text-xs font-black text-rose-500 mt-1 uppercase">{{ $message }}</p> @enderror
                     </div>
 

@@ -4,6 +4,8 @@ use App\Livewire\Profile\Index;
 use App\Models\Inquiry;
 use App\Models\Kost;
 use App\Models\User;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
 
@@ -103,8 +105,9 @@ it('updates the profile name and email', function () {
     expect($user->fresh()->email)->toBe('baru@example.com');
 });
 
-it('resets email verification when the email is changed', function () {
+it('sends a verification notification and resets verification when the email is changed', function () {
     $user = User::factory()->create(['role' => 'user']);
+    Notification::fake();
 
     Livewire::actingAs($user)
         ->test(Index::class)
@@ -113,6 +116,39 @@ it('resets email verification when the email is changed', function () {
         ->assertHasNoErrors();
 
     expect($user->fresh()->email_verified_at)->toBeNull();
+
+    Notification::assertSentTo($user, VerifyEmail::class);
+});
+
+it('does not send a verification notification when the email is unchanged', function () {
+    $user = User::factory()->create(['role' => 'user']);
+    Notification::fake();
+
+    Livewire::actingAs($user)
+        ->test(Index::class)
+        ->set('name', 'Nama Baru')
+        ->set('email', $user->email)
+        ->call('updateProfile')
+        ->assertHasNoErrors();
+
+    Notification::assertNothingSent();
+});
+
+it('prevents an admin from changing their email', function () {
+    $admin = User::factory()->create(['role' => 'admin']);
+    Notification::fake();
+
+    Livewire::actingAs($admin)
+        ->test(Index::class)
+        ->set('name', 'Admin Baru')
+        ->set('email', 'admin-hacked@example.com')
+        ->call('updateProfile')
+        ->assertHasNoErrors();
+
+    expect($admin->fresh()->email)->toBe($admin->email);
+    expect($admin->fresh()->name)->toBe('Admin Baru');
+
+    Notification::assertNothingSent();
 });
 
 it('rejects a duplicate email', function () {

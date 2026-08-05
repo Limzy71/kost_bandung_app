@@ -243,7 +243,7 @@
             <div class="relative bg-white border-4 border-black rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] w-full max-w-lg p-6 space-y-5">
                 <div class="flex items-center justify-between gap-4">
                     <h2 class="text-xl font-black text-black uppercase">Pesan Baru ke Admin</h2>
-                    <button wire:click="closeCompose" class="p-1.5 bg-zinc-200 hover:bg-zinc-300 border-2 border-black rounded text-black cursor-pointer">
+                    <button wire:click="closeCompose" class="p-1.5 bg-rose-500 hover:bg-rose-400 border-2 border-black rounded text-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer">
                         <x-icon name="lucide-x" class="w-4 h-4 stroke-[2.5]" />
                     </button>
                 </div>

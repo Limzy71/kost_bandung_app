@@ -262,7 +262,7 @@ class Kost extends Model
     public function deleteOwnershipDocumentFile(): void
     {
         if ($this->ownership_doc_path) {
-            Storage::disk(config('filesystems.default'))->delete($this->ownership_doc_path);
+            Storage::disk('verification_docs')->delete($this->ownership_doc_path);
         }
     }
 }

@@ -105,7 +105,7 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     public function deleteIdentityDocumentFile(): void
     {
         if ($this->identity_doc_path) {
-            Storage::disk(config('filesystems.default'))->delete($this->identity_doc_path);
+            Storage::disk('verification_docs')->delete($this->identity_doc_path);
         }
     }
 

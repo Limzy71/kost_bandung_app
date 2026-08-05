@@ -1790,11 +1790,18 @@
                             </div>
 
                             @if ($ownership_doc)
-                                <div class="bg-lime-100 border-3 border-black p-3 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] space-y-2">
-                                    <p class="text-[10px] font-black uppercase text-black flex items-center gap-2">
-                                        <x-icon name="lucide-file-check" class="w-3.5 h-3.5 stroke-[2.5]" />
-                                        Pratinjau Dokumen Terpilih
-                                    </p>
+                                <div class="bg-lime-100 border-3 border-black p-3 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] space-y-2 relative">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <p class="text-[10px] font-black uppercase text-black flex items-center gap-2">
+                                            <x-icon name="lucide-file-check" class="w-3.5 h-3.5 stroke-[2.5]" />
+                                            Pratinjau Dokumen Terpilih
+                                        </p>
+                                        <button type="button" wire:click="$set('ownership_doc', null)"
+                                            class="inline-flex items-center gap-1 bg-rose-500 hover:bg-rose-600 text-white border-2 border-black font-black text-[10px] uppercase px-2 py-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all rounded cursor-pointer shrink-0">
+                                            <x-icon name="lucide-trash-2" class="w-3 h-3 stroke-[3]" />
+                                            Batal
+                                        </button>
+                                    </div>
                                     <img src="{{ $ownership_doc->temporaryUrl() }}" alt="Pratinjau Dokumen Kepemilikan"
                                         class="w-full max-h-52 object-contain rounded-lg border-2 border-black bg-white">
                                 </div>

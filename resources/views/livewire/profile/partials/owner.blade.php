@@ -7,7 +7,7 @@
 </div>
 
 <!-- Verifikasi Identitas (KTP) -->
-<div class="bg-white border-4 border-black rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+<div class="bg-white border-4 border-black rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] overflow-hidden" x-data="{ showDeleteIdentity: false }">
     <div class="bg-cyan-300 border-b-4 border-black px-6 py-4 flex items-center gap-3">
         <div class="w-9 h-9 bg-black rounded flex items-center justify-center shrink-0">
             <x-icon name="lucide-id-card" class="w-5 h-5 text-cyan-300 stroke-[2.5]" />
@@ -31,6 +31,20 @@
                     <p class="text-xs font-bold text-emerald-800">KTP telah disetujui tim KostBandung. Properti Anda berhak atas badge "Terverifikasi".</p>
                 </div>
             </div>
+
+            <div class="p-4 bg-zinc-100 border-2 border-black rounded-xl flex items-start gap-2">
+                <x-icon name="lucide-shield-check" class="w-4 h-4 text-black stroke-[2.5] shrink-0 mt-0.5" />
+                <p class="text-xs font-bold text-zinc-700 leading-relaxed">
+                    Dokumen KTP tersimpan rahasia, hanya admin yang dapat melihatnya, dan tidak pernah
+                    ditampilkan ke publik (sesuai UU PDP). Anda dapat menghapusnya lalu mengunggah ulang jika keliru.
+                </p>
+            </div>
+
+            <button type="button" @click="showDeleteIdentity = true"
+                class="inline-flex items-center gap-1.5 bg-rose-100 hover:bg-rose-200 text-rose-700 border-2 border-rose-500 font-black text-xs uppercase px-4 py-2.5 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer">
+                <x-icon name="lucide-trash-2" class="w-4 h-4 stroke-[2.5]" />
+                Hapus Dokumen KTP
+            </button>
         @else
             @if ($idStatus === 'pending')
                 <div class="p-4 bg-amber-100 border-2 border-black rounded-xl flex items-center gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
@@ -53,6 +67,14 @@
                         <p class="text-xs font-bold text-zinc-700">Silakan unggah ulang KTP yang jelas di bawah ini.</p>
                     </div>
                 </div>
+            @endif
+
+            @if ($user->identity_doc_path)
+                <button type="button" @click="showDeleteIdentity = true"
+                    class="inline-flex items-center gap-1.5 bg-rose-100 hover:bg-rose-200 text-rose-700 border-2 border-rose-500 font-black text-xs uppercase px-4 py-2.5 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer">
+                    <x-icon name="lucide-trash-2" class="w-4 h-4 stroke-[2.5]" />
+                    Hapus Dokumen KTP
+                </button>
             @endif
 
             <div class="p-4 bg-zinc-100 border-2 border-black rounded-xl flex items-start gap-2">
@@ -106,6 +128,52 @@
                 @enderror
             </div>
         @endif
+    </div>
+
+    <!-- Hapus Dokumen KTP: Konfirmasi Modal -->
+    <div x-show="showDeleteIdentity" x-cloak x-transition.opacity.duration.150ms
+        class="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
+        <div class="absolute inset-0 bg-black/70" @click="showDeleteIdentity = false"></div>
+        <div x-show="showDeleteIdentity" x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+            x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 scale-100"
+            x-transition:leave-end="opacity-0 scale-95"
+            class="relative w-full max-w-md bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-2xl p-6">
+            <div class="flex items-start justify-between gap-4">
+                <div class="w-12 h-12 bg-rose-500 border-2 border-black rounded-lg flex items-center justify-center text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] shrink-0">
+                    <x-icon name="lucide-trash-2" class="w-6 h-6 stroke-[2.5]" />
+                </div>
+                <button type="button" @click="showDeleteIdentity = false"
+                    class="text-black hover:bg-black/10 p-1.5 rounded font-black cursor-pointer transition-colors">
+                    <x-icon name="lucide-x" class="w-4 h-4 stroke-[2.5]" />
+                </button>
+            </div>
+
+            <h3 class="text-xl font-black text-black uppercase tracking-tight mt-4">Hapus Dokumen KTP?</h3>
+            <p class="text-xs font-bold text-zinc-600 mt-2 leading-relaxed">
+                Dokumen KTP Anda akan dihapus dari sistem dan status verifikasi akun dikembalikan ke
+                <span class="bg-rose-100 border-b-2 border-rose-400 px-1 font-black">"Belum Diverifikasi"</span>.
+                Anda dapat mengunggah ulang KTP kapan saja dari halaman ini.
+            </p>
+
+            <div class="mt-4 border-2 border-black bg-rose-50 p-3 rounded-lg flex items-start gap-2">
+                <x-icon name="lucide-triangle-alert" class="w-4 h-4 text-rose-700 stroke-[2.5] shrink-0 mt-0.5" />
+                <p class="text-[11px] font-black uppercase text-rose-700 leading-relaxed">
+                    Badge "Terverifikasi" di kost Anda akan hilang hingga KTP baru disetujui admin.
+                </p>
+            </div>
+
+            <div class="flex items-center gap-2 mt-6">
+                <button type="button" @click="showDeleteIdentity = false"
+                    class="flex-1 h-10 px-3 bg-zinc-100 hover:bg-zinc-200 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer">
+                    Batal
+                </button>
+                <button type="button" wire:click="deleteIdentityDocument" @click="showDeleteIdentity = false"
+                    class="flex-1 h-10 px-3 bg-rose-500 hover:bg-rose-600 text-white border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer">
+                    Ya, Hapus Dokumen
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 

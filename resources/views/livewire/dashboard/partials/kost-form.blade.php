@@ -1673,7 +1673,7 @@
                 </div>
 
                 <!-- 7b. Bukti Kepemilikan Properti -->
-                <div class="space-y-3 pt-2 border-t-2 border-black">
+                <div class="space-y-3 pt-2 border-t-2 border-black" x-data="{ showDeleteOwnership: false }">
                     <div class="flex items-center justify-between gap-2">
                         <label class="block text-xs font-black uppercase tracking-wider text-black flex items-center gap-2">
                             <x-icon name="lucide-file-text" class="w-4 h-4 stroke-[2.5] shrink-0" />
@@ -1681,6 +1681,15 @@
                         </label>
                         <span class="text-[10px] font-bold italic text-zinc-500">Opsional &middot; diunggah untuk setiap kost</span>
                     </div>
+
+                    @if (isset($ownershipDocDeleted) && $ownershipDocDeleted)
+                        <div class="p-3 bg-lime-100 border-2 border-black rounded-xl flex items-center gap-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                            <x-icon name="lucide-circle-check" class="w-4 h-4 text-black stroke-[2.5] shrink-0" />
+                            <p class="text-xs font-bold text-zinc-700">
+                                Dokumen kepemilikan berhasil dihapus. Silakan unggah ulang dokumen yang sesuai jika diperlukan.
+                            </p>
+                        </div>
+                    @endif
 
                     @if ($ownershipStatus === 'verified')
                         <div class="p-4 bg-emerald-100 border-2 border-black rounded-xl flex items-center gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
@@ -1692,6 +1701,12 @@
                                 <p class="text-xs font-bold text-emerald-800">Bukti kepemilikan kost ini telah disetujui. Badge "Terverifikasi" aktif di halaman publik.</p>
                             </div>
                         </div>
+
+                        <button type="button" @click="showDeleteOwnership = true"
+                            class="inline-flex items-center gap-1.5 bg-rose-100 hover:bg-rose-200 text-rose-700 border-2 border-rose-500 font-black text-xs uppercase px-4 py-2.5 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer">
+                            <x-icon name="lucide-trash-2" class="w-4 h-4 stroke-[2.5]" />
+                            Hapus Dokumen
+                        </button>
                     @else
                         @if ($ownershipStatus === 'pending')
                             <div class="p-4 bg-amber-100 border-2 border-black rounded-xl flex items-center gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
@@ -1714,6 +1729,14 @@
                                     <p class="text-xs font-bold text-zinc-700">Silakan unggah ulang dokumen yang sesuai di bawah ini.</p>
                                 </div>
                             </div>
+                        @endif
+
+                        @if ($isEdit && $kost->ownership_doc_path)
+                            <button type="button" @click="showDeleteOwnership = true"
+                                class="inline-flex items-center gap-1.5 bg-rose-100 hover:bg-rose-200 text-rose-700 border-2 border-rose-500 font-black text-xs uppercase px-4 py-2.5 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer">
+                                <x-icon name="lucide-trash-2" class="w-4 h-4 stroke-[2.5]" />
+                                Hapus Dokumen
+                            </button>
                         @endif
 
                         <div class="space-y-2">
@@ -1777,5 +1800,51 @@
                             @enderror
                         </div>
                     @endif
+
+                    <!-- Hapus Dokumen Kepemilikan: Konfirmasi Modal -->
+                    <div x-show="showDeleteOwnership" x-cloak x-transition.opacity.duration.150ms
+                        class="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
+                        <div class="absolute inset-0 bg-black/70" @click="showDeleteOwnership = false"></div>
+                        <div x-show="showDeleteOwnership" x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+                            x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 scale-100"
+                            x-transition:leave-end="opacity-0 scale-95"
+                            class="relative w-full max-w-md bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-2xl p-6">
+                            <div class="flex items-start justify-between gap-4">
+                                <div class="w-12 h-12 bg-rose-500 border-2 border-black rounded-lg flex items-center justify-center text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] shrink-0">
+                                    <x-icon name="lucide-trash-2" class="w-6 h-6 stroke-[2.5]" />
+                                </div>
+                                <button type="button" @click="showDeleteOwnership = false"
+                                    class="text-black hover:bg-black/10 p-1.5 rounded font-black cursor-pointer transition-colors">
+                                    <x-icon name="lucide-x" class="w-4 h-4 stroke-[2.5]" />
+                                </button>
+                            </div>
+
+                            <h3 class="text-xl font-black text-black uppercase tracking-tight mt-4">Hapus Dokumen Kepemilikan?</h3>
+                            <p class="text-xs font-bold text-zinc-600 mt-2 leading-relaxed">
+                                Dokumen kepemilikan kost ini akan dihapus dari sistem dan status verifikasi dikembalikan ke
+                                <span class="bg-rose-100 border-b-2 border-rose-400 px-1 font-black">"Belum Diverifikasi"</span>.
+                                Anda dapat mengunggah ulang dokumen kapan saja dari form ini.
+                            </p>
+
+                            <div class="mt-4 border-2 border-black bg-rose-50 p-3 rounded-lg flex items-start gap-2">
+                                <x-icon name="lucide-triangle-alert" class="w-4 h-4 text-rose-700 stroke-[2.5] shrink-0 mt-0.5" />
+                                <p class="text-[11px] font-black uppercase text-rose-700 leading-relaxed">
+                                    Badge "Terverifikasi" di kost ini akan hilang hingga dokumen baru disetujui admin.
+                                </p>
+                            </div>
+
+                            <div class="flex items-center gap-2 mt-6">
+                                <button type="button" @click="showDeleteOwnership = false"
+                                    class="flex-1 h-10 px-3 bg-zinc-100 hover:bg-zinc-200 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer">
+                                    Batal
+                                </button>
+                                <button type="button" wire:click="deleteOwnershipDocument" @click="showDeleteOwnership = false"
+                                    class="flex-1 h-10 px-3 bg-rose-500 hover:bg-rose-600 text-white border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer">
+                                    Ya, Hapus Dokumen
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </x-brutal-card>

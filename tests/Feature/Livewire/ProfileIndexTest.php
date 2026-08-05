@@ -302,3 +302,49 @@ it('does not let a pencari kost upload an identity KTP document', function () {
     expect($user->identity_verification_status)->toBe('unverified');
     expect($user->identity_doc_path)->toBeNull();
 });
+
+it('lets an owner delete their identity KTP document', function () {
+    Storage::fake(config('filesystems.default'));
+    $path = 'verification-docs/identity/ktp.jpg';
+    Storage::disk(config('filesystems.default'))->put($path, 'bytes');
+
+    $owner = User::factory()->create([
+        'role' => 'owner',
+        'identity_doc_path' => $path,
+        'identity_verification_status' => 'verified',
+        'identity_verified_at' => now(),
+    ]);
+
+    Livewire::actingAs($owner)
+        ->test(Index::class)
+        ->call('deleteIdentityDocument')
+        ->assertDispatched('show-toast');
+
+    $owner->refresh();
+    expect($owner->identity_verification_status)->toBe('unverified');
+    expect($owner->identity_doc_path)->toBeNull();
+    expect($owner->identity_verified_at)->toBeNull();
+    expect($owner->identity_rejection_note)->toBeNull();
+    expect(Storage::disk(config('filesystems.default'))->exists($path))->toBeFalse();
+});
+
+it('does not let a pencari kost delete an identity KTP document', function () {
+    Storage::fake(config('filesystems.default'));
+    $path = 'verification-docs/identity/ktp.jpg';
+    Storage::disk(config('filesystems.default'))->put($path, 'bytes');
+
+    $user = User::factory()->create(['role' => 'user']);
+    $user->forceFill([
+        'identity_doc_path' => $path,
+        'identity_verification_status' => 'pending',
+    ])->save();
+
+    Livewire::actingAs($user)
+        ->test(Index::class)
+        ->call('deleteIdentityDocument');
+
+    $user->refresh();
+    expect($user->identity_doc_path)->toBe($path);
+    expect($user->identity_verification_status)->toBe('pending');
+    expect(Storage::disk(config('filesystems.default'))->exists($path))->toBeTrue();
+});

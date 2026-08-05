@@ -180,6 +180,26 @@ class Index extends Component
         }
     }
 
+    public function deleteIdentityDocument(): void
+    {
+        $user = $this->currentUser();
+
+        if ($user->role !== 'owner' || ! $user->identity_doc_path) {
+            return;
+        }
+
+        $user->deleteIdentityDocumentFile();
+
+        $user->forceFill([
+            'identity_doc_path' => null,
+            'identity_verification_status' => 'unverified',
+            'identity_verified_at' => null,
+            'identity_rejection_note' => null,
+        ])->save();
+
+        $this->dispatch('show-toast', message: 'Dokumen KTP berhasil dihapus. Anda dapat mengunggah ulang kapan saja.');
+    }
+
     public function render(): View
     {
         $user = $this->currentUser();

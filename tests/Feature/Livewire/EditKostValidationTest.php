@@ -6,6 +6,7 @@ use App\Models\Kost;
 use App\Models\KostImage;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
 
@@ -135,4 +136,30 @@ it('keeps a pending facility that is still selected on save', function () {
         ->assertHasNoErrors();
 
     expect(Facility::find($facility->id))->not->toBeNull();
+});
+
+it('lets the owner delete the ownership document and reset verification', function () {
+    Storage::fake(config('filesystems.default'));
+    $path = 'verification-docs/ownership/pbb.jpg';
+    Storage::disk(config('filesystems.default'))->put($path, 'bytes');
+
+    $user = User::factory()->create();
+    $kost = makeOwnerKost($user, 4);
+    $kost->forceFill([
+        'ownership_doc_type' => 'pbb',
+        'ownership_doc_path' => $path,
+        'ownership_verification_status' => 'pending',
+    ])->save();
+
+    $this->actingAs($user);
+
+    Livewire::test(EditKost::class, ['kost' => $kost])
+        ->call('deleteOwnershipDocument')
+        ->assertSet('ownershipDocDeleted', true);
+
+    $kost->refresh();
+    expect($kost->ownership_verification_status)->toBe('unverified');
+    expect($kost->ownership_doc_type)->toBeNull();
+    expect($kost->ownership_doc_path)->toBeNull();
+    expect(Storage::disk(config('filesystems.default'))->exists($path))->toBeFalse();
 });

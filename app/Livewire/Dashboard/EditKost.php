@@ -7,9 +7,11 @@ use App\Models\Kost;
 use App\Models\KostImage;
 use App\Models\KostPrice;
 use App\Models\Rule;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -100,6 +102,8 @@ class EditKost extends Component
      */
     public $ownership_doc = null;
 
+    public bool $ownershipDocDeleted = false;
+
     /**
      * @var array<int, array{id: int, url: string, is_primary: bool}>
      */
@@ -163,6 +167,8 @@ class EditKost extends Component
         $this->additional_rules_note = (string) ($kost->additional_rules_note ?? '');
 
         $this->ownership_doc_type = (string) ($kost->ownership_doc_type ?? '');
+
+        $this->ownershipDocDeleted = false;
 
         $this->selectedFacilities = $kost->facilities()
             ->where('facilities.status', 'approved')
@@ -830,6 +836,29 @@ class EditKost extends Component
         session()->flash('status', 'Properti kost "'.$kost->name.'" berhasil diperbarui!');
 
         return redirect()->route('dashboard');
+    }
+
+    public function deleteOwnershipDocument(): void
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        $kost = $user->kosts()->find($this->kost->id);
+
+        if (! $kost || ! $kost->ownership_doc_path) {
+            return;
+        }
+
+        $kost->deleteOwnershipDocumentFile();
+
+        $kost->forceFill([
+            'ownership_doc_type' => null,
+            'ownership_doc_path' => null,
+            'ownership_verification_status' => 'unverified',
+            'ownership_verified_at' => null,
+            'ownership_rejection_note' => null,
+        ])->save();
+
+        $this->ownershipDocDeleted = true;
     }
 
     public function render(): View

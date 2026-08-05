@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\KostController;
+use App\Http\Controllers\VerificationDocumentController;
 use App\Livewire\Admin\AdminMessages;
 use App\Livewire\Admin\ModerationDashboard;
 use App\Livewire\Auth\Login;
@@ -36,6 +37,7 @@ Route::middleware(['auth', 'verified', 'owner'])->group(function () {
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/admin/moderation', ModerationDashboard::class)->name('admin.moderation');
     Route::get('/admin/messages', AdminMessages::class)->name('admin.messages');
+    Route::get('/admin/verification-document/{kind}/{id}', VerificationDocumentController::class)->name('admin.verification.document');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

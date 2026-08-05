@@ -52,7 +52,7 @@
                 </div>
             </div>
             <button wire:click="openCompose"
-                class="shrink-0 inline-flex items-center gap-2 px-5 py-3 bg-black hover:bg-zinc-800 text-white border-3 border-black font-black text-xs uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl cursor-pointer">
+                class="shrink-0 inline-flex items-center gap-2 px-5 py-3 bg-yellow-300 hover:bg-yellow-200 text-black border-3 border-black font-black text-xs uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl cursor-pointer">
                 <x-icon name="lucide-message-circle-plus" class="w-4 h-4 stroke-[2.5]" />
                 Pesan Baru
             </button>

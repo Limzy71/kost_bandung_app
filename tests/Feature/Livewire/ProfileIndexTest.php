@@ -185,3 +185,51 @@ it('requires a business name for owners', function () {
         ->call('updateProfile')
         ->assertHasErrors(['business_name' => 'required']);
 });
+
+it('rejects a name that is too short', function () {
+    $user = User::factory()->create(['role' => 'user']);
+
+    Livewire::actingAs($user)
+        ->test(Index::class)
+        ->set('name', 'a')
+        ->call('updateProfile')
+        ->assertHasErrors(['name' => 'min']);
+
+    expect($user->fresh()->name)->not->toBe('a');
+});
+
+it('rejects a name containing invalid characters', function () {
+    $user = User::factory()->create(['role' => 'user']);
+
+    Livewire::actingAs($user)
+        ->test(Index::class)
+        ->set('name', 'ldhjdkhsdhgz;j')
+        ->call('updateProfile')
+        ->assertHasErrors(['name' => 'regex']);
+
+    expect($user->fresh()->name)->not->toBe('ldhjdkhsdhgz;j');
+});
+
+it('accepts a valid unicode name', function () {
+    $user = User::factory()->create(['role' => 'user']);
+
+    Livewire::actingAs($user)
+        ->test(Index::class)
+        ->set('name', 'Agus Setiawan')
+        ->call('updateProfile')
+        ->assertHasNoErrors();
+
+    expect($user->fresh()->name)->toBe('Agus Setiawan');
+});
+
+it('squishes surrounding whitespace from the name', function () {
+    $user = User::factory()->create(['role' => 'user']);
+
+    Livewire::actingAs($user)
+        ->test(Index::class)
+        ->set('name', '  Agus   Setiawan  ')
+        ->call('updateProfile')
+        ->assertHasNoErrors();
+
+    expect($user->fresh()->name)->toBe('Agus Setiawan');
+});

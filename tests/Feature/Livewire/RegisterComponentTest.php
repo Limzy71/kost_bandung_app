@@ -142,3 +142,47 @@ test('password shorter than 8 characters fails validation', function () {
         ->call('register')
         ->assertHasErrors(['password']);
 });
+
+// ---------------------------------------------------------------------------
+// 6. Validasi nama: terlalu pendek / karakter ilegal / whitespace berlebih
+// ---------------------------------------------------------------------------
+test('registration fails when the name is too short', function () {
+    Livewire::test(Register::class)
+        ->set('name', 'a')
+        ->set('email', 'tes@example.com')
+        ->set('password', 'password1')
+        ->set('password_confirmation', 'password1')
+        ->set('role', 'user')
+        ->set('phone_number', '081234567890')
+        ->call('register')
+        ->assertHasErrors(['name' => 'min']);
+});
+
+test('registration fails when the name contains invalid characters', function () {
+    Livewire::test(Register::class)
+        ->set('name', 'ldhjdkhsdhgz;j')
+        ->set('email', 'tes@example.com')
+        ->set('password', 'password1')
+        ->set('password_confirmation', 'password1')
+        ->set('role', 'user')
+        ->set('phone_number', '081234567890')
+        ->call('register')
+        ->assertHasErrors(['name' => 'regex']);
+});
+
+test('registration accepts a valid unicode name and squishes whitespace', function () {
+    Livewire::test(Register::class)
+        ->set('name', '  Agus   Setiawan  ')
+        ->set('email', 'agus@example.com')
+        ->set('password', 'password1')
+        ->set('password_confirmation', 'password1')
+        ->set('role', 'user')
+        ->set('phone_number', '081234567890')
+        ->call('register')
+        ->assertHasNoErrors();
+
+    $user = User::where('email', 'agus@example.com')->first();
+
+    expect($user)->not->toBeNull()
+        ->and($user->name)->toBe('Agus Setiawan');
+});

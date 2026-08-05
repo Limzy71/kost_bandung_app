@@ -117,9 +117,9 @@ window.catalogMap = function (config) {
                 script = document.createElement('script');
                 script.id = 'google-catalog-map-script';
                 script.src = 'https://maps.googleapis.com/maps/api/js?key=' +
-                    this.hasGoogleKey + '&callback=initGoogleCatalogMap';
+                    this.hasGoogleKey + '&callback=initGoogleCatalogMap' +
+                    '&loading=async&libraries=marker';
                 script.async = true;
-                script.defer = true;
                 script.onerror = () => {
                     // Remove the failed script so a later retry can re-add it
                     if (script.parentNode) script.parentNode.removeChild(script);
@@ -187,6 +187,7 @@ window.catalogMap = function (config) {
                     this.map = new google.maps.Map(this.$refs.catalogMapElement, {
                         center: { lat: -6.917464, lng: 107.619123 },
                         zoom: 13,
+                        mapId: 'DEMO_MAP_ID',
                         mapTypeControl: false,
                         streetViewControl: false,
                         fullscreenControl: false,
@@ -239,30 +240,49 @@ window.catalogMap = function (config) {
             const bounds = new google.maps.LatLngBounds();
             let validCount = 0;
 
+            const AdvancedMarker =
+                window.google.maps.marker && window.google.maps.marker.AdvancedMarkerElement;
+            if (!AdvancedMarker) {
+                console.warn('Google Maps marker library unavailable; skipping markers.');
+                return;
+            }
+
             currentItems.forEach(item => {
                 if (!item.lat || !item.lng) return;
                 const pos = { lat: item.lat, lng: item.lng };
                 bounds.extend(pos);
                 validCount++;
 
-                const marker = new google.maps.Marker({
+                // Custom DOM marker: neo-brutalist price tag with a downward tail
+                // pointing at the exact location (AdvancedMarkerElement does not
+                // support the legacy `label`/`icon` options).
+                const bg = item.is_boosted ? '#FACC15' : '#FFFFFF';
+                const labelEl = document.createElement('div');
+                labelEl.textContent = item.price_short;
+                labelEl.style.cssText =
+                    'background:' + bg + ';border:2px solid #000;border-radius:4px;' +
+                    'padding:2px 8px;font-weight:900;font-size:11px;color:#000;' +
+                    'white-space:nowrap;box-shadow:2px 2px 0 #000;' +
+                    'font-family:system-ui,sans-serif;';
+
+                const tailEl = document.createElement('div');
+                tailEl.style.cssText =
+                    'width:0;height:0;border-left:6px solid transparent;' +
+                    'border-right:6px solid transparent;border-top:8px solid #000;';
+
+                const contentEl = document.createElement('div');
+                contentEl.style.cssText =
+                    'display:flex;flex-direction:column;align-items:center;';
+                contentEl.appendChild(labelEl);
+                contentEl.appendChild(tailEl);
+
+                const marker = new AdvancedMarker({
                     position: pos,
                     map: this.map,
                     title: item.name,
-                    label: {
-                        text: item.price_short,
-                        color: '#000000',
-                        fontWeight: '900',
-                        fontSize: '11px',
-                    },
-                    icon: {
-                        path: 'M -25,-12 L 25,-12 L 25,8 L 8,8 L 0,16 L -8,8 L -25,8 Z',
-                        fillColor: item.is_boosted ? '#FACC15' : '#FFFFFF',
-                        fillOpacity: 1,
-                        strokeColor: '#000000',
-                        strokeWeight: 2,
-                        labelOrigin: new google.maps.Point(0, -2),
-                    },
+                    content: contentEl,
+                    collisionBehavior:
+                        google.maps.CollisionBehavior?.REQUIRED ?? 'REQUIRED',
                 });
 
                 marker.addListener('click', () => {

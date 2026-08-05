@@ -110,3 +110,42 @@ test('correct password must be provided to delete account', function () {
 
     expect($user->fresh())->not->toBeNull();
 });
+
+test('rejects a name that is too short', function () {
+    $user = User::factory()->create(['email_verified_at' => now()]);
+
+    $this->actingAs($user);
+
+    Livewire::test(Profile::class)
+        ->set('name', 'a')
+        ->call('updateProfileInformation')
+        ->assertHasErrors(['name' => 'min']);
+
+    expect($user->fresh()->name)->not->toBe('a');
+});
+
+test('rejects a name containing invalid characters', function () {
+    $user = User::factory()->create(['email_verified_at' => now()]);
+
+    $this->actingAs($user);
+
+    Livewire::test(Profile::class)
+        ->set('name', 'ldhjdkhsdhgz;j')
+        ->call('updateProfileInformation')
+        ->assertHasErrors(['name' => 'regex']);
+
+    expect($user->fresh()->name)->not->toBe('ldhjdkhsdhgz;j');
+});
+
+test('accepts a valid unicode name', function () {
+    $user = User::factory()->create(['email_verified_at' => now()]);
+
+    $this->actingAs($user);
+
+    Livewire::test(Profile::class)
+        ->set('name', 'Agus Setiawan')
+        ->call('updateProfileInformation')
+        ->assertHasNoErrors();
+
+    expect($user->fresh()->name)->toBe('Agus Setiawan');
+});

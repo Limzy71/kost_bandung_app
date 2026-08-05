@@ -17,7 +17,8 @@
                 const n = this.$refs.minSelect      ? this.$refs.minSelect.value      : '';
                 const x = this.$refs.maxSelect      ? this.$refs.maxSelect.value      : '';
                 const s = this.$refs.searchInput    ? this.$refs.searchInput.value    : '';
-                this.hasFilter = Boolean(g || d || p || n || x || s);
+                const v = this.$refs.verifiedToggle ? this.$refs.verifiedToggle.checked : false;
+                this.hasFilter = Boolean(g || d || p || n || x || s || v);
             }
         }"
         x-init="checkFilter()"
@@ -134,6 +135,19 @@
                 </div>
             </div>
         </div>
+
+        <!-- Verified Only Toggle -->
+        <div class="flex flex-wrap items-center gap-2 pt-1">
+            <label :class="$wire.verified_only
+                    ? 'bg-emerald-400 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
+                    : 'bg-white text-zinc-700 border-2 border-black hover:bg-zinc-100'"
+                class="px-3.5 py-1.5 font-black text-xs uppercase rounded-lg transition-all cursor-pointer inline-flex items-center gap-1.5">
+                <input type="checkbox" x-ref="verifiedToggle" wire:model="verified_only" @change="checkFilter()" class="hidden">
+                <x-icon name="lucide-badge-check" class="w-3.5 h-3.5 stroke-[3]" />
+                <span>Hanya Kost Terverifikasi</span>
+            </label>
+            <span class="text-[10px] font-bold text-zinc-500 normal-case">Tampilkan hanya kost yang pemilik &amp; kepemilikannya telah terverifikasi tim KostBandung.</span>
+        </div>
     </div>
 
     <!-- Section Title & Layout Switcher -->
@@ -206,6 +220,12 @@
                                         @if ($kost->boosted_at)
                                             <span class="px-2.5 py-1 bg-yellow-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider flex items-center gap-1">
                                                 &#9889; Super Boost
+                                            </span>
+                                        @endif
+                                        @if ($kost->isVerified())
+                                            <span class="px-2.5 py-1 bg-emerald-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider inline-flex items-center gap-1">
+                                                <x-icon name="lucide-badge-check" class="w-3 h-3 shrink-0 stroke-[3]" />
+                                                Terverifikasi
                                             </span>
                                         @endif
                                     </div>

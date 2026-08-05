@@ -57,7 +57,7 @@
         </div>
 
         <!-- Metric Stat Cards -->
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 sm:gap-6">
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-4 sm:gap-6">
             <!-- Pending -->
             <button 
                 type="button" 
@@ -131,6 +131,24 @@
                 <h3 class="text-3xl sm:text-4xl font-black text-black mt-2 tracking-tight">{{ $pendingFacilityCount }}</h3>
                 <p class="text-[10px] font-bold text-black/70 mt-1 uppercase">Perlu Review Admin</p>
             </button>
+
+            <!-- Verification Pending -->
+            <button 
+                type="button" 
+                wire:click="setTab('verification')" 
+                class="text-left p-5 border-3 border-black rounded-xl shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer {{ $activeTab === 'verification' ? 'bg-teal-300 ring-4 ring-black translate-x-0.5 translate-y-0.5' : 'bg-teal-100 hover:bg-teal-200' }}"
+            >
+                <p class="text-xs font-black uppercase tracking-wider text-black flex items-center gap-1.5">
+                    <span class="relative flex h-2 w-2 shrink-0">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-600 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-teal-700"></span>
+                    </span>
+                    <x-icon name="lucide-shield-check" class="w-4 h-4 text-black stroke-[2.5]" />
+                    <span>Verifikasi Dokumen</span>
+                </p>
+                <h3 class="text-3xl sm:text-4xl font-black text-black mt-2 tracking-tight">{{ $verificationCount }}</h3>
+                <p class="text-[10px] font-bold text-black/70 mt-1 uppercase">KTP &amp; Bukti Kepemilikan</p>
+            </button>
         </div>
 
         <!-- Filter & Search Bar -->
@@ -172,6 +190,13 @@
                 >
                     Fasilitas ({{ $pendingFacilityCount }})
                 </button>
+                <button 
+                    type="button" 
+                    wire:click="setTab('verification')" 
+                    class="px-4 py-2 border-2 border-black font-black text-xs uppercase rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer {{ $activeTab === 'verification' ? 'bg-teal-400 text-black' : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-700' }}"
+                >
+                    Verifikasi ({{ $verificationCount }})
+                </button>
             </div>
 
             <!-- Search Input -->
@@ -197,6 +222,224 @@
             </div>
         </div>
 
+        <!-- Verification Review List -->
+        @if($activeTab === 'verification')
+            <div x-data="{
+                rejectOpen: false,
+                rejectType: '',
+                rejectId: null,
+                rejectReason: '',
+                openReject(type, id) {
+                    this.rejectType = type;
+                    this.rejectId = id;
+                    this.rejectReason = '';
+                    this.rejectOpen = true;
+                },
+                confirmReject() {
+                    if (this.rejectId === null) return;
+                    $wire.submitReject(this.rejectType, this.rejectId, this.rejectReason);
+                    this.rejectOpen = false;
+                }
+            }" @keydown.escape.window="rejectOpen = false">
+                <!-- Info Banner -->
+                <div class="bg-teal-100 border-4 border-black p-5 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-2">
+                    <p class="text-xs font-black uppercase text-black flex items-center gap-2">
+                        <x-icon name="lucide-shield-check" class="w-5 h-5 stroke-[2.5]" />
+                        Verifikasi Dokumen Kepemilikan
+                    </p>
+                    <p class="text-sm font-bold text-zinc-700 leading-relaxed">
+                        Tinjau dokumen <span class="font-black text-black">KTP pemilik</span> dan <span class="font-black text-black">bukti kepemilikan properti</span> yang diajukan pemilik untuk badge "Terverifikasi".
+                        Dokumen hanya dapat diakses oleh admin dan tidak pernah ditampilkan ke publik. Kost tetap dapat ditayangkan tanpa dokumen — verifikasi ini bersifat sukarela.
+                    </p>
+                </div>
+
+                <!-- Pending Identity (KTP) -->
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between gap-3">
+                        <h2 class="text-2xl font-black text-black uppercase tracking-tight flex items-center gap-2">
+                            <x-icon name="lucide-id-card" class="w-6 h-6 stroke-[2.5]" />
+                            Identitas Pemilik (KTP) Menunggu
+                        </h2>
+                        <span class="px-3 py-1 bg-amber-300 text-black border-2 border-black font-black text-xs uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                            {{ $pendingIdentities->count() }} Dokumen
+                        </span>
+                    </div>
+
+                    @if($pendingIdentities->count() > 0)
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            @foreach($pendingIdentities as $verUser)
+                                <div class="bg-white border-4 border-black rounded-2xl overflow-hidden shadow-[7px_7px_0px_0px_rgba(0,0,0,1)] flex flex-col justify-between">
+                                    <div class="p-5 space-y-4">
+                                        <div class="flex items-center justify-between gap-3">
+                                            <div class="flex items-center gap-3 min-w-0">
+                                                <div class="w-11 h-11 rounded-xl bg-teal-300 border-2 border-black flex items-center justify-center shrink-0 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                    <x-icon name="lucide-user-check" class="w-5 h-5 text-black stroke-[2.5]" />
+                                                </div>
+                                                <div class="min-w-0">
+                                                    <h3 class="text-lg font-black text-black leading-snug truncate">{{ $verUser->name }}</h3>
+                                                    <p class="text-[10px] font-black uppercase text-zinc-500">Pemilik Kost</p>
+                                                </div>
+                                            </div>
+                                            <span class="px-2.5 py-1 bg-amber-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1 animate-pulse shrink-0">
+                                                <x-icon name="lucide-hourglass" class="w-3 h-3 stroke-[2.5]" />
+                                                Pending
+                                            </span>
+                                        </div>
+
+                                        <div class="bg-zinc-50 border-2 border-black p-3 rounded-xl space-y-1.5 text-xs font-bold text-black">
+                                            <p class="truncate flex items-center gap-1.5">
+                                                <x-icon name="lucide-mail" class="w-3.5 h-3.5 stroke-[2.5] shrink-0" />
+                                                <span class="truncate">{{ $verUser->email }}</span>
+                                            </p>
+                                            <p class="truncate flex items-center gap-1.5">
+                                                <x-icon name="lucide-phone" class="w-3.5 h-3.5 stroke-[2.5] shrink-0" />
+                                                <span class="truncate">{{ $verUser->phone_number ?? '-' }}</span>
+                                            </p>
+                                            @if($verUser->business_name)
+                                                <p class="truncate flex items-center gap-1.5">
+                                                    <x-icon name="lucide-building-2" class="w-3.5 h-3.5 stroke-[2.5] shrink-0" />
+                                                    <span class="truncate">{{ $verUser->business_name }}</span>
+                                                </p>
+                                            @endif
+                                        </div>
+
+                                        <a href="{{ route('admin.verification.document', ['kind' => 'identity', 'id' => $verUser->id]) }}" target="_blank"
+                                            class="w-full py-3 bg-cyan-300 hover:bg-cyan-200 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 cursor-pointer">
+                                            <x-icon name="lucide-eye" class="w-4 h-4 stroke-[2.5]" />
+                                            Lihat Dokumen KTP
+                                        </a>
+                                    </div>
+
+                                    <div class="p-4 bg-zinc-100 border-t-4 border-black grid grid-cols-2 gap-2">
+                                        <button type="button" wire:click="approveIdentity({{ $verUser->id }})"
+                                            class="w-full py-3 bg-lime-400 hover:bg-lime-300 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl cursor-pointer">
+                                            ✓ SETUJUI
+                                        </button>
+                                        <button type="button" @click="openReject('identity', {{ $verUser->id }})"
+                                            class="w-full py-3 bg-rose-500 hover:bg-rose-400 text-white border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl cursor-pointer">
+                                            ✕ TOLAK
+                                        </button>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="bg-emerald-100 border-4 border-black rounded-2xl p-8 text-center shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+                            <div class="w-14 h-14 bg-white border-3 border-black rounded-xl flex items-center justify-center mx-auto text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                                <x-icon name="lucide-badge-check" class="w-7 h-7" />
+                            </div>
+                            <h3 class="text-xl font-black text-black uppercase mt-3">Tidak Ada KTP Menunggu</h3>
+                            <p class="text-sm font-bold text-zinc-700 mt-1">Semua dokumen identitas pemilik telah selesai ditinjau.</p>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Pending Ownership Documents -->
+                <div class="space-y-4 pt-2">
+                    <div class="flex items-center justify-between gap-3">
+                        <h2 class="text-2xl font-black text-black uppercase tracking-tight flex items-center gap-2">
+                            <x-icon name="lucide-file-text" class="w-6 h-6 stroke-[2.5]" />
+                            Bukti Kepemilikan Menunggu
+                        </h2>
+                        <span class="px-3 py-1 bg-amber-300 text-black border-2 border-black font-black text-xs uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                            {{ $pendingOwnerships->count() }} Dokumen
+                        </span>
+                    </div>
+
+                    @if($pendingOwnerships->count() > 0)
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            @foreach($pendingOwnerships as $verKost)
+                                <div class="bg-white border-4 border-black rounded-2xl overflow-hidden shadow-[7px_7px_0px_0px_rgba(0,0,0,1)] flex flex-col justify-between">
+                                    <div>
+                                        <div class="aspect-[16/9] bg-zinc-200 relative overflow-hidden border-b-4 border-black">
+                                            @if($verKost->primaryImage)
+                                                <img src="{{ Str::startsWith($verKost->primaryImage->image_path, 'http') ? $verKost->primaryImage->image_path : Storage::url($verKost->primaryImage->image_path) }}" alt="{{ $verKost->name }}" class="w-full h-full object-cover">
+                                            @else
+                                                <div class="w-full h-full flex items-center justify-center bg-teal-100 text-black">
+                                                    <x-icon name="lucide-image" class="w-12 h-12" />
+                                                </div>
+                                            @endif
+                                            <span class="absolute top-3 left-3 px-2.5 py-1 bg-amber-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1 animate-pulse">
+                                                <x-icon name="lucide-hourglass" class="w-3 h-3 stroke-[2.5]" />
+                                                Pending
+                                            </span>
+                                        </div>
+                                        <div class="p-5 space-y-3">
+                                            <div>
+                                                <h3 class="text-lg font-black text-black leading-snug line-clamp-1">{{ $verKost->name }}</h3>
+                                                <p class="text-xs font-bold text-zinc-600 mt-1 inline-flex items-center gap-1">
+                                                    <x-icon name="lucide-map-pin" class="w-3.5 h-3.5 text-zinc-700 shrink-0 stroke-[2.5]" />
+                                                    {{ $verKost->district }} &middot; {{ $verKost->user->name ?? 'Pemilik Tanpa Nama' }}
+                                                </p>
+                                            </div>
+                                            <div class="bg-yellow-50 border-2 border-black p-3 rounded-xl flex items-center gap-2">
+                                                <x-icon name="lucide-file-check" class="w-4 h-4 text-black stroke-[2.5] shrink-0" />
+                                                <span class="text-xs font-black text-black">{{ $verKost->ownershipDocTypeLabel() }}</span>
+                                            </div>
+                                            <a href="{{ route('admin.verification.document', ['kind' => 'ownership', 'id' => $verKost->id]) }}" target="_blank"
+                                                class="w-full py-3 bg-cyan-300 hover:bg-cyan-200 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 cursor-pointer">
+                                                <x-icon name="lucide-eye" class="w-4 h-4 stroke-[2.5]" />
+                                                Lihat Dokumen Kepemilikan
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="p-4 bg-zinc-100 border-t-4 border-black grid grid-cols-2 gap-2">
+                                        <button type="button" wire:click="approveOwnership({{ $verKost->id }})"
+                                            class="w-full py-3 bg-lime-400 hover:bg-lime-300 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl cursor-pointer">
+                                            ✓ SETUJUI
+                                        </button>
+                                        <button type="button" @click="openReject('ownership', {{ $verKost->id }})"
+                                            class="w-full py-3 bg-rose-500 hover:bg-rose-400 text-white border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl cursor-pointer">
+                                            ✕ TOLAK
+                                        </button>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="bg-emerald-100 border-4 border-black rounded-2xl p-8 text-center shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+                            <div class="w-14 h-14 bg-white border-3 border-black rounded-xl flex items-center justify-center mx-auto text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                                <x-icon name="lucide-badge-check" class="w-7 h-7" />
+                            </div>
+                            <h3 class="text-xl font-black text-black uppercase mt-3">Tidak Ada Dokumen Menunggu</h3>
+                            <p class="text-sm font-bold text-zinc-700 mt-1">Semua bukti kepemilikan telah selesai ditinjau.</p>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Reject Reason Modal -->
+                <div x-show="rejectOpen" x-cloak class="fixed inset-0 z-[60] flex items-center justify-center p-4" @click.self="rejectOpen = false">
+                    <div class="absolute inset-0 bg-black/60"></div>
+                    <div class="relative bg-white border-4 border-black rounded-2xl p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] w-full max-w-md space-y-4"
+                        x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="opacity-0 scale-95"
+                        x-transition:enter-end="opacity-100 scale-100">
+                        <div class="flex items-center justify-between gap-3">
+                            <h3 class="text-lg font-black text-black uppercase flex items-center gap-2">
+                                <x-icon name="lucide-x-circle" class="w-5 h-5 text-rose-600 stroke-[2.5]" />
+                                Tolak Verifikasi Dokumen
+                            </h3>
+                            <button type="button" @click="rejectOpen = false"
+                                class="w-8 h-8 bg-zinc-200 hover:bg-zinc-300 text-black border-2 border-black rounded font-black text-sm cursor-pointer">✕</button>
+                        </div>
+                        <p class="text-xs font-bold text-zinc-600">Alasan penolakan akan ditampilkan kepada pemilik sebagai panduan untuk memperbaiki dokumen.</p>
+                        <textarea x-model="rejectReason" rows="3" maxlength="300"
+                            placeholder="Contoh: Foto KTP buram / tidak terbaca. Nama pada dokumen tidak sesuai. Sertakan dokumen yang lebih jelas..."
+                            class="w-full bg-white border-3 border-black rounded-xl px-4 py-3 text-sm font-bold text-black focus:outline-none focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"></textarea>
+                        <p class="text-[10px] font-bold italic text-zinc-500">Kosongkan untuk menggunakan alasan default.</p>
+                        <div class="grid grid-cols-2 gap-3 pt-1">
+                            <button type="button" @click="rejectOpen = false"
+                                class="py-3 bg-zinc-200 hover:bg-zinc-300 text-black border-3 border-black font-black text-xs uppercase rounded-xl cursor-pointer">Batal</button>
+                            <button type="button" @click="confirmReject()"
+                                class="py-3 bg-rose-500 hover:bg-rose-400 text-white border-3 border-black font-black text-xs uppercase rounded-xl cursor-pointer shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all">
+                                Konfirmasi Tolak
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @else
         <!-- Facilities Moderation List -->
         @if($activeTab === 'facilities')
             @if($facilities->count() > 0)
@@ -453,6 +696,7 @@
                     </p>
                 </div>
             </div>
+        @endif
         @endif
         @endif
 

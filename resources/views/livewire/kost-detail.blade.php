@@ -113,6 +113,25 @@
             </a>
         </div>
 
+        <!-- Keamanan Transaksi Callout -->
+        @unless (auth()->check() && auth()->id() === $kost->user_id)
+            <div class="bg-rose-50 border-3 border-black rounded-2xl p-4 sm:p-5 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] flex items-start gap-3">
+                <div class="w-10 h-10 shrink-0 rounded-xl bg-rose-500 border-2 border-black flex items-center justify-center text-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                    <x-icon name="lucide-shield-alert" class="w-5 h-5 stroke-[2.5]" />
+                </div>
+                <div class="space-y-1 min-w-0">
+                    <p class="text-xs font-black uppercase tracking-wider text-rose-800 flex items-center gap-1.5">
+                        <x-icon name="lucide-info" class="w-4 h-4 stroke-[2.5]" />
+                        Panduan Keamanan Transaksi
+                    </p>
+                    <p class="text-sm font-bold text-zinc-800 leading-relaxed">
+                        Jangan pernah melakukan transaksi sebelum melihat/datang langsung ke kost tersebut.
+                        <span class="text-zinc-600">KostBandung hanya mempertemukan pemilik dan pencari kost serta tidak memfasilitasi pembayaran sewa.</span>
+                    </p>
+                </div>
+            </div>
+        @endunless
+
         <!-- ================================================================
             MAIN TWO-COLUMN LAYOUT — Grid structure stretched for sticky right sidebar
             Left (lg:col-span-2): Gallery + Content + Map
@@ -215,6 +234,14 @@
                                     class="px-3.5 py-1 bg-yellow-400 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider inline-flex items-center gap-1.5">
                                     <x-icon name="lucide-zap" fill="#FBBF24" stroke-width="0.8" class="w-4 h-4 shrink-0 drop-shadow-[1px_1px_0px_rgba(0,0,0,1)]" />
                                     <span>Properti Rekomendasi</span>
+                                </span>
+                            @endif
+
+                            @if ($kost->isVerified())
+                                <span
+                                    class="px-3.5 py-1 bg-emerald-400 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider inline-flex items-center gap-1.5">
+                                    <x-icon name="lucide-badge-check" class="w-4 h-4 shrink-0 stroke-[2.5]" />
+                                    <span>Kepemilikan Terverifikasi</span>
                                 </span>
                             @endif
                         </div>

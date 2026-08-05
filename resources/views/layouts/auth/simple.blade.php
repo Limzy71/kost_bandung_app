@@ -11,7 +11,7 @@
                 {{-- Logo & Brand --}}
                 <a href="{{ route('home') }}" class="flex items-center gap-2.5 group" wire:navigate>
                     <span class="text-lg font-black text-black uppercase tracking-tight flex items-center leading-none">
-                        KostBandung<span class="bg-[#FFE500] border-2 border-black px-1.5 py-0.5 rounded text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ml-1 font-black text-black">.id</span>
+                        KostBandung<span class="bg-[#FFE500] border-2 border-black px-1.5 py-0.5 rounded text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ml-1 font-black text-black">.web.id</span>
                     </span>
                 </a>
 

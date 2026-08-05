@@ -23,9 +23,12 @@
                             <x-icon name="lucide-building-2" class="w-3.5 h-3.5 stroke-[2.5]" />
                             <span>Pemilik Kost</span>
                         </span>
-                        <span class="px-3 py-1 bg-white text-black border-2 border-black font-extrabold text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                            Akun Terverifikasi
-                        </span>
+                        @if ($user->isIdentityVerified())
+                            <span class="px-3 py-1 bg-emerald-400 text-black border-2 border-black font-extrabold text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1.5">
+                                <x-icon name="lucide-badge-check" class="w-3.5 h-3.5 stroke-[2.5]" />
+                                <span>Pemilik Terverifikasi</span>
+                            </span>
+                        @endif
                     </div>
 
                     <h2 class="text-2xl md:text-3xl font-black text-black uppercase tracking-tight">
@@ -91,6 +94,12 @@
                             <div class="flex flex-wrap items-center gap-2">
                                 <span class="font-black text-black uppercase text-sm group-hover:text-yellow-600 transition-colors truncate">{{ $kost->name }}</span>
                                 <x-status-badge :status="$kost->is_available ? 'available' : 'full'" />
+                                @if ($kost->isVerified())
+                                    <span class="px-2 py-0.5 bg-emerald-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1">
+                                        <x-icon name="lucide-badge-check" class="w-3 h-3 stroke-[3]" />
+                                        Terverifikasi
+                                    </span>
+                                @endif
                             </div>
                             <p class="text-xs font-bold text-zinc-600 flex items-center gap-1.5">
                                 <x-icon name="lucide-map-pin" class="w-3.5 h-3.5 stroke-[2.5]" />

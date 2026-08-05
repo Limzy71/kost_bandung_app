@@ -332,6 +332,56 @@
                                         </p>
                                     </div>
 
+                                    <!-- Verifikasi Dokumen -->
+                                    <div class="pt-3 border-t-2 border-black space-y-2">
+                                        <p class="text-[10px] font-black uppercase text-zinc-500 flex items-center gap-1.5">
+                                            <x-icon name="lucide-shield-check" class="w-3.5 h-3.5 text-black stroke-[2.5]" />
+                                            <span>Verifikasi Dokumen</span>
+                                        </p>
+                                        <div class="flex flex-wrap items-center gap-1.5">
+                                            @php
+                                                $idStatus = $owner->identity_verification_status;
+                                                $ownStatus = $kost->ownership_verification_status;
+                                                $idColor = $idStatus === 'verified' ? 'bg-emerald-400' : ($idStatus === 'rejected' ? 'bg-rose-400' : ($idStatus === 'pending' ? 'bg-amber-300' : 'bg-zinc-200'));
+                                                $ownColor = $ownStatus === 'verified' ? 'bg-emerald-400' : ($ownStatus === 'rejected' ? 'bg-rose-400' : ($ownStatus === 'pending' ? 'bg-amber-300' : 'bg-zinc-200'));
+                                            @endphp
+                                            <span class="px-2 py-0.5 {{ $idColor }} text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1">
+                                                <x-icon name="lucide-id-card" class="w-3 h-3 stroke-[2.5]" />
+                                                KTP: {{ $owner->identityStatusLabel() }}
+                                            </span>
+                                            <span class="px-2 py-0.5 {{ $ownColor }} text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1">
+                                                <x-icon name="lucide-file-text" class="w-3 h-3 stroke-[2.5]" />
+                                                {{ $kost->ownershipStatusLabel() }}
+                                            </span>
+                                        </div>
+                                        @if ($idStatus === 'rejected' && $owner->identity_rejection_note)
+                                            <p class="text-[10px] font-bold text-rose-600 leading-snug flex items-start gap-1">
+                                                <x-icon name="lucide-triangle-alert" class="w-3 h-3 stroke-[2.5] shrink-0 mt-0.5" />
+                                                KTP: {{ $owner->identity_rejection_note }}
+                                            </p>
+                                        @endif
+                                        @if ($ownStatus === 'rejected' && $kost->ownership_rejection_note)
+                                            <p class="text-[10px] font-bold text-rose-600 leading-snug flex items-start gap-1">
+                                                <x-icon name="lucide-triangle-alert" class="w-3 h-3 stroke-[2.5] shrink-0 mt-0.5" />
+                                                Kepemilikan: {{ $kost->ownership_rejection_note }}
+                                            </p>
+                                        @endif
+                                        @if ($idStatus !== 'verified' || $ownStatus !== 'verified')
+                                            @php
+                                                $verCta = ($idStatus === 'rejected' || $ownStatus === 'rejected')
+                                                    ? 'Unggah Ulang Dokumen'
+                                                    : (($idStatus === 'pending' || $ownStatus === 'pending')
+                                                        ? 'Lihat Status Verifikasi'
+                                                        : 'Verifikasi untuk Badge Kepercayaan');
+                                            @endphp
+                                            <a href="{{ route('dashboard.kost.edit', $kost->slug) }}"
+                                                class="inline-flex items-center gap-1 text-[10px] font-black uppercase text-black bg-cyan-300 hover:bg-cyan-200 border-2 border-black px-2 py-1 rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all">
+                                                <x-icon name="lucide-file-up" class="w-3 h-3 stroke-[2.5]" />
+                                                {{ $verCta }}
+                                            </a>
+                                        @endif
+                                    </div>
+
                                     <!-- Price & Facilities -->
                                     <div class="pt-3 border-t-2 border-black flex items-center justify-between">
                                         <div>

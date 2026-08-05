@@ -326,7 +326,7 @@
                     <!-- Fasilitas Utama -->
                     <div class="space-y-6">
                         <h2 class="text-xl font-black text-black uppercase tracking-tight flex items-center gap-2">
-                            <x-icon name="lucide-sparkles" class="w-5 h-5 text-black stroke-[2.5]" />
+                            <x-icon name="lucide-home" class="w-5 h-5 text-black stroke-[2.5]" />
                             <span>Fasilitas Properti</span>
                         </h2>
 
@@ -339,7 +339,7 @@
                         @if ($roomFacilities->count() > 0)
                             <div class="space-y-3">
                                 <h3 class="text-sm font-black uppercase tracking-wider text-black flex items-center gap-2">
-                                    <x-icon name="lucide-user" class="w-4 h-4 text-black stroke-[2.5]" />
+                                    <x-icon name="lucide-bed-double" class="w-4 h-4 text-black stroke-[2.5]" />
                                     Fasilitas Kamar
                                     <span
                                         class="text-[10px] font-black uppercase bg-lime-300 border-2 border-black px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">

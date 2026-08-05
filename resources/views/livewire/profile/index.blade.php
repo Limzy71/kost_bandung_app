@@ -76,7 +76,7 @@
         </div>
 
         <!-- Profile Card -->
-        <div class="bg-white border-4 border-black p-6 md:p-8 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+        <div class="bg-white border-4 border-black p-6 md:p-8 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
             <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                 <div class="flex flex-col items-center shrink-0">
                     <div class="w-24 h-24 md:w-28 md:h-28 rounded-2xl bg-yellow-300 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center overflow-hidden">

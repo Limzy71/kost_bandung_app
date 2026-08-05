@@ -32,12 +32,12 @@
                         </span>
                     </a>
                     <p class="text-xs font-bold text-zinc-700 max-w-md leading-relaxed">
-                        Platform Direktori Kost Hyper-Local Kota Bandung. Temukan kost mahasiswa & karyawan di area Coblong, Dipatiukur, Dago, dan sekitarnya dengan cepat & akurat.
+                        Direktori kost terlengkap khusus Kota Bandung. Temukan kost mahasiswa & karyawan di area Coblong, Dipatiukur, Dago, dan sekitarnya dengan mudah & cepat.
                     </p>
                     <div class="flex flex-wrap items-center gap-2 pt-1">
                         <span class="px-2.5 py-1 bg-lime-300 border-2 border-black text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1">
                             <x-icon name="lucide-zap" fill="#FBBF24" stroke-width="0.8" class="w-3.5 h-3.5 shrink-0" />
-                            <span>Hyper-Local Bandung</span>
+                            <span>Khusus Kota Bandung</span>
                         </span>
                         <span class="px-2.5 py-1 bg-cyan-300 border-2 border-black text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1">
                             <x-icon name="lucide-building-2" class="w-3 h-3 text-black shrink-0 stroke-[2.5]" />

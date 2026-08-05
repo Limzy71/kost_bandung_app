@@ -12,7 +12,7 @@
                     <div class="flex flex-wrap items-center justify-center md:justify-start gap-2">
                         <span class="px-3.5 py-1 bg-yellow-300 text-black border-2 border-black font-extrabold text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1.5">
                             <x-icon name="lucide-zap" fill="#FBBF24" stroke-width="0.8" class="w-4 h-4 shrink-0 drop-shadow-[1px_1px_0px_rgba(0,0,0,1)]" />
-                            <span>Hyper-Local Bandung</span>
+                            <span>Khusus Kota Bandung</span>
                         </span>
                         <span class="px-3.5 py-1 bg-cyan-300 text-black border-2 border-black font-extrabold text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1.5">
                             <x-icon name="lucide-shield-check" class="w-3.5 h-3.5 text-black shrink-0 stroke-[2.5]" />

@@ -529,36 +529,44 @@
 
                     <!-- CTA Buttons -->
                     <div class="space-y-3">
-                        @php
-                            $waMessage = rawurlencode(
-                                "Halo, saya tertarik dengan kost \"" .
-                                    $kost->name .
-                                    "\" di " .
-                                    $kost->district .
-                                    '. Apakah kamar masih tersedia?',
-                            );
-                        @endphp
-
-                        @if ($hasWaNumber)
-                            <a href="https://wa.me/{{ $waNumber }}?text={{ $waMessage }}" target="_blank"
-                                class="w-full py-4 bg-emerald-400 hover:bg-emerald-300 text-black border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 group cursor-pointer">
-                                <x-icon name="lucide-message-square" class="w-5 h-5 text-black stroke-[2.5] group-hover:scale-110 transition-transform" />
-                                <span>Tanya via WhatsApp</span>
+                        @if (auth()->check() && auth()->id() === $kost->user_id)
+                            <a href="{{ route('dashboard.edit-kost', $kost->id) }}"
+                                class="w-full py-4 bg-yellow-300 hover:bg-yellow-200 text-black border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 cursor-pointer">
+                                <x-icon name="lucide-pencil" class="w-5 h-5 stroke-[2.5]" />
+                                <span>Kelola Properti Ini</span>
                             </a>
                         @else
-                            <div
-                                class="w-full py-4 bg-zinc-200 text-zinc-500 border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-xl flex items-center justify-center gap-2 cursor-not-allowed"
-                                title="Kontak WhatsApp belum tersedia">
-                                <x-icon name="lucide-message-square" class="w-5 h-5 stroke-[2.5]" />
-                                <span>Kontak WA Belum Tersedia</span>
-                            </div>
-                        @endif
+                            @php
+                                $waMessage = rawurlencode(
+                                    "Halo, saya tertarik dengan kost \"" .
+                                        $kost->name .
+                                        "\" di " .
+                                        $kost->district .
+                                        '. Apakah kamar masih tersedia?',
+                                );
+                            @endphp
 
-                        <button type="button" @click="openInquiryModal()"
-                            class="w-full py-4 bg-cyan-300 hover:bg-cyan-200 text-black border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 cursor-pointer">
-                            <x-icon name="lucide-mail" class="w-5 h-5 stroke-[2.5]" />
-                            <span>Kirim Pesan Internal</span>
-                        </button>
+                            @if ($hasWaNumber)
+                                <a href="https://wa.me/{{ $waNumber }}?text={{ $waMessage }}" target="_blank"
+                                    class="w-full py-4 bg-emerald-400 hover:bg-emerald-300 text-black border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 group cursor-pointer">
+                                    <x-icon name="lucide-message-circle" class="w-5 h-5 text-black stroke-[2.5] group-hover:scale-110 transition-transform" />
+                                    <span>Tanya via WhatsApp</span>
+                                </a>
+                            @else
+                                <div
+                                    class="w-full py-4 bg-zinc-200 text-zinc-500 border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-xl flex items-center justify-center gap-2 cursor-not-allowed"
+                                    title="Kontak WhatsApp belum tersedia">
+                                    <x-icon name="lucide-message-circle-off" class="w-5 h-5 stroke-[2.5]" />
+                                    <span>Kontak WA Belum Tersedia</span>
+                                </div>
+                            @endif
+
+                            <button type="button" @click="openInquiryModal()"
+                                class="w-full py-4 bg-cyan-300 hover:bg-cyan-200 text-black border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 cursor-pointer">
+                                <x-icon name="lucide-mail" class="w-5 h-5 stroke-[2.5]" />
+                                <span>Kirim Pesan Internal</span>
+                            </button>
+                        @endif
                     </div>
 
                     <!-- Owner Info Card -->
@@ -660,28 +668,45 @@
                 </div>
             </div>
 
-            @php
-                $waMessageMobile = rawurlencode(
-                    "Halo, saya tertarik dengan kost \"" .
-                        $kost->name .
-                        "\" di " .
-                        $kost->district .
-                        '. Apakah kamar masih tersedia?',
-                );
-            @endphp
-            <div class="flex items-center gap-2">
-                <button type="button" @click="openInquiryModal()"
-                    class="px-4 py-3 bg-cyan-300 hover:bg-cyan-200 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl whitespace-nowrap cursor-pointer">
-                    Pesan
-                </button>
-                @if ($hasWaNumber)
-                    <a href="https://wa.me/{{ $waNumber }}?text={{ $waMessageMobile }}" target="_blank"
-                        class="px-5 py-3 bg-emerald-400 hover:bg-emerald-300 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl whitespace-nowrap inline-flex items-center gap-1.5 cursor-pointer">
-                        <x-icon name="lucide-message-square" class="w-4 h-4 stroke-[2.5]" />
-                        <span>Tanya WA</span>
+            @if (auth()->check() && auth()->id() === $kost->user_id)
+                <div class="flex items-center gap-2">
+                    <a href="{{ route('dashboard.edit-kost', $kost->id) }}"
+                        class="px-5 py-3 bg-yellow-300 hover:bg-yellow-200 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl whitespace-nowrap inline-flex items-center gap-1.5 cursor-pointer">
+                        <x-icon name="lucide-pencil" class="w-4 h-4 stroke-[2.5]" />
+                        <span>Kelola Properti</span>
                     </a>
-                @endif
-            </div>
+                </div>
+            @else
+                @php
+                    $waMessageMobile = rawurlencode(
+                        "Halo, saya tertarik dengan kost \"" .
+                            $kost->name .
+                            "\" di " .
+                            $kost->district .
+                            '. Apakah kamar masih tersedia?',
+                    );
+                @endphp
+                <div class="flex items-center gap-2">
+                    <button type="button" @click="openInquiryModal()"
+                        class="px-4 py-3 bg-cyan-300 hover:bg-cyan-200 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl whitespace-nowrap inline-flex items-center gap-1.5 cursor-pointer">
+                        <x-icon name="lucide-mail" class="w-4 h-4 stroke-[2.5]" />
+                        <span>Pesan</span>
+                    </button>
+                    @if ($hasWaNumber)
+                        <a href="https://wa.me/{{ $waNumber }}?text={{ $waMessageMobile }}" target="_blank"
+                            class="px-5 py-3 bg-emerald-400 hover:bg-emerald-300 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl whitespace-nowrap inline-flex items-center gap-1.5 cursor-pointer">
+                            <x-icon name="lucide-message-circle" class="w-4 h-4 stroke-[2.5]" />
+                            <span>Tanya WA</span>
+                        </a>
+                    @else
+                        <div class="px-5 py-3 bg-zinc-200 text-zinc-500 border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] rounded-xl whitespace-nowrap inline-flex items-center gap-1.5 cursor-not-allowed"
+                            title="WhatsApp belum tersedia">
+                            <x-icon name="lucide-message-circle-off" class="w-4 h-4 stroke-[2.5]" />
+                            <span>WA</span>
+                        </div>
+                    @endif
+                </div>
+            @endif
         </div>
     </div>
 

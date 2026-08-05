@@ -9,6 +9,7 @@ use App\Models\Kost;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -94,18 +95,23 @@ class Index extends Component
     public function updatedAvatarUpload(): void
     {
         $this->validate([
-            'avatarUpload' => 'nullable|image|max:2048',
+            'avatarUpload' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
         ], [
-            'avatarUpload.image' => 'File harus berupa gambar (JPG, PNG, WEBP).',
+            'avatarUpload.image' => 'File harus berupa gambar.',
+            'avatarUpload.mimes' => 'Format foto harus JPG, JPEG, PNG, atau WEBP.',
             'avatarUpload.max' => 'Ukuran gambar maksimal 2MB.',
         ]);
 
         if ($this->avatarUpload) {
             $user = $this->currentUser();
-            $user->deleteAvatarFile();
+            $oldAvatar = $user->avatar;
 
             $path = $this->avatarUpload->store('avatars', config('filesystems.default'));
             $user->update(['avatar' => $path]);
+
+            if ($oldAvatar) {
+                Storage::disk(config('filesystems.default'))->delete($oldAvatar);
+            }
 
             $this->avatarUpload = null;
             $this->dispatch('show-toast', message: 'Foto profil Anda berhasil diperbarui.');

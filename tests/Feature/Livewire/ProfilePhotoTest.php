@@ -1,101 +1,112 @@
 <?php
 
-namespace Tests\Feature\Livewire;
-
 use App\Livewire\Profile\Index;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
-use Tests\TestCase;
 
-class ProfilePhotoTest extends TestCase
-{
-    use RefreshDatabase;
+uses(RefreshDatabase::class);
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        Storage::fake(config('filesystems.default'));
-    }
+beforeEach(function () {
+    Storage::fake(config('filesystems.default'));
+});
 
-    public function test_user_can_upload_profile_photo(): void
-    {
-        $user = User::factory()->create([
-            'role' => 'user',
-        ]);
+it('lets a user upload a profile photo', function () {
+    $user = User::factory()->create([
+        'role' => 'user',
+    ]);
 
-        $file = UploadedFile::fake()->image('avatar.jpg', 400, 400);
+    $file = UploadedFile::fake()->image('avatar.jpg', 400, 400);
 
-        Livewire::actingAs($user)
-            ->test(Index::class)
-            ->set('avatarUpload', $file);
+    Livewire::actingAs($user)
+        ->test(Index::class)
+        ->set('avatarUpload', $file);
 
-        $user->refresh();
+    $user->refresh();
 
-        $this->assertNotNull($user->avatar);
-        Storage::disk(config('filesystems.default'))->assertExists($user->avatar);
-    }
+    expect($user->avatar)->not->toBeNull();
+    Storage::disk(config('filesystems.default'))->assertExists($user->avatar);
+});
 
-    public function test_owner_can_upload_and_replace_profile_photo(): void
-    {
-        $user = User::factory()->create([
-            'role' => 'owner',
-        ]);
+it('lets an owner upload and replace a profile photo, removing the old file', function () {
+    $user = User::factory()->create([
+        'role' => 'owner',
+    ]);
 
-        $firstFile = UploadedFile::fake()->image('first.png', 400, 400);
+    $firstFile = UploadedFile::fake()->image('first.png', 400, 400);
 
-        Livewire::actingAs($user)
-            ->test(Index::class)
-            ->set('avatarUpload', $firstFile);
+    Livewire::actingAs($user)
+        ->test(Index::class)
+        ->set('avatarUpload', $firstFile);
 
-        $user->refresh();
-        $oldPath = $user->avatar;
+    $user->refresh();
+    $oldPath = $user->avatar;
 
-        $secondFile = UploadedFile::fake()->image('second.jpg', 400, 400);
+    $secondFile = UploadedFile::fake()->image('second.jpg', 400, 400);
 
-        Livewire::actingAs($user)
-            ->test(Index::class)
-            ->set('avatarUpload', $secondFile);
+    Livewire::actingAs($user)
+        ->test(Index::class)
+        ->set('avatarUpload', $secondFile);
 
-        $user->refresh();
+    $user->refresh();
 
-        $this->assertNotNull($user->avatar);
-        $this->assertNotEquals($oldPath, $user->avatar);
-        Storage::disk(config('filesystems.default'))->assertMissing($oldPath);
-        Storage::disk(config('filesystems.default'))->assertExists($user->avatar);
-    }
+    expect($user->avatar)->not->toBeNull()
+        ->and($user->avatar)->not->toBe($oldPath);
 
-    public function test_admin_can_delete_profile_photo(): void
-    {
-        $fakePath = 'avatars/test-admin.jpg';
-        Storage::disk(config('filesystems.default'))->put($fakePath, 'dummy content');
+    Storage::disk(config('filesystems.default'))->assertMissing($oldPath);
+    Storage::disk(config('filesystems.default'))->assertExists($user->avatar);
+});
 
-        $user = User::factory()->create([
-            'role' => 'admin',
-            'avatar' => $fakePath,
-        ]);
+it('lets an admin delete a profile photo', function () {
+    $fakePath = 'avatars/test-admin.jpg';
+    Storage::disk(config('filesystems.default'))->put($fakePath, 'dummy content');
 
-        Livewire::actingAs($user)
-            ->test(Index::class)
-            ->call('deleteAvatar');
+    $user = User::factory()->create([
+        'role' => 'admin',
+        'avatar' => $fakePath,
+    ]);
 
-        $user->refresh();
+    Livewire::actingAs($user)
+        ->test(Index::class)
+        ->call('deleteAvatar');
 
-        $this->assertNull($user->avatar);
-        Storage::disk(config('filesystems.default'))->assertMissing($fakePath);
-    }
+    $user->refresh();
 
-    public function test_rejects_invalid_file_type_or_large_size(): void
-    {
-        $user = User::factory()->create();
+    expect($user->avatar)->toBeNull();
+    Storage::disk(config('filesystems.default'))->assertMissing($fakePath);
+});
 
-        $largeFile = UploadedFile::fake()->create('document.pdf', 3000);
+it('rejects a file that is not an image', function () {
+    $user = User::factory()->create();
 
-        Livewire::actingAs($user)
-            ->test(Index::class)
-            ->set('avatarUpload', $largeFile)
-            ->assertHasErrors(['avatarUpload']);
-    }
-}
+    $file = UploadedFile::fake()->create('document.pdf', 3000);
+
+    Livewire::actingAs($user)
+        ->test(Index::class)
+        ->set('avatarUpload', $file)
+        ->assertHasErrors(['avatarUpload' => 'image']);
+});
+
+it('rejects a profile photo larger than 2MB', function () {
+    $user = User::factory()->create();
+
+    $file = UploadedFile::fake()->image('big.jpg', 100, 100)->size(2049);
+
+    Livewire::actingAs($user)
+        ->test(Index::class)
+        ->set('avatarUpload', $file)
+        ->assertHasErrors(['avatarUpload' => 'max']);
+});
+
+it('rejects an unsupported image format', function () {
+    $user = User::factory()->create();
+
+    $file = UploadedFile::fake()->image('avatar.gif', 400, 400);
+
+    Livewire::actingAs($user)
+        ->test(Index::class)
+        ->set('avatarUpload', $file)
+        ->assertHasErrors(['avatarUpload' => 'mimes']);
+});

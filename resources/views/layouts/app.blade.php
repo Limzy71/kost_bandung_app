@@ -156,7 +156,7 @@
                     <a href="{{ route('login') }}" class="text-xs md:text-sm font-black uppercase text-black bg-white hover:bg-zinc-100 px-3.5 py-2 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded">
                         Masuk
                     </a>
-                    <a href="{{ route('register') }}" class="text-xs md:text-sm font-black uppercase text-black bg-yellow-400 hover:bg-yellow-300 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded">
+                    <a href="{{ route('register', ['role' => 'owner']) }}" class="text-xs md:text-sm font-black uppercase text-black bg-yellow-400 hover:bg-yellow-300 px-4 py-2 border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded">
                         Pasang Iklan
                     </a>
                 @endauth

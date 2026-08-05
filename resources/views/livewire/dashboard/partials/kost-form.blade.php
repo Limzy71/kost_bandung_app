@@ -1823,8 +1823,12 @@
 
                             <h3 class="text-xl font-black text-black uppercase tracking-tight mt-4">Hapus Dokumen Kepemilikan?</h3>
                             <p class="text-xs font-bold text-zinc-600 mt-2 leading-relaxed">
-                                Dokumen kepemilikan kost ini akan dihapus dari sistem dan status verifikasi dikembalikan ke
-                                <span class="bg-rose-100 border-b-2 border-rose-400 px-1 font-black">"Belum Diverifikasi"</span>.
+                                @if ($ownershipStatus === 'verified')
+                                    Dokumen kepemilikan kost ini akan dihapus dari sistem dan status verifikasi dikembalikan ke
+                                    <span class="bg-rose-100 border-b-2 border-rose-400 px-1 font-black">"Belum Diverifikasi"</span>.
+                                @else
+                                    Data pengajuan kepemilikan kost ini akan dibatalkan dan dihapus dari sistem.
+                                @endif
                                 Anda dapat mengunggah ulang dokumen kapan saja dari form ini.
                             </p>
 

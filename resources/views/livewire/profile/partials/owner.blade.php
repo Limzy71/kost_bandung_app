@@ -152,8 +152,12 @@
 
             <h3 class="text-xl font-black text-black uppercase tracking-tight mt-4">Hapus Dokumen KTP?</h3>
             <p class="text-xs font-bold text-zinc-600 mt-2 leading-relaxed">
-                Dokumen KTP Anda akan dihapus dari sistem dan status verifikasi akun dikembalikan ke
-                <span class="bg-rose-100 border-b-2 border-rose-400 px-1 font-black">"Belum Diverifikasi"</span>.
+                @if ($user->isIdentityVerified())
+                    Dokumen KTP Anda akan dihapus dari sistem dan status verifikasi akun dikembalikan ke
+                    <span class="bg-rose-100 border-b-2 border-rose-400 px-1 font-black">"Belum Diverifikasi"</span>.
+                @else
+                    Data pengajuan KTP Anda akan dibatalkan dan dihapus dari sistem.
+                @endif
                 Anda dapat mengunggah ulang KTP kapan saja dari halaman ini.
             </p>
 

@@ -93,11 +93,6 @@ class EditKost extends Component
      */
     public array $photos = [];
 
-    /**
-     * @var TemporaryUploadedFile|null
-     */
-    public $identity_doc = null;
-
     public string $ownership_doc_type = '';
 
     /**
@@ -334,7 +329,6 @@ class EditKost extends Component
             'photos.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
             'extraPeriods' => 'nullable|array',
             'extraPeriods.*' => \Illuminate\Validation\Rule::in(Kost::allowedRentPeriods()),
-            'identity_doc' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'ownership_doc' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'ownership_doc_type' => ['required_with:ownership_doc', \Illuminate\Validation\Rule::in(Kost::OWNERSHIP_DOC_TYPES)],
         ];
@@ -376,9 +370,6 @@ class EditKost extends Component
             'photos.*.mimes' => 'File harus berupa gambar dengan format JPG, PNG, atau WEBP.',
             'photos.*.max' => 'Ukuran setiap foto tidak boleh melebihi 2MB.',
             'extraPeriods.*.in' => 'Periode sewa tidak valid.',
-            'identity_doc.image' => 'File KTP harus berupa gambar.',
-            'identity_doc.mimes' => 'File KTP harus berformat JPG, PNG, atau WEBP.',
-            'identity_doc.max' => 'Ukuran foto KTP tidak boleh melebihi 2MB.',
             'ownership_doc.image' => 'File dokumen harus berupa gambar.',
             'ownership_doc.mimes' => 'File dokumen harus berformat JPG, PNG, atau WEBP.',
             'ownership_doc.max' => 'Ukuran dokumen kepemilikan tidak boleh melebihi 2MB.',
@@ -709,18 +700,7 @@ class EditKost extends Component
 
         $kost->save();
 
-        // Re-upload verification documents (identity KTP + ownership proof)
-        if ($this->identity_doc) {
-            $newIdentityPath = $this->identity_doc->store('verification-docs/identity', config('filesystems.default'));
-            auth()->user()->deleteIdentityDocumentFile();
-            auth()->user()->forceFill([
-                'identity_doc_path' => $newIdentityPath,
-                'identity_verification_status' => 'pending',
-                'identity_rejection_note' => null,
-            ])->save();
-            $this->identity_doc = null;
-        }
-
+        // Re-upload verification documents (ownership proof)
         if ($this->ownership_doc) {
             $newOwnershipPath = $this->ownership_doc->store('verification-docs/ownership', config('filesystems.default'));
             $kost->deleteOwnershipDocumentFile();

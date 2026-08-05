@@ -32,6 +32,8 @@ class Index extends Component
 
     public mixed $avatarUpload = null;
 
+    public $identity_doc = null;
+
     /**
      * @var array<string, string>
      */
@@ -141,6 +143,40 @@ class Index extends Component
             $user->deleteAvatarFile();
             $user->update(['avatar' => null]);
             $this->dispatch('show-toast', message: 'Foto profil Anda berhasil dihapus.');
+        }
+    }
+
+    public function updatedIdentityDoc(): void
+    {
+        $user = $this->currentUser();
+
+        if ($user->role !== 'owner') {
+            $this->identity_doc = null;
+
+            return;
+        }
+
+        $this->validate([
+            'identity_doc' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ], [
+            'identity_doc.image' => 'File KTP harus berupa gambar.',
+            'identity_doc.mimes' => 'File KTP harus berformat JPG, PNG, atau WEBP.',
+            'identity_doc.max' => 'Ukuran foto KTP tidak boleh melebihi 2MB.',
+        ]);
+
+        if ($this->identity_doc) {
+            $user->deleteIdentityDocumentFile();
+
+            $path = $this->identity_doc->store('verification-docs/identity', config('filesystems.default'));
+
+            $user->forceFill([
+                'identity_doc_path' => $path,
+                'identity_verification_status' => 'pending',
+                'identity_rejection_note' => null,
+            ])->save();
+
+            $this->identity_doc = null;
+            $this->dispatch('show-toast', message: 'Dokumen KTP berhasil diunggah dan sedang ditinjau admin.');
         }
     }
 

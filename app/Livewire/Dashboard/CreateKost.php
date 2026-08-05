@@ -93,11 +93,6 @@ class CreateKost extends Component
      */
     public array $photos = [];
 
-    /**
-     * @var TemporaryUploadedFile|null
-     */
-    public $identity_doc = null;
-
     public string $ownership_doc_type = '';
 
     /**
@@ -256,7 +251,6 @@ class CreateKost extends Component
             'photos.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
             'extraPeriods' => 'nullable|array',
             'extraPeriods.*' => \Illuminate\Validation\Rule::in(Kost::allowedRentPeriods()),
-            'identity_doc' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'ownership_doc' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'ownership_doc_type' => ['required_with:ownership_doc', \Illuminate\Validation\Rule::in(Kost::OWNERSHIP_DOC_TYPES)],
         ];
@@ -300,9 +294,6 @@ class CreateKost extends Component
             'photos.*.mimes' => 'File harus berupa gambar dengan format JPG, PNG, atau WEBP.',
             'photos.*.max' => 'Ukuran setiap foto tidak boleh melebihi 2MB.',
             'extraPeriods.*.in' => 'Periode sewa tidak valid.',
-            'identity_doc.image' => 'File KTP harus berupa gambar.',
-            'identity_doc.mimes' => 'File KTP harus berformat JPG, PNG, atau WEBP.',
-            'identity_doc.max' => 'Ukuran foto KTP tidak boleh melebihi 2MB.',
             'ownership_doc.image' => 'File dokumen harus berupa gambar.',
             'ownership_doc.mimes' => 'File dokumen harus berformat JPG, PNG, atau WEBP.',
             'ownership_doc.max' => 'Ukuran dokumen kepemilikan tidak boleh melebihi 2MB.',
@@ -608,14 +599,6 @@ class CreateKost extends Component
         ]);
 
         // Store verification documents (private disk, only visible to admin)
-        if ($this->identity_doc) {
-            $user->identity_doc_path = $this->identity_doc->store('verification-docs/identity', config('filesystems.default'));
-            $user->identity_verification_status = 'pending';
-            $user->identity_rejection_note = null;
-            $user->save();
-            $this->identity_doc = null;
-        }
-
         if ($this->ownership_doc) {
             $kost->ownership_doc_type = $this->ownership_doc_type;
             $kost->ownership_doc_path = $this->ownership_doc->store('verification-docs/ownership', config('filesystems.default'));

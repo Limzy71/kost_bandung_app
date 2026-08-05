@@ -142,7 +142,7 @@
                             @else
                                 <x-icon name="lucide-user" class="w-4 h-4 text-black stroke-[2.5]" />
                             @endif
-                            <span class="truncate max-w-[120px] md:max-w-[150px] lg:max-w-[200px]">{{ auth()->user()->name }}</span>
+                            <span class="truncate max-w-[120px] md:max-w-[150px] lg:max-w-[200px]" title="{{ auth()->user()->name }}">{{ Str::limit(auth()->user()->name, 30) }}</span>
                         </a>
                     @endunless
 

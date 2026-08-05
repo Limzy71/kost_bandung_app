@@ -38,8 +38,8 @@ class Index extends Component
     protected array $messages = [
         'name.required' => 'Nama lengkap wajib diisi.',
         'name.min' => 'Nama minimal 2 karakter.',
-        'name.max' => 'Nama maksimal 100 karakter.',
-        'name.regex' => 'Nama hanya boleh mengandung huruf, spasi, tanda hubung (-), atau titik (.).',
+        'name.max' => 'Nama maksimal 50 karakter.',
+        'name.regex' => 'Nama hanya boleh mengandung huruf, spasi, atau titik (.).',
         'email.required' => 'Email wajib diisi.',
         'email.email' => 'Format email tidak valid.',
         'email.unique' => 'Email sudah terdaftar.',

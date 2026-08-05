@@ -32,8 +32,8 @@ trait ProfileValidationRules
             'required',
             'string',
             'min:2',
-            'max:100',
-            'regex:/^[\p{L}\p{M}\'\-\. ]+$/u',
+            'max:50',
+            'regex:/^[\p{L}\p{M}\'\. ]+$/u',
             'not_regex:/^\s+$/',
         ];
     }

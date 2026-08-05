@@ -15,8 +15,8 @@
                             <span>Khusus Kota Bandung</span>
                         </span>
                         <span class="px-3.5 py-1 bg-cyan-300 text-black border-2 border-black font-extrabold text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1.5">
-                            <x-icon name="lucide-shield-check" class="w-3.5 h-3.5 text-black shrink-0 stroke-[2.5]" />
-                            <span>Direktori Terverifikasi</span>
+                            <x-icon name="lucide-messages-square" class="w-3.5 h-3.5 text-black shrink-0 stroke-[2.5]" />
+                            <span>Kontak Langsung Pemilik</span>
                         </span>
                     </div>
                     <h1 class="text-4xl sm:text-6xl md:text-7xl font-black text-black tracking-tight uppercase leading-none">

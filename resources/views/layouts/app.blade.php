@@ -41,7 +41,7 @@
                         </span>
                         <span class="px-2.5 py-1 bg-cyan-300 border-2 border-black text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1">
                             <x-icon name="lucide-building-2" class="w-3 h-3 text-black shrink-0 stroke-[2.5]" />
-                            <span>100% Terverifikasi</span>
+                            <span>Pilihan Terlengkap</span>
                         </span>
                     </div>
                 </div>

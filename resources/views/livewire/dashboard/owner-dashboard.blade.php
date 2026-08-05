@@ -23,7 +23,7 @@
                     Dashboard Pemilik
                 </h1>
                 <p class="text-zinc-700 text-sm md:text-base font-bold">
-                    Selamat datang kembali, <span class="bg-yellow-200 border-b-2 border-black px-1" title="{{ $owner->name }}">{{ Str::limit(explode(' ', trim($owner->name))[0], 30) }}</span>! Kelola iklan & ketersediaan kost Anda.
+                    Selamat datang kembali, <span class="bg-yellow-200 border-b-2 border-black px-1" title="{{ $owner->name }}">{{ Str::limit(trim($owner->name), 30) }}</span>! Kelola iklan & ketersediaan kost Anda.
                 </p>
             </div>
             

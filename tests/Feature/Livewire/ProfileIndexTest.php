@@ -5,7 +5,9 @@ use App\Models\Inquiry;
 use App\Models\Kost;
 use App\Models\User;
 use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
 
@@ -232,4 +234,71 @@ it('squishes surrounding whitespace from the name', function () {
         ->assertHasNoErrors();
 
     expect($user->fresh()->name)->toBe('Agus Setiawan');
+});
+
+it('shows the identity verification card only to owners', function () {
+    $owner = User::factory()->create(['role' => 'owner']);
+    $pencari = User::factory()->create(['role' => 'user']);
+
+    $this->actingAs($owner)
+        ->get('/profil')
+        ->assertOk()
+        ->assertSee('Verifikasi Identitas (KTP)');
+
+    $this->actingAs($pencari)
+        ->get('/profil')
+        ->assertOk()
+        ->assertDontSee('Verifikasi Identitas (KTP)');
+});
+
+it('lets an owner upload an identity KTP document', function () {
+    Storage::fake(config('filesystems.default'));
+    $owner = User::factory()->create(['role' => 'owner']);
+
+    Livewire::actingAs($owner)
+        ->test(Index::class)
+        ->set('identity_doc', UploadedFile::fake()->image('ktp.jpg'))
+        ->assertHasNoErrors(['identity_doc'])
+        ->assertDispatched('show-toast');
+
+    $owner->refresh();
+    expect($owner->identity_verification_status)->toBe('pending');
+    expect($owner->identity_doc_path)->not->toBeNull();
+    expect(Storage::disk(config('filesystems.default'))->exists($owner->identity_doc_path))->toBeTrue();
+});
+
+it('lets an owner re-upload identity KTP and clears the rejection note', function () {
+    Storage::fake(config('filesystems.default'));
+    $oldPath = 'verification-docs/identity/old-ktp.jpg';
+    Storage::disk(config('filesystems.default'))->put($oldPath, 'old');
+
+    $owner = User::factory()->create([
+        'role' => 'owner',
+        'identity_doc_path' => $oldPath,
+        'identity_verification_status' => 'rejected',
+        'identity_rejection_note' => 'Foto KTP buram, tidak terbaca.',
+    ]);
+
+    Livewire::actingAs($owner)
+        ->test(Index::class)
+        ->set('identity_doc', UploadedFile::fake()->image('ktp-baru.jpg'));
+
+    $owner->refresh();
+    expect($owner->identity_verification_status)->toBe('pending');
+    expect($owner->identity_rejection_note)->toBeNull();
+    expect($owner->identity_doc_path)->not->toBe($oldPath);
+    expect(Storage::disk(config('filesystems.default'))->exists($oldPath))->toBeFalse();
+});
+
+it('does not let a pencari kost upload an identity KTP document', function () {
+    Storage::fake(config('filesystems.default'));
+    $user = User::factory()->create(['role' => 'user']);
+
+    Livewire::actingAs($user)
+        ->test(Index::class)
+        ->set('identity_doc', UploadedFile::fake()->image('ktp.jpg'));
+
+    $user->refresh();
+    expect($user->identity_verification_status)->toBe('unverified');
+    expect($user->identity_doc_path)->toBeNull();
 });

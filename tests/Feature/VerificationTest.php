@@ -57,7 +57,7 @@ it('saves a kost without verification documents as unverified', function () {
         ->test(CreateKost::class)
         ->set(verifTestKostPayload())
         ->call('save')
-        ->assertHasNoErrors(['identity_doc', 'ownership_doc', 'ownership_doc_type'])
+        ->assertHasNoErrors(['ownership_doc', 'ownership_doc_type'])
         ->assertRedirect(route('dashboard'));
 
     $user->refresh();
@@ -71,23 +71,21 @@ it('saves a kost without verification documents as unverified', function () {
     expect($kost->ownership_doc_path)->toBeNull();
 });
 
-it('marks uploaded documents as pending and stores their paths', function () {
+it('marks an uploaded ownership document as pending and stores its path', function () {
     $user = User::factory()->create();
 
     Livewire::actingAs($user)
         ->test(CreateKost::class)
         ->set(verifTestKostPayload())
-        ->set('identity_doc', UploadedFile::fake()->image('ktp.jpg'))
         ->set('ownership_doc', UploadedFile::fake()->image('pbb.jpg'))
         ->set('ownership_doc_type', 'pbb')
         ->call('save')
-        ->assertHasNoErrors(['identity_doc', 'ownership_doc', 'ownership_doc_type'])
+        ->assertHasNoErrors(['ownership_doc', 'ownership_doc_type'])
         ->assertRedirect(route('dashboard'));
 
     $user->refresh();
-    expect($user->identity_verification_status)->toBe('pending');
-    expect($user->identity_doc_path)->not->toBeNull();
-    expect(Storage::disk(config('filesystems.default'))->exists($user->identity_doc_path))->toBeTrue();
+    expect($user->identity_verification_status)->toBe('unverified');
+    expect($user->identity_doc_path)->toBeNull();
 
     $kost = Kost::where('name', 'Kost Test')->first();
     expect($kost->ownership_verification_status)->toBe('pending');

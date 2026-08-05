@@ -1591,3 +1591,244 @@
                     </div>
                 </div>
             </x-brutal-card>
+
+            <!-- Seksi 7: Verifikasi Kepemilikan -->
+            @php
+                $verUser = auth()->user();
+                $identityVerified = $verUser ? $verUser->isIdentityVerified() : false;
+                $identityStatus = $verUser ? (string) $verUser->identity_verification_status : 'unverified';
+                $identityRejection = $verUser ? $verUser->identity_rejection_note : null;
+                $ownershipStatus = $isEdit ? $kost->ownership_verification_status : '';
+                $ownershipRejection = $isEdit ? $kost->ownership_rejection_note : null;
+            @endphp
+            <x-brutal-card class="space-y-6">
+                <div class="flex items-center gap-3 border-b-3 border-black pb-4">
+                    <div
+                        class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                        7
+                    </div>
+                    <div>
+                        <h2 class="flex items-center gap-2 text-xl font-black text-black uppercase tracking-tight">
+                            <span>Verifikasi Kepemilikan</span>
+                            <span class="text-[10px] px-2 py-0.5 bg-cyan-300 border-2 border-black rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">Opsional</span>
+                        </h2>
+                        <p class="text-xs font-bold text-zinc-600">Sukarela — dapatkan badge "Terverifikasi" untuk meningkatkan kepercayaan calon penghuni. Kost tetap dapat ditayangkan tanpa dokumen ini.</p>
+                    </div>
+                </div>
+
+                <!-- Penjelasan & Privasi -->
+                <div class="p-4 bg-zinc-100 border-2 border-black rounded-xl space-y-2">
+                    <p class="text-xs font-black text-black uppercase flex items-center gap-2">
+                        <x-icon name="lucide-shield-check" class="w-4 h-4 text-black stroke-[2.5] shrink-0" />
+                        Mengapa dokumen ini diperlukan?
+                    </p>
+                    <p class="text-xs font-bold text-zinc-700 leading-relaxed">
+                        Dokumen berikut digunakan untuk memverifikasi keaslian kost dan status Anda sebagai pemilik/pengelola
+                        secara sukarela. Setelah diverifikasi, properti Anda akan mendapatkan badge
+                        <span class="font-black text-black">"Terverifikasi"</span> sebagai tanda kepercayaan bagi calon penghuni.
+                        Dokumen identitas (KTP) cukup diunggah sekali dan berlaku untuk semua kost Anda.
+                    </p>
+                    <p class="text-xs font-bold text-zinc-700 leading-relaxed flex items-start gap-1.5">
+                        <x-icon name="lucide-lock-keyhole" class="w-4 h-4 text-zinc-600 stroke-[2] shrink-0 mt-0.5" />
+                        <span>
+                            Dokumen disimpan secara <span class="font-black">rahasia dan terenkripsi akses</span>, hanya dapat
+                            dilihat oleh tim admin KostBandung untuk keperluan verifikasi, dan tidak pernah ditampilkan kepada publik.
+                        </span>
+                    </p>
+                </div>
+
+                <!-- 7a. Identitas Pemilik (KTP) -->
+                <div class="space-y-3 pt-2 border-t-2 border-black">
+                    <div class="flex items-center justify-between gap-2">
+                        <label class="block text-xs font-black uppercase tracking-wider text-black flex items-center gap-2">
+                            <x-icon name="lucide-id-card" class="w-4 h-4 stroke-[2.5] shrink-0" />
+                            Identitas Pemilik (KTP)
+                        </label>
+                        <span class="text-[10px] font-bold italic text-zinc-500">Opsional &middot; cukup sekali, berlaku untuk semua kost Anda</span>
+                    </div>
+
+                    @if ($identityVerified)
+                        <div class="p-4 bg-emerald-100 border-2 border-black rounded-xl flex items-center gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                            <div class="w-10 h-10 rounded bg-emerald-400 border-2 border-black flex items-center justify-center shrink-0">
+                                <x-icon name="lucide-badge-check" class="w-5 h-5 text-black stroke-[2.5]" />
+                            </div>
+                            <div>
+                                <p class="text-xs font-black text-black uppercase">Identitas Anda Telah Terverifikasi</p>
+                                <p class="text-xs font-bold text-emerald-800">KTP pemilik telah disetujui oleh tim KostBandung. Tidak perlu mengunggah ulang.</p>
+                            </div>
+                        </div>
+                    @else
+                        @if ($identityStatus === 'pending')
+                            <div class="p-4 bg-amber-100 border-2 border-black rounded-xl flex items-center gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                                <div class="w-10 h-10 rounded bg-amber-400 border-2 border-black flex items-center justify-center shrink-0">
+                                    <x-icon name="lucide-hourglass" class="w-5 h-5 text-black stroke-[2.5]" />
+                                </div>
+                                <div>
+                                    <p class="text-xs font-black text-black uppercase">Menunggu Verifikasi Admin</p>
+                                    <p class="text-xs font-bold text-amber-800">Dokumen KTP Anda sedang ditinjau oleh tim admin.</p>
+                                </div>
+                            </div>
+                        @elseif ($identityStatus === 'rejected' && $identityRejection)
+                            <div class="p-4 bg-rose-100 border-2 border-black rounded-xl flex items-start gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                                <div class="w-10 h-10 rounded bg-rose-400 border-2 border-black flex items-center justify-center shrink-0">
+                                    <x-icon name="lucide-x-circle" class="w-5 h-5 text-black stroke-[2.5]" />
+                                </div>
+                                <div class="space-y-1">
+                                    <p class="text-xs font-black text-black uppercase">Dokumen KTP Ditolak</p>
+                                    <p class="text-xs font-bold text-rose-800">Alasan: {{ $identityRejection }}</p>
+                                    <p class="text-xs font-bold text-zinc-700">Silakan unggah ulang KTP yang jelas di bawah ini.</p>
+                                </div>
+                            </div>
+                        @endif
+
+                        <div class="space-y-3"
+                            x-data="{ uploading: false, progress: 0 }"
+                            x-on:livewire-upload-start="uploading = true; progress = 0"
+                            x-on:livewire-upload-finish="uploading = false; progress = 100"
+                            x-on:livewire-upload-error="uploading = false; progress = 0"
+                            x-on:livewire-upload-progress="progress = $event.detail.progress">
+                            <div class="relative border-3 border-dashed border-black rounded-xl p-6 text-center bg-zinc-50 hover:bg-yellow-100/70 transition-all cursor-pointer shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                                <input type="file" wire:model="identity_doc" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                                <div class="space-y-2 pointer-events-none">
+                                    <div class="w-11 h-11 rounded-lg bg-white border-2 border-black flex items-center justify-center mx-auto text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                        <x-icon name="lucide-id-card" class="w-5 h-5 stroke-[2]" />
+                                    </div>
+                                    <p class="text-xs font-black text-black uppercase">
+                                        {{ $identityStatus === 'rejected' ? 'Unggah Ulang Foto KTP' : 'Klik atau seret foto KTP ke area ini' }}
+                                    </p>
+                                    <p class="text-xs font-bold text-zinc-600">Format: JPG, PNG, WEBP &middot; Maks 2MB</p>
+                                </div>
+                            </div>
+
+                            @if ($identity_doc)
+                                <div class="bg-lime-100 border-3 border-black p-3 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] space-y-2">
+                                    <p class="text-[10px] font-black uppercase text-black flex items-center gap-2">
+                                        <x-icon name="lucide-file-check" class="w-3.5 h-3.5 stroke-[2.5]" />
+                                        Pratinjau KTP Terpilih
+                                    </p>
+                                    <img src="{{ $identity_doc->temporaryUrl() }}" alt="Pratinjau KTP"
+                                        class="w-full max-h-52 object-contain rounded-lg border-2 border-black bg-white">
+                                </div>
+                            @endif
+
+                            <div x-show="uploading" x-cloak class="space-y-1.5">
+                                <div class="w-full bg-white border-2 border-black rounded-lg h-5 p-0.5 relative overflow-hidden">
+                                    <div class="bg-lime-400 border-r-2 border-black h-full transition-all duration-300" :style="'width: ' + progress + '%'"></div>
+                                </div>
+                                <p class="text-[10px] font-black uppercase text-zinc-600" x-text="'Mengunggah ' + progress + '%'"></p>
+                            </div>
+
+                            @error('identity_doc')
+                                <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md inline-block">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    @endif
+                </div>
+
+                <!-- 7b. Bukti Kepemilikan Properti -->
+                <div class="space-y-3 pt-2 border-t-2 border-black">
+                    <div class="flex items-center justify-between gap-2">
+                        <label class="block text-xs font-black uppercase tracking-wider text-black flex items-center gap-2">
+                            <x-icon name="lucide-file-text" class="w-4 h-4 stroke-[2.5] shrink-0" />
+                            Bukti Kepemilikan Properti
+                        </label>
+                        <span class="text-[10px] font-bold italic text-zinc-500">Opsional &middot; diunggah untuk setiap kost</span>
+                    </div>
+
+                    @if ($ownershipStatus === 'verified')
+                        <div class="p-4 bg-emerald-100 border-2 border-black rounded-xl flex items-center gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                            <div class="w-10 h-10 rounded bg-emerald-400 border-2 border-black flex items-center justify-center shrink-0">
+                                <x-icon name="lucide-badge-check" class="w-5 h-5 text-black stroke-[2.5]" />
+                            </div>
+                            <div>
+                                <p class="text-xs font-black text-black uppercase">Kepemilikan Properti Terverifikasi</p>
+                                <p class="text-xs font-bold text-emerald-800">Bukti kepemilikan kost ini telah disetujui. Badge "Terverifikasi" aktif di halaman publik.</p>
+                            </div>
+                        </div>
+                    @else
+                        @if ($ownershipStatus === 'pending')
+                            <div class="p-4 bg-amber-100 border-2 border-black rounded-xl flex items-center gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                                <div class="w-10 h-10 rounded bg-amber-400 border-2 border-black flex items-center justify-center shrink-0">
+                                    <x-icon name="lucide-hourglass" class="w-5 h-5 text-black stroke-[2.5]" />
+                                </div>
+                                <div>
+                                    <p class="text-xs font-black text-black uppercase">Menunggu Verifikasi Admin</p>
+                                    <p class="text-xs font-bold text-amber-800">Dokumen kepemilikan kost ini sedang ditinjau.</p>
+                                </div>
+                            </div>
+                        @elseif ($ownershipStatus === 'rejected' && $ownershipRejection)
+                            <div class="p-4 bg-rose-100 border-2 border-black rounded-xl flex items-start gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                                <div class="w-10 h-10 rounded bg-rose-400 border-2 border-black flex items-center justify-center shrink-0">
+                                    <x-icon name="lucide-x-circle" class="w-5 h-5 text-black stroke-[2.5]" />
+                                </div>
+                                <div class="space-y-1">
+                                    <p class="text-xs font-black text-black uppercase">Dokumen Kepemilikan Ditolak</p>
+                                    <p class="text-xs font-bold text-rose-800">Alasan: {{ $ownershipRejection }}</p>
+                                    <p class="text-xs font-bold text-zinc-700">Silakan unggah ulang dokumen yang sesuai di bawah ini.</p>
+                                </div>
+                            </div>
+                        @endif
+
+                        <div class="space-y-2">
+                            <label for="ownership_doc_type" class="block text-xs font-black uppercase tracking-wider text-black">
+                                Jenis Dokumen
+                            </label>
+                            <select id="ownership_doc_type" wire:model="ownership_doc_type"
+                                class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-black text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer">
+                                <option value="" disabled>-- Pilih Jenis Dokumen --</option>
+                                @foreach (\App\Models\Kost::ownershipDocTypeLabels() as $value => $label)
+                                    <option value="{{ $value }}">{{ $label }}</option>
+                                @endforeach
+                            </select>
+                            @error('ownership_doc_type')
+                                <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md inline-block">{{ $message }}</p>
+                            @enderror
+                            <p class="text-[11px] font-bold italic text-zinc-500">
+                                Untuk pengelola/penyewa-ulang: gunakan "Surat Kuasa dari Pemilik". Pastikan nama pada dokumen sesuai dengan nama pemilik.
+                            </p>
+                        </div>
+
+                        <div class="space-y-3"
+                            x-data="{ uploading: false, progress: 0 }"
+                            x-on:livewire-upload-start="uploading = true; progress = 0"
+                            x-on:livewire-upload-finish="uploading = false; progress = 100"
+                            x-on:livewire-upload-error="uploading = false; progress = 0"
+                            x-on:livewire-upload-progress="progress = $event.detail.progress">
+                            <div class="relative border-3 border-dashed border-black rounded-xl p-6 text-center bg-zinc-50 hover:bg-lime-100/70 transition-all cursor-pointer shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                                <input type="file" wire:model="ownership_doc" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                                <div class="space-y-2 pointer-events-none">
+                                    <div class="w-11 h-11 rounded-lg bg-white border-2 border-black flex items-center justify-center mx-auto text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                        <x-icon name="lucide-file-up" class="w-5 h-5 stroke-[2]" />
+                                    </div>
+                                    <p class="text-xs font-black text-black uppercase">
+                                        {{ $ownershipStatus === 'rejected' ? 'Unggah Ulang Dokumen Kepemilikan' : 'Klik atau seret dokumen ke area ini' }}
+                                    </p>
+                                    <p class="text-xs font-bold text-zinc-600">Format: JPG, PNG, WEBP &middot; Maks 2MB</p>
+                                </div>
+                            </div>
+
+                            @if ($ownership_doc)
+                                <div class="bg-lime-100 border-3 border-black p-3 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] space-y-2">
+                                    <p class="text-[10px] font-black uppercase text-black flex items-center gap-2">
+                                        <x-icon name="lucide-file-check" class="w-3.5 h-3.5 stroke-[2.5]" />
+                                        Pratinjau Dokumen Terpilih
+                                    </p>
+                                    <img src="{{ $ownership_doc->temporaryUrl() }}" alt="Pratinjau Dokumen Kepemilikan"
+                                        class="w-full max-h-52 object-contain rounded-lg border-2 border-black bg-white">
+                                </div>
+                            @endif
+
+                            <div x-show="uploading" x-cloak class="space-y-1.5">
+                                <div class="w-full bg-white border-2 border-black rounded-lg h-5 p-0.5 relative overflow-hidden">
+                                    <div class="bg-lime-400 border-r-2 border-black h-full transition-all duration-300" :style="'width: ' + progress + '%'"></div>
+                                </div>
+                                <p class="text-[10px] font-black uppercase text-zinc-600" x-text="'Mengunggah ' + progress + '%'"></p>
+                            </div>
+
+                            @error('ownership_doc')
+                                <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md inline-block">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    @endif
+                </div>
+            </x-brutal-card>

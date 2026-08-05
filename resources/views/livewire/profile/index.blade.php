@@ -78,8 +78,35 @@
         <!-- Profile Card -->
         <div class="bg-white border-4 border-black p-6 md:p-8 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
             <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-                <div class="w-24 h-24 md:w-28 md:h-28 rounded-2xl bg-yellow-300 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center shrink-0">
-                    <span class="text-3xl md:text-4xl font-black text-black uppercase">{{ $user->initials() }}</span>
+                <div class="flex flex-col items-center shrink-0">
+                    <div class="w-24 h-24 md:w-28 md:h-28 rounded-2xl bg-yellow-300 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center overflow-hidden">
+                        @if ($user->avatar_url)
+                            <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="w-full h-full object-cover" />
+                        @else
+                            <span class="text-3xl md:text-4xl font-black text-black uppercase">{{ $user->initials() }}</span>
+                        @endif
+                    </div>
+
+                    <div class="flex items-center justify-center gap-1.5 mt-2.5">
+                        <label class="px-2.5 py-1 bg-cyan-300 hover:bg-cyan-200 text-black border-2 border-black font-black text-[10px] uppercase rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer inline-flex items-center gap-1">
+                            <x-icon name="lucide-camera" class="w-3 h-3 stroke-[2.5]" />
+                            <span>{{ $user->avatar_url ? 'Ganti' : 'Unggah' }}</span>
+                            <input type="file" wire:model="avatarUpload" accept="image/*" class="hidden" />
+                        </label>
+                        @if ($user->avatar_url)
+                            <button type="button" wire:click="deleteAvatar" wire:confirm="Apakah Anda yakin ingin menghapus foto profil ini?" class="px-2 py-1 bg-rose-400 hover:bg-rose-300 text-black border-2 border-black font-black text-[10px] uppercase rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer inline-flex items-center gap-1" title="Hapus Foto Profil">
+                                <x-icon name="lucide-trash-2" class="w-3 h-3 stroke-[2.5]" />
+                            </button>
+                        @endif
+                    </div>
+
+                    <div wire:loading wire:target="avatarUpload" class="text-[10px] font-black text-black mt-1 text-center animate-pulse">
+                        Mengunggah...
+                    </div>
+
+                    @error('avatarUpload')
+                        <p class="text-[10px] font-black text-rose-600 mt-1 text-center max-w-[140px]">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="flex-1 text-center sm:text-left space-y-2">

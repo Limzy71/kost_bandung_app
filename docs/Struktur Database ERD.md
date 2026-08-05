@@ -15,6 +15,7 @@ Menyimpan semua data pengguna (Admin, Mahasiswa/Pencari Kost, dan Pemilik Kost).
 |`id`|Primary Key, BigInt||
 |`name`|String||
 |`email`|String, Unique||
+|`avatar`|String, Nullable|Path berkas foto profil di storage|
 |`phone_number`|String, Unique||
 |`password`|String||
 |`role`|Enum|’admin’, ’owner’, ’student’|

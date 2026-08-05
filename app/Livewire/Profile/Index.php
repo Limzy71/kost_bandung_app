@@ -11,11 +11,12 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 #[Title('Profil Saya — KostBandung.web.id')]
 class Index extends Component
 {
-    use ProfileValidationRules;
+    use ProfileValidationRules, WithFileUploads;
 
     public string $name = '';
 
@@ -26,6 +27,8 @@ class Index extends Component
     public string $business_name = '';
 
     public bool $editing = false;
+
+    public mixed $avatarUpload = null;
 
     /**
      * @var array<string, string>
@@ -86,6 +89,38 @@ class Index extends Component
         $this->editing = false;
 
         $this->dispatch('show-toast', message: 'Profil Anda berhasil diperbarui.');
+    }
+
+    public function updatedAvatarUpload(): void
+    {
+        $this->validate([
+            'avatarUpload' => 'nullable|image|max:2048',
+        ], [
+            'avatarUpload.image' => 'File harus berupa gambar (JPG, PNG, WEBP).',
+            'avatarUpload.max' => 'Ukuran gambar maksimal 2MB.',
+        ]);
+
+        if ($this->avatarUpload) {
+            $user = $this->currentUser();
+            $user->deleteAvatarFile();
+
+            $path = $this->avatarUpload->store('avatars', config('filesystems.default'));
+            $user->update(['avatar' => $path]);
+
+            $this->avatarUpload = null;
+            $this->dispatch('show-toast', message: 'Foto profil Anda berhasil diperbarui.');
+        }
+    }
+
+    public function deleteAvatar(): void
+    {
+        $user = $this->currentUser();
+
+        if ($user->avatar) {
+            $user->deleteAvatarFile();
+            $user->update(['avatar' => null]);
+            $this->dispatch('show-toast', message: 'Foto profil Anda berhasil dihapus.');
+        }
     }
 
     public function render(): View

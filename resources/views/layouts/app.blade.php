@@ -137,7 +137,11 @@
 
                     @unless(request()->routeIs('profile.show'))
                         <a href="{{ route('profile.show') }}" class="text-xs font-black uppercase text-black bg-zinc-100 hover:bg-zinc-200 border-2 border-black px-3 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] rounded max-sm:hidden inline-flex items-center gap-1.5 cursor-pointer transition-all" title="Profil Saya">
-                            <x-icon name="lucide-user" class="w-4 h-4 text-black stroke-[2.5]" />
+                            @if(auth()->user()->avatar_url)
+                                <img src="{{ auth()->user()->avatar_url }}" alt="" class="w-5 h-5 rounded-md object-cover border border-black shrink-0" />
+                            @else
+                                <x-icon name="lucide-user" class="w-4 h-4 text-black stroke-[2.5]" />
+                            @endif
                             <span>{{ auth()->user()->name }}</span>
                         </a>
                     @endunless
@@ -295,7 +299,11 @@
                             @unless(request()->routeIs('profile.show'))
                                 <li>
                                     <a href="{{ route('profile.show') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
-                                        <x-icon name="lucide-user" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
+                                        @if(auth()->user()->avatar_url)
+                                            <img src="{{ auth()->user()->avatar_url }}" alt="" class="w-5 h-5 rounded-md object-cover border border-black shrink-0" />
+                                        @else
+                                            <x-icon name="lucide-user" class="w-4 h-4 text-black group-hover:rotate-12 transition-transform stroke-[2.5]" />
+                                        @endif
                                         <span>Profil Saya</span>
                                     </a>
                                 </li>

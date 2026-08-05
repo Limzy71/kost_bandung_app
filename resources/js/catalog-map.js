@@ -15,6 +15,8 @@ window.catalogMap = function (config) {
         viewMode: 'list',
         hasGoogleKey: '',
         map: null,
+        mapEngine: '',     // 'google' | 'leaflet' | '' — engine actually in use
+        googleRetries: 0,  // attempts made to load the Google Maps script
         mapReady: false,   // true once the map library has been loaded
         markers: [],
         infoWindow: null,
@@ -46,12 +48,27 @@ window.catalogMap = function (config) {
             // Re-render markers whenever Livewire pushes updated mapItems
             window.addEventListener('map-items-updated', () => {
                 if (this.viewMode === 'map' && this.map) {
-                    if (window.google && window.google.maps) {
+                    if (this.mapEngine === 'google' && window.google && window.google.maps) {
                         this.renderGoogleMarkers();
-                    } else if (typeof L !== 'undefined') {
+                    } else if (this.mapEngine === 'leaflet' && typeof L !== 'undefined') {
                         this.renderLeafletMarkers();
                     }
                 }
+            });
+
+            // Resilience: if the network drops/reconnects (ERR_NETWORK_CHANGED),
+            // retry loading the Google Maps script — it may succeed on a fresh connection.
+            window.addEventListener('online', () => {
+                if (!this.map && this.hasGoogleKey && !window.google) {
+                    this.initCatalogMap();
+                }
+            });
+
+            // When Google Maps finishes loading, set up the map — but never clobber
+            // a Leaflet map that may have already been initialized as a fallback.
+            window.addEventListener('google-catalog-map-loaded', () => {
+                if (this.mapEngine === 'leaflet' || this.map) return;
+                if (!this.setupGoogleMap()) this.loadLeafletAndInit();
             });
         },
 
@@ -62,10 +79,10 @@ window.catalogMap = function (config) {
         /** Force resize on already-created map instance */
         resizeMap() {
             if (!this.map) return;
-            if (window.google && window.google.maps) {
+            if (this.mapEngine === 'google' && window.google) {
                 google.maps.event.trigger(this.map, 'resize');
                 this.renderGoogleMarkers(); // re-fit bounds after resize
-            } else if (typeof L !== 'undefined' && this.map.invalidateSize) {
+            } else if (this.mapEngine === 'leaflet' && typeof L !== 'undefined' && this.map.invalidateSize) {
                 this.map.invalidateSize();
                 this.renderLeafletMarkers();
             }
@@ -73,31 +90,52 @@ window.catalogMap = function (config) {
 
         /** Load the appropriate map library then set up the map */
         initCatalogMap() {
+            if (this.map) return; // already initialized, nothing to do
             if (this.hasGoogleKey) {
                 if (window.google && window.google.maps) {
                     this.setupGoogleMap();
-                } else {
-                    if (!document.getElementById('google-catalog-map-script')) {
-                        window.initGoogleCatalogMap = () =>
-                            window.dispatchEvent(new CustomEvent('google-catalog-map-loaded'));
-                        const s = document.createElement('script');
-                        s.id = 'google-catalog-map-script';
-                        s.src = 'https://maps.googleapis.com/maps/api/js?key=' +
-                            this.hasGoogleKey + '&callback=initGoogleCatalogMap';
-                        s.async = true;
-                        s.defer = true;
-                        s.onerror = () => this.loadLeafletAndInit();
-                        document.head.appendChild(s);
-                    }
-                    window.addEventListener('google-catalog-map-loaded', () => {
-                        if (!this.setupGoogleMap()) this.loadLeafletAndInit();
-                    });
-                    // Fallback to Leaflet after 5s if Google Maps script hasn't loaded
-                    setTimeout(() => { if (!this.map) this.loadLeafletAndInit(); }, 5000);
+                } else if (this.mapEngine !== 'leaflet') {
+                    this.loadGoogleMaps();
                 }
             } else {
                 this.loadLeafletAndInit();
             }
+        },
+
+        /** Load the Google Maps script with retry-on-failure, then fall back to Leaflet */
+        loadGoogleMaps() {
+            if (window.google && window.google.maps) {
+                this.setupGoogleMap();
+                return;
+            }
+            if (this.mapEngine === 'leaflet' || this.map) return;
+
+            let script = document.getElementById('google-catalog-map-script');
+            if (!script) {
+                window.initGoogleCatalogMap = () =>
+                    window.dispatchEvent(new CustomEvent('google-catalog-map-loaded'));
+                script = document.createElement('script');
+                script.id = 'google-catalog-map-script';
+                script.src = 'https://maps.googleapis.com/maps/api/js?key=' +
+                    this.hasGoogleKey + '&callback=initGoogleCatalogMap';
+                script.async = true;
+                script.defer = true;
+                script.onerror = () => {
+                    // Remove the failed script so a later retry can re-add it
+                    if (script.parentNode) script.parentNode.removeChild(script);
+                    if (this.map || this.mapEngine === 'leaflet') return;
+                    if (this.googleRetries < 3) {
+                        this.googleRetries++;
+                        // Exponential backoff: 2s, 4s, 6s
+                        setTimeout(() => this.loadGoogleMaps(), 2000 * this.googleRetries);
+                    } else {
+                        this.loadLeafletAndInit();
+                    }
+                };
+                document.head.appendChild(script);
+            }
+            // Fallback to Leaflet after 5s if Google Maps script hasn't loaded
+            setTimeout(() => { if (!this.map) this.loadLeafletAndInit(); }, 5000);
         },
 
         loadLeafletAndInit() {
@@ -138,6 +176,7 @@ window.catalogMap = function (config) {
         },
 
         setupGoogleMap() {
+            if (this.mapEngine === 'leaflet') return true; // don't clobber a working Leaflet map
             if (!this.$refs.catalogMapElement) return false;
             if (!window.google || !window.google.maps) {
                 window.dispatchEvent(new Event('map-load-error'));
@@ -153,6 +192,8 @@ window.catalogMap = function (config) {
                         fullscreenControl: false,
                     });
                     this.infoWindow = new google.maps.InfoWindow();
+                    this.mapEngine = 'google';
+                    this.googleRetries = 0;
                 }
                 this.renderGoogleMarkers();
                 
@@ -173,7 +214,7 @@ window.catalogMap = function (config) {
         },
 
         renderGoogleMarkers() {
-            if (!this.map || !window.google) return;
+            if (this.mapEngine !== 'google' || !this.map || !window.google) return;
             this.markers.forEach(m => m.setMap(null));
             this.markers = [];
 
@@ -245,6 +286,7 @@ window.catalogMap = function (config) {
         },
 
         setupLeafletMap() {
+            if (this.mapEngine === 'google') return; // don't clobber a working Google map
             if (!this.$refs.catalogMapElement || typeof L === 'undefined') return;
             if (!this.map) {
                 this.map = L.map(this.$refs.catalogMapElement)
@@ -253,6 +295,7 @@ window.catalogMap = function (config) {
                     maxZoom: 19,
                     attribution: '&copy; OpenStreetMap',
                 }).addTo(this.map);
+                this.mapEngine = 'leaflet';
             }
             this.renderLeafletMarkers();
             
@@ -269,7 +312,7 @@ window.catalogMap = function (config) {
         },
 
         renderLeafletMarkers() {
-            if (!this.map || typeof L === 'undefined') return;
+            if (this.mapEngine !== 'leaflet' || !this.map || typeof L === 'undefined') return;
             this.markers.forEach(m => this.map.removeLayer(m));
             this.markers = [];
 

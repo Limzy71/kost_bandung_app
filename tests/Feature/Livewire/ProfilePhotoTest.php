@@ -10,7 +10,7 @@ use Livewire\Livewire;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    Storage::fake(config('filesystems.default'));
+    Storage::fake('public');
 });
 
 it('lets a user upload a profile photo', function () {
@@ -27,7 +27,7 @@ it('lets a user upload a profile photo', function () {
     $user->refresh();
 
     expect($user->avatar)->not->toBeNull();
-    Storage::disk(config('filesystems.default'))->assertExists($user->avatar);
+    Storage::disk('public')->assertExists($user->avatar);
 });
 
 it('lets an owner upload and replace a profile photo, removing the old file', function () {
@@ -55,13 +55,13 @@ it('lets an owner upload and replace a profile photo, removing the old file', fu
     expect($user->avatar)->not->toBeNull()
         ->and($user->avatar)->not->toBe($oldPath);
 
-    Storage::disk(config('filesystems.default'))->assertMissing($oldPath);
-    Storage::disk(config('filesystems.default'))->assertExists($user->avatar);
+    Storage::disk('public')->assertMissing($oldPath);
+    Storage::disk('public')->assertExists($user->avatar);
 });
 
 it('lets an admin delete a profile photo', function () {
     $fakePath = 'avatars/test-admin.jpg';
-    Storage::disk(config('filesystems.default'))->put($fakePath, 'dummy content');
+    Storage::disk('public')->put($fakePath, 'dummy content');
 
     $user = User::factory()->create([
         'role' => 'admin',
@@ -75,7 +75,7 @@ it('lets an admin delete a profile photo', function () {
     $user->refresh();
 
     expect($user->avatar)->toBeNull();
-    Storage::disk(config('filesystems.default'))->assertMissing($fakePath);
+    Storage::disk('public')->assertMissing($fakePath);
 });
 
 it('rejects a file that is not an image', function () {

@@ -59,7 +59,7 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     protected function avatarUrl(): Attribute
     {
         return Attribute::make(
-            get: fn (): ?string => $this->avatar ? Storage::disk(config('filesystems.default'))->url($this->avatar) : null,
+            get: fn (): ?string => $this->avatar ? Storage::disk('public')->url($this->avatar) : null,
         );
     }
 
@@ -69,7 +69,7 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     public function deleteAvatarFile(): void
     {
         if ($this->avatar) {
-            Storage::disk(config('filesystems.default'))->delete($this->avatar);
+            Storage::disk('public')->delete($this->avatar);
         }
     }
 

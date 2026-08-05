@@ -227,6 +227,11 @@
                                                 <x-icon name="lucide-badge-check" class="w-3 h-3 shrink-0 stroke-[3]" />
                                                 Terverifikasi
                                             </span>
+                                        @else
+                                            <span class="px-2.5 py-1 bg-rose-400 text-black border-2 border-black text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider inline-flex items-center gap-1" title="Kost ini belum diverifikasi kepemilikannya">
+                                                <x-icon name="lucide-shield-alert" class="w-3 h-3 shrink-0 stroke-[3]" />
+                                                Belum Terverifikasi
+                                            </span>
                                         @endif
                                     </div>
 

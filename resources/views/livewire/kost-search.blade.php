@@ -374,27 +374,7 @@
                         <span x-text="items.length"></span> Kost Tampil Pada Peta
                     </span>
                 </div>
-                <!-- Map stage: the live map sits behind a loading overlay that
-                     fades out only after the map engine has laid out its tiles,
-                     so the reveal never shows a blank/gray flash. -->
-                <div class="relative w-full h-[450px] lg:h-[500px] bg-zinc-100 z-0">
-                    <div x-ref="catalogMapElement" class="w-full h-full z-0"></div>
-                    <div x-show="!mapReady" x-cloak
-                        x-transition:leave="transition ease-out duration-500"
-                        x-transition:leave-start="opacity-100"
-                        x-transition:leave-end="opacity-0"
-                        class="absolute inset-0 z-10 bg-zinc-100 flex items-center justify-center">
-                        <div class="flex flex-col items-center gap-4">
-                            <div class="bg-white border-3 border-black rounded-2xl p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] animate-bounce">
-                                <x-icon name="lucide-map-pin" class="w-8 h-8 text-black stroke-[2.5]" />
-                            </div>
-                            <div class="bg-yellow-300 border-3 border-black px-6 py-3 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center gap-3">
-                                <x-icon name="lucide-loader-circle" class="animate-spin h-5 w-5 text-black" />
-                                <span class="font-black text-black text-sm uppercase tracking-wide">Menyiapkan Peta...</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div x-ref="catalogMapElement" class="w-full h-[450px] lg:h-[500px] bg-zinc-100 z-0"></div>
             </div>
 
             <!-- Fallback Neo-Brutalist Error Card -->

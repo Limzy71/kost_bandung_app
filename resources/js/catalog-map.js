@@ -48,8 +48,11 @@ window.catalogMap = function (config) {
             // Re-render markers whenever Livewire pushes updated mapItems
             window.addEventListener('map-items-updated', () => {
                 if (this.viewMode === 'map' && this.map) {
-                    this.syncMapToView();
-                    this.revealMap();
+                    if (this.mapEngine === 'google' && window.google && window.google.maps) {
+                        this.renderGoogleMarkers();
+                    } else if (this.mapEngine === 'leaflet' && typeof L !== 'undefined') {
+                        this.renderLeafletMarkers();
+                    }
                 }
             });
 
@@ -75,18 +78,7 @@ window.catalogMap = function (config) {
 
         /** Force resize on already-created map instance */
         resizeMap() {
-            if (!this.map) {
-                // Map not initialized yet — eager init runs in the background,
-                // so keep retrying until it lands so the reveal overlay always clears.
-                if (!this.mapFailed) setTimeout(() => this.resizeMap(), 150);
-                return;
-            }
-            this.syncMapToView();
-            this.revealMap();
-        },
-
-        /** Push the latest items to the live map and fix its viewport size */
-        syncMapToView() {
+            if (!this.map) return;
             if (this.mapEngine === 'google' && window.google) {
                 google.maps.event.trigger(this.map, 'resize');
                 this.renderGoogleMarkers(); // re-fit bounds after resize
@@ -94,22 +86,6 @@ window.catalogMap = function (config) {
                 this.map.invalidateSize();
                 this.renderLeafletMarkers();
             }
-        },
-
-        revealMap() {
-            if (this.mapReady || this.mapFailed) return;
-            const reveal = () => {
-                if (this.mapFailed || this.mapReady) return;
-                this.mapReady = true;
-                // Wait a tick for Alpine to remove the overlay from the DOM,
-                // so the map container is at its final full size before we
-                // re-render the markers and re-fit the bounds.
-                this.$nextTick(() => {
-                    if (this.viewMode === 'map') this.syncMapToView();
-                });
-            };
-            setTimeout(reveal, 300);
-            setTimeout(reveal, 1500); // absolute fallback
         },
 
         /** Load the appropriate map library then set up the map */
@@ -221,18 +197,14 @@ window.catalogMap = function (config) {
                     this.googleRetries = 0;
                 }
                 this.renderGoogleMarkers();
-                this.revealMap();
                 
                 // Critical Resilience: Force Google Maps to recalculate size
-                // after the reveal overlay has faded and the container is at
-                // full size. The 600ms delay gives the CSS transition time to
-                // complete before we call resize + re-render.
                 setTimeout(() => {
                     if (this.map && window.google) {
                         google.maps.event.trigger(this.map, 'resize');
-                        this.renderGoogleMarkers();
+                        this.renderGoogleMarkers(); // re-fit bounds after resize
                     }
-                }, 600);
+                }, 500);
                 
                 return true;
             } catch (e) {
@@ -346,7 +318,6 @@ window.catalogMap = function (config) {
                 this.mapEngine = 'leaflet';
             }
             this.renderLeafletMarkers();
-            this.revealMap();
             
             // Critical Resilience: Force Leaflet to recalculate size after DOM is fully painted
             setTimeout(() => {
@@ -357,7 +328,7 @@ window.catalogMap = function (config) {
                         this.map.fitBounds(group.getBounds());
                     }
                 }
-            }, 600);
+            }, 500);
         },
 
         renderLeafletMarkers() {

@@ -27,20 +27,27 @@ window.catalogMap = function (config) {
         init() {
             this.hasGoogleKey = this.$el.dataset.mapsKey || '';
 
-            // EAGER MAP INIT: Load scripts and initialize map in background immediately.
-            // This prevents network delay when the user clicks 'Lihat Peta'.
-            // Use setTimeout to yield to the main thread so page rendering isn't blocked.
+            // EAGER SCRIPT LOAD: Load scripts in background immediately,
+            // but DO NOT initialize the map yet if the container is hidden.
             setTimeout(() => {
-                this.initCatalogMap();
+                if (this.hasGoogleKey) {
+                    this.loadGoogleMapsScriptOnly();
+                } else {
+                    this.loadLeafletScriptOnly();
+                }
             }, 100);
 
-            // Watch for viewMode switch to trigger a resize, because the map was
-            // initialized inside a hidden (display: none) container.
+            // Watch for viewMode switch to mount or resize the map.
+            // We must mount the map ONLY when it's visible to avoid
+            // AdvancedMarkerElement invisible bugs in display:none containers.
             this.$watch('viewMode', (newMode) => {
                 if (newMode === 'map') {
-                    // Wait one tick for Alpine to un-hide the container via x-show
                     this.$nextTick(() => {
-                        this.resizeMap();
+                        if (!this.map) {
+                            this.initCatalogMap();
+                        } else {
+                            this.resizeMap();
+                        }
                     });
                 }
             });
@@ -56,19 +63,19 @@ window.catalogMap = function (config) {
                 }
             });
 
-            // Resilience: if the network drops/reconnects (ERR_NETWORK_CHANGED),
-            // retry loading the Google Maps script — it may succeed on a fresh connection.
+            // Resilience: if the network drops/reconnects, retry loading scripts
             window.addEventListener('online', () => {
                 if (!this.map && this.hasGoogleKey && !window.google) {
-                    this.initCatalogMap();
+                    this.loadGoogleMapsScriptOnly();
                 }
             });
 
-            // When Google Maps finishes loading, set up the map — but never clobber
-            // a Leaflet map that may have already been initialized as a fallback.
+            // When Google Maps finishes loading, if we are already in map view, mount it!
             window.addEventListener('google-catalog-map-loaded', () => {
-                if (this.mapEngine === 'leaflet' || this.map) return;
-                if (!this.setupGoogleMap()) this.loadLeafletAndInit();
+                if (this.viewMode === 'map') {
+                    if (this.mapEngine === 'leaflet' || this.map) return;
+                    if (!this.setupGoogleMap()) this.loadLeafletAndInit();
+                }
             });
         },
 
@@ -102,14 +109,10 @@ window.catalogMap = function (config) {
             }
         },
 
-        /** Load the Google Maps script with retry-on-failure, then fall back to Leaflet */
-        loadGoogleMaps() {
-            if (window.google && window.google.maps) {
-                this.setupGoogleMap();
-                return;
-            }
-            if (this.mapEngine === 'leaflet' || this.map) return;
-
+        /** Load the Google Maps script without mounting the map */
+        loadGoogleMapsScriptOnly() {
+            if (window.google && window.google.maps) return;
+            
             let script = document.getElementById('google-catalog-map-script');
             if (!script) {
                 window.initGoogleCatalogMap = () =>
@@ -121,21 +124,57 @@ window.catalogMap = function (config) {
                     '&loading=async&libraries=marker';
                 script.async = true;
                 script.onerror = () => {
-                    // Remove the failed script so a later retry can re-add it
                     if (script.parentNode) script.parentNode.removeChild(script);
                     if (this.map || this.mapEngine === 'leaflet') return;
                     if (this.googleRetries < 3) {
                         this.googleRetries++;
-                        // Exponential backoff: 2s, 4s, 6s
-                        setTimeout(() => this.loadGoogleMaps(), 2000 * this.googleRetries);
+                        setTimeout(() => this.loadGoogleMapsScriptOnly(), 2000 * this.googleRetries);
                     } else {
-                        this.loadLeafletAndInit();
+                        this.loadLeafletScriptOnly();
                     }
                 };
                 document.head.appendChild(script);
             }
+        },
+
+        /** Load the Google Maps script with retry-on-failure, then fall back to Leaflet */
+        loadGoogleMaps() {
+            if (window.google && window.google.maps) {
+                this.setupGoogleMap();
+                return;
+            }
+            if (this.mapEngine === 'leaflet' || this.map) return;
+
+            this.loadGoogleMapsScriptOnly();
             // Fallback to Leaflet after 5s if Google Maps script hasn't loaded
             setTimeout(() => { if (!this.map) this.loadLeafletAndInit(); }, 5000);
+        },
+
+        loadLeafletScriptOnly() {
+            if (typeof L !== 'undefined') return;
+            if (!document.getElementById('leaflet-css')) {
+                const link = document.createElement('link');
+                link.id = 'leaflet-css';
+                link.rel = 'stylesheet';
+                link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+                document.head.appendChild(link);
+            }
+            if (!document.getElementById('leaflet-js')) {
+                const script = document.createElement('script');
+                script.id = 'leaflet-js';
+                script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+                script.onload = () => window.dispatchEvent(new CustomEvent('leaflet-catalog-map-loaded'));
+                script.onerror = () => {
+                    if (script.parentNode) script.parentNode.removeChild(script);
+                    if (catalogLeafletRetries < CATALOG_LEAFLET_MAX_RETRIES) {
+                        catalogLeafletRetries++;
+                        setTimeout(() => this.loadLeafletScriptOnly(), 1000 * catalogLeafletRetries);
+                    } else {
+                        if (!this.map) window.dispatchEvent(new Event('map-load-error'));
+                    }
+                };
+                document.head.appendChild(script);
+            }
         },
 
         loadLeafletAndInit() {
@@ -148,31 +187,11 @@ window.catalogMap = function (config) {
                 if (!this.map) window.dispatchEvent(new Event('map-load-error'));
                 return;
             }
-            if (!document.getElementById('leaflet-css')) {
-                const link = document.createElement('link');
-                link.id = 'leaflet-css';
-                link.rel = 'stylesheet';
-                link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-                document.head.appendChild(link);
-            }
-            if (!document.getElementById('leaflet-js')) {
-                const script = document.createElement('script');
-                script.id = 'leaflet-js';
-                script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-                script.onload = () => {
-                    catalogLeafletRetries = 0;
-                    this.setupLeafletMap();
-                };
-                script.onerror = () => {
-                    const el = document.getElementById('leaflet-js');
-                    if (el) el.remove();
-                    window.dispatchEvent(new Event('map-load-error'));
-                };
-                document.head.appendChild(script);
-            } else {
-                catalogLeafletRetries++;
-                setTimeout(() => this.loadLeafletAndInit(), 200);
-            }
+            
+            this.loadLeafletScriptOnly();
+            window.addEventListener('leaflet-catalog-map-loaded', () => {
+                if (!this.map) this.setupLeafletMap();
+            });
         },
 
         setupGoogleMap() {
@@ -188,9 +207,9 @@ window.catalogMap = function (config) {
                         center: { lat: -6.917464, lng: 107.619123 },
                         zoom: 13,
                         mapId: 'DEMO_MAP_ID',
-                        mapTypeControl: false,
+                        mapTypeControl: true,
                         streetViewControl: false,
-                        fullscreenControl: false,
+                        fullscreenControl: true,
                     });
                     this.infoWindow = new google.maps.InfoWindow();
                     this.mapEngine = 'google';

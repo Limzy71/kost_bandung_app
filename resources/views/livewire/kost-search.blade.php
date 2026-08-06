@@ -327,12 +327,12 @@
                 <div>
                     <h3 class="text-3xl font-black text-black dark:text-white uppercase">Tidak Ada Hunian Ditemukan</h3>
                     <p class="text-sm font-bold text-zinc-700 dark:text-zinc-300 max-w-md mx-auto mt-2">
-                        @if($search && !$gender && !$district && !$rent_period && !$price_min && !$price_max)
+                        @if($hasSearchOnly)
                             Tidak ada kost yang cocok dengan kata kunci "{{ $search }}". Coba hapus pencarian atau gunakan kata kunci lain.
-                        @elseif($search || $gender || $district || $rent_period || $price_min || $price_max)
+                        @elseif($hasActiveFilter)
                             Tidak ada kost yang cocok dengan kriteria filter Anda. Coba ubah atau reset filter pencarian.
                         @else
-                            Belum ada daftar kost yang terdaftar saat ini.
+                            Belum ada daftar kost yang terdaftar atau tersedia saat ini.
                         @endif
                     </p>
                 </div>
@@ -340,10 +340,12 @@
                     @click="$dispatch('reset-filters'); if(viewMode==='map') { $nextTick(() => window.dispatchEvent(new Event('resize'))); }"
                     class="px-6 py-3 bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black dark:border-zinc-700 font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl inline-flex items-center gap-2 cursor-pointer">
                     <x-icon name="lucide-refresh-cw" class="w-4 h-4 stroke-[3]" />
-                    @if($search && !$gender && !$district && !$rent_period && !$price_min && !$price_max)
+                    @if($hasSearchOnly)
                         <span>Hapus Pencarian</span>
+                    @elseif($hasActiveFilter)
+                        <span>Reset Semua Filter</span>
                     @else
-                        <span>Tampilkan Semua Kost</span>
+                        <span>Muat Ulang Halaman</span>
                     @endif
                 </button>
             </div>

@@ -202,12 +202,16 @@ class KostSearch extends Component
         // Notify Alpine map component that markers need to be refreshed
         $this->dispatch('map-items-updated');
 
+        $hasSearch = !empty(trim($this->search));
+        $hasOtherFilters = (bool) ($this->gender || $this->district || $this->rent_period || $this->price_min || $this->price_max || $this->verified_only);
+
         return view('livewire.kost-search', [
             'kosts' => $kosts,
             'districts' => $districts,
             'districtBounds' => config('bandung.districts', []),
             'googleMapsApiKey' => config('services.google.maps_api_key'),
-            'hasActiveFilter' => (bool) ($this->search || $this->gender || $this->district || $this->rent_period || $this->price_min || $this->price_max || $this->verified_only),
+            'hasActiveFilter' => $hasSearch || $hasOtherFilters,
+            'hasSearchOnly' => $hasSearch && !$hasOtherFilters,
         ]);
     }
 }

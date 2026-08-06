@@ -373,7 +373,7 @@
                 </div>
                 <!-- Map Type Switcher Buttons -->
                 <div x-ref="mapTypeSwitcher" class="mt-3 ml-3 flex gap-2"
-                    x-show="map !== null" x-cloak>
+                    x-show="map !== null" x-cloak style="font-family: 'Inter', system-ui, sans-serif !important;">
                     <button type="button" @click="switchLayer('street')"
                         :class="currentLayer === 'street' ?
                             'bg-yellow-400 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]' :

@@ -511,7 +511,8 @@ window.catalogMap = function (config) {
                         justify-content: center !important;
                     }
                     .gm-ui-hover-effect:hover {
-                        transform: translate(1px, 1px) !important;
+                        top: 11px !important;
+                        right: 9px !important;
                         box-shadow: 1px 1px 0px #000 !important;
                         background: #FECACA !important;
                     }
@@ -541,15 +542,19 @@ window.catalogMap = function (config) {
 
                     /* Custom Button */
                     .neo-popup-btn {
+                        position: relative;
                         display: flex; align-items: center; justify-content: center; gap: 6px;
                         background: #FB923C; color: #000; border: 2.5px solid #000;
                         padding: 10px 12px; border-radius: 8px; font-weight: 900;
                         font-size: 13px; text-decoration: none; text-transform: uppercase;
                         box-shadow: 3px 3px 0px #000; transition: all 0.15s ease;
                         margin-top: 4px; box-sizing: border-box; width: 100%;
+                        top: 0;
+                        left: 0;
                     }
                     .neo-popup-btn:hover {
-                        transform: translate(2px, 2px);
+                        top: 2px;
+                        left: 2px;
                         box-shadow: 1px 1px 0px #000;
                     }
                 </style>

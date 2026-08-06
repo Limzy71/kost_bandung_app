@@ -13,13 +13,13 @@
         <!-- Owner Header Card -->
         <div class="bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 p-6 md:p-8 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)]">
             <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-                <div class="w-24 h-24 md:w-28 md:h-28 rounded-2xl bg-lime-300 border-4 border-black dark:border-zinc-700 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] flex items-center justify-center shrink-0">
-                    <span class="text-3xl md:text-4xl font-black text-black dark:text-white uppercase">{{ $user->initials() }}</span>
+                <div class="w-24 h-24 md:w-28 md:h-28 rounded-2xl bg-cyan-300 border-4 border-black dark:border-zinc-700 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] flex items-center justify-center shrink-0">
+                    <span class="text-3xl md:text-4xl font-black text-black uppercase">{{ $user->initials() }}</span>
                 </div>
 
                 <div class="flex-1 text-center sm:text-left space-y-2">
                     <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                        <span class="px-3 py-1 bg-lime-400 text-black dark:text-white border-2 border-black dark:border-zinc-700 font-extrabold text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] inline-flex items-center gap-1.5">
+                        <span class="px-3 py-1 bg-cyan-300 text-black border-2 border-black dark:border-zinc-700 font-extrabold text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] inline-flex items-center gap-1.5">
                             <x-icon name="lucide-building-2" class="w-3.5 h-3.5 stroke-[2.5]" />
                             <span>Pemilik Kost</span>
                         </span>

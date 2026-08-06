@@ -6,7 +6,7 @@
     @php
         $roleConfig = [
             'user' => ['label' => 'Pencari Kost', 'badge' => 'bg-cyan-300', 'icon' => 'lucide-search'],
-            'owner' => ['label' => 'Pemilik Kost', 'badge' => 'bg-lime-400', 'icon' => 'lucide-building-2'],
+            'owner' => ['label' => 'Pemilik Kost', 'badge' => 'bg-cyan-300', 'icon' => 'lucide-building-2'],
             'admin' => ['label' => 'Administrator', 'badge' => 'bg-yellow-300', 'icon' => 'lucide-shield-check'],
         ][$user->role] ?? ['label' => 'Pengguna', 'badge' => 'bg-zinc-200', 'icon' => 'lucide-user'];
     @endphp

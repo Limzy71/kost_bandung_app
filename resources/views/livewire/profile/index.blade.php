@@ -36,7 +36,29 @@
                 </p>
             </div>
 
-            <div class="flex items-center gap-3">
+            <div class="flex flex-wrap items-center gap-3">
+                <!-- Theme Switcher Neo-Brutalist -->
+                <div x-data class="inline-flex p-1 bg-zinc-100 dark:bg-zinc-800 border-3 border-black dark:border-zinc-700 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]">
+                    <button type="button" @click="$flux.appearance = 'light'"
+                        :class="$flux.appearance === 'light' ? 'bg-yellow-300 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white border-2 border-transparent'"
+                        class="px-3 py-1.5 rounded-lg font-black text-xs uppercase flex items-center gap-1.5 transition-all cursor-pointer">
+                        <x-icon name="lucide-sun" class="w-4 h-4 stroke-[2.5]" />
+                        <span class="hidden sm:inline">Terang</span>
+                    </button>
+                    <button type="button" @click="$flux.appearance = 'dark'"
+                        :class="$flux.appearance === 'dark' ? 'bg-yellow-300 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white border-2 border-transparent'"
+                        class="px-3 py-1.5 rounded-lg font-black text-xs uppercase flex items-center gap-1.5 transition-all cursor-pointer">
+                        <x-icon name="lucide-moon" class="w-4 h-4 stroke-[2.5]" />
+                        <span class="hidden sm:inline">Gelap</span>
+                    </button>
+                    <button type="button" @click="$flux.appearance = 'system'"
+                        :class="$flux.appearance === 'system' ? 'bg-yellow-300 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white border-2 border-transparent'"
+                        class="px-3 py-1.5 rounded-lg font-black text-xs uppercase flex items-center gap-1.5 transition-all cursor-pointer">
+                        <x-icon name="lucide-monitor" class="w-4 h-4 stroke-[2.5]" />
+                        <span class="hidden sm:inline">Sistem</span>
+                    </button>
+                </div>
+
                 <button type="button" wire:click="toggleEdit"
                     class="bg-yellow-400 hover:bg-yellow-300 text-black dark:text-white border-3 border-black dark:border-zinc-700 font-black text-sm uppercase px-6 py-3.5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all inline-flex items-center gap-2 rounded-lg group cursor-pointer">
                     <x-icon name="lucide-pencil" class="w-5 h-5 text-black dark:text-white stroke-[2.5]" />

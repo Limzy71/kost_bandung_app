@@ -30,7 +30,7 @@
                 <!-- Professional Neo-Brutalist Architectural Building Icon -->
                 <div class="shrink-0 hidden md:block">
                     <div class="w-28 h-28 bg-pink-300 border-4 border-black rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center -rotate-3 hover:rotate-0 transition-transform dark:border-zinc-700 dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)]">
-                        <x-icon name="lucide-building-2" class="w-14 h-14 text-black dark:text-white stroke-[2.5]" />
+                        <x-icon name="lucide-building-2" class="w-14 h-14 text-black stroke-[2.5]" />
                     </div>
                 </div>
             </div>

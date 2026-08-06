@@ -29,19 +29,19 @@
                 <div class="space-y-3">
                     <a href="{{ route('home') }}" class="inline-flex items-center gap-1.5">
                         <span class="text-2xl font-black text-black dark:text-white uppercase tracking-tight flex items-center">
-                            KostBandung<span class="bg-yellow-300 border-2 border-black dark:border-zinc-700 px-2 py-0.5 rounded text-base shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] ml-1 font-black text-black dark:text-white">.web.id</span>
+                            KostBandung<span class="bg-yellow-300 border-2 border-black dark:border-zinc-700 px-2 py-0.5 rounded text-base shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] ml-1 font-black text-black">.web.id</span>
                         </span>
                     </a>
                     <p class="text-xs font-bold text-zinc-700 dark:text-zinc-300 max-w-md leading-relaxed">
                         Direktori kost terlengkap khusus Kota Bandung. Temukan kost mahasiswa & karyawan di area Coblong, Dipatiukur, Dago, dan sekitarnya dengan mudah & cepat.
                     </p>
                     <div class="flex flex-wrap items-center gap-2 pt-1">
-                        <span class="px-2.5 py-1 bg-lime-300 border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] inline-flex items-center gap-1">
-                            <x-icon name="lucide-zap" fill="#FBBF24" stroke-width="0.8" class="w-3.5 h-3.5 shrink-0" />
+                        <span class="px-2.5 py-1 bg-lime-300 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] inline-flex items-center gap-1">
+                            <x-icon name="lucide-zap" fill="#FBBF24" stroke="black" stroke-width="1.8" class="w-3.5 h-3.5 shrink-0" />
                             <span>Khusus Kota Bandung</span>
                         </span>
-                        <span class="px-2.5 py-1 bg-cyan-300 border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] inline-flex items-center gap-1">
-                            <x-icon name="lucide-building-2" class="w-3 h-3 text-black dark:text-white shrink-0 stroke-[2.5]" />
+                        <span class="px-2.5 py-1 bg-cyan-300 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] inline-flex items-center gap-1">
+                            <x-icon name="lucide-building-2" class="w-3 h-3 text-black shrink-0 stroke-[2.5]" />
                             <span>Pilihan Terlengkap</span>
                         </span>
                     </div>
@@ -49,7 +49,7 @@
 
                 <!-- Col 2: Navigation Links -->
                 <div class="space-y-3">
-                    <h4 class="text-xs font-black uppercase tracking-wider text-black dark:text-white bg-yellow-300 border-2 border-black dark:border-zinc-700 px-2.5 py-1 inline-block shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
+                    <h4 class="text-xs font-black uppercase tracking-wider text-black bg-yellow-300 border-2 border-black dark:border-zinc-700 px-2.5 py-1 inline-block shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
                         Navigasi Cepat
                     </h4>
                     <ul class="space-y-2.5 text-xs font-black uppercase">

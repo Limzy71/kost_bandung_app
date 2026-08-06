@@ -64,8 +64,8 @@
     $isActive = fn ($item) => request()->routeIs($item['match']);
 
     $desktopItemClass = fn ($item) => $isActive($item)
-        ? 'bg-yellow-300 border-3 shadow-none translate-x-0.5 translate-y-0.5'
-        : 'bg-white hover:bg-zinc-100 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]';
+        ? 'bg-yellow-300 text-black border-3 border-black shadow-none translate-x-0.5 translate-y-0.5'
+        : 'bg-white hover:bg-zinc-100 text-black dark:text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]';
 @endphp
 
 <header class="bg-white border-b-3 border-black sticky top-0 z-50 shadow-[0_4px_0_0_rgba(0,0,0,1)] dark:bg-zinc-900 dark:border-zinc-700 dark:shadow-[0_4px_0_0_rgba(255,255,255,0.25)]"
@@ -83,7 +83,7 @@
             @auth
                 @foreach ($navItems as $item)
                     <a href="{{ $item['href'] }}" wire:navigate @if ($isActive($item)) aria-current="page" @endif
-                        class="inline-flex items-center gap-1.5 text-xs font-black uppercase text-black px-3.5 py-2 border-2 border-black rounded transition-all cursor-pointer dark:text-white dark:border-zinc-700 {{ $desktopItemClass($item) }}">
+                        class="inline-flex items-center gap-1.5 text-xs font-black uppercase px-3.5 py-2 border-2 border-black rounded transition-all cursor-pointer dark:border-zinc-700 {{ $desktopItemClass($item) }}">
                         <x-icon name="{{ $item['icon'] }}" class="w-4 h-4 stroke-[2.5]" />
                         <span>{{ $item['label'] }}</span>
                         @if (isset($item['badge']))
@@ -99,7 +99,7 @@
                 @endforeach
 
                 <a href="{{ route('profile.show') }}" wire:navigate @if (request()->routeIs('profile.show')) aria-current="page" @endif
-                    class="inline-flex items-center gap-1.5 text-xs font-black uppercase text-black border-2 border-black px-3.5 py-2 rounded transition-all cursor-pointer dark:text-white dark:border-zinc-700 {{ request()->routeIs('profile.show') ? 'bg-yellow-300 border-3 shadow-none translate-x-0.5 translate-y-0.5' : 'bg-white hover:bg-zinc-100 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]' }}"
+                    class="inline-flex items-center gap-1.5 text-xs font-black uppercase border-2 border-black px-3.5 py-2 rounded transition-all cursor-pointer dark:border-zinc-700 {{ request()->routeIs('profile.show') ? 'bg-yellow-300 text-black border-3 shadow-none translate-x-0.5 translate-y-0.5' : 'bg-white hover:bg-zinc-100 text-black dark:text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]' }}"
                     title="Profil Saya" aria-label="Profil Saya">
                     @if ($user->avatar_url)
                         <img src="{{ $user->avatar_url }}" alt="" class="w-5 h-5 rounded-md object-cover border border-black shrink-0 dark:border-zinc-700" />
@@ -151,7 +151,7 @@
             @auth
                 @foreach ($navItems as $item)
                     <a href="{{ $item['href'] }}" wire:navigate @click="open = false"
-                        class="flex items-center gap-3 px-3.5 py-3 text-sm font-black uppercase text-black border-2 border-black rounded transition-colors cursor-pointer dark:text-white dark:border-zinc-700 {{ $isActive($item) ? 'bg-yellow-300' : 'bg-white hover:bg-zinc-100 dark:bg-zinc-900 dark:hover:bg-zinc-800' }}">
+                        class="flex items-center gap-3 px-3.5 py-3 text-sm font-black uppercase border-2 border-black rounded transition-colors cursor-pointer dark:border-zinc-700 {{ $isActive($item) ? 'bg-yellow-300 text-black' : 'bg-white hover:bg-zinc-100 text-black dark:text-white dark:bg-zinc-900 dark:hover:bg-zinc-800' }}">
                         <x-icon name="{{ $item['icon'] }}" class="w-5 h-5 shrink-0 stroke-[2.5]" />
                         <span>{{ $item['label'] }}</span>
                         @if (isset($item['badge']))
@@ -167,7 +167,7 @@
                 @endforeach
 
                 <a href="{{ route('profile.show') }}" wire:navigate @click="open = false"
-                    class="flex items-center gap-3 px-3.5 py-3 text-sm font-black uppercase text-black border-2 border-black rounded transition-colors cursor-pointer dark:text-white dark:border-zinc-700 {{ request()->routeIs('profile.show') ? 'bg-yellow-300' : 'bg-white hover:bg-zinc-100 dark:bg-zinc-900 dark:hover:bg-zinc-800' }}">
+                    class="flex items-center gap-3 px-3.5 py-3 text-sm font-black uppercase border-2 border-black rounded transition-colors cursor-pointer dark:border-zinc-700 {{ request()->routeIs('profile.show') ? 'bg-yellow-300 text-black' : 'bg-white hover:bg-zinc-100 text-black dark:text-white dark:bg-zinc-900 dark:hover:bg-zinc-800' }}">
                     @if ($user->avatar_url)
                         <img src="{{ $user->avatar_url }}" alt="" class="w-5 h-5 rounded-md object-cover border border-black shrink-0 dark:border-zinc-700" />
                     @else

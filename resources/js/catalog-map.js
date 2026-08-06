@@ -50,6 +50,10 @@ window.catalogMap = function (config) {
                             this.resizeMap();
                         }
                     });
+                    // Fallback to guarantee resize fires after the 500ms slide-up transition completes
+                    setTimeout(() => {
+                        if (this.viewMode === 'map') this.resizeMap();
+                    }, 600);
                 }
             });
 
@@ -240,13 +244,13 @@ window.catalogMap = function (config) {
                 }
                 this.renderGoogleMarkers();
                 
-                // Critical Resilience: Force Google Maps to recalculate size
+                // Critical Resilience: Force Google Maps to recalculate size after panel transition
                 setTimeout(() => {
                     if (this.map && window.google) {
                         google.maps.event.trigger(this.map, 'resize');
                         this.renderGoogleMarkers(); // re-fit bounds after resize
                     }
-                }, 500);
+                }, 700);
                 
                 return true;
             } catch (e) {
@@ -359,6 +363,14 @@ window.catalogMap = function (config) {
                 this.mapEngine = 'leaflet';
             }
             this.renderLeafletMarkers();
+
+            // Critical Resilience: Force Leaflet to recalculate size after panel transition
+            setTimeout(() => {
+                if (this.map && typeof L !== 'undefined' && this.map.invalidateSize) {
+                    this.map.invalidateSize();
+                    this.renderLeafletMarkers(); // re-fit bounds after resize
+                }
+            }, 700);
             
             // Critical Resilience: Force Leaflet to recalculate size after DOM is fully painted
             setTimeout(() => {

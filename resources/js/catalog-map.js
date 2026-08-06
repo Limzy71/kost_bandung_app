@@ -78,14 +78,33 @@ window.catalogMap = function (config) {
 
         /** Force resize on already-created map instance */
         resizeMap() {
-            if (!this.map) return;
+            if (!this.map) {
+                // Map not initialized yet — eager init runs in the background,
+                // so keep retrying until it lands so the reveal overlay always clears.
+                if (!this.mapFailed) setTimeout(() => this.resizeMap(), 150);
+                return;
+            }
+            let resized = false;
             if (this.mapEngine === 'google' && window.google) {
                 google.maps.event.trigger(this.map, 'resize');
                 this.renderGoogleMarkers(); // re-fit bounds after resize
+                resized = true;
             } else if (this.mapEngine === 'leaflet' && typeof L !== 'undefined' && this.map.invalidateSize) {
                 this.map.invalidateSize();
                 this.renderLeafletMarkers();
+                resized = true;
             }
+            if (resized) this.revealMap();
+        },
+
+        /** Fade the loading overlay out once the map has laid out its tiles */
+        revealMap() {
+            if (this.mapReady || this.mapFailed) return;
+            // Give the engine a beat to lay out and fetch tiles before revealing,
+            // so the user never sees a blank gray stage mid-fade.
+            setTimeout(() => {
+                if (!this.mapFailed) this.mapReady = true;
+            }, 300);
         },
 
         /** Load the appropriate map library then set up the map */

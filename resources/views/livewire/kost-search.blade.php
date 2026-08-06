@@ -207,10 +207,17 @@
 
         @if($kosts->count() > 0)
             <!-- List View (Default Mode: Balanced 3-column grid at 100% container width) -->
-            <div wire:key="list-view" x-show="viewMode === 'list'" x-cloak class="space-y-6">
+            <div wire:key="list-view" x-show="viewMode === 'list'" x-cloak
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 translate-y-3 scale-[0.985]"
+                x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                x-transition:leave-end="opacity-0 translate-y-2 scale-[0.99]"
+                class="space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($kosts as $kost)
-                        <div class="bg-white border-3 border-black rounded-xl overflow-hidden shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:shadow-[7px_7px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 ease-out will-change-transform flex flex-col justify-between group">
+                        <div class="kost-card bg-white border-3 border-black rounded-xl overflow-hidden shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:shadow-[7px_7px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 ease-out will-change-transform flex flex-col justify-between group" style="animation-delay: {{ min($loop->index, 9) * 45 }}ms">
                             <div>
                                 <!-- Image -->
                                 <div class="aspect-[4/3] bg-zinc-200 relative overflow-hidden border-b-3 border-black cursor-pointer"
@@ -310,7 +317,14 @@
             </div>
         @else
             <!-- Empty State: Always show when there are 0 results -->
-            <div wire:key="empty-state" x-show="viewMode === 'list'" x-cloak class="bg-yellow-100 border-4 border-black rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] space-y-4">
+            <div wire:key="empty-state" x-show="viewMode === 'list'" x-cloak
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 translate-y-3"
+                x-transition:enter-end="opacity-100 translate-y-0"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100 translate-y-0"
+                x-transition:leave-end="opacity-0 translate-y-2"
+                class="bg-yellow-100 border-4 border-black rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] space-y-4">
                 <div class="w-20 h-20 bg-white border-3 border-black rounded-2xl flex items-center justify-center mx-auto text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -rotate-3">
                     <x-icon name="lucide-search" class="w-10 h-10" />
                 </div>
@@ -340,7 +354,14 @@
         @endif
 
         <!-- Full-Width Immersive Map View Mode (Always in DOM to preserve Map instance) -->
-        <div wire:key="map-view" wire:ignore x-show="viewMode === 'map' && (items.length > 0 || $wire.district)" x-cloak class="w-full" @map-load-error.window="mapFailed = true">
+        <div wire:key="map-view" wire:ignore x-show="viewMode === 'map' && (items.length > 0 || $wire.district)" x-cloak
+            x-transition:enter="transition ease-[cubic-bezier(0.22,1,0.36,1)] duration-500"
+            x-transition:enter-start="opacity-0 translate-y-5 scale-[0.98]"
+            x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+            x-transition:leave-end="opacity-0 translate-y-2 scale-[0.99]"
+            class="w-full" @map-load-error.window="mapFailed = true">
             <!-- Map Container -->
             <div x-show="!mapFailed" class="relative w-full rounded-2xl border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden bg-white">
                 <div class="p-4 bg-yellow-300 border-b-3 border-black flex items-center justify-between">
@@ -351,7 +372,27 @@
                         <span x-text="items.length"></span> Kost Tampil Pada Peta
                     </span>
                 </div>
-                <div x-ref="catalogMapElement" class="w-full h-[450px] lg:h-[500px] bg-zinc-100 z-0"></div>
+                <!-- Map stage: the live map sits behind a loading overlay that
+                     fades out only after the map engine has laid out its tiles,
+                     so the reveal never shows a blank/gray flash. -->
+                <div class="relative w-full h-[450px] lg:h-[500px] bg-zinc-100 z-0">
+                    <div x-ref="catalogMapElement" class="w-full h-full z-0"></div>
+                    <div x-show="!mapReady" x-cloak
+                        x-transition:leave="transition ease-out duration-500"
+                        x-transition:leave-start="opacity-100"
+                        x-transition:leave-end="opacity-0"
+                        class="absolute inset-0 z-10 bg-zinc-100 flex items-center justify-center">
+                        <div class="flex flex-col items-center gap-4">
+                            <div class="bg-white border-3 border-black rounded-2xl p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] animate-bounce">
+                                <x-icon name="lucide-map-pin" class="w-8 h-8 text-black stroke-[2.5]" />
+                            </div>
+                            <div class="bg-yellow-300 border-3 border-black px-6 py-3 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center gap-3">
+                                <x-icon name="lucide-loader-circle" class="animate-spin h-5 w-5 text-black" />
+                                <span class="font-black text-black text-sm uppercase tracking-wide">Menyiapkan Peta...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Fallback Neo-Brutalist Error Card -->

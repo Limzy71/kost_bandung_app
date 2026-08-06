@@ -93,3 +93,30 @@ select:focus[data-flux-control] {
     scrollbar-width: thin;
     scrollbar-color: #ffd000 #f8f9fa;
 }
+
+/* Staggered rise-in for home catalog kost cards.
+   The animation re-triggers whenever the list container becomes visible
+   again (switch from map view, filter changes, pagination, etc.).
+   `backwards` fill keeps cards hidden during their delay without locking
+   the final keyframe, so the existing hover transform still works. */
+.kost-card {
+    animation: kost-card-rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+@keyframes kost-card-rise {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .kost-card {
+        animation: none;
+    }
+}

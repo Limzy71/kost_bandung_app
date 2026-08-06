@@ -229,6 +229,11 @@ window.catalogMap = function (config) {
                 window.dispatchEvent(new Event('map-load-error'));
                 return false;
             }
+            if (!window.google.maps.Marker) {
+                console.warn('Google Maps Marker API unavailable; falling back to Leaflet.');
+                this.loadLeafletAndInit();
+                return false;
+            }
             try {
                 if (!this.map) {
                     this.map = new google.maps.Map(this.$refs.catalogMapElement, {
@@ -241,6 +246,11 @@ window.catalogMap = function (config) {
                     this.infoWindow = new google.maps.InfoWindow();
                     this.mapEngine = 'google';
                     this.googleRetries = 0;
+
+                    // Inject custom switcher into Google Maps controls so it stays visible in Fullscreen
+                    if (this.$refs.mapTypeSwitcher) {
+                        this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(this.$refs.mapTypeSwitcher);
+                    }
                 }
                 this.renderGoogleMarkers();
                 
@@ -289,11 +299,7 @@ window.catalogMap = function (config) {
             let validCount = 0;
 
             const Marker = window.google.maps.Marker;
-            if (!Marker) {
-                console.warn('Google Maps Marker API unavailable; falling back to Leaflet.');
-                this.loadLeafletAndInit();
-                return;
-            }
+            if (!Marker) return;
 
             currentItems.forEach(item => {
                 if (!item.lat || !item.lng) return;
@@ -365,6 +371,13 @@ window.catalogMap = function (config) {
                     }).addTo(this.map);
                 }
                 this.mapEngine = 'leaflet';
+
+                // Inject custom switcher into Leaflet container so it overlays correctly
+                if (this.$refs.mapTypeSwitcher) {
+                    this.$refs.mapTypeSwitcher.style.position = 'absolute';
+                    this.$refs.mapTypeSwitcher.style.zIndex = '1000';
+                    this.$refs.catalogMapElement.appendChild(this.$refs.mapTypeSwitcher);
+                }
             }
             this.renderLeafletMarkers();
 

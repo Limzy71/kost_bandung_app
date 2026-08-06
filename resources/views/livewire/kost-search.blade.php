@@ -372,7 +372,7 @@
                     </span>
                 </div>
                 <!-- Map Type Switcher Buttons -->
-                <div class="absolute top-[84px] left-3 z-[400] flex gap-2"
+                <div x-ref="mapTypeSwitcher" class="mt-3 ml-3 flex gap-2"
                     x-show="map !== null" x-cloak>
                     <button type="button" @click="switchLayer('street')"
                         :class="currentLayer === 'street' ?

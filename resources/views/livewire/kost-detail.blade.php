@@ -847,9 +847,9 @@
                     </div>
 
                     <x-brutal-button type="submit" color="cyan" wire:loading.attr="disabled" wire:target="sendInquiry"
-                        wire:loading.class="opacity-50 cursor-not-allowed" class="w-full mt-4 rounded-xl">
+                        wire:loading.class="opacity-50 cursor-not-allowed" class="w-full mt-4 rounded-xl flex items-center justify-center">
                         <span wire:loading.remove wire:target="sendInquiry">Kirim Sekarang</span>
-                        <span wire:loading wire:target="sendInquiry" class="flex items-center gap-2">
+                        <span wire:loading.flex wire:target="sendInquiry" class="items-center justify-center gap-2">
                             <x-icon name="lucide-loader-circle" class="animate-spin h-5 w-5 text-black" />
                             Mengirim...
                         </span>

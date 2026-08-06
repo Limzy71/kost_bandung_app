@@ -78,6 +78,13 @@ window.catalogMap = function (config) {
                     if (!this.setupGoogleMap()) this.loadLeafletAndInit();
                 }
             });
+
+            // Handle window resize events (especially from the "Lihat Peta" button dispatching resize)
+            window.addEventListener('resize', () => {
+                if (this.viewMode === 'map') {
+                    this.resizeMap();
+                }
+            });
         },
 
         get items() {
@@ -223,8 +230,7 @@ window.catalogMap = function (config) {
                     this.map = new google.maps.Map(this.$refs.catalogMapElement, {
                         center: { lat: -6.917464, lng: 107.619123 },
                         zoom: 13,
-                        mapId: 'DEMO_MAP_ID',
-                        mapTypeControl: false,
+                        mapTypeControl: false, // We use custom buttons for this
                         streetViewControl: false,
                         fullscreenControl: true,
                     });
@@ -253,11 +259,8 @@ window.catalogMap = function (config) {
         renderGoogleMarkers() {
             if (this.mapEngine !== 'google' || !this.map || !window.google) return;
             this.markers.forEach(m => {
-                if (typeof m.setMap === 'function') {
-                    m.setMap(null);
-                } else {
-                    m.map = null;
-                }
+                if (typeof m.setMap === 'function') m.setMap(null);
+                else m.map = null;
             });
             this.markers = [];
 
@@ -265,7 +268,6 @@ window.catalogMap = function (config) {
             const activeDistrict = this.$wire ? this.$wire.district : '';
             const hasActiveDistrict = activeDistrict && this.districtBounds[activeDistrict];
 
-            // Case B: 0 Listings but has active district
             if ((!currentItems || currentItems.length === 0) && hasActiveDistrict) {
                 const dist = this.districtBounds[activeDistrict];
                 this.map.setCenter({ lat: dist.center.lat, lng: dist.center.lng });
@@ -282,12 +284,8 @@ window.catalogMap = function (config) {
             const bounds = new google.maps.LatLngBounds();
             let validCount = 0;
 
-            const AdvancedMarker =
-                window.google.maps.marker && window.google.maps.marker.AdvancedMarkerElement;
-            if (!AdvancedMarker) {
-                console.warn('Google Maps marker library unavailable; skipping markers.');
-                return;
-            }
+            const Marker = window.google.maps.Marker;
+            if (!Marker) return;
 
             currentItems.forEach(item => {
                 if (!item.lat || !item.lng) return;
@@ -295,36 +293,35 @@ window.catalogMap = function (config) {
                 bounds.extend(pos);
                 validCount++;
 
-                // Custom DOM marker: neo-brutalist price tag with a downward tail
-                // pointing at the exact location (AdvancedMarkerElement does not
-                // support the legacy `label`/`icon` options).
                 const bg = item.is_boosted ? '#FACC15' : '#FFFFFF';
-                const labelEl = document.createElement('div');
-                labelEl.textContent = item.price_short;
-                labelEl.style.cssText =
-                    'background:' + bg + ';border:2px solid #000;border-radius:4px;' +
-                    'padding:2px 8px;font-weight:900;font-size:11px;color:#000;' +
-                    'white-space:nowrap;box-shadow:2px 2px 0 #000;' +
-                    'font-family:system-ui,sans-serif;';
+                // Create SVG for Neo-Brutalist Price Tag
+                const svgWidth = 80;
+                const svgHeight = 36;
+                const svg = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" viewBox="0 0 ${svgWidth} ${svgHeight}">
+                        <!-- Shadow -->
+                        <rect x="2" y="2" width="76" height="24" rx="4" fill="#000" />
+                        <!-- Box -->
+                        <rect x="0" y="0" width="76" height="24" rx="4" fill="${bg}" stroke="#000" stroke-width="2" />
+                        <!-- Text -->
+                        <text x="38" y="16" font-family="system-ui, sans-serif" font-weight="900" font-size="11" fill="#000" text-anchor="middle">${item.price_short}</text>
+                        <!-- Tail -->
+                        <polygon points="32,24 44,24 38,32" fill="${bg}" stroke="#000" stroke-width="2" />
+                        <!-- Hide top border of tail -->
+                        <line x1="33.5" y1="24" x2="42.5" y2="24" stroke="${bg}" stroke-width="2.5" />
+                    </svg>
+                `.trim().replace(/\s+/g, ' ');
 
-                const tailEl = document.createElement('div');
-                tailEl.style.cssText =
-                    'width:0;height:0;border-left:6px solid transparent;' +
-                    'border-right:6px solid transparent;border-top:8px solid #000;';
+                const iconUrl = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
 
-                const contentEl = document.createElement('div');
-                contentEl.style.cssText =
-                    'display:flex;flex-direction:column;align-items:center;';
-                contentEl.appendChild(labelEl);
-                contentEl.appendChild(tailEl);
-
-                const marker = new AdvancedMarker({
+                const marker = new Marker({
                     position: pos,
                     map: this.map,
                     title: item.name,
-                    content: contentEl,
-                    collisionBehavior:
-                        google.maps.CollisionBehavior?.REQUIRED ?? 'REQUIRED',
+                    icon: {
+                        url: iconUrl,
+                        anchor: new google.maps.Point(38, 32),
+                    },
                 });
 
                 marker.addListener('click', () => {
@@ -335,15 +332,11 @@ window.catalogMap = function (config) {
                 this.markers.push(marker);
             });
 
-            // Case A: Listings exist in district, use fitBounds of markers
             if (validCount > 0) {
                 this.map.fitBounds(bounds);
                 if (validCount === 1) {
-                    this.map.setZoom(14);
+                    setTimeout(() => { this.map.setZoom(14); }, 100);
                 }
-            } else {
-                this.map.setCenter({ lat: -6.917464, lng: 107.619123 });
-                this.map.setZoom(13);
             }
         },
 

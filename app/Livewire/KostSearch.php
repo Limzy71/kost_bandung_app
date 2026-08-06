@@ -202,6 +202,7 @@ class KostSearch extends Component
         // Notify Alpine map component that markers need to be refreshed
         $this->dispatch('map-items-updated');
 
+        $totalKostInDb = Kost::where('status', 'published')->where('is_available', true)->count();
         $hasSearch = !empty(trim($this->search));
         $hasOtherFilters = (bool) ($this->gender || $this->district || $this->rent_period || $this->price_min || $this->price_max || $this->verified_only);
 
@@ -212,6 +213,7 @@ class KostSearch extends Component
             'googleMapsApiKey' => config('services.google.maps_api_key'),
             'hasActiveFilter' => $hasSearch || $hasOtherFilters,
             'hasSearchOnly' => $hasSearch && !$hasOtherFilters,
+            'totalKostInDb' => $totalKostInDb,
         ]);
     }
 }

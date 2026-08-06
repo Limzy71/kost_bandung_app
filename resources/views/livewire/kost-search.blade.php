@@ -180,13 +180,15 @@
                 @click="viewMode = 'list'"
                 :class="viewMode === 'list' ? 'bg-yellow-400 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-600 hover:text-black'"
                 class="flex-1 sm:flex-initial px-4 py-2 rounded-lg font-black text-xs uppercase transition-all cursor-pointer flex items-center justify-center gap-2">
-                <span>&#128203; Lihat Daftar</span>
+                <x-icon name="lucide-list" class="w-4 h-4 stroke-[3]" />
+                <span>Lihat Daftar</span>
             </button>
             <button type="button"
                 @click="viewMode = 'map'; $nextTick(() => { window.dispatchEvent(new Event('resize')); })"
                 :class="viewMode === 'map' ? 'bg-yellow-400 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-600 hover:text-black'"
                 class="flex-1 sm:flex-initial px-4 py-2 rounded-lg font-black text-xs uppercase transition-all cursor-pointer flex items-center justify-center gap-2">
-                <span>&#128506; Lihat Peta</span>
+                <x-icon name="lucide-map" class="w-4 h-4 stroke-[3]" />
+                <span>Lihat Peta</span>
             </button>
         </div>
         @endif

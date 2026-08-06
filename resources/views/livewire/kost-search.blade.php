@@ -8,22 +8,21 @@
     <!-- Filter Bar Neo-Brutalist -->
     <div
         x-data="{
-            hasFilter: @js($hasActiveFilter),
+            query: @entangle('search'),
             wasApplied: false,
-            checkFilter() {
-                const g = this.$refs.genderSelect   ? this.$refs.genderSelect.value   : '';
-                const d = this.$refs.districtSelect ? this.$refs.districtSelect.value : '';
-                const p = this.$refs.periodSelect   ? this.$refs.periodSelect.value   : '';
-                const n = this.$refs.minSelect      ? this.$refs.minSelect.value      : '';
-                const x = this.$refs.maxSelect      ? this.$refs.maxSelect.value      : '';
-                const s = this.$wire ? String(this.$wire.search || '') : '';
-                const v = this.$refs.verifiedToggle ? this.$refs.verifiedToggle.checked : false;
-                this.hasFilter = Boolean(g || d || p || n || x || s || v);
+            get hasFilter() {
+                return Boolean(
+                    this.query ||
+                    $wire.gender ||
+                    $wire.district ||
+                    $wire.rent_period ||
+                    $wire.price_min ||
+                    $wire.price_max ||
+                    $wire.verified_only
+                );
             }
         }"
-        @input="checkFilter()"
-        @change="checkFilter()"
-        @reset-filters.window="hasFilter = false; wasApplied = false"
+        @reset-filters.window="query = ''; wasApplied = false"
         class="bg-white border-4 border-black p-6 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-4"
     >
         <!-- Header -->
@@ -33,7 +32,7 @@
                 <span>Filter Pencarian Kost</span>
             </h2>
             <div class="flex items-center gap-2.5 shrink-0 self-end sm:self-auto">
-                <button x-show="hasFilter" x-cloak type="button" wire:click="resetFilters" @click="hasFilter = false; wasApplied = false"
+                <button x-show="hasFilter" x-cloak type="button" wire:click="resetFilters" @click="query = ''; wasApplied = false"
                     class="bg-rose-400 hover:bg-rose-300 text-black border-2 border-black font-black text-xs uppercase px-3.5 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
                     <x-icon name="lucide-refresh-cw" class="w-3.5 h-3.5 stroke-[3]" />
                     <span>Reset Filter</span>
@@ -50,24 +49,22 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 pt-2">
             <!-- Left Column: Location & Basic -->
             <div class="space-y-5">
-                <!-- Search Text -->
                 <div class="relative">
                     <label class="block text-xs font-black uppercase text-black mb-2 tracking-wide">Cari Nama / Jalan</label>
-                    <div class="relative flex items-center" x-data="{ query: @entangle('search') }">
+                    <div class="relative flex items-center">
                         <input
                             x-ref="searchInput"
-                            wire:model="search"
+                            x-model="query"
                             wire:keydown.enter="applyFilters"
                             @keydown.enter="wasApplied = true"
-                            @input="checkFilter()"
                             type="text"
                             placeholder="Contoh: Dago, Setiabudi..."
                             class="w-full bg-white border-3 border-black rounded-xl pl-11 pr-10 py-3 text-sm font-black uppercase text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
                         >
                         <x-icon name="lucide-search" class="w-5 h-5 text-black absolute left-3.5 pointer-events-none stroke-[2.5]" />
-                        <template x-if="query || ($refs.searchInput && $refs.searchInput.value)">
+                        <template x-if="query">
                             <button type="button"
-                                @click="$refs.searchInput.value=''; $wire.search=''; checkFilter(); if(wasApplied){$wire.applyFilters();}"
+                                @click="query=''; $wire.search=''; if(wasApplied){$wire.applyFilters();}"
                                 class="absolute right-3 w-7 h-7 bg-rose-400 hover:bg-rose-300 border-2 border-black rounded-lg text-black font-black text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center cursor-pointer">
                                 &#x2715;
                             </button>
@@ -153,7 +150,7 @@
                                 ? 'bg-emerald-400 text-black border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
                                 : 'bg-white text-zinc-700 border-3 border-black hover:bg-zinc-100 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'"
                             class="w-full h-[52px] flex justify-center items-center font-black text-xs sm:text-sm uppercase rounded-xl transition-all cursor-pointer gap-2 px-3">
-                            <input type="checkbox" x-ref="verifiedToggle" wire:model="verified_only" @change="checkFilter()" class="hidden">
+                            <input type="checkbox" x-ref="verifiedToggle" wire:model="verified_only" class="hidden">
                             <x-icon name="lucide-badge-check" class="w-4 h-4 stroke-[3] shrink-0" />
                             <span class="truncate">Kost Verified</span>
                         </label>

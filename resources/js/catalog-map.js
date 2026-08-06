@@ -216,7 +216,13 @@ window.catalogMap = function (config) {
 
         renderGoogleMarkers() {
             if (this.mapEngine !== 'google' || !this.map || !window.google) return;
-            this.markers.forEach(m => m.setMap(null));
+            this.markers.forEach(m => {
+                if (typeof m.setMap === 'function') {
+                    m.setMap(null);
+                } else {
+                    m.map = null;
+                }
+            });
             this.markers = [];
 
             const currentItems = this.items;

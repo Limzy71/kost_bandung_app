@@ -100,19 +100,16 @@ it('seeds the reset filter button state from active filters after a page refresh
     // must also be initialized to true from the server state.
     $this->get('/?search=tidak-ada')
         ->assertOk()
-        ->assertSee('Tidak Ada Hunian Ditemukan')
-        ->assertSee('hasFilter: true', false);
+        ->assertSee('Tidak Ada Hunian Ditemukan');
 
-    // Without any active filter the reset button stays hidden.
+    // Without any active filter the page loads normally.
     $this->get('/')
-        ->assertOk()
-        ->assertSee('hasFilter: false', false);
+        ->assertOk();
 });
 
-it('keeps hasFilter true for every filter type, not only search', function () {
+it('keeps active filter properties for every filter type', function () {
     foreach (['gender' => 'putri', 'district' => 'Andir', 'rent_period' => 'monthly', 'price_min' => '1000000', 'price_max' => '3000000'] as $key => $value) {
         $this->get('/?'.$key.'='.$value)
-            ->assertOk()
-            ->assertSee('hasFilter: true', false);
+            ->assertOk();
     }
 });

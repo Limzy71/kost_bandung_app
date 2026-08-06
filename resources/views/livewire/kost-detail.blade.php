@@ -61,7 +61,7 @@
             @auth
                 this.showModal = true;
             @else
-                window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
+                window.location.href = '{{ route('login') }}?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
             @endauth
         },
         nextImage() {

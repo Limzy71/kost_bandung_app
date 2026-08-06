@@ -26,7 +26,7 @@ class VerificationDocumentController extends Controller
             default => null,
         };
 
-        abort_unless($path, 404);
+        abort_unless(is_string($path), 404);
 
         if (! in_array(Str::lower((string) pathinfo($path, PATHINFO_EXTENSION)), self::ALLOWED_EXTENSIONS, true)) {
             abort(404);

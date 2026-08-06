@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use App\Livewire\Profile\Index;
 use App\Models\User;

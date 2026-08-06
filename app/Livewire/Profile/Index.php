@@ -35,7 +35,7 @@ class Index extends Component
 
     public mixed $avatarUpload = null;
 
-    public $identity_doc = null;
+    public mixed $identity_doc = null;
 
     public string $deletePassword = '';
 

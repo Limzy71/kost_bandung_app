@@ -601,7 +601,8 @@ class CreateKost extends Component
         // Store verification documents (private disk, only visible to admin)
         if ($this->ownership_doc) {
             $kost->ownership_doc_type = $this->ownership_doc_type;
-            $kost->ownership_doc_path = $this->ownership_doc->store('verification-docs/ownership', 'verification_docs');
+            $storedPath = $this->ownership_doc->store('verification-docs/ownership', 'verification_docs');
+            $kost->ownership_doc_path = $storedPath === false ? null : $storedPath;
             $kost->ownership_verification_status = 'pending';
             $kost->ownership_rejection_note = null;
             $kost->save();

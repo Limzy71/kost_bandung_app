@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\CarbonImmutable;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -29,7 +30,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property string|null $two_factor_recovery_codes
  * @property Carbon|null $two_factor_confirmed_at
  * @property string|null $remember_token
- * @property Carbon|null $identity_verified_at
+ * @property CarbonImmutable|null $identity_verified_at
  * @property string|null $identity_doc_path
  * @property string $identity_verification_status
  * @property string|null $identity_rejection_note
@@ -53,7 +54,7 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     {
         return [
             'email_verified_at' => 'datetime',
-            'identity_verified_at' => 'datetime',
+            'identity_verified_at' => 'immutable_datetime',
             'password' => 'hashed',
         ];
     }
@@ -81,6 +82,8 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 
     /**
      * Get the user's avatar URL or null.
+     *
+     * @return Attribute<?string, never>
      */
     protected function avatarUrl(): Attribute
     {

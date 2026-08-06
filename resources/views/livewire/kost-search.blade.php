@@ -360,7 +360,7 @@
             class="w-full" @map-load-error.window="mapFailed = true">
             <!-- Map Container -->
             <div x-show="!mapFailed" class="relative w-full rounded-2xl border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden bg-white">
-                <div class="p-4 bg-yellow-300 border-b-3 border-black flex items-center justify-between">
+                <div class="p-4 bg-yellow-300 border-b-3 border-black flex items-center justify-between z-10 relative">
                     <span class="font-black text-sm uppercase text-black flex items-center gap-2 tracking-tight">
                         <span class="bg-white border-2 border-black rounded-lg p-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                             <x-icon name="lucide-map-pin" class="w-4 h-4 text-black stroke-[3]" />
@@ -370,6 +370,22 @@
                     <span class="text-xs font-black text-black bg-white border-2 border-black px-3 py-1 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] uppercase">
                         <span x-text="items.length"></span> Kost Tampil Pada Peta
                     </span>
+                </div>
+                <!-- Map Type Switcher Buttons -->
+                <div class="absolute top-[84px] left-3 z-[400] flex gap-2"
+                    x-show="map !== null" x-cloak>
+                    <button type="button" @click="switchLayer('street')"
+                        :class="currentLayer === 'street' ?
+                            'bg-yellow-400 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]' :
+                            'bg-white border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-zinc-100'"
+                        class="px-3.5 py-1.5 text-xs font-black uppercase border-2 rounded-lg text-black transition-all cursor-pointer"
+                        title="Peta Standard">Peta</button>
+                    <button type="button" @click="switchLayer('satellite')"
+                        :class="currentLayer === 'satellite' ?
+                            'bg-cyan-300 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]' :
+                            'bg-white border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-zinc-100'"
+                        class="px-3.5 py-1.5 text-xs font-black uppercase border-2 rounded-lg text-black transition-all cursor-pointer"
+                        title="Tampilan Satelit">Satelit</button>
                 </div>
                 <div x-ref="catalogMapElement" class="w-full h-[450px] lg:h-[500px] bg-zinc-100 z-0"></div>
             </div>

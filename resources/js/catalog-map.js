@@ -22,6 +22,7 @@ window.catalogMap = function (config) {
         infoWindow: null,
         mapFailed: false,
         districtBounds: config.districtBounds || {},
+        currentLayer: 'street', // 'street' or 'satellite'
 
         /** Called from x-init — sets up watchers and eagerly loads map in background */
         init() {
@@ -81,6 +82,22 @@ window.catalogMap = function (config) {
 
         get items() {
             return (this.$wire && this.$wire.mapItems) ? this.$wire.mapItems : [];
+        },
+
+        switchLayer(layer) {
+            this.currentLayer = layer;
+            if (!this.map) return;
+
+            if (this.mapEngine === 'google') {
+                const mapTypeId = layer === 'satellite' ? 'hybrid' : 'roadmap';
+                this.map.setMapTypeId(mapTypeId);
+            } else if (this.mapEngine === 'leaflet') {
+                if (this.currentTileLayer) this.map.removeLayer(this.currentTileLayer);
+                const url = layer === 'satellite'
+                    ? 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+                    : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+                this.currentTileLayer = L.tileLayer(url, { maxZoom: 19 }).addTo(this.map);
+            }
         },
 
         /** Force resize on already-created map instance */
@@ -207,7 +224,7 @@ window.catalogMap = function (config) {
                         center: { lat: -6.917464, lng: 107.619123 },
                         zoom: 13,
                         mapId: 'DEMO_MAP_ID',
-                        mapTypeControl: true,
+                        mapTypeControl: false,
                         streetViewControl: false,
                         fullscreenControl: true,
                     });
@@ -336,10 +353,16 @@ window.catalogMap = function (config) {
             if (!this.map) {
                 this.map = L.map(this.$refs.catalogMapElement)
                     .setView([-6.917464, 107.619123], 13);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 19,
-                    attribution: '&copy; OpenStreetMap',
-                }).addTo(this.map);
+                // Use custom layer if needed
+                if (this.currentLayer === 'satellite') {
+                    this.switchLayer('satellite');
+                } else {
+                    const url = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+                    this.currentTileLayer = L.tileLayer(url, {
+                        maxZoom: 19,
+                        attribution: '© OpenStreetMap'
+                    }).addTo(this.map);
+                }
                 this.mapEngine = 'leaflet';
             }
             this.renderLeafletMarkers();

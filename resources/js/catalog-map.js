@@ -502,20 +502,41 @@ window.catalogMap = function (config) {
                         border-radius: 50% !important;
                         box-shadow: 2px 2px 0px #000 !important;
                         opacity: 1 !important;
-                        width: 26px !important;
-                        height: 26px !important;
+                        width: 28px !important;
+                        height: 28px !important;
                         transition: all 0.15s ease !important;
                         z-index: 100 !important;
+                        display: flex !important;
+                        align-items: center !important;
+                        justify-content: center !important;
                     }
                     .gm-ui-hover-effect:hover {
                         transform: translate(1px, 1px) !important;
                         box-shadow: 1px 1px 0px #000 !important;
                         background: #FECACA !important;
                     }
-                    .gm-ui-hover-effect span {
-                        margin: 2px !important;
-                        width: 18px !important;
-                        height: 18px !important;
+                    /* Hide Google's native sprite icon to prevent hover glitching */
+                    .gm-ui-hover-effect > span,
+                    .gm-ui-hover-effect > img {
+                        display: none !important;
+                    }
+                    /* Draw our own perfect Neo-Brutalist 'X' */
+                    .gm-ui-hover-effect::before,
+                    .gm-ui-hover-effect::after {
+                        content: '' !important;
+                        position: absolute !important;
+                        top: 50% !important;
+                        left: 50% !important;
+                        width: 12px !important;
+                        height: 2.5px !important;
+                        background-color: #000 !important;
+                        border-radius: 2px !important;
+                    }
+                    .gm-ui-hover-effect::before {
+                        transform: translate(-50%, -50%) rotate(45deg) !important;
+                    }
+                    .gm-ui-hover-effect::after {
+                        transform: translate(-50%, -50%) rotate(-45deg) !important;
                     }
 
                     /* Custom Button */

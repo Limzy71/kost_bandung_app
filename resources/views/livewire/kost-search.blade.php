@@ -47,106 +47,119 @@
             </div>
         </div>
 
-        <!-- Filter Inputs Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4">
-            <!-- Search Text -->
-            <div class="lg:col-span-3 relative">
-                <label class="block text-xs font-black uppercase text-black mb-1.5">Cari Nama / Jalan</label>
-                <div class="relative flex items-center" x-data="{ query: @entangle('search') }">
-                    <input
-                        x-ref="searchInput"
-                        wire:model="search"
-                        wire:keydown.enter="applyFilters"
-                        @keydown.enter="wasApplied = true"
-                        @input="checkFilter()"
-                        type="text"
-                        placeholder="Contoh: Dago, Setiabudi..."
-                        class="w-full bg-white border-3 border-black rounded-xl pl-10 pr-10 py-2.5 text-xs font-black uppercase text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
-                    >
-                    <x-icon name="lucide-search" class="w-5 h-5 text-black absolute left-3 pointer-events-none" />
-                    <template x-if="query || ($refs.searchInput && $refs.searchInput.value)">
-                        <button type="button"
-                            @click="$refs.searchInput.value=''; $wire.search=''; checkFilter(); if(wasApplied){$wire.applyFilters();}"
-                            class="absolute right-2.5 w-6 h-6 bg-rose-400 hover:bg-rose-300 border-2 border-black rounded text-black font-black text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center cursor-pointer">
-                            &#x2715;
-                        </button>
-                    </template>
+        <!-- Filter Inputs Grid: 2 Columns Neo-Brutalist Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 pt-2">
+            <!-- Left Column: Location & Basic -->
+            <div class="space-y-5">
+                <!-- Search Text -->
+                <div class="relative">
+                    <label class="block text-xs font-black uppercase text-black mb-2 tracking-wide">Cari Nama / Jalan</label>
+                    <div class="relative flex items-center" x-data="{ query: @entangle('search') }">
+                        <input
+                            x-ref="searchInput"
+                            wire:model="search"
+                            wire:keydown.enter="applyFilters"
+                            @keydown.enter="wasApplied = true"
+                            @input="checkFilter()"
+                            type="text"
+                            placeholder="Contoh: Dago, Setiabudi..."
+                            class="w-full bg-white border-3 border-black rounded-xl pl-11 pr-10 py-3 text-sm font-black uppercase text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                        >
+                        <x-icon name="lucide-search" class="w-5 h-5 text-black absolute left-3.5 pointer-events-none stroke-[2.5]" />
+                        <template x-if="query || ($refs.searchInput && $refs.searchInput.value)">
+                            <button type="button"
+                                @click="$refs.searchInput.value=''; $wire.search=''; checkFilter(); if(wasApplied){$wire.applyFilters();}"
+                                class="absolute right-3 w-7 h-7 bg-rose-400 hover:bg-rose-300 border-2 border-black rounded-lg text-black font-black text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center cursor-pointer">
+                                &#x2715;
+                            </button>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- District & Gender (2 Cols inside Left Col) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <!-- District -->
+                    <div>
+                        <label class="block text-xs font-black uppercase text-black mb-2 tracking-wide">Kecamatan</label>
+                        <select x-ref="districtSelect" wire:model="district"
+                            class="w-full bg-white border-3 border-black rounded-xl px-3 py-3 text-sm font-black uppercase tracking-wide text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_12px_center] pr-9">
+                            <option value="" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Semua Kecamatan</option>
+                            @foreach ($districts as $val => $label)
+                                <option value="{{ $val }}" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">{{ $label }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Gender -->
+                    <div>
+                        <label class="block text-xs font-black uppercase text-black mb-2 tracking-wide">Tipe Penghuni</label>
+                        <select x-ref="genderSelect" wire:model="gender"
+                            class="w-full bg-white border-3 border-black rounded-xl px-3 py-3 text-sm font-black uppercase tracking-wide text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_12px_center] pr-9">
+                            <option value="" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Semua Tipe</option>
+                            <option value="putra" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Putra</option>
+                            <option value="putri" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Putri</option>
+                            <option value="campur" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Campur</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
-            <!-- Gender -->
-            <div class="lg:col-span-2">
-                <label class="block text-xs font-black uppercase text-black mb-1.5 tracking-wide">Tipe Penghuni</label>
-                <select x-ref="genderSelect" wire:model="gender"
-                    class="w-full bg-white border-3 border-black rounded-xl px-2.5 py-2.5 text-xs font-black uppercase tracking-wide text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_8px_center] pr-7">
-                    <option value="" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Semua Tipe</option>
-                    <option value="putra" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Putra</option>
-                    <option value="putri" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Putri</option>
-                    <option value="campur" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Campur</option>
-                </select>
-            </div>
+            <!-- Right Column: Price & Period -->
+            <div class="space-y-5">
+                <!-- Price Range -->
+                <div>
+                    <label class="block text-xs font-black uppercase text-black mb-2 tracking-wide flex items-center justify-between">
+                        <span>Batas Harga Sewa <span class="text-zinc-500 font-bold normal-case text-[10px] ml-1">(per tipe)</span></span>
+                    </label>
+                    <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                        <select x-ref="minSelect" wire:model="price_min"
+                            class="w-full bg-white border-3 border-black rounded-xl px-3 py-3 text-sm font-black uppercase tracking-wide text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_10px_center] pr-8">
+                            <option value="" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Min Harga</option>
+                            <option value="500000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 500rb</option>
+                            <option value="1000000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 1 Jt</option>
+                            <option value="1500000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 1.5 Jt</option>
+                            <option value="2000000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 2 Jt</option>
+                            <option value="3000000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 3 Jt</option>
+                        </select>
+                        <select x-ref="maxSelect" wire:model="price_max"
+                            class="w-full bg-white border-3 border-black rounded-xl px-3 py-3 text-sm font-black uppercase tracking-wide text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_10px_center] pr-8">
+                            <option value="" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Max Harga</option>
+                            <option value="1000000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 1 Jt</option>
+                            <option value="1500000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 1.5 Jt</option>
+                            <option value="2000000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 2 Jt</option>
+                            <option value="3000000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 3 Jt</option>
+                            <option value="5000000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 5 Jt</option>
+                        </select>
+                    </div>
+                </div>
 
-            <!-- District -->
-            <div class="lg:col-span-2">
-                <label class="block text-xs font-black uppercase text-black mb-1.5 tracking-wide">Kecamatan</label>
-                <select x-ref="districtSelect" wire:model="district"
-                    class="w-full bg-white border-3 border-black rounded-xl px-2.5 py-2.5 text-xs font-black uppercase tracking-wide text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_8px_center] pr-7">
-                    <option value="" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Semua Kecamatan</option>
-                    @foreach ($districts as $val => $label)
-                        <option value="{{ $val }}" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">{{ $label }}</option>
-                    @endforeach
-                </select>
-            </div>
+                <!-- Period & Verified (2 Cols inside Right Col) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 items-end">
+                    <!-- Rent Period -->
+                    <div>
+                        <label class="block text-xs font-black uppercase text-black mb-2 tracking-wide">Periode Sewa</label>
+                        <select x-ref="periodSelect" wire:model="rent_period"
+                            class="w-full bg-white border-3 border-black rounded-xl px-3 py-3 text-sm font-black uppercase tracking-wide text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_12px_center] pr-9">
+                            <option value="" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Semua Periode</option>
+                            @foreach (\App\Models\Kost::rentPeriodLabels() as $val => $label)
+                                <option value="{{ $val }}" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">{{ $label }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-            <!-- Rent Period -->
-            <div class="lg:col-span-2">
-                <label class="block text-xs font-black uppercase text-black mb-1.5 tracking-wide">Periode Sewa</label>
-                <select x-ref="periodSelect" wire:model="rent_period"
-                    class="w-full bg-white border-3 border-black rounded-xl px-2.5 py-2.5 text-xs font-black uppercase tracking-wide text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_8px_center] pr-7">
-                    <option value="" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Semua Periode</option>
-                    @foreach (\App\Models\Kost::rentPeriodLabels() as $val => $label)
-                        <option value="{{ $val }}" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">{{ $label }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <!-- Price Range -->
-            <div class="lg:col-span-3">
-                <label class="block text-xs font-black uppercase text-black mb-1.5 tracking-wide">Batas Harga Sewa <span class="text-zinc-500 font-bold normal-case text-[10px] ml-1">(per tipe)</span></label>
-                <div class="grid grid-cols-2 gap-2">
-                    <select x-ref="minSelect" wire:model="price_min"
-                        class="w-full bg-white border-3 border-black rounded-xl px-2 py-2.5 text-xs font-black uppercase tracking-wide text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-no-repeat bg-[right_6px_center] pr-5">
-                        <option value="" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Min (Semua)</option>
-                        <option value="500000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 500rb</option>
-                        <option value="1000000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 1 Jt</option>
-                        <option value="1500000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 1.5 Jt</option>
-                        <option value="2000000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 2 Jt</option>
-                        <option value="3000000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 3 Jt</option>
-                    </select>
-                    <select x-ref="maxSelect" wire:model="price_max"
-                        class="w-full bg-white border-3 border-black rounded-xl px-2 py-2.5 text-xs font-black uppercase tracking-wide text-black focus:outline-none focus:ring-0 cursor-pointer transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-no-repeat bg-[right_6px_center] pr-5">
-                        <option value="" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Max (Semua)</option>
-                        <option value="1000000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 1 Jt</option>
-                        <option value="1500000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 1.5 Jt</option>
-                        <option value="2000000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 2 Jt</option>
-                        <option value="3000000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 3 Jt</option>
-                        <option value="5000000" class="font-bold text-sm normal-case text-zinc-900 bg-white py-2">Rp 5 Jt</option>
-                    </select>
+                    <!-- Verified Only Toggle -->
+                    <div>
+                        <label :class="$wire.verified_only
+                                ? 'bg-emerald-400 text-black border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
+                                : 'bg-white text-zinc-700 border-3 border-black hover:bg-zinc-100 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'"
+                            class="w-full h-[52px] flex justify-center items-center font-black text-xs sm:text-sm uppercase rounded-xl transition-all cursor-pointer gap-2 px-3">
+                            <input type="checkbox" x-ref="verifiedToggle" wire:model="verified_only" @change="checkFilter()" class="hidden">
+                            <x-icon name="lucide-badge-check" class="w-4 h-4 stroke-[3] shrink-0" />
+                            <span class="truncate">Kost Verified</span>
+                        </label>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Verified Only Toggle -->
-        <div class="flex flex-wrap items-center gap-2 pt-1">
-            <label :class="$wire.verified_only
-                    ? 'bg-emerald-400 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
-                    : 'bg-white text-zinc-700 border-2 border-black hover:bg-zinc-100'"
-                class="px-3.5 py-1.5 font-black text-xs uppercase rounded-lg transition-all cursor-pointer inline-flex items-center gap-1.5">
-                <input type="checkbox" x-ref="verifiedToggle" wire:model="verified_only" @change="checkFilter()" class="hidden">
-                <x-icon name="lucide-badge-check" class="w-3.5 h-3.5 stroke-[3]" />
-                <span>Hanya Kost Terverifikasi</span>
-            </label>
-            <span class="text-[10px] font-bold text-zinc-500 normal-case">Tampilkan hanya kost yang pemilik &amp; kepemilikannya telah terverifikasi tim KostBandung.</span>
         </div>
     </div>
 

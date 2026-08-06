@@ -469,11 +469,61 @@ window.catalogMap = function (config) {
             const escape = (v) => this.escapeHtml(v);
             return `
                 <style>
+                    /* Reset Google Maps InfoWindow wrappers to remove default padding */
+                    .gm-style-iw-c {
+                        padding: 0 !important;
+                        border-radius: 12px !important;
+                        border: 3px solid #000 !important;
+                        box-shadow: 6px 6px 0px #000 !important;
+                        background: #fff !important;
+                    }
+                    .gm-style-iw-d {
+                        overflow: hidden !important;
+                        padding: 0 !important;
+                    }
+                    /* Hide default tail shadow from Google Maps */
+                    .gm-style-iw-tc::after {
+                        background: #000 !important;
+                    }
+                    
+                    /* Hide yellow pan arrows (accessibility focus indicators) */
+                    .gm-style-iw-c button[title^="Pan"],
+                    .gm-style-iw-c button[aria-label^="Pan"],
+                    .gm-style-iw-a button:not(.gm-ui-hover-effect) {
+                        display: none !important;
+                    }
+
+                    /* Override Google Maps InfoWindow default close button */
+                    .gm-ui-hover-effect {
+                        top: 10px !important;
+                        right: 10px !important;
+                        background: #FEE2E2 !important;
+                        border: 2px solid #000 !important;
+                        border-radius: 50% !important;
+                        box-shadow: 2px 2px 0px #000 !important;
+                        opacity: 1 !important;
+                        width: 26px !important;
+                        height: 26px !important;
+                        transition: all 0.15s ease !important;
+                        z-index: 100 !important;
+                    }
+                    .gm-ui-hover-effect:hover {
+                        transform: translate(1px, 1px) !important;
+                        box-shadow: 1px 1px 0px #000 !important;
+                        background: #FECACA !important;
+                    }
+                    .gm-ui-hover-effect span {
+                        margin: 2px !important;
+                        width: 18px !important;
+                        height: 18px !important;
+                    }
+
+                    /* Custom Button */
                     .neo-popup-btn {
                         display: flex; align-items: center; justify-content: center; gap: 6px;
                         background: #FB923C; color: #000; border: 2.5px solid #000;
-                        padding: 8px 12px; border-radius: 8px; font-weight: 900;
-                        font-size: 12px; text-decoration: none; text-transform: uppercase;
+                        padding: 10px 12px; border-radius: 8px; font-weight: 900;
+                        font-size: 13px; text-decoration: none; text-transform: uppercase;
                         box-shadow: 3px 3px 0px #000; transition: all 0.15s ease;
                         margin-top: 4px; box-sizing: border-box; width: 100%;
                     }
@@ -481,52 +531,37 @@ window.catalogMap = function (config) {
                         transform: translate(2px, 2px);
                         box-shadow: 1px 1px 0px #000;
                     }
-                    /* Override Google Maps InfoWindow default close button */
-                    .gm-ui-hover-effect {
-                        background: #FEE2E2 !important;
-                        border: 2px solid #000 !important;
-                        border-radius: 6px !important;
-                        box-shadow: 2px 2px 0px #000 !important;
-                        opacity: 1 !important;
-                        top: 8px !important;
-                        right: 8px !important;
-                        transition: all 0.15s ease !important;
-                    }
-                    .gm-ui-hover-effect:hover {
-                        transform: translate(1px, 1px) !important;
-                        box-shadow: 1px 1px 0px #000 !important;
-                    }
                 </style>
-                <div style="font-family: 'Inter', system-ui, sans-serif; width: 230px; padding: 2px; color: #000; box-sizing: border-box;">
-                    <div style="position: relative; margin-bottom: 16px;">
+                <div style="font-family: 'Inter', system-ui, sans-serif; width: 250px; color: #000; box-sizing: border-box; display: flex; flex-direction: column;">
+                    <div style="position: relative; width: 100%; height: 140px; border-bottom: 3px solid #000;">
                         <img src="${escape(item.image)}" 
-                            style="width: 100%; height: 130px; object-fit: cover; border-radius: 8px; border: 2.5px solid #000; box-sizing: border-box;" />
-                        <div style="position: absolute; bottom: -10px; left: 10px; display: flex; gap: 6px;">
-                            <span style="background: #F472B6; color: #000; font-size: 9px; font-weight: 900; text-transform: uppercase; padding: 4px 8px; border: 2px solid #000; border-radius: 6px; box-shadow: 2px 2px 0px #000;">
+                             style="width: 100%; height: 100%; object-fit: cover; border-top-left-radius: 8px; border-top-right-radius: 8px;" />
+                        <div style="position: absolute; bottom: 8px; left: 8px; display: flex; gap: 6px;">
+                            <span style="background: #F472B6; color: #000; font-size: 10px; font-weight: 900; text-transform: uppercase; padding: 4px 8px; border: 2px solid #000; border-radius: 6px; box-shadow: 2px 2px 0px #000;">
                                 ${escape(item.gender)}
                             </span>
-                            <span style="background: #67E8F9; color: #000; font-size: 9px; font-weight: 900; text-transform: uppercase; padding: 4px 8px; border: 2px solid #000; border-radius: 6px; box-shadow: 2px 2px 0px #000;">
+                            <span style="background: #67E8F9; color: #000; font-size: 10px; font-weight: 900; text-transform: uppercase; padding: 4px 8px; border: 2px solid #000; border-radius: 6px; box-shadow: 2px 2px 0px #000;">
                                 ${escape(item.district)}
                             </span>
                         </div>
                     </div>
                     
-                    <div>
-                        <h4 style="font-size: 15px; font-weight: 900; margin: 0 0 2px 0; line-height: 1.2; text-transform: uppercase;">
+                    <div style="padding: 14px;">
+                        <h4 style="font-size: 16px; font-weight: 900; margin: 0 0 2px 0; line-height: 1.2; text-transform: uppercase;">
                             ${escape(item.name)}
                         </h4>
-                        <p style="font-size: 11px; font-weight: 700; color: #555; margin: 0 0 10px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        <p style="font-size: 12px; font-weight: 700; color: #555; margin: 0 0 12px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                             ${escape(item.address)}
                         </p>
                         
-                        <div style="display: flex; align-items: baseline; gap: 4px; margin-bottom: 12px;">
-                            <span style="font-weight: 900; font-size: 16px; color: #000;">${escape(item.price_full)}</span>
-                            <span style="font-weight: 800; font-size: 10px; color: #666;">${escape(item.price_unit)}</span>
+                        <div style="display: flex; align-items: baseline; gap: 4px; margin-bottom: 14px;">
+                            <span style="font-weight: 900; font-size: 17px; color: #000;">${escape(item.price_full)}</span>
+                            <span style="font-weight: 800; font-size: 11px; color: #666;">${escape(item.price_unit)}</span>
                         </div>
 
                         <a href="${escape(item.url)}" class="neo-popup-btn">
                             <span>Lihat Detail</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                         </a>
                     </div>
                 </div>

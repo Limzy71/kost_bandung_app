@@ -31,8 +31,8 @@
                 <h1 class="text-3xl md:text-5xl font-black text-black dark:text-white tracking-tight uppercase">
                     Profil Saya
                 </h1>
-                <p class="text-zinc-700 dark:text-zinc-300 text-sm md:text-base font-bold">
-                    Kelola identitas akun Anda di <span class="bg-yellow-200 border-b-2 border-black dark:border-zinc-700 px-1">KostBandung.web.id</span>.
+                <p class="text-zinc-700 dark:text-white text-sm md:text-base font-bold">
+                    Kelola identitas akun Anda di <span class="bg-yellow-200 dark:bg-yellow-400 border-b-2 border-black px-1 text-black">KostBandung.web.id</span>.
                 </p>
             </div>
 

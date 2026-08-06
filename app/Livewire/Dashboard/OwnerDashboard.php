@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Dashboard;
 
-use App\Models\Inquiry;
 use App\Models\Kost;
+use App\Models\KostMessage;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
@@ -148,7 +148,14 @@ class OwnerDashboard extends Component
     #[Computed]
     public function pesanMasuk(): int
     {
-        return Inquiry::whereIn('kost_id', $this->ownerKostsQuery()->toBase()->select('id'))->count();
+        return KostMessage::whereNull('read_at')
+            ->where(function ($q) {
+                $q->whereNull('sender_id')->orWhere('sender_id', '!=', Auth::id());
+            })
+            ->whereHas('conversation', function ($q) {
+                $q->whereHas('kost', fn ($k) => $k->where('user_id', Auth::id()));
+            })
+            ->count();
     }
 
     public function render(): View
@@ -187,7 +194,7 @@ class OwnerDashboard extends Component
     {
         return $this->ownerKostsQuery()->getQuery()
             ->with(['primaryImage', 'facilities'])
-            ->withCount('inquiries')
+            ->withCount('conversations')
             ->when($this->search, function ($query) {
                 $term = '%'.addcslashes($this->search, '%_').'%';
 

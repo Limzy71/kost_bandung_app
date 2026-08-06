@@ -112,11 +112,11 @@ class Kost extends Model
     }
 
     /**
-     * @return HasMany<Inquiry, $this>
+     * @return HasMany<KostConversation, $this>
      */
-    public function inquiries(): HasMany
+    public function conversations(): HasMany
     {
-        return $this->hasMany(Inquiry::class);
+        return $this->hasMany(KostConversation::class);
     }
 
     /**

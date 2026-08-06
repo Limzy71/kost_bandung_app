@@ -9,9 +9,9 @@ use App\Livewire\Auth\Register;
 use App\Livewire\Contact\AdminChat;
 use App\Livewire\Dashboard\CreateKost;
 use App\Livewire\Dashboard\EditKost;
-use App\Livewire\Dashboard\InquiryIndex;
+use App\Livewire\Dashboard\OwnerChat;
 use App\Livewire\Dashboard\OwnerDashboard;
-use App\Livewire\Dashboard\SeekerInquiries;
+use App\Livewire\Dashboard\SeekerChat;
 use App\Livewire\KostDetail;
 use App\Livewire\Profile\Index as ProfileIndex;
 use App\Livewire\Profile\PublicOwner as PublicOwnerProfile;
@@ -31,7 +31,7 @@ Route::middleware(['auth', 'verified', 'owner'])->group(function () {
     Route::get('/dashboard', OwnerDashboard::class)->name('dashboard');
     Route::get('/dashboard/kost/create', CreateKost::class)->name('dashboard.kost.create');
     Route::get('/dashboard/kost/{kost:slug}/edit', EditKost::class)->name('dashboard.kost.edit');
-    Route::get('/dashboard/inquiries', InquiryIndex::class)->name('dashboard.inquiries');
+    Route::get('/dashboard/chats', OwnerChat::class)->name('dashboard.chats');
 });
 
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
@@ -42,7 +42,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profil', ProfileIndex::class)->name('profile.show');
-    Route::get('/dashboard/user/inquiries', SeekerInquiries::class)->name('user.inquiries');
+    Route::get('/dashboard/user/chats', SeekerChat::class)->name('user.chats');
     Route::get('/hubungi-admin', AdminChat::class)->name('hubungi.admin');
 });
 

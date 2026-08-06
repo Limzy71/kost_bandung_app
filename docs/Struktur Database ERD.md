@@ -2,9 +2,9 @@
 
 ## **Platform Pencarian & Manajemen Kost Hyper-Local Bandung** 
 
-Status: Final Version | Kompatibilitas: Laravel 12 (Eloquent ORM) 
+Status: Final Version | Kompatibilitas: Laravel 13 (Eloquent ORM) 
 
-Rancangan Struktur Database atau _Entity Relationship Diagram_ (ERD) ini merupakan versi akhir ( _Final Version_ ) yang telah diperbarui secara penuh. Skema ini telah mencakup seluruh penyesuaian terkait manajemen fasilitas, tipe kost, serta aturan khusus, dan dirancang agar 100% kompatibel dengan standar _migration_ dan Eloquent ORM pada _framework_ Laravel 12. 
+Rancangan Struktur Database atau _Entity Relationship Diagram_ (ERD) ini merupakan versi akhir ( _Final Version_ ) yang telah diperbarui secara penuh. Skema ini telah mencakup seluruh penyesuaian terkait manajemen fasilitas, tipe kost, aturan khusus, serta sistem obrolan kost, dan dirancang agar 100% kompatibel dengan standar _migration_ dan Eloquent ORM pada _framework_ Laravel 13. 
 
 ## **1. Tabel** **`users`** 
 
@@ -18,7 +18,7 @@ Menyimpan semua data pengguna (Admin, Mahasiswa/Pencari Kost, dan Pemilik Kost).
 |`avatar`|String, Nullable|Path berkas foto profil di storage|
 |`phone_number`|String, Unique||
 |`password`|String||
-|`role`|Enum|’admin’, ’owner’, ’student’|
+|`role`|String|’admin’, ’owner’, ’user’|
 |`timestamps`|Timestamps|created_at, updated_at|
 
 
@@ -111,9 +111,32 @@ Tabel relasi _Many-to-Many_ antara Kost dan Aturan.
 
 
 
-## **8. Tabel** **`inquiries`** 
+## **8. Tabel** **`kost_conversations`**
 
-Untuk mencatat riwayat pesan/pengajuan _booking_ internal dari pencari kost. 
+Menyimpan thread percakapan langsung (chat real-time) antara pencari kost dan pemilik kost untuk satu kost tertentu.
+
+|**Nama Kolom**|**Tipe Data / Key**|**Keterangan**|
+|---|---|---|
+|`id`|Primary Key, BigInt||
+|`kost_id`|Foreign Key|Merujuk ke`kosts.id` (cascadeOnDelete)|
+|`seeker_id`|Foreign Key, Nullable|Merujuk ke`users.id` (nullOnDelete)|
+|`status`|Enum/String|’open’, ’archived_by_owner’, ’archived_by_seeker’|
+|`timestamps`|Timestamps|created_at, updated_at|
+|Index|Unique|(kost_id, seeker_id)|
+
+## **9. Tabel** **`kost_messages`**
+
+Menyimpan pesan per thread obrolan kost (Relasi _One-to-Many_ ke `kost_conversations`).
+
+|**Nama Kolom**|**Tipe Data / Key**|**Keterangan**|
+|---|---|---|
+|`id`|Primary Key, BigInt||
+|`conversation_id`|Foreign Key|Merujuk ke`kost_conversations.id` (cascadeOnDelete)|
+|`sender_id`|Foreign Key, Nullable|Merujuk ke`users.id` (nullOnDelete)|
+|`body`|Text|Maksimal 2.000 karakter|
+|`read_at`|Timestamp, Nullable|Ditandai saat penerima membuka thread|
+|`timestamps`|Timestamps|created_at, updated_at|
+|Index|Composite|(conversation_id, created_at)|
 
 ## **Ringkasan Relasi Database (Model Laravel Eloquent)** 
 
@@ -121,7 +144,7 @@ Untuk mencatat riwayat pesan/pengajuan _booking_ internal dari pencari kost.
 
    - `hasMany(Kost::class)` 
 
-   - `hasMany(Inquiry::class)` 
+   - `hasMany(KostConversation::class)` _(Sebagai_ _`seeker_id` )_ 
 
    - `hasMany(AdminConversation::class)`
 
@@ -131,59 +154,29 @@ Untuk mencatat riwayat pesan/pengajuan _booking_ internal dari pencari kost.
 
    - `hasMany(KostImage::class)` 
 
-   - `hasMany(Inquiry::class)` 
+   - `hasMany(KostConversation::class)` 
 
    - `belongsToMany(Facility::class)` _(Melalui tabel pivot:_ _`facility_kost` )_ 
 
+   - `belongsToMany(Rule::class)` _(Melalui tabel pivot:_ _`kost_rule` )_ 
+
 3 
 
-|**Nama Kolom**|**Tipe Data / Key**|**Keterangan**|
-|---|---|---|
-|`id`|Primary Key, BigInt||
-|`kost_id`|Foreign Key|Merujuk ke`kosts.id`|
-|`student_id`|Foreign Key|Merujuk ke`users.id`|
-|`message`|Text||
-|`status`|Enum|’unread’, ’read’, ’replied’|
-|`timestamps`|Timestamps|created_at, updated_at|
+- **`KostConversation`** 
 
+   - `belongsTo(Kost::class)` 
 
+   - `belongsTo(User::class)` _(Sebagai_ _`seeker_id` )_ 
 
-## **9. Tabel** **`admin_conversations`** (Thread CS / Hubungi Admin)
+   - `hasMany(KostMessage::class)` 
 
-Menyimpan thread percakapan antara pengguna (Pencari Kost / Pemilik Kost) dengan Admin (fitur Hubungi Admin / CS & pengaduan).
+   - `hasOne(KostMessage::class)` _(`latestMessage` via_ _`latestOfMany` )_ 
 
-|**Nama Kolom**|**Tipe Data / Key**|**Keterangan**|
-|---|---|---|
-|`id`|Primary Key, BigInt||
-|`user_id`|Foreign Key, Nullable|Merujuk ke`users.id` (nullOnDelete)|
-|`sender_role`|Enum/String|’user’, ’owner’ — peran pengirim saat membuka thread|
-|`category`|Enum/String|’komplain’, ’pertanyaan’, ’masukan’, ’lainnya’|
-|`status`|Enum/String|’open’, ’closed’ (default: ’open’)|
-|`closed_reason`|String, Nullable|’admin’ atau ’expired’|
-|`awaiting_reply_at`|Timestamp, Nullable|Batas SLA 1x24 jam; direset setiap user mengirim pesan|
-|`closed_at`|Timestamp, Nullable||
-|`deleted_at`|SoftDeletes|Retensi 30 hari sebelum dihapus permanen|
-|`timestamps`|Timestamps|created_at, updated_at|
-|Index|Composite|(status, awaiting_reply_at), (user_id, status)|
+- **`KostMessage`** 
 
-## **10. Tabel** **`admin_messages`**
+   - `belongsTo(KostConversation::class)` 
 
-Menyimpan pesan per thread percakapan CS (Relasi _One-to-Many_ ke `admin_conversations`).
-
-|**Nama Kolom**|**Tipe Data / Key**|**Keterangan**|
-|---|---|---|
-|`id`|Primary Key, BigInt||
-|`conversation_id`|Foreign Key|Merujuk ke`admin_conversations.id` (cascadeOnDelete)|
-|`sender_type`|Enum/String|’user’, ’admin’|
-|`sender_id`|Foreign Key, Nullable|Merujuk ke`users.id` (nullOnDelete)|
-|`body`|Text|Maksimal 2.000 karakter|
-|`read_at`|Timestamp, Nullable|Ditandai saat penerima membuka thread|
-|`timestamps`|Timestamps|created_at, updated_at|
-|Index|Composite|(conversation_id, created_at)|
-
-
-
-   - `belongsToMany(Rule::class)` _(Melalui tabel pivot:_ _`kost_rule` )_ 
+   - `belongsTo(User::class)` _(Sebagai_ _`sender_id` )_ 
 
 - **`Facility`** 
 
@@ -207,3 +200,35 @@ Menyimpan pesan per thread percakapan CS (Relasi _One-to-Many_ ke `admin_convers
 
 4 
 
+## **10. Tabel** **`admin_conversations`** (Thread CS / Hubungi Admin)
+
+Menyimpan thread percakapan antara pengguna (Pencari Kost / Pemilik Kost) dengan Admin (fitur Hubungi Admin / CS & pengaduan).
+
+|**Nama Kolom**|**Tipe Data / Key**|**Keterangan**|
+|---|---|---|
+|`id`|Primary Key, BigInt||
+|`user_id`|Foreign Key, Nullable|Merujuk ke`users.id` (nullOnDelete)|
+|`sender_role`|Enum/String|’user’, ’owner’ — peran pengirim saat membuka thread|
+|`category`|Enum/String|’komplain’, ’pertanyaan’, ’masukan’, ’lainnya’|
+|`status`|Enum/String|’open’, ’closed’ (default: ’open’)|
+|`closed_reason`|String, Nullable|’admin’ atau ’expired’|
+|`awaiting_reply_at`|Timestamp, Nullable|Batas SLA 1x24 jam; direset setiap user mengirim pesan|
+|`closed_at`|Timestamp, Nullable||
+|`deleted_at`|SoftDeletes|Retensi 30 hari sebelum dihapus permanen|
+|`timestamps`|Timestamps|created_at, updated_at|
+|Index|Composite|(status, awaiting_reply_at), (user_id, status)|
+
+## **11. Tabel** **`admin_messages`**
+
+Menyimpan pesan per thread percakapan CS (Relasi _One-to-Many_ ke `admin_conversations`).
+
+|**Nama Kolom**|**Tipe Data / Key**|**Keterangan**|
+|---|---|---|
+|`id`|Primary Key, BigInt||
+|`conversation_id`|Foreign Key|Merujuk ke`admin_conversations.id` (cascadeOnDelete)|
+|`sender_type`|Enum/String|’user’, ’admin’|
+|`sender_id`|Foreign Key, Nullable|Merujuk ke`users.id` (nullOnDelete)|
+|`body`|Text|Maksimal 2.000 karakter|
+|`read_at`|Timestamp, Nullable|Ditandai saat penerima membuka thread|
+|`timestamps`|Timestamps|created_at, updated_at|
+|Index|Composite|(conversation_id, created_at)|

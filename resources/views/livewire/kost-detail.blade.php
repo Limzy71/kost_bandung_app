@@ -57,7 +57,7 @@
         showGalleryModal: false, 
         activeIndex: 0, 
         images: {{ Js::from($allImages) }},
-        openInquiryModal() {
+        openChatModal() {
             @auth
                 this.showModal = true;
             @else
@@ -89,8 +89,7 @@
             }
         }
     }" 
-    x-effect="document.body.style.overflow = (showGalleryModal || showModal) ? 'hidden' : ''"
-    @inquiry-sent.window="showModal = false">
+    x-effect="document.body.style.overflow = (showGalleryModal || showModal) ? 'hidden' : ''">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
         <!-- Admin Review Notice Banner -->
@@ -600,11 +599,19 @@
                                     </div>
                                 @endif
 
-                                <button type="button" @click="openInquiryModal()"
-                                    class="w-full py-4 bg-cyan-300 hover:bg-cyan-200 text-black border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 cursor-pointer">
-                                    <x-icon name="lucide-mail" class="w-5 h-5 stroke-[2.5]" />
-                                    <span>Kirim Pesan Internal</span>
-                                </button>
+                                @if ($this->existingConversation)
+                                    <a href="{{ route('user.chats', ['conversation' => $this->existingConversation->id]) }}"
+                                        class="w-full py-4 bg-yellow-300 hover:bg-yellow-200 text-black border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 cursor-pointer">
+                                        <x-icon name="lucide-message-circle" class="w-5 h-5 stroke-[2.5]" />
+                                        <span>Buka Obrolan</span>
+                                    </a>
+                                @else
+                                    <button type="button" @click="openChatModal()"
+                                        class="w-full py-4 bg-cyan-300 hover:bg-cyan-200 text-black border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 cursor-pointer">
+                                        <x-icon name="lucide-mail" class="w-5 h-5 stroke-[2.5]" />
+                                        <span>Kirim Pesan Internal</span>
+                                    </button>
+                                @endif
                             @else
                                 <div
                                     class="w-full py-4 bg-rose-100 text-rose-700 border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-xl flex items-center justify-center gap-2 cursor-not-allowed"
@@ -734,11 +741,19 @@
                     );
                 @endphp
                 <div class="flex items-center gap-2">
-                    <button type="button" @click="openInquiryModal()"
-                        class="px-4 py-3 bg-cyan-300 hover:bg-cyan-200 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl whitespace-nowrap inline-flex items-center gap-1.5 cursor-pointer">
-                        <x-icon name="lucide-mail" class="w-4 h-4 stroke-[2.5]" />
-                        <span>Pesan</span>
-                    </button>
+                    @if ($this->existingConversation)
+                        <a href="{{ route('user.chats', ['conversation' => $this->existingConversation->id]) }}"
+                            class="px-4 py-3 bg-yellow-300 hover:bg-yellow-200 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl whitespace-nowrap inline-flex items-center gap-1.5 cursor-pointer">
+                            <x-icon name="lucide-message-circle" class="w-4 h-4 stroke-[2.5]" />
+                            <span>Obrolan</span>
+                        </a>
+                    @else
+                        <button type="button" @click="openChatModal()"
+                            class="px-4 py-3 bg-cyan-300 hover:bg-cyan-200 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl whitespace-nowrap inline-flex items-center gap-1.5 cursor-pointer">
+                            <x-icon name="lucide-mail" class="w-4 h-4 stroke-[2.5]" />
+                            <span>Pesan</span>
+                        </button>
+                    @endif
                     @if ($hasWaNumber)
                         <a href="https://wa.me/{{ $waNumber }}?text={{ $waMessageMobile }}" target="_blank"
                             class="px-5 py-3 bg-emerald-400 hover:bg-emerald-300 text-black border-3 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl whitespace-nowrap inline-flex items-center gap-1.5 cursor-pointer">
@@ -761,7 +776,7 @@
         </div>
     </div>
 
-    <!-- Neo-Brutalist Inquiry Modal -->
+    <!-- Neo-Brutalist Chat Modal -->
     <template x-teleport="body">
         <div x-show="showModal" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-0">
             <!-- Backdrop -->
@@ -798,37 +813,37 @@
                     </div>
                 @else
                 @if ($kost->is_available)
-                <form wire:submit.prevent="sendInquiry" class="space-y-4">
+                <form wire:submit.prevent="startChat" class="space-y-4">
                     <div>
                         <label class="block text-sm font-black uppercase text-black mb-1.5">Nama Lengkap</label>
-                        @if ($inquiry_name)
+                        @if ($message_name)
                             <div class="w-full bg-white border-3 border-black rounded-xl px-4 py-3 text-sm font-bold text-black flex items-center justify-between gap-3">
-                                <span class="truncate" title="{{ $inquiry_name }}">{{ Str::limit($inquiry_name, 30) }}</span>
+                                <span class="truncate" title="{{ $message_name }}">{{ Str::limit($message_name, 30) }}</span>
                                 <span class="text-[10px] font-black uppercase text-zinc-500 shrink-0">Dari profil Anda</span>
                             </div>
                         @else
-                            <input type="text" wire:model="inquiry_name"
+                            <input type="text" wire:model="message_name"
                                 class="w-full bg-zinc-100 border-3 border-black rounded-xl px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:bg-white focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
                                 placeholder="Masukkan nama Anda">
-                            @error('inquiry_name')
+                            @error('message_name')
                                 <span class="text-xs font-bold text-rose-500 mt-1 block">{{ $message }}</span>
                             @enderror
                         @endif
                     </div>
                     <div>
                         <label class="block text-sm font-black uppercase text-black mb-1.5">Nomor WhatsApp</label>
-                        @if ($inquiry_phone)
+                        @if ($message_phone)
                             <div class="w-full bg-white border-3 border-black rounded-xl px-4 py-3 text-sm font-bold text-black flex items-center justify-between gap-3">
-                                <span class="truncate">{{ $inquiry_phone }}</span>
+                                <span class="truncate">{{ $message_phone }}</span>
                                 <span class="text-[10px] font-black uppercase text-zinc-500 shrink-0">Dari profil Anda</span>
                             </div>
                         @else
-                            <input type="text" wire:model="inquiry_phone"
+                            <input type="text" wire:model="message_phone"
                                 inputmode="numeric" oninput="let v = this.value.replace(/[^0-9]/g, ''); if(v.startsWith('62')) v = '0' + v.slice(2); else if(v.length > 0 && v[0] !== '0') v = '0' + v; this.value = v;"
                                 maxlength="16"
                                 class="w-full bg-zinc-100 border-3 border-black rounded-xl px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:bg-white focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
                                 placeholder="Contoh: 081234567890">
-                            @error('inquiry_phone')
+                            @error('message_phone')
                                 <span class="text-xs font-bold text-rose-500 mt-1 block">{{ $message }}</span>
                             @enderror
                             <p class="text-[10px] font-bold text-zinc-500 mt-1">
@@ -838,18 +853,18 @@
                     </div>
                     <div>
                         <label class="block text-sm font-black uppercase text-black mb-1.5">Pesan Anda</label>
-                        <textarea wire:model="inquiry_message" rows="4"
+                        <textarea wire:model="message_body" rows="4"
                             class="w-full bg-zinc-100 border-3 border-black rounded-xl px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:bg-white focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all resize-none"
                             placeholder="Tuliskan pertanyaan Anda mengenai ketersediaan kamar, fasilitas, dll..."></textarea>
-                        @error('inquiry_message')
+                        @error('message_body')
                             <span class="text-xs font-bold text-rose-500 mt-1 block">{{ $message }}</span>
                         @enderror
                     </div>
 
-                    <x-brutal-button type="submit" color="cyan" wire:loading.attr="disabled" wire:target="sendInquiry"
+                    <x-brutal-button type="submit" color="cyan" wire:loading.attr="disabled" wire:target="startChat"
                         wire:loading.class="opacity-50 cursor-not-allowed" class="w-full mt-4 rounded-xl flex items-center justify-center">
-                        <span wire:loading.remove wire:target="sendInquiry">Kirim Sekarang</span>
-                        <span wire:loading.flex wire:target="sendInquiry" class="items-center justify-center gap-2">
+                        <span wire:loading.remove wire:target="startChat">Kirim Sekarang</span>
+                        <span wire:loading.flex wire:target="startChat" class="items-center justify-center gap-2">
                             <x-icon name="lucide-loader-circle" class="animate-spin h-5 w-5 text-black" />
                             Mengirim...
                         </span>

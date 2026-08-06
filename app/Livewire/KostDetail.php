@@ -3,12 +3,14 @@
 namespace App\Livewire;
 
 use App\Models\Facility;
-use App\Models\Inquiry;
 use App\Models\Kost;
+use App\Models\KostConversation;
+use App\Models\KostMessage;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 class KostDetail extends Component
@@ -17,11 +19,11 @@ class KostDetail extends Component
 
     public bool $kostUnavailable = false;
 
-    public string $inquiry_name = '';
+    public string $message_name = '';
 
-    public string $inquiry_phone = '';
+    public string $message_phone = '';
 
-    public string $inquiry_message = '';
+    public string $message_body = '';
 
     /**
      * @return array<string, mixed>
@@ -29,9 +31,9 @@ class KostDetail extends Component
     protected function rules(): array
     {
         return [
-            'inquiry_name' => 'required|string|max:255',
-            'inquiry_phone' => 'required|string|max:20',
-            'inquiry_message' => 'required|string|max:1000',
+            'message_name' => 'required|string|max:255',
+            'message_phone' => 'required|string|max:20',
+            'message_body' => 'required|string|max:1000',
         ];
     }
 
@@ -39,9 +41,9 @@ class KostDetail extends Component
      * @var array<string, string>
      */
     protected array $messages = [
-        'inquiry_name.required' => 'Nama lengkap wajib diisi.',
-        'inquiry_phone.required' => 'Nomor WhatsApp wajib diisi.',
-        'inquiry_message.required' => 'Pesan tidak boleh kosong.',
+        'message_name.required' => 'Nama lengkap wajib diisi.',
+        'message_phone.required' => 'Nomor WhatsApp wajib diisi.',
+        'message_body.required' => 'Pesan tidak boleh kosong.',
     ];
 
     public string $backUrl = '';
@@ -57,8 +59,8 @@ class KostDetail extends Component
         }
 
         if (auth()->check()) {
-            $this->inquiry_name = auth()->user()->name;
-            $this->inquiry_phone = auth()->user()->phone_number ?? '';
+            $this->message_name = auth()->user()->name;
+            $this->message_phone = auth()->user()->phone_number ?? '';
         }
 
         $this->kost->load(['facilities', 'rules', 'images', 'user', 'prices']);
@@ -77,6 +79,18 @@ class KostDetail extends Component
             $this->backUrl = route('home');
             $this->backLabel = 'Kembali ke Beranda Utama';
         }
+    }
+
+    #[Computed]
+    public function existingConversation(): ?KostConversation
+    {
+        if (! auth()->check() || Auth::id() === $this->kost->user_id) {
+            return null;
+        }
+
+        return KostConversation::where('kost_id', $this->kost->id)
+            ->where('seeker_id', Auth::id())
+            ->first();
     }
 
     public function removeFacility(int $facilityId): void
@@ -105,7 +119,7 @@ class KostDetail extends Component
         session()->flash('success', 'Fasilitas "'.$facility->name.'" telah dihapus dari kost.');
     }
 
-    public function sendInquiry(): void
+    public function startChat(): void
     {
         // The $kost property is re-fetched fresh from the database on every
         // request (Livewire lazy proxy). If the owner deleted the kost after
@@ -123,13 +137,13 @@ class KostDetail extends Component
         }
 
         if ($kostStatus !== 'published') {
-            $this->addError('inquiry_message', 'Kost ini sedang tidak aktif dan tidak menerima pesan saat ini.');
+            $this->addError('message_body', 'Kost ini sedang tidak aktif dan tidak menerima pesan saat ini.');
 
             return;
         }
 
         if (! $kostAvailable) {
-            $this->addError('inquiry_message', 'Kost ini sedang PENUH dan tidak menerima pesan baru saat ini.');
+            $this->addError('message_body', 'Kost ini sedang PENUH dan tidak menerima pesan baru saat ini.');
 
             return;
         }
@@ -142,37 +156,40 @@ class KostDetail extends Component
         }
 
         if (Auth::id() === $kost->user_id) {
-            $this->addError('inquiry_message', 'Anda tidak dapat mengirim pesan ke kost milik Anda sendiri.');
+            $this->addError('message_body', 'Anda tidak dapat mengirim pesan ke kost milik Anda sendiri.');
 
             return;
         }
 
         $this->validate();
 
-        $key = 'inquiry_'.request()->ip();
+        $key = 'kost_chat_start_'.request()->ip();
 
         if (RateLimiter::tooManyAttempts($key, 3)) {
             $seconds = RateLimiter::availableIn($key);
-            $this->addError('inquiry_message', 'TERLALU BANYAK MENGIRIM PESAN. TUNGGU '.$seconds.' DETIK.');
+            $this->addError('message_body', 'TERLALU BANYAK MENGIRIM PESAN. TUNGGU '.$seconds.' DETIK.');
 
             return;
         }
 
         RateLimiter::hit($key, 60);
 
-        Inquiry::create([
-            'kost_id' => $kostId,
-            'user_id' => Auth::id(),
-            'name' => $this->inquiry_name,
-            'phone_number' => $this->inquiry_phone,
-            'message' => $this->inquiry_message,
-            'status' => 'unread',
+        $conversation = KostConversation::firstOrCreate(
+            ['kost_id' => $kostId, 'seeker_id' => Auth::id()],
+            ['status' => KostConversation::STATUS_OPEN],
+        );
+
+        KostMessage::create([
+            'conversation_id' => $conversation->id,
+            'sender_id' => Auth::id(),
+            'body' => $this->message_body,
         ]);
 
-        $this->reset(['inquiry_message']);
+        $conversation->touch();
 
-        $this->dispatch('inquiry-sent');
         session()->flash('success', 'Pesan Anda berhasil dikirim ke pemilik kost!');
+
+        $this->redirect(route('user.chats', ['conversation' => $conversation->id]));
     }
 
     public function render(): View

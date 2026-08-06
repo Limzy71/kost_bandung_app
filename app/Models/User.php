@@ -149,10 +149,12 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     }
 
     /**
-     * @return HasMany<Inquiry, $this>
+     * Percakapan chat kost di mana user berperan sebagai pencari kost.
+     *
+     * @return HasMany<KostConversation, $this>
      */
-    public function inquiries(): HasMany
+    public function kostConversations(): HasMany
     {
-        return $this->hasMany(Inquiry::class);
+        return $this->hasMany(KostConversation::class, 'seeker_id');
     }
 }

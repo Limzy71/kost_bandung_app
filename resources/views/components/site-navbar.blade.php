@@ -4,8 +4,7 @@
 
     $unreadAdminRepliesCount = 0;
     $adminUnansweredCount = 0;
-    $unreadInquiriesCount = 0;
-    $newRepliesCount = 0;
+    $unreadChatCount = 0;
 
     if ($user) {
         $unreadAdminRepliesCount = \App\Models\AdminMessage::where('sender_type', 'admin')
@@ -19,17 +18,18 @@
                 ->count();
         }
 
-        if ($role === 'owner') {
-            $unreadInquiriesCount = \App\Models\Inquiry::where('status', 'unread')
-                ->whereHas('kost', fn ($q) => $q->where('user_id', $user->id))
-                ->count();
-        }
-
-        if ($role === 'user') {
-            $newRepliesCount = \App\Models\Inquiry::where('user_id', $user->id)
-                ->whereNotNull('owner_reply')
-                ->where('status', '!=', 'archived')
-                ->whereNull('seeker_seen_reply_at')
+        if (in_array($role, ['owner', 'user'], true)) {
+            $unreadChatCount = \App\Models\KostMessage::whereNull('read_at')
+                ->where(function ($q) use ($user) {
+                    $q->whereNull('sender_id')->orWhere('sender_id', '!=', $user->id);
+                })
+                ->whereHas('conversation', function ($q) use ($user, $role) {
+                    if ($role === 'owner') {
+                        $q->whereHas('kost', fn ($k) => $k->where('user_id', $user->id));
+                    } else {
+                        $q->where('seeker_id', $user->id);
+                    }
+                })
                 ->count();
         }
     }
@@ -45,14 +45,14 @@
         $navItems = [
             ['href' => route('home'), 'label' => 'Beranda Utama', 'icon' => 'lucide-house', 'match' => 'home'],
             ['href' => route('dashboard'), 'label' => 'Dashboard Pemilik', 'icon' => 'lucide-layout-grid', 'match' => ['dashboard', 'dashboard.kost.create', 'dashboard.kost.edit']],
-            ['href' => route('dashboard.inquiries'), 'label' => 'Inbox Pesan', 'icon' => 'lucide-inbox', 'match' => 'dashboard.inquiries', 'badge' => $unreadInquiriesCount],
-            ['href' => route('hubungi.admin'), 'label' => 'Hubungi Admin', 'icon' => 'lucide-message-circle', 'match' => 'hubungi.admin', 'badge' => $unreadAdminRepliesCount],
+            ['href' => route('dashboard.chats'), 'label' => 'Obrolan Kost', 'icon' => 'lucide-message-circle', 'match' => 'dashboard.chats', 'badge' => $unreadChatCount],
+            ['href' => route('hubungi.admin'), 'label' => 'Hubungi Admin', 'icon' => 'lucide-message-square-text', 'match' => 'hubungi.admin', 'badge' => $unreadAdminRepliesCount],
         ];
     } elseif ($role === 'user') {
         $navItems = [
             ['href' => route('home'), 'label' => 'Beranda Utama', 'icon' => 'lucide-house', 'match' => 'home'],
-            ['href' => route('user.inquiries'), 'label' => 'Pesan Terkirim', 'icon' => 'lucide-send', 'match' => 'user.inquiries', 'badge' => $newRepliesCount],
-            ['href' => route('hubungi.admin'), 'label' => 'Hubungi Admin', 'icon' => 'lucide-message-circle', 'match' => 'hubungi.admin', 'badge' => $unreadAdminRepliesCount],
+            ['href' => route('user.chats'), 'label' => 'Obrolan Kost', 'icon' => 'lucide-message-circle', 'match' => 'user.chats', 'badge' => $unreadChatCount],
+            ['href' => route('hubungi.admin'), 'label' => 'Hubungi Admin', 'icon' => 'lucide-message-square-text', 'match' => 'hubungi.admin', 'badge' => $unreadAdminRepliesCount],
         ];
     }
 
@@ -88,8 +88,8 @@
                         <span>{{ $item['label'] }}</span>
                         @if (isset($item['badge']))
                             <span x-data="{ count: {{ $item['badge'] }} }"
-                                @if($item['match'] === 'dashboard.inquiries')
-                                    @inquiries-updated.window="count = $event.detail.count"
+                                @if($item['match'] === 'dashboard.chats' || $item['match'] === 'user.chats')
+                                    @kost-chats-updated.window="count = $event.detail.count"
                                 @endif
                                 x-show="count > 0"
                                 x-text="count"
@@ -156,8 +156,8 @@
                         <span>{{ $item['label'] }}</span>
                         @if (isset($item['badge']))
                             <span x-data="{ count: {{ $item['badge'] }} }"
-                                @if($item['match'] === 'dashboard.inquiries')
-                                    @inquiries-updated.window="count = $event.detail.count"
+                                @if($item['match'] === 'dashboard.chats' || $item['match'] === 'user.chats')
+                                    @kost-chats-updated.window="count = $event.detail.count"
                                 @endif
                                 x-show="count > 0"
                                 x-text="count"

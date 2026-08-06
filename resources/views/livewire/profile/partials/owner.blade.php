@@ -3,7 +3,7 @@
     <x-stat-card label="Total Properti" :value="$stats['totalKosts']" hint="Kost terdaftar dalam sistem" icon="lucide-building-2" color="bg-cyan-300" />
     <x-stat-card label="Kost Tersedia" :value="$stats['availableKosts']" hint="Properti siap huni" icon="lucide-circle-check" color="bg-lime-300" />
     <x-stat-card label="Menunggu Moderasi" :value="$stats['pendingKosts']" hint="Pengajuan belum ditinjau admin" icon="lucide-hourglass" color="bg-yellow-300" />
-    <x-stat-card label="Pesan Masuk" :value="$stats['inquiries']" hint="Pertanyaan dari calon penyewa" icon="lucide-message-square" color="bg-pink-300" />
+    <x-stat-card label="Pesan Masuk" :value="$stats['pesanMasuk']" hint="Chat masuk yang belum dibaca" icon="lucide-message-circle" color="bg-pink-300" />
 </div>
 
 <!-- Verifikasi Identitas (KTP) -->

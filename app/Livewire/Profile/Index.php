@@ -6,8 +6,8 @@ use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
 use App\Livewire\Actions\Logout;
 use App\Models\Facility;
-use App\Models\Inquiry;
 use App\Models\Kost;
+use App\Models\KostMessage;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -268,7 +268,12 @@ class Index extends Component
                 'totalKosts' => $user->kosts()->count(),
                 'availableKosts' => $user->kosts()->where('is_available', true)->count(),
                 'pendingKosts' => $user->kosts()->where('status', 'pending')->count(),
-                'inquiries' => Inquiry::whereHas('kost', fn ($query) => $query->where('user_id', $user->id))->count(),
+                'pesanMasuk' => KostMessage::whereNull('read_at')
+                    ->where(function ($q) use ($user) {
+                        $q->whereNull('sender_id')->orWhere('sender_id', '!=', $user->id);
+                    })
+                    ->whereHas('conversation', fn ($query) => $query->whereHas('kost', fn ($k) => $k->where('user_id', $user->id)))
+                    ->count(),
                 'kosts' => $user->kosts()->with('primaryImage')->latest()->get(),
             ],
             'admin' => [
@@ -280,9 +285,14 @@ class Index extends Component
                 'pendingFacilities' => Facility::where('status', 'pending')->count(),
             ],
             default => [
-                'totalInquiries' => $user->inquiries()->count(),
-                'unreadInquiries' => $user->inquiries()->where('status', 'unread')->count(),
-                'inquiries' => $user->inquiries()->with('kost')->latest()->get(),
+                'totalChats' => $user->kostConversations()->count(),
+                'unreadChats' => KostMessage::whereNull('read_at')
+                    ->where(function ($q) use ($user) {
+                        $q->whereNull('sender_id')->orWhere('sender_id', '!=', $user->id);
+                    })
+                    ->whereHas('conversation', fn ($query) => $query->where('seeker_id', $user->id))
+                    ->count(),
+                'chats' => $user->kostConversations()->with(['kost', 'latestMessage'])->latest('updated_at')->get(),
             ],
         };
     }

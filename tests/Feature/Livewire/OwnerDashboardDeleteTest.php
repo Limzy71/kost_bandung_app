@@ -1,9 +1,10 @@
 <?php
 
 use App\Livewire\Dashboard\OwnerDashboard;
-use App\Models\Inquiry;
 use App\Models\Kost;
+use App\Models\KostConversation;
 use App\Models\KostImage;
+use App\Models\KostMessage;
 use App\Models\KostPrice;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
@@ -48,11 +49,15 @@ it('permanently deletes an owned kost along with its related data', function () 
 
     KostPrice::create(['kost_id' => $kost->id, 'period' => 'weekly', 'price' => 500000]);
 
-    Inquiry::create([
+    $conversation = KostConversation::create([
         'kost_id' => $kost->id,
-        'name' => 'Budi',
-        'phone_number' => '081234567890',
-        'message' => 'Masih ada kamar?',
+        'seeker_id' => User::factory()->create(['role' => 'user'])->id,
+        'status' => KostConversation::STATUS_OPEN,
+    ]);
+    KostMessage::create([
+        'conversation_id' => $conversation->id,
+        'sender_id' => $conversation->seeker_id,
+        'body' => 'Masih ada kamar?',
     ]);
 
     Livewire::actingAs($owner)
@@ -70,7 +75,8 @@ it('permanently deletes an owned kost along with its related data', function () 
         ->and(Kost::count())->toBe(0)
         ->and(KostImage::count())->toBe(0)
         ->and(KostPrice::count())->toBe(0)
-        ->and(Inquiry::count())->toBe(0);
+        ->and(KostConversation::count())->toBe(0)
+        ->and(KostMessage::count())->toBe(0);
 
     Storage::assertMissing('kosts/photo.jpg');
 });

@@ -1,9 +1,10 @@
 <?php
 
 use App\Livewire\Profile\Index;
-use App\Models\Inquiry;
 use App\Models\Kost;
+use App\Models\KostConversation;
 use App\Models\KostImage;
+use App\Models\KostMessage;
 use App\Models\User;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Http\UploadedFile;
@@ -50,25 +51,27 @@ it('renders the profile page for a pencari kost', function () {
         ->assertSee('081234567890');
 });
 
-it('shows inquiry history and stats for a pencari kost', function () {
+it('shows chat history and stats for a pencari kost', function () {
     $user = User::factory()->create(['role' => 'user']);
     $owner = User::factory()->create(['role' => 'owner']);
     $kost = profileTestKost($owner);
 
-    Inquiry::create([
+    $conversation = KostConversation::create([
         'kost_id' => $kost->id,
-        'user_id' => $user->id,
-        'name' => $user->name,
-        'phone_number' => '081234567890',
-        'message' => 'Apakah masih ada kamar?',
-        'status' => 'unread',
+        'seeker_id' => $user->id,
+        'status' => KostConversation::STATUS_OPEN,
+    ]);
+    KostMessage::create([
+        'conversation_id' => $conversation->id,
+        'sender_id' => $user->id,
+        'body' => 'Apakah masih ada kamar?',
     ]);
 
     $this->actingAs($user)
         ->get('/profil')
         ->assertOk()
         ->assertSee($kost->name)
-        ->assertSee('Riwayat Pertanyaan Saya');
+        ->assertSee('Riwayat Obrolan Saya');
 });
 
 it('renders owner specific sections on the profile page', function () {

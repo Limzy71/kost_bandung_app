@@ -68,16 +68,21 @@
                                     </li>
 
                                     @php
-                                        $unreadInquiriesCountMobile = \App\Models\Inquiry::where('status', 'unread')->whereHas('kost', function($q) {
-                                            $q->where('user_id', auth()->id());
-                                        })->count();
+                                        $unreadChatCountMobile = \App\Models\KostMessage::whereNull('read_at')
+                                            ->where(function ($q) {
+                                                $q->whereNull('sender_id')->orWhere('sender_id', '!=', auth()->id());
+                                            })
+                                            ->whereHas('conversation', function ($q) {
+                                                $q->whereHas('kost', fn ($k) => $k->where('user_id', auth()->id()));
+                                            })
+                                            ->count();
                                     @endphp
                                     <li>
-                                        <a href="{{ route('dashboard.inquiries') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
-                                            <x-icon name="lucide-inbox" class="w-4 h-4 text-black group-hover:scale-110 transition-transform stroke-[2.5]" />
-                                            <span>Inbox Pesan</span>
-                                            @if($unreadInquiriesCountMobile > 0)
-                                                <span class="bg-rose-500 text-white rounded-full px-1.5 py-0.5 text-[9px] font-black min-w-[20px] text-center ml-1 border-2 border-black">{{ $unreadInquiriesCountMobile }}</span>
+                                        <a href="{{ route('dashboard.chats') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
+                                            <x-icon name="lucide-message-circle" class="w-4 h-4 text-black group-hover:scale-110 transition-transform stroke-[2.5]" />
+                                            <span>Obrolan Kost</span>
+                                            @if($unreadChatCountMobile > 0)
+                                                <span class="bg-rose-500 text-white rounded-full px-1.5 py-0.5 text-[9px] font-black min-w-[20px] text-center ml-1 border-2 border-black">{{ $unreadChatCountMobile }}</span>
                                             @endif
                                         </a>
                                     </li>
@@ -114,9 +119,9 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('user.inquiries') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
-                                            <x-icon name="lucide-send" class="w-4 h-4 text-black group-hover:scale-110 transition-transform stroke-[2.5]" />
-                                            <span>Pesan Terkirim</span>
+                                        <a href="{{ route('user.chats') }}" class="text-black hover:text-yellow-600 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
+                                            <x-icon name="lucide-message-circle" class="w-4 h-4 text-black group-hover:scale-110 transition-transform stroke-[2.5]" />
+                                            <span>Obrolan Kost</span>
                                         </a>
                                     </li>
                                     <li>

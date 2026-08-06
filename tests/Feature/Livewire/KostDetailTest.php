@@ -1,8 +1,9 @@
 <?php
 
 use App\Livewire\KostDetail;
-use App\Models\Inquiry;
 use App\Models\Kost;
+use App\Models\KostConversation;
+use App\Models\KostMessage;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
@@ -30,109 +31,155 @@ function kostDetailTestKost(User $owner, string $status = 'published', string $n
     ]);
 }
 
-it('redirects guests to login when they try to send an inquiry', function () {
+it('redirects guests to login when they try to start a chat', function () {
     $owner = User::factory()->create(['role' => 'owner']);
     $kost = kostDetailTestKost($owner);
 
     Livewire::test(KostDetail::class, ['kost' => $kost])
-        ->set('inquiry_name', 'Budi')
-        ->set('inquiry_phone', '081234567890')
-        ->set('inquiry_message', 'Apakah kamar masih tersedia?')
-        ->call('sendInquiry')
+        ->set('message_name', 'Budi')
+        ->set('message_phone', '081234567890')
+        ->set('message_body', 'Apakah kamar masih tersedia?')
+        ->call('startChat')
         ->assertRedirect(route('login'));
 
-    expect(Inquiry::count())->toBe(0);
+    expect(KostConversation::count())->toBe(0)
+        ->and(KostMessage::count())->toBe(0);
 });
 
-it('stores an inquiry when an authenticated user sends one', function () {
+it('creates a conversation and message when an authenticated user sends a chat', function () {
     $owner = User::factory()->create(['role' => 'owner']);
     $seeker = User::factory()->create(['role' => 'user']);
     $kost = kostDetailTestKost($owner);
 
     Livewire::actingAs($seeker)
         ->test(KostDetail::class, ['kost' => $kost])
-        ->set('inquiry_name', 'Budi')
-        ->set('inquiry_phone', '081234567890')
-        ->set('inquiry_message', 'Apakah kamar masih tersedia?')
-        ->call('sendInquiry')
+        ->set('message_name', 'Budi')
+        ->set('message_phone', '081234567890')
+        ->set('message_body', 'Apakah kamar masih tersedia?')
+        ->call('startChat')
         ->assertHasNoErrors()
-        ->assertDispatched('inquiry-sent');
+        ->assertRedirect();
 
-    expect(Inquiry::count())->toBe(1)
-        ->and(Inquiry::first()->kost_id)->toBe($kost->id)
-        ->and(Inquiry::first()->user_id)->toBe($seeker->id);
+    $conversation = KostConversation::first();
+
+    expect(KostConversation::count())->toBe(1)
+        ->and($conversation->kost_id)->toBe($kost->id)
+        ->and($conversation->seeker_id)->toBe($seeker->id)
+        ->and(KostMessage::count())->toBe(1)
+        ->and(KostMessage::first()->body)->toBe('Apakah kamar masih tersedia?')
+        ->and(KostMessage::first()->sender_id)->toBe($seeker->id);
 });
 
-it('prefills the inquiry name and phone from the logged in profile', function () {
+it('redirects the seeker to their chat thread after starting a chat', function () {
+    $owner = User::factory()->create(['role' => 'owner']);
+    $seeker = User::factory()->create(['role' => 'user']);
+    $kost = kostDetailTestKost($owner);
+
+    Livewire::actingAs($seeker)
+        ->test(KostDetail::class, ['kost' => $kost])
+        ->set('message_name', 'Budi')
+        ->set('message_phone', '081234567890')
+        ->set('message_body', 'Apakah kamar masih tersedia?')
+        ->call('startChat')
+        ->assertRedirect(route('user.chats', ['conversation' => KostConversation::first()->id]));
+});
+
+it('reuses an existing conversation when the seeker sends again', function () {
+    $owner = User::factory()->create(['role' => 'owner']);
+    $seeker = User::factory()->create(['role' => 'user']);
+    $kost = kostDetailTestKost($owner);
+
+    KostConversation::create([
+        'kost_id' => $kost->id,
+        'seeker_id' => $seeker->id,
+        'status' => KostConversation::STATUS_OPEN,
+    ]);
+
+    Livewire::actingAs($seeker)
+        ->test(KostDetail::class, ['kost' => $kost])
+        ->set('message_name', 'Budi')
+        ->set('message_phone', '081234567890')
+        ->set('message_body', 'Pesan kedua.')
+        ->call('startChat')
+        ->assertHasNoErrors();
+
+    expect(KostConversation::count())->toBe(1)
+        ->and(KostMessage::count())->toBe(1)
+        ->and(KostMessage::first()->body)->toBe('Pesan kedua.');
+});
+
+it('prefills the message name and phone from the logged in profile', function () {
     $owner = User::factory()->create(['role' => 'owner']);
     $seeker = User::factory()->create(['role' => 'user', 'phone_number' => '081234567890']);
     $kost = kostDetailTestKost($owner);
 
     Livewire::actingAs($seeker)
         ->test(KostDetail::class, ['kost' => $kost])
-        ->assertSet('inquiry_name', $seeker->name)
-        ->assertSet('inquiry_phone', '081234567890');
+        ->assertSet('message_name', $seeker->name)
+        ->assertSet('message_phone', '081234567890');
 });
 
-it('leaves the inquiry phone empty when the profile has no phone number', function () {
+it('leaves the message phone empty when the profile has no phone number', function () {
     $owner = User::factory()->create(['role' => 'owner']);
     $seeker = User::factory()->create(['role' => 'user', 'phone_number' => null]);
     $kost = kostDetailTestKost($owner);
 
     Livewire::actingAs($seeker)
         ->test(KostDetail::class, ['kost' => $kost])
-        ->assertSet('inquiry_name', $seeker->name)
-        ->assertSet('inquiry_phone', '');
+        ->assertSet('message_name', $seeker->name)
+        ->assertSet('message_phone', '');
 });
 
-it('blocks the inquiry when the kost is full', function () {
+it('blocks the chat when the kost is full', function () {
     $owner = User::factory()->create(['role' => 'owner']);
     $seeker = User::factory()->create(['role' => 'user']);
     $kost = kostDetailTestKost($owner, isAvailable: false);
 
     Livewire::actingAs($seeker)
         ->test(KostDetail::class, ['kost' => $kost])
-        ->set('inquiry_name', 'Budi')
-        ->set('inquiry_phone', '081234567890')
-        ->set('inquiry_message', 'Apakah kamar masih tersedia?')
-        ->call('sendInquiry')
-        ->assertHasErrors('inquiry_message');
+        ->set('message_name', 'Budi')
+        ->set('message_phone', '081234567890')
+        ->set('message_body', 'Apakah kamar masih tersedia?')
+        ->call('startChat')
+        ->assertHasErrors('message_body');
 
-    expect(Inquiry::count())->toBe(0);
+    expect(KostConversation::count())->toBe(0)
+        ->and(KostMessage::count())->toBe(0);
 });
 
-it('blocks the inquiry when the kost becomes unpublished after the page loaded', function () {
+it('blocks the chat when the kost becomes unpublished after the page loaded', function () {
     $owner = User::factory()->create(['role' => 'owner']);
     $seeker = User::factory()->create(['role' => 'user']);
     $kost = kostDetailTestKost($owner);
 
     $component = Livewire::actingAs($seeker)
         ->test(KostDetail::class, ['kost' => $kost])
-        ->set('inquiry_name', 'Budi')
-        ->set('inquiry_phone', '081234567890')
-        ->set('inquiry_message', 'Apakah kamar masih tersedia?');
+        ->set('message_name', 'Budi')
+        ->set('message_phone', '081234567890')
+        ->set('message_body', 'Apakah kamar masih tersedia?');
 
     $kost->update(['status' => 'rejected']);
 
-    $component->call('sendInquiry')
-        ->assertHasErrors('inquiry_message');
+    $component->call('startChat')
+        ->assertHasErrors('message_body');
 
-    expect(Inquiry::count())->toBe(0);
+    expect(KostConversation::count())->toBe(0);
 });
 
-it('blocks the owner from sending an inquiry to their own kost', function () {
+it('blocks the owner from starting a chat with their own kost', function () {
     $owner = User::factory()->create(['role' => 'owner']);
     $kost = kostDetailTestKost($owner);
 
     Livewire::actingAs($owner)
         ->test(KostDetail::class, ['kost' => $kost])
-        ->set('inquiry_name', $owner->name)
-        ->set('inquiry_phone', '081234567890')
-        ->set('inquiry_message', 'Apakah kamar masih tersedia?')
-        ->call('sendInquiry')
-        ->assertHasErrors('inquiry_message');
+        ->set('message_name', $owner->name)
+        ->set('message_phone', '081234567890')
+        ->set('message_body', 'Apakah kamar masih tersedia?')
+        ->call('startChat')
+        ->assertHasErrors('message_body');
 
-    expect(Inquiry::count())->toBe(0);
+    expect(KostConversation::count())->toBe(0)
+        ->and(KostMessage::count())->toBe(0);
 });
 
 it('shows a notice when the kost was deleted after the page loaded', function () {
@@ -142,17 +189,17 @@ it('shows a notice when the kost was deleted after the page loaded', function ()
 
     $component = Livewire::actingAs($seeker)
         ->test(KostDetail::class, ['kost' => $kost])
-        ->set('inquiry_name', 'Budi')
-        ->set('inquiry_phone', '081234567890')
-        ->set('inquiry_message', 'Apakah kamar masih tersedia?');
+        ->set('message_name', 'Budi')
+        ->set('message_phone', '081234567890')
+        ->set('message_body', 'Apakah kamar masih tersedia?');
 
     $kost->forceDelete();
 
-    $component->call('sendInquiry')
+    $component->call('startChat')
         ->assertSet('kostUnavailable', true)
         ->assertDispatched('kost-unavailable')
         ->assertSee('Kost Tidak Tersedia')
         ->assertDontSee('Kirim Pesan ke Pemilik');
 
-    expect(Inquiry::count())->toBe(0);
+    expect(KostConversation::count())->toBe(0);
 });

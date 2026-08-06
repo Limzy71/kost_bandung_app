@@ -116,10 +116,8 @@ window.catalogMap = function (config) {
             if (!this.map) return;
             if (this.mapEngine === 'google' && window.google) {
                 google.maps.event.trigger(this.map, 'resize');
-                this.renderGoogleMarkers(); // re-fit bounds after resize
             } else if (this.mapEngine === 'leaflet' && typeof L !== 'undefined' && this.map.invalidateSize) {
                 this.map.invalidateSize();
-                this.renderLeafletMarkers();
             }
         },
 
@@ -253,15 +251,7 @@ window.catalogMap = function (config) {
                     }
                 }
                 this.renderGoogleMarkers();
-                
-                // Critical Resilience: Force Google Maps to recalculate size after panel transition
-                setTimeout(() => {
-                    if (this.map && window.google) {
-                        google.maps.event.trigger(this.map, 'resize');
-                        this.renderGoogleMarkers(); // re-fit bounds after resize
-                    }
-                }, 700);
-                
+
                 return true;
             } catch (e) {
                 console.warn('Google Map Catalog init error:', e);
@@ -381,22 +371,10 @@ window.catalogMap = function (config) {
             }
             this.renderLeafletMarkers();
 
-            // Critical Resilience: Force Leaflet to recalculate size after panel transition
-            setTimeout(() => {
-                if (this.map && typeof L !== 'undefined' && this.map.invalidateSize) {
-                    this.map.invalidateSize();
-                    this.renderLeafletMarkers(); // re-fit bounds after resize
-                }
-            }, 700);
-            
-            // Critical Resilience: Force Leaflet to recalculate size after DOM is fully painted
+            // Force Leaflet to recalculate size once after DOM is fully painted
             setTimeout(() => {
                 if (this.map && this.map.invalidateSize) {
                     this.map.invalidateSize();
-                    if (this.markers && this.markers.length > 0) {
-                        const group = new L.featureGroup(this.markers);
-                        this.map.fitBounds(group.getBounds());
-                    }
                 }
             }, 500);
         },

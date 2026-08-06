@@ -16,9 +16,25 @@
         </div>
     </div>
 
+    <!-- Success Toast Notification Neo-Brutalist -->
     @if (session()->has('success'))
-        <div class="bg-lime-300 border-4 border-black rounded-2xl p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-sm font-black text-black">
-            {{ session('success') }}
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show" x-transition
+            class="fixed bottom-24 lg:bottom-10 right-4 lg:right-10 z-[110]">
+            <div
+                class="bg-lime-400 border-4 border-black p-4 rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex items-center gap-4 max-w-sm">
+                <div
+                    class="w-10 h-10 bg-white border-2 border-black rounded-lg flex items-center justify-center shrink-0">
+                    <x-icon name="lucide-check" class="w-6 h-6 text-black stroke-[3]" />
+                </div>
+                <div>
+                    <h4 class="text-sm font-black text-black uppercase">Berhasil!</h4>
+                    <p class="text-xs font-bold text-black mt-0.5">{{ session('success') }}</p>
+                </div>
+                <button @click="show = false"
+                    class="text-black hover:text-rose-500 transition-colors ml-auto cursor-pointer">
+                    <x-icon name="lucide-x" class="w-5 h-5 stroke-[3]" />
+                </button>
+            </div>
         </div>
     @endif
 

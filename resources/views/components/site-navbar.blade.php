@@ -109,13 +109,6 @@
                     <span class="max-xl:hidden">Profil Saya</span>
                 </a>
 
-                <a href="{{ route('profile.edit') }}" wire:navigate @if (request()->routeIs('profile.edit', 'appearance.edit', 'security.edit')) aria-current="page" @endif
-                    class="inline-flex items-center gap-1.5 text-xs font-black uppercase text-black border-2 border-black px-3.5 py-2 rounded transition-all cursor-pointer {{ request()->routeIs('profile.edit', 'appearance.edit', 'security.edit') ? 'bg-yellow-300 border-3 shadow-none translate-x-0.5 translate-y-0.5' : 'bg-white hover:bg-zinc-100 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none' }}"
-                    title="Pengaturan" aria-label="Pengaturan">
-                    <x-icon name="lucide-settings" class="w-4 h-4 stroke-[2.5]" />
-                    <span class="max-xl:hidden">Pengaturan</span>
-                </a>
-
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit"
@@ -181,12 +174,6 @@
                         <x-icon name="lucide-user" class="w-5 h-5 shrink-0 stroke-[2.5]" />
                     @endif
                     <span>Profil Saya</span>
-                </a>
-
-                <a href="{{ route('profile.edit') }}" wire:navigate @click="open = false"
-                    class="flex items-center gap-3 px-3.5 py-3 text-sm font-black uppercase text-black border-2 border-black rounded transition-colors cursor-pointer {{ request()->routeIs('profile.edit', 'appearance.edit', 'security.edit') ? 'bg-yellow-300' : 'bg-white hover:bg-zinc-100' }}">
-                    <x-icon name="lucide-settings" class="w-5 h-5 shrink-0 stroke-[2.5]" />
-                    <span>Pengaturan</span>
                 </a>
 
                 <form method="POST" action="{{ route('logout') }}" @click="open = false">

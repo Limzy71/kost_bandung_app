@@ -313,7 +313,7 @@
             </div>
         @else
             <!-- Empty State: Always show when there are 0 results -->
-            <div wire:key="empty-state" x-show="viewMode === 'list'" x-cloak
+            <div wire:key="empty-state" x-show="viewMode === 'list' || (viewMode === 'map' && items.length === 0 && !$wire.district)" x-cloak
                 x-transition:enter="transition ease-out duration-300"
                 x-transition:enter-start="opacity-0 translate-y-3"
                 x-transition:enter-end="opacity-100 translate-y-0"

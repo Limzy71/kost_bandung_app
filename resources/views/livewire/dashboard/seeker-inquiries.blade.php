@@ -38,14 +38,18 @@
                                 @endif
                                 <span class="text-[10px] font-black text-zinc-500 uppercase">{{ $inquiry->created_at->diffForHumans() }}</span>
                             </div>
-                            <h3 class="text-xl font-black text-black uppercase">{{ $inquiry->kost->name }}</h3>
+                            <h3 class="text-xl font-black text-black uppercase">{{ $inquiry->kost?->name ?? 'Kost telah dihapus' }}</h3>
                             <p class="text-sm font-bold text-zinc-600 mt-1">Dikirim atas nama {{ $inquiry->name }}</p>
                         </div>
 
-                        <a href="{{ route('kost.show', $inquiry->kost->slug) }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-cyan-300 hover:bg-cyan-200 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg">
-                            <x-icon name="lucide-eye" class="w-4 h-4 stroke-[2.5]" />
-                            Lihat Kost
-                        </a>
+                        @if ($inquiry->kost)
+                            <a href="{{ route('kost.show', $inquiry->kost->slug) }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-cyan-300 hover:bg-cyan-200 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg">
+                                <x-icon name="lucide-eye" class="w-4 h-4 stroke-[2.5]" />
+                                Lihat Kost
+                            </a>
+                        @else
+                            <span class="inline-flex items-center gap-2 px-4 py-2 bg-zinc-200 text-zinc-600 border-2 border-zinc-400 font-black text-xs uppercase rounded-lg">Kost telah dihapus</span>
+                        @endif
                     </div>
 
                     <!-- Right: Message & Reply -->

@@ -19,6 +19,11 @@ class AdminMessages extends Component
 
     public string $replyBody = '';
 
+    public function mount(): void
+    {
+        abort_unless(auth()->user()->role === 'admin', 403, 'Akses ditolak. Halaman ini khusus Administrator.');
+    }
+
     public function updatedFilter(): void
     {
         $this->resetPage();
@@ -139,7 +144,7 @@ class AdminMessages extends Component
         AdminConversation::expireStale();
         AdminConversation::pruneSoftDeleted();
 
-        $query = AdminConversation::with('user')->orderBy('created_at', 'desc');
+        $query = AdminConversation::with(['user', 'latestMessage'])->orderBy('created_at', 'desc');
 
         if ($this->filter === 'unanswered') {
             $query->where('status', 'open')->whereNotNull('awaiting_reply_at');

@@ -100,7 +100,7 @@
                                 <span class="text-[10px] font-black text-zinc-500 uppercase shrink-0">{{ $conversation->created_at->diffForHumans() }}</span>
                             </div>
                             <p class="text-sm font-black text-black mt-2 line-clamp-2">
-                                {{ $conversation->messages()->latest()->value('body') ?? 'Belum ada pesan.' }}
+                                {{ $conversation->latestMessage?->body ?? 'Belum ada pesan.' }}
                             </p>
                         </button>
                     @empty

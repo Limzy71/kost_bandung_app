@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AdminConversation extends Model
@@ -42,6 +43,16 @@ class AdminConversation extends Model
     public function messages(): HasMany
     {
         return $this->hasMany(AdminMessage::class, 'conversation_id')->orderBy('created_at');
+    }
+
+    /**
+     * Pesan terbaru untuk pratinjau daftar percakapan (one-of-many).
+     *
+     * @return HasOne<AdminMessage, $this>
+     */
+    public function latestMessage(): HasOne
+    {
+        return $this->hasOne(AdminMessage::class, 'conversation_id')->latestOfMany();
     }
 
     public function isOpen(): bool

@@ -48,6 +48,14 @@ it('forbids an owner from accessing the admin messages page', function () {
     $this->actingAs($owner)->get('/admin/messages')->assertForbidden();
 });
 
+it('forbids a non-admin from mounting the admin messages component directly', function () {
+    $user = adminMessagesUser();
+
+    Livewire::actingAs($user)
+        ->test(AdminMessages::class)
+        ->assertForbidden();
+});
+
 it('lets an admin see unanswered conversations', function () {
     $admin = adminMessagesUser('admin');
     $user = adminMessagesUser();

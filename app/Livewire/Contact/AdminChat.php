@@ -171,7 +171,7 @@ class AdminChat extends Component
         AdminConversation::expireStale();
         AdminConversation::pruneSoftDeleted();
 
-        $query = AdminConversation::with('user')
+        $query = AdminConversation::with(['user', 'latestMessage'])
             ->where('user_id', Auth::id())
             ->orderBy('created_at', 'desc');
 

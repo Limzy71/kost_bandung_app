@@ -69,9 +69,13 @@
                         
                         <div class="bg-zinc-100 border-2 border-black p-3 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                             <p class="text-[10px] font-black uppercase text-zinc-500 mb-1">Menanyakan Properti:</p>
-                            <a href="{{ route('kost.show', $inquiry->kost->slug) }}" target="_blank" class="text-sm font-black text-black hover:underline line-clamp-2">
-                                {{ $inquiry->kost->name }}
-                            </a>
+                            @if ($inquiry->kost)
+                                <a href="{{ route('kost.show', $inquiry->kost->slug) }}" target="_blank" class="text-sm font-black text-black hover:underline line-clamp-2">
+                                    {{ $inquiry->kost->name }}
+                                </a>
+                            @else
+                                <span class="text-sm font-black text-zinc-500 line-clamp-2">Kost telah dihapus</span>
+                            @endif
                         </div>
                     </div>
                     
@@ -94,7 +98,7 @@
                         
                         <div class="flex flex-wrap items-center gap-3">
                             @php
-                                $waText = rawurlencode("Halo " . $inquiry->name . ", saya pemilik kost " . $inquiry->kost->name . ". Membalas pesan Anda: \n\n\"" . Str::limit($inquiry->message, 50) . "\"");
+                                $waText = rawurlencode("Halo " . $inquiry->name . ", saya pemilik kost " . ($inquiry->kost?->name ?? 'kost tersebut') . ". Membalas pesan Anda: \n\n\"" . Str::limit($inquiry->message, 50) . "\"");
                                 $phone = $inquiry->phone_number;
                                 if (str_starts_with($phone, '08')) {
                                     $phone = '628' . substr($phone, 2);

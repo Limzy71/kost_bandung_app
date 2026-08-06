@@ -113,7 +113,7 @@
                                 @endif
                             </div>
                             <p class="text-xs font-bold text-zinc-700 mt-2 line-clamp-2">
-                                {{ $conversation->messages()->latest()->value('body') ?? 'Belum ada pesan.' }}
+                                {{ $conversation->latestMessage?->body ?? 'Belum ada pesan.' }}
                             </p>
                         </button>
                     @empty

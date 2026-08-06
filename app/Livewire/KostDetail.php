@@ -141,6 +141,12 @@ class KostDetail extends Component
             return;
         }
 
+        if (Auth::id() === $kost->user_id) {
+            $this->addError('inquiry_message', 'Anda tidak dapat mengirim pesan ke kost milik Anda sendiri.');
+
+            return;
+        }
+
         $this->validate();
 
         $key = 'inquiry_'.request()->ip();

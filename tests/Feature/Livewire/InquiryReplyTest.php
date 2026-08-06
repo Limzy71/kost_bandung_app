@@ -149,6 +149,52 @@ it('prevents an owner from replying to another owners inquiry', function () {
         ->assertForbidden();
 });
 
+it('keeps an archived inquiry archived and resets the seeker seen flag when replying', function () {
+    $seeker = User::factory()->create(['role' => 'user']);
+    $owner = User::factory()->create(['role' => 'owner']);
+    $kost = inquiryReplyTestKost($owner);
+    $inquiry = inquiryReplyTestInquiry($seeker, $kost);
+    $inquiry->update([
+        'status' => 'archived',
+        'owner_reply' => 'Balasan lama.',
+        'seeker_seen_reply_at' => now(),
+    ]);
+
+    Livewire::actingAs($owner)
+        ->test(InquiryIndex::class)
+        ->set('replyingToId', $inquiry->id)
+        ->set('replyMessage', 'Balasan baru.')
+        ->call('replyInquiry')
+        ->assertHasNoErrors();
+
+    $fresh = $inquiry->fresh();
+
+    expect($fresh->status)->toBe('archived');
+    expect($fresh->owner_reply)->toBe('Balasan baru.');
+    expect($fresh->seeker_seen_reply_at)->toBeNull();
+});
+
+it('resets the seeker seen flag when the owner updates a reply', function () {
+    $seeker = User::factory()->create(['role' => 'user']);
+    $owner = User::factory()->create(['role' => 'owner']);
+    $kost = inquiryReplyTestKost($owner);
+    $inquiry = inquiryReplyTestInquiry($seeker, $kost);
+    $inquiry->update([
+        'status' => 'read',
+        'owner_reply' => 'Balasan lama.',
+        'seeker_seen_reply_at' => now(),
+    ]);
+
+    Livewire::actingAs($owner)
+        ->test(InquiryIndex::class)
+        ->set('replyingToId', $inquiry->id)
+        ->set('replyMessage', 'Balasan terbaru.')
+        ->call('replyInquiry')
+        ->assertHasNoErrors();
+
+    expect($inquiry->fresh()->seeker_seen_reply_at)->toBeNull();
+});
+
 it('renders the seeker inquiries livewire component for a pencari kost', function () {
     $seeker = User::factory()->create(['role' => 'user']);
 

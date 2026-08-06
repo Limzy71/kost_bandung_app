@@ -50,10 +50,13 @@ class InquiryIndex extends Component
             abort(403);
         }
 
+        $status = $inquiry->status === 'archived' ? 'archived' : 'read';
+
         $inquiry->update([
             'owner_reply' => $this->replyMessage,
             'replied_at' => now(),
-            'status' => 'read',
+            'status' => $status,
+            'seeker_seen_reply_at' => null,
         ]);
 
         $this->updateBadgeCount();

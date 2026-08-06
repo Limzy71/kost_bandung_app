@@ -120,6 +120,21 @@ it('blocks the inquiry when the kost becomes unpublished after the page loaded',
     expect(Inquiry::count())->toBe(0);
 });
 
+it('blocks the owner from sending an inquiry to their own kost', function () {
+    $owner = User::factory()->create(['role' => 'owner']);
+    $kost = kostDetailTestKost($owner);
+
+    Livewire::actingAs($owner)
+        ->test(KostDetail::class, ['kost' => $kost])
+        ->set('inquiry_name', $owner->name)
+        ->set('inquiry_phone', '081234567890')
+        ->set('inquiry_message', 'Apakah kamar masih tersedia?')
+        ->call('sendInquiry')
+        ->assertHasErrors('inquiry_message');
+
+    expect(Inquiry::count())->toBe(0);
+});
+
 it('shows a notice when the kost was deleted after the page loaded', function () {
     $owner = User::factory()->create(['role' => 'owner']);
     $seeker = User::factory()->create(['role' => 'user']);

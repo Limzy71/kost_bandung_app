@@ -335,8 +335,10 @@
                     <p class="text-sm font-bold text-zinc-700 dark:text-zinc-300 max-w-md mx-auto mt-2">
                         @if($totalKostInDb === 0)
                             Belum ada daftar kost yang terdaftar atau tersedia saat ini.
+                        @elseif($hasBothSearchAndFilters)
+                            Tidak ada kost yang cocok dengan kata kunci "{{ $search }}" dan kriteria filter Anda. Coba ubah kata kunci atau reset filter pencarian.
                         @elseif($hasSearchOnly)
-                            Tidak ada kost yang cocok dengan kata kunci "{{ $search }}". Coba gunakan kata kunci lain.
+                            Tidak ada kost yang cocok dengan kata kunci "{{ $search }}". Coba hapus pencarian atau gunakan kata kunci lain.
                         @elseif($hasActiveFilter)
                             Tidak ada kost yang cocok dengan kriteria filter Anda. Coba ubah atau reset filter pencarian.
                         @else

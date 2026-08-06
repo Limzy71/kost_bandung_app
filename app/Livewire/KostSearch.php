@@ -213,6 +213,7 @@ class KostSearch extends Component
             'googleMapsApiKey' => config('services.google.maps_api_key'),
             'hasActiveFilter' => $hasSearch || $hasOtherFilters,
             'hasSearchOnly' => $hasSearch && !$hasOtherFilters,
+            'hasBothSearchAndFilters' => $hasSearch && $hasOtherFilters,
             'totalKostInDb' => $totalKostInDb,
         ]);
     }

@@ -93,3 +93,26 @@ it('hydrates filters from the URL query string', function () {
         ->assertSee('Kost Khusus Coblong')
         ->assertDontSee('Kost Andir Raya');
 });
+
+it('seeds the reset filter button state from active filters after a page refresh', function () {
+    // Simulates a refresh with a search filter that has no results: the empty
+    // state card is rendered server-side, so the reset filter button (hasFilter)
+    // must also be initialized to true from the server state.
+    $this->get('/?search=tidak-ada')
+        ->assertOk()
+        ->assertSee('Tidak Ada Hunian Ditemukan')
+        ->assertSee('hasFilter: true', false);
+
+    // Without any active filter the reset button stays hidden.
+    $this->get('/')
+        ->assertOk()
+        ->assertSee('hasFilter: false', false);
+});
+
+it('keeps hasFilter true for every filter type, not only search', function () {
+    foreach (['gender' => 'putri', 'district' => 'Andir', 'rent_period' => 'monthly', 'price_min' => '1000000', 'price_max' => '3000000'] as $key => $value) {
+        $this->get('/?'.$key.'='.$value)
+            ->assertOk()
+            ->assertSee('hasFilter: true', false);
+    }
+});

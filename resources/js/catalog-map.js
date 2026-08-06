@@ -48,11 +48,8 @@ window.catalogMap = function (config) {
             // Re-render markers whenever Livewire pushes updated mapItems
             window.addEventListener('map-items-updated', () => {
                 if (this.viewMode === 'map' && this.map) {
-                    if (this.mapEngine === 'google' && window.google && window.google.maps) {
-                        this.renderGoogleMarkers();
-                    } else if (this.mapEngine === 'leaflet' && typeof L !== 'undefined') {
-                        this.renderLeafletMarkers();
-                    }
+                    this.syncMapToView();
+                    this.revealMap();
                 }
             });
 
@@ -84,27 +81,35 @@ window.catalogMap = function (config) {
                 if (!this.mapFailed) setTimeout(() => this.resizeMap(), 150);
                 return;
             }
-            let resized = false;
+            this.syncMapToView();
+            this.revealMap();
+        },
+
+        /** Push the latest items to the live map and fix its viewport size */
+        syncMapToView() {
             if (this.mapEngine === 'google' && window.google) {
                 google.maps.event.trigger(this.map, 'resize');
                 this.renderGoogleMarkers(); // re-fit bounds after resize
-                resized = true;
             } else if (this.mapEngine === 'leaflet' && typeof L !== 'undefined' && this.map.invalidateSize) {
                 this.map.invalidateSize();
                 this.renderLeafletMarkers();
-                resized = true;
             }
-            if (resized) this.revealMap();
         },
 
-        /** Fade the loading overlay out once the map has laid out its tiles */
+        /** Fade the loading overlay out once the map is laid out and populated.
+         *  Includes a hard fallback so the overlay can never stay up forever
+         *  and hide the markers. */
         revealMap() {
             if (this.mapReady || this.mapFailed) return;
-            // Give the engine a beat to lay out and fetch tiles before revealing,
-            // so the user never sees a blank gray stage mid-fade.
-            setTimeout(() => {
-                if (!this.mapFailed) this.mapReady = true;
-            }, 300);
+            const reveal = () => {
+                if (this.mapFailed || this.mapReady) return;
+                this.mapReady = true;
+                // Re-sync now that the map is visible at full size, so the
+                // markers are always positioned and drawn correctly.
+                if (this.viewMode === 'map') this.syncMapToView();
+            };
+            setTimeout(reveal, 250);
+            setTimeout(reveal, 1500); // absolute fallback
         },
 
         /** Load the appropriate map library then set up the map */

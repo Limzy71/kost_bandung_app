@@ -8,7 +8,7 @@
     <!-- Filter Bar Neo-Brutalist -->
     <div
         x-data="{
-            hasFilter: false,
+            hasFilter: @js($hasActiveFilter),
             wasApplied: false,
             checkFilter() {
                 const g = this.$refs.genderSelect   ? this.$refs.genderSelect.value   : '';
@@ -16,7 +16,7 @@
                 const p = this.$refs.periodSelect   ? this.$refs.periodSelect.value   : '';
                 const n = this.$refs.minSelect      ? this.$refs.minSelect.value      : '';
                 const x = this.$refs.maxSelect      ? this.$refs.maxSelect.value      : '';
-                const s = this.$refs.searchInput    ? this.$refs.searchInput.value    : '';
+                const s = this.$wire ? String(this.$wire.search || '') : '';
                 const v = this.$refs.verifiedToggle ? this.$refs.verifiedToggle.checked : false;
                 this.hasFilter = Boolean(g || d || p || n || x || s || v);
             }
@@ -366,7 +366,10 @@
             <div x-show="!mapFailed" class="relative w-full rounded-2xl border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden bg-white">
                 <div class="p-4 bg-yellow-300 border-b-3 border-black flex items-center justify-between">
                     <span class="font-black text-sm uppercase text-black flex items-center gap-2 tracking-tight">
-                        &#128205; Peta Interaktif Kost Bandung
+                        <span class="bg-white border-2 border-black rounded-lg p-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                            <x-icon name="lucide-map-pin" class="w-4 h-4 text-black stroke-[3]" />
+                        </span>
+                        Peta Interaktif Kost Bandung
                     </span>
                     <span class="text-xs font-black text-black bg-white border-2 border-black px-3 py-1 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] uppercase">
                         <span x-text="items.length"></span> Kost Tampil Pada Peta

@@ -207,6 +207,7 @@ class KostSearch extends Component
             'districts' => $districts,
             'districtBounds' => config('bandung.districts', []),
             'googleMapsApiKey' => config('services.google.maps_api_key'),
+            'hasActiveFilter' => (bool) ($this->search || $this->gender || $this->district || $this->rent_period || $this->price_min || $this->price_max || $this->verified_only),
         ]);
     }
 }

@@ -21,7 +21,6 @@
                 this.hasFilter = Boolean(g || d || p || n || x || s || v);
             }
         }"
-        x-init="checkFilter()"
         @input="checkFilter()"
         @change="checkFilter()"
         @reset-filters.window="hasFilter = false; wasApplied = false"

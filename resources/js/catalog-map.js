@@ -96,19 +96,19 @@ window.catalogMap = function (config) {
             }
         },
 
-        /** Fade the loading overlay out once the map is laid out and populated.
-         *  Includes a hard fallback so the overlay can never stay up forever
-         *  and hide the markers. */
         revealMap() {
             if (this.mapReady || this.mapFailed) return;
             const reveal = () => {
                 if (this.mapFailed || this.mapReady) return;
                 this.mapReady = true;
-                // Re-sync now that the map is visible at full size, so the
-                // markers are always positioned and drawn correctly.
-                if (this.viewMode === 'map') this.syncMapToView();
+                // Wait a tick for Alpine to remove the overlay from the DOM,
+                // so the map container is at its final full size before we
+                // re-render the markers and re-fit the bounds.
+                this.$nextTick(() => {
+                    if (this.viewMode === 'map') this.syncMapToView();
+                });
             };
-            setTimeout(reveal, 250);
+            setTimeout(reveal, 300);
             setTimeout(reveal, 1500); // absolute fallback
         },
 
@@ -221,14 +221,18 @@ window.catalogMap = function (config) {
                     this.googleRetries = 0;
                 }
                 this.renderGoogleMarkers();
+                this.revealMap();
                 
                 // Critical Resilience: Force Google Maps to recalculate size
+                // after the reveal overlay has faded and the container is at
+                // full size. The 600ms delay gives the CSS transition time to
+                // complete before we call resize + re-render.
                 setTimeout(() => {
                     if (this.map && window.google) {
                         google.maps.event.trigger(this.map, 'resize');
-                        this.renderGoogleMarkers(); // re-fit bounds after resize
+                        this.renderGoogleMarkers();
                     }
-                }, 500);
+                }, 600);
                 
                 return true;
             } catch (e) {
@@ -342,6 +346,7 @@ window.catalogMap = function (config) {
                 this.mapEngine = 'leaflet';
             }
             this.renderLeafletMarkers();
+            this.revealMap();
             
             // Critical Resilience: Force Leaflet to recalculate size after DOM is fully painted
             setTimeout(() => {
@@ -352,7 +357,7 @@ window.catalogMap = function (config) {
                         this.map.fitBounds(group.getBounds());
                     }
                 }
-            }, 500);
+            }, 600);
         },
 
         renderLeafletMarkers() {

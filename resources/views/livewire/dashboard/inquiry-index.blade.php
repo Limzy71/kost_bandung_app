@@ -89,23 +89,45 @@
                                target="_blank"
                                wire:click="markAsRead({{ $inquiry->id }})"
                                class="px-5 py-2.5 bg-emerald-400 hover:bg-emerald-300 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-2">
-                                <x-icon name="lucide-send" class="w-4 h-4 stroke-[2.5]" />
-                                Hubungi via WhatsApp &rarr;
+                                <span wire:loading.remove wire:target="markAsRead({{ $inquiry->id }})" class="flex items-center gap-2">
+                                    <x-icon name="lucide-send" class="w-4 h-4 stroke-[2.5]" />
+                                    Hubungi via WhatsApp &rarr;
+                                </span>
+                                <span wire:loading.flex wire:target="markAsRead({{ $inquiry->id }})" class="items-center gap-2">
+                                    <x-icon name="lucide-loader-circle" class="animate-spin h-4 w-4" />
+                                    Membuka...
+                                </span>
                             </a>
 
                             <button wire:click="openReplyModal({{ $inquiry->id }})" class="px-4 py-2.5 bg-cyan-300 hover:bg-cyan-200 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-2">
-                                <x-icon name="lucide-reply" class="w-4 h-4 stroke-[2.5]" />
-                                {{ $inquiry->owner_reply ? 'Ubah Balasan' : 'Balas Pesan' }}
+                                <span wire:loading.remove wire:target="openReplyModal({{ $inquiry->id }})" class="flex items-center gap-2">
+                                    <x-icon name="lucide-reply" class="w-4 h-4 stroke-[2.5]" />
+                                    {{ $inquiry->owner_reply ? 'Ubah Balasan' : 'Balas Pesan' }}
+                                </span>
+                                <span wire:loading.flex wire:target="openReplyModal({{ $inquiry->id }})" class="items-center gap-2">
+                                    <x-icon name="lucide-loader-circle" class="animate-spin h-4 w-4" />
+                                    Memuat...
+                                </span>
                             </button>
                             
                             @if($inquiry->status === 'unread')
-                                <button wire:click="markAsRead({{ $inquiry->id }})" class="px-4 py-2.5 bg-white hover:bg-zinc-100 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg">
-                                    Tandai Sudah Dibaca
+                                <button wire:click="markAsRead({{ $inquiry->id }})" class="px-4 py-2.5 bg-white hover:bg-zinc-100 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-2">
+                                    <span wire:loading.remove wire:target="markAsRead({{ $inquiry->id }})">Tandai Sudah Dibaca</span>
+                                    <span wire:loading.flex wire:target="markAsRead({{ $inquiry->id }})" class="items-center gap-2">
+                                        <x-icon name="lucide-loader-circle" class="animate-spin h-4 w-4" />
+                                        Menandai...
+                                    </span>
                                 </button>
                             @endif
                             
-                            <button wire:click="toggleArchive({{ $inquiry->id }})" class="px-4 py-2.5 {{ $inquiry->status === 'archived' ? 'bg-cyan-300 hover:bg-cyan-200' : 'bg-zinc-200 hover:bg-zinc-300' }} text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg ml-auto">
-                                {{ $inquiry->status === 'archived' ? 'Kembalikan dari Arsip' : 'Arsipkan' }}
+                            <button wire:click="toggleArchive({{ $inquiry->id }})" class="px-4 py-2.5 {{ $inquiry->status === 'archived' ? 'bg-cyan-300 hover:bg-cyan-200' : 'bg-zinc-200 hover:bg-zinc-300' }} text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg ml-auto inline-flex items-center gap-2">
+                                <span wire:loading.remove wire:target="toggleArchive({{ $inquiry->id }})">
+                                    {{ $inquiry->status === 'archived' ? 'Kembalikan dari Arsip' : 'Arsipkan' }}
+                                </span>
+                                <span wire:loading.flex wire:target="toggleArchive({{ $inquiry->id }})" class="items-center gap-2">
+                                    <x-icon name="lucide-loader-circle" class="animate-spin h-4 w-4" />
+                                    {{ $inquiry->status === 'archived' ? 'Mengembalikan...' : 'Mengarsipkan...' }}
+                                </span>
                             </button>
                         </div>
                     </div>
@@ -159,9 +181,15 @@
                     <button wire:click="closeReplyModal" class="px-4 py-2.5 bg-white hover:bg-zinc-100 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg">
                         Batal
                     </button>
-                    <button wire:click="replyInquiry" class="px-5 py-2.5 bg-emerald-400 hover:bg-emerald-300 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-2">
-                        <x-icon name="lucide-send" class="w-4 h-4 stroke-[2.5]" />
-                        Kirim Balasan
+                    <button wire:click="replyInquiry" wire:loading.attr="disabled" class="px-5 py-2.5 bg-emerald-400 hover:bg-emerald-300 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span wire:loading.remove wire:target="replyInquiry" class="flex items-center gap-2">
+                            <x-icon name="lucide-send" class="w-4 h-4 stroke-[2.5]" />
+                            Kirim Balasan
+                        </span>
+                        <span wire:loading.flex wire:target="replyInquiry" class="items-center gap-2">
+                            <x-icon name="lucide-loader-circle" class="animate-spin h-4 w-4" />
+                            Mengirim...
+                        </span>
                     </button>
                 </div>
             </div>

@@ -86,8 +86,14 @@
                         class="inline-flex items-center gap-1.5 text-xs font-black uppercase text-black px-3.5 py-2 border-2 border-black rounded transition-all cursor-pointer {{ $desktopItemClass($item) }}">
                         <x-icon name="{{ $item['icon'] }}" class="w-4 h-4 stroke-[2.5]" />
                         <span>{{ $item['label'] }}</span>
-                        @if (!empty($item['badge']) && $item['badge'] > 0)
-                            <span class="bg-rose-500 text-white border-2 border-black rounded-full px-1.5 py-0.5 text-[9px] min-w-[20px] text-center ml-1">{{ $item['badge'] }}</span>
+                        @if (isset($item['badge']))
+                            <span x-data="{ count: {{ $item['badge'] }} }"
+                                @if($item['match'] === 'dashboard.inquiries')
+                                    @inquiries-updated.window="count = $event.detail.count"
+                                @endif
+                                x-show="count > 0"
+                                x-text="count"
+                                class="bg-rose-500 text-white border-2 border-black rounded-full px-1.5 py-0.5 text-[9px] min-w-[20px] text-center ml-1"></span>
                         @endif
                     </a>
                 @endforeach
@@ -148,8 +154,14 @@
                         class="flex items-center gap-3 px-3.5 py-3 text-sm font-black uppercase text-black border-2 border-black rounded transition-colors cursor-pointer {{ $isActive($item) ? 'bg-yellow-300' : 'bg-white hover:bg-zinc-100' }}">
                         <x-icon name="{{ $item['icon'] }}" class="w-5 h-5 shrink-0 stroke-[2.5]" />
                         <span>{{ $item['label'] }}</span>
-                        @if (!empty($item['badge']) && $item['badge'] > 0)
-                            <span class="ml-auto bg-rose-500 text-white border-2 border-black rounded-full px-2 py-0.5 text-[10px] min-w-[24px] text-center">{{ $item['badge'] }}</span>
+                        @if (isset($item['badge']))
+                            <span x-data="{ count: {{ $item['badge'] }} }"
+                                @if($item['match'] === 'dashboard.inquiries')
+                                    @inquiries-updated.window="count = $event.detail.count"
+                                @endif
+                                x-show="count > 0"
+                                x-text="count"
+                                class="ml-auto bg-rose-500 text-white border-2 border-black rounded-full px-2 py-0.5 text-[10px] min-w-[24px] text-center"></span>
                         @endif
                     </a>
                 @endforeach

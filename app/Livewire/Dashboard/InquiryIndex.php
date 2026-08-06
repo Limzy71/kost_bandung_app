@@ -56,6 +56,8 @@ class InquiryIndex extends Component
             'status' => 'read',
         ]);
 
+        $this->updateBadgeCount();
+
         $this->reset(['replyingToId', 'replyMessage']);
 
         session()->flash('success', 'Balasan berhasil dikirim ke pencari kost.');
@@ -68,12 +70,23 @@ class InquiryIndex extends Component
         })->find($id);
     }
 
+    private function updateBadgeCount(): void
+    {
+        $count = Inquiry::where('status', 'unread')
+            ->whereHas('kost', function ($q) {
+                $q->where('user_id', Auth::id());
+            })->count();
+
+        $this->dispatch('inquiries-updated', count: $count);
+    }
+
     public function markAsRead(int $id): void
     {
         $inquiry = $this->findOwnedInquiry($id);
 
         if ($inquiry && $inquiry->status === 'unread') {
             $inquiry->update(['status' => 'read']);
+            $this->updateBadgeCount();
         }
     }
 
@@ -83,6 +96,7 @@ class InquiryIndex extends Component
 
         if ($inquiry) {
             $inquiry->update(['status' => $inquiry->status === 'archived' ? 'read' : 'archived']);
+            $this->updateBadgeCount();
         }
     }
 

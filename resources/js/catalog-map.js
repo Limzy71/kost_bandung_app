@@ -289,7 +289,11 @@ window.catalogMap = function (config) {
             let validCount = 0;
 
             const Marker = window.google.maps.Marker;
-            if (!Marker) return;
+            if (!Marker) {
+                console.warn('Google Maps Marker API unavailable; falling back to Leaflet.');
+                this.loadLeafletAndInit();
+                return;
+            }
 
             currentItems.forEach(item => {
                 if (!item.lat || !item.lng) return;

@@ -149,6 +149,7 @@
 
                     <!-- Verified Only Toggle -->
                     <div>
+                        <label class="block text-xs font-black uppercase text-black mb-2 tracking-wide">Status Verifikasi</label>
                         <label :class="$wire.verified_only
                                 ? 'bg-emerald-400 text-black border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
                                 : 'bg-white text-zinc-700 border-3 border-black hover:bg-zinc-100 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'"

@@ -24,6 +24,8 @@ class DeleteUserForm extends Component
 
         $user = Auth::user();
 
+        abort_if($user->role === 'admin', 403, 'Akun administrator tidak dapat dihapus.');
+
         $user->purgeAllDataFiles();
 
         tap($user, $logout(...))->delete();

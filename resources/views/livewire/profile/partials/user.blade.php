@@ -11,8 +11,8 @@
             <x-icon name="lucide-history" class="w-5 h-5 text-yellow-300 stroke-[2.5]" />
         </div>
         <div>
-            <h2 class="text-xl font-black text-black dark:text-white uppercase tracking-tight">Riwayat Obrolan Saya</h2>
-            <p class="text-xs font-bold text-black dark:text-white/70">Daftar percakapan yang telah Anda kirim ke pemilik kost.</p>
+            <h2 class="text-xl font-black text-black uppercase tracking-tight">Riwayat Obrolan Saya</h2>
+            <p class="text-xs font-bold text-black">Daftar percakapan yang telah Anda kirim ke pemilik kost.</p>
         </div>
     </div>
 

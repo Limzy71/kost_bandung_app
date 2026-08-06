@@ -206,8 +206,8 @@
                 <x-icon name="lucide-building-2" class="w-5 h-5 text-yellow-300 stroke-[2.5]" />
             </div>
             <div>
-                <h2 class="text-xl font-black text-black dark:text-white uppercase tracking-tight">Daftar Kost Saya</h2>
-                <p class="text-xs font-bold text-black dark:text-white/70">Kelola properti yang Anda miliki.</p>
+                <h2 class="text-xl font-black text-black uppercase tracking-tight">Daftar Kost Saya</h2>
+                <p class="text-xs font-bold text-black">Kelola properti yang Anda miliki.</p>
             </div>
         </div>
         <a href="{{ route('dashboard.kost.create') }}"

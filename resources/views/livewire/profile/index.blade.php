@@ -17,7 +17,7 @@
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 bg-white dark:bg-zinc-900 p-6 md:p-8 border-4 border-black dark:border-zinc-700 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] rounded-xl">
             <div class="space-y-2">
                 <div class="flex flex-wrap items-center gap-2">
-                    <span class="px-3 py-1 {{ $roleConfig['badge'] }} text-black dark:text-white border-2 border-black dark:border-zinc-700 font-extrabold text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] inline-flex items-center gap-1.5">
+                    <span class="px-3 py-1 {{ $roleConfig['badge'] }} text-black border-2 border-black dark:border-zinc-700 font-extrabold text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] inline-flex items-center gap-1.5">
                         <x-icon :name="$roleConfig['icon']" class="w-3.5 h-3.5 stroke-[2.5]" />
                         <span>{{ $roleConfig['label'] }}</span>
                     </span>
@@ -60,8 +60,8 @@
                 </div>
 
                 <button type="button" wire:click="toggleEdit"
-                    class="bg-yellow-400 hover:bg-yellow-300 text-black dark:text-white border-3 border-black dark:border-zinc-700 font-black text-sm uppercase px-6 py-3.5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all inline-flex items-center gap-2 rounded-lg group cursor-pointer">
-                    <x-icon name="lucide-pencil" class="w-5 h-5 text-black dark:text-white stroke-[2.5]" />
+                    class="bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black dark:border-zinc-700 font-black text-sm uppercase px-6 py-3.5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all inline-flex items-center gap-2 rounded-lg group cursor-pointer">
+                    <x-icon name="lucide-pencil" class="w-5 h-5 text-black stroke-[2.5]" />
                     <span>{{ $editing ? 'Batal' : 'Edit Profil' }}</span>
                 </button>
             </div>
@@ -111,8 +111,8 @@
                     </div>
 
                     <div class="flex items-center justify-center gap-1.5 mt-2.5">
-                        <label class="px-2.5 py-1 bg-cyan-300 hover:bg-cyan-200 text-black dark:text-white border-2 border-black dark:border-zinc-700 font-black text-[10px] uppercase rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer inline-flex items-center gap-1">
-                            <x-icon name="lucide-camera" class="w-3 h-3 stroke-[2.5]" />
+                        <label class="px-2.5 py-1 bg-cyan-300 hover:bg-cyan-200 text-black border-2 border-black dark:border-zinc-700 font-black text-[10px] uppercase rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer inline-flex items-center gap-1">
+                            <x-icon name="lucide-camera" class="w-3 h-3 text-black stroke-[2.5]" />
                             <span>{{ $user->avatar_url ? 'Ganti' : 'Unggah' }}</span>
                             <input type="file" wire:model="avatarUpload" accept="image/*" class="hidden" />
                         </label>
@@ -135,8 +135,8 @@
                 <div class="flex-1 min-w-0 text-center sm:text-left space-y-2">
                     <h2 class="text-2xl md:text-3xl font-black text-black dark:text-white uppercase tracking-tight truncate" title="{{ $user->name }}">{{ Str::limit($user->name, 30) }}</h2>
                     <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                        <span class="px-2.5 py-1 {{ $roleConfig['badge'] }} border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] inline-flex items-center gap-1">
-                            <x-icon :name="$roleConfig['icon']" class="w-3 h-3 stroke-[2.5]" />
+                        <span class="px-2.5 py-1 {{ $roleConfig['badge'] }} border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] inline-flex items-center gap-1">
+                            <x-icon :name="$roleConfig['icon']" class="w-3 h-3 text-black stroke-[2.5]" />
                             <span>{{ $roleConfig['label'] }}</span>
                         </span>
                         <span class="text-[10px] font-black uppercase text-zinc-500 dark:text-zinc-400">Terdaftar sejak {{ $user->created_at?->translatedFormat('d F Y') }}</span>
@@ -165,8 +165,8 @@
         @if ($editing)
             <div class="bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 p-6 md:p-8 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)]">
                 <div class="flex items-center gap-3 border-b-3 border-black dark:border-zinc-700 pb-4 mb-6">
-                    <div class="w-10 h-10 bg-yellow-300 border-2 border-black dark:border-zinc-700 rounded-lg flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
-                        <x-icon name="lucide-pencil" class="w-5 h-5 stroke-[2.5]" />
+                    <div class="w-10 h-10 bg-yellow-300 border-2 border-black dark:border-zinc-700 rounded-lg flex items-center justify-center text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
+                        <x-icon name="lucide-pencil" class="w-5 h-5 text-black stroke-[2.5]" />
                     </div>
                     <div>
                         <h2 class="text-xl font-black text-black dark:text-white uppercase tracking-tight">Edit Data Profil</h2>

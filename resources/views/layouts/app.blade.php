@@ -89,7 +89,7 @@
                                     </li>
                                     <li>
                                         <a href="{{ route('hubungi.admin') }}" class="text-black dark:text-white hover:text-yellow-600 dark:hover:text-yellow-400 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
-                                            <x-icon name="lucide-message-circle" class="w-4 h-4 text-black dark:text-white group-hover:rotate-12 transition-transform stroke-[2.5]" />
+                                            <x-icon name="lucide-message-square-text" class="w-4 h-4 text-black dark:text-white group-hover:rotate-12 transition-transform stroke-[2.5]" />
                                             <span>Hubungi Admin</span>
                                         </a>
                                     </li>
@@ -127,7 +127,7 @@
                                     </li>
                                     <li>
                                         <a href="{{ route('hubungi.admin') }}" class="text-black dark:text-white hover:text-yellow-600 dark:hover:text-yellow-400 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
-                                            <x-icon name="lucide-message-circle" class="w-4 h-4 text-black dark:text-white group-hover:rotate-12 transition-transform stroke-[2.5]" />
+                                            <x-icon name="lucide-message-square-text" class="w-4 h-4 text-black dark:text-white group-hover:rotate-12 transition-transform stroke-[2.5]" />
                                             <span>Hubungi Admin</span>
                                         </a>
                                     </li>

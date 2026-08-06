@@ -467,37 +467,70 @@ window.catalogMap = function (config) {
         /** Build the popup/infoWindow HTML string for a single kost item */
         buildPopupHtml(item) {
             const escape = (v) => this.escapeHtml(v);
-            return (
-                '<div style="font-family:sans-serif;width:210px;padding:4px">' +
-                '<img src="' + escape(item.image) + '" ' +
-                    'style="width:100%;height:96px;object-fit:cover;border-radius:6px;' +
-                    'border:2px solid #000;margin-bottom:6px" />' +
-                '<div style="display:flex;gap:4px;margin-bottom:4px">' +
-                    '<span style="background:#F472B6;color:#000;font-size:9px;font-weight:900;' +
-                        'text-transform:uppercase;padding:2px 6px;border:1.5px solid #000;border-radius:4px">' +
-                        escape(item.gender) + '</span>' +
-                    '<span style="background:#67E8F9;color:#000;font-size:9px;font-weight:900;' +
-                        'text-transform:uppercase;padding:2px 6px;border:1.5px solid #000;border-radius:4px">' +
-                        escape(item.district) + '</span>' +
-                '</div>' +
-                '<h4 style="font-size:13px;font-weight:900;color:#000;text-transform:uppercase;' +
-                    'margin:4px 0 2px;line-height:1.2">' + escape(item.name) + '</h4>' +
-                '<p style="font-size:10px;font-weight:700;color:#555;margin-bottom:6px;' +
-                    'white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + escape(item.address) + '</p>' +
-                '<div style="background:#FACC15;border:1.5px solid #000;padding:4px 8px;border-radius:6px;' +
-                    'font-weight:900;font-size:12px;margin-bottom:8px;box-shadow:2px 2px 0 #000">' +
-                    escape(item.price_full) +
-                    '<span style="font-size:9px">' + escape(item.price_unit) + '</span>' +
-                '</div>' +
-                '<a href="' + escape(item.url) + '" ' +
-                    'style="display:flex;align-items:center;justify-content:center;gap:4px;background:#FB923C;color:#000;' +
-                    'border:1.5px solid #000;padding:6px;border-radius:6px;font-weight:900;' +
-                    'font-size:11px;text-decoration:none;text-transform:uppercase;box-shadow:2px 2px 0 #000">' +
-                    '<span>Lihat Detail</span>' +
-                    '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>' +
-                '</a>' +
-                '</div>'
-            );
+            return `
+                <style>
+                    .neo-popup-btn {
+                        display: flex; align-items: center; justify-content: center; gap: 6px;
+                        background: #FB923C; color: #000; border: 2.5px solid #000;
+                        padding: 8px 12px; border-radius: 8px; font-weight: 900;
+                        font-size: 12px; text-decoration: none; text-transform: uppercase;
+                        box-shadow: 3px 3px 0px #000; transition: all 0.15s ease;
+                        margin-top: 4px; box-sizing: border-box; width: 100%;
+                    }
+                    .neo-popup-btn:hover {
+                        transform: translate(2px, 2px);
+                        box-shadow: 1px 1px 0px #000;
+                    }
+                    /* Override Google Maps InfoWindow default close button */
+                    .gm-ui-hover-effect {
+                        background: #FEE2E2 !important;
+                        border: 2px solid #000 !important;
+                        border-radius: 6px !important;
+                        box-shadow: 2px 2px 0px #000 !important;
+                        opacity: 1 !important;
+                        top: 8px !important;
+                        right: 8px !important;
+                        transition: all 0.15s ease !important;
+                    }
+                    .gm-ui-hover-effect:hover {
+                        transform: translate(1px, 1px) !important;
+                        box-shadow: 1px 1px 0px #000 !important;
+                    }
+                </style>
+                <div style="font-family: 'Inter', system-ui, sans-serif; width: 230px; padding: 2px; color: #000; box-sizing: border-box;">
+                    <div style="position: relative; margin-bottom: 16px;">
+                        <img src="${escape(item.image)}" 
+                            style="width: 100%; height: 130px; object-fit: cover; border-radius: 8px; border: 2.5px solid #000; box-sizing: border-box;" />
+                        <div style="position: absolute; bottom: -10px; left: 10px; display: flex; gap: 6px;">
+                            <span style="background: #F472B6; color: #000; font-size: 9px; font-weight: 900; text-transform: uppercase; padding: 4px 8px; border: 2px solid #000; border-radius: 6px; box-shadow: 2px 2px 0px #000;">
+                                ${escape(item.gender)}
+                            </span>
+                            <span style="background: #67E8F9; color: #000; font-size: 9px; font-weight: 900; text-transform: uppercase; padding: 4px 8px; border: 2px solid #000; border-radius: 6px; box-shadow: 2px 2px 0px #000;">
+                                ${escape(item.district)}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 style="font-size: 15px; font-weight: 900; margin: 0 0 2px 0; line-height: 1.2; text-transform: uppercase;">
+                            ${escape(item.name)}
+                        </h4>
+                        <p style="font-size: 11px; font-weight: 700; color: #555; margin: 0 0 10px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            ${escape(item.address)}
+                        </p>
+                        
+                        <div style="display: flex; align-items: baseline; gap: 4px; margin-bottom: 12px;">
+                            <span style="font-weight: 900; font-size: 16px; color: #000;">${escape(item.price_full)}</span>
+                            <span style="font-weight: 800; font-size: 10px; color: #666;">${escape(item.price_unit)}</span>
+                        </div>
+
+                        <a href="${escape(item.url)}" class="neo-popup-btn">
+                            <span>Lihat Detail</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                        </a>
+                    </div>
+                </div>
+            `;
         },
     };
 };

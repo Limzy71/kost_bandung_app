@@ -1,42 +1,42 @@
 <div class="w-full">
     {{-- ===== Neo-Brutalist Register Card ===== --}}
-    <div class="bg-white border-4 border-black p-8 md:p-10 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] rounded-lg w-full">
+    <div class="bg-white border-4 border-black p-8 md:p-10 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] rounded-lg w-full dark:bg-zinc-900 dark:border-zinc-700 dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,0.25)]">
 
         {{-- Card Header --}}
         <div class="mb-8">
-            <div class="inline-flex items-center gap-2 bg-[#FFE500] border-2 border-black px-3 py-1 rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] mb-4">
+            <div class="inline-flex items-center gap-2 bg-[#FFE500] border-2 border-black px-3 py-1 rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] mb-4 dark:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
                 <span class="text-[10px] font-black uppercase tracking-widest text-black">Daftar Akun Baru</span>
             </div>
-            <h1 class="text-3xl sm:text-4xl font-black text-black uppercase tracking-tight leading-tight">
+            <h1 class="text-3xl sm:text-4xl font-black text-black uppercase tracking-tight leading-tight dark:text-white">
                 Bergabung Sekarang!
             </h1>
-            <p class="mt-2 text-sm font-bold text-zinc-600">
+            <p class="mt-2 text-sm font-bold text-zinc-600 dark:text-zinc-400">
                 Cari kost impian atau publikasikan properti Anda di KostBandung.web.id
             </p>
         </div>
 
         {{-- Divider --}}
-        <div class="border-t-4 border-black mb-8"></div>
+        <div class="border-t-4 border-black mb-8 dark:border-zinc-700"></div>
 
         <form wire:submit="register" class="space-y-5">
 
             {{-- ===== Role Selector Tabs ===== --}}
             <div>
-                <p class="block text-xs font-black uppercase tracking-wider text-black mb-3">Tipe Akun Saya</p>
+                <p class="block text-xs font-black uppercase tracking-wider text-black mb-3 dark:text-white">Tipe Akun Saya</p>
                 <div class="grid grid-cols-2 gap-3">
                     <button type="button" wire:click="$set('role', 'user')"
-                        class="py-3.5 px-4 text-xs font-black text-black uppercase border-2 border-black rounded-lg transition-all cursor-pointer focus:outline-none focus:ring-0 {{ $role === 'user'
+                        class="py-3.5 px-4 text-xs font-black text-black uppercase border-2 border-black rounded-lg transition-all cursor-pointer focus:outline-none focus:ring-0 dark:text-white dark:border-zinc-700 {{ $role === 'user'
                             ? 'bg-[#FFE500] shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] -translate-x-0.5 -translate-y-0.5'
-                            : 'bg-white hover:bg-zinc-100 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none' }}">
+                            : 'bg-white hover:bg-zinc-100 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]' }}">
                         <div class="flex items-center justify-center gap-2">
                             <x-icon name="lucide-search" class="w-4 h-4" />
                             <span>Pencari Kost</span>
                         </div>
                     </button>
                     <button type="button" wire:click="$set('role', 'owner')"
-                        class="py-3.5 px-4 text-xs font-black text-black uppercase border-2 border-black rounded-lg transition-all cursor-pointer focus:outline-none focus:ring-0 {{ $role === 'owner'
+                        class="py-3.5 px-4 text-xs font-black text-black uppercase border-2 border-black rounded-lg transition-all cursor-pointer focus:outline-none focus:ring-0 dark:text-white dark:border-zinc-700 {{ $role === 'owner'
                             ? 'bg-[#FFE500] shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] -translate-x-0.5 -translate-y-0.5'
-                            : 'bg-white hover:bg-zinc-100 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none' }}">
+                            : 'bg-white hover:bg-zinc-100 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]' }}">
                         <div class="flex items-center justify-center gap-2">
                             <x-icon name="lucide-house" class="w-4 h-4" />
                             <span>Pemilik Kost</span>
@@ -44,7 +44,7 @@
                     </button>
                 </div>
                 @error('role')
-                    <p class="mt-2 text-xs font-bold text-rose-600">✕ {{ $message }}</p>
+                    <p class="mt-2 text-xs font-bold text-rose-600 dark:text-rose-400">✕ {{ $message }}</p>
                 @enderror
             </div>
 
@@ -53,62 +53,62 @@
 
             {{-- Nama Lengkap --}}
             <div>
-                <label for="name" class="block text-xs font-black uppercase tracking-wider text-black mb-2">
+                <label for="name" class="block text-xs font-black uppercase tracking-wider text-black mb-2 dark:text-white">
                     Nama Lengkap
                 </label>
                 <input wire:model="name" type="text" id="name" autocomplete="name"
-                    class="w-full px-4 py-3 text-sm bg-zinc-50 border-3 border-black rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:bg-[#FFE500]/10 focus:border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                    class="w-full px-4 py-3 text-sm bg-zinc-50 border-3 border-black rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:bg-[#FFE500]/10 focus:border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:bg-zinc-900 dark:border-zinc-700 dark:text-white dark:placeholder-zinc-500 dark:focus:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] dark:focus:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]"
                     placeholder="Nama lengkap Anda">
                 @error('name')
-                    <p class="mt-2 text-xs font-bold text-rose-600">✕ {{ $message }}</p>
+                    <p class="mt-2 text-xs font-bold text-rose-600 dark:text-rose-400">✕ {{ $message }}</p>
                 @enderror
             </div>
 
             {{-- Email --}}
             <div>
-                <label for="email" class="block text-xs font-black uppercase tracking-wider text-black mb-2">
+                <label for="email" class="block text-xs font-black uppercase tracking-wider text-black mb-2 dark:text-white">
                     Alamat Email
                 </label>
                 <input wire:model="email" type="email" id="email" autocomplete="email"
-                    class="w-full px-4 py-3 text-sm bg-zinc-50 border-3 border-black rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:bg-[#FFE500]/10 focus:border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                    class="w-full px-4 py-3 text-sm bg-zinc-50 border-3 border-black rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:bg-[#FFE500]/10 focus:border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:bg-zinc-900 dark:border-zinc-700 dark:text-white dark:placeholder-zinc-500 dark:focus:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] dark:focus:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]"
                     placeholder="nama@email.com">
                 @error('email')
-                    <p class="mt-2 text-xs font-bold text-rose-600">✕ {{ $message }}</p>
+                    <p class="mt-2 text-xs font-bold text-rose-600 dark:text-rose-400">✕ {{ $message }}</p>
                 @enderror
             </div>
 
             {{-- Password --}}
             <div>
-                <label for="password" class="block text-xs font-black uppercase tracking-wider text-black mb-2">
+                <label for="password" class="block text-xs font-black uppercase tracking-wider text-black mb-2 dark:text-white">
                     Kata Sandi
-                    <span class="normal-case font-bold text-zinc-500 ml-1">(min. 8 karakter, huruf + angka)</span>
+                    <span class="normal-case font-bold text-zinc-500 ml-1 dark:text-zinc-400">(min. 8 karakter, huruf + angka)</span>
                 </label>
                 <div class="relative flex items-center" x-data="{ show: false }">
                     <input wire:model="password" :type="show ? 'text' : 'password'" id="password" autocomplete="new-password"
-                        class="block w-full px-4 pr-12 py-3 text-sm bg-zinc-50 border-3 border-black rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:bg-[#FFE500]/10 focus:border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                        class="block w-full px-4 pr-12 py-3 text-sm bg-zinc-50 border-3 border-black rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:bg-[#FFE500]/10 focus:border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:bg-zinc-900 dark:border-zinc-700 dark:text-white dark:placeholder-zinc-500 dark:focus:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] dark:focus:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]"
                         placeholder="Min. 8 karakter, huruf dan angka">
                     <button type="button" @click="show = !show" :aria-label="show ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'"
-                        class="absolute inset-y-0 right-1 flex items-center px-3 text-zinc-500 hover:text-black transition-colors cursor-pointer focus:outline-none">
+                        class="absolute inset-y-0 right-1 flex items-center px-3 text-zinc-500 hover:text-black transition-colors cursor-pointer focus:outline-none dark:text-zinc-400 dark:hover:text-white">
                         <x-icon x-show="!show" name="lucide-eye" class="w-5 h-5" />
                         <x-icon x-cloak x-show="show" name="lucide-eye-off" class="w-5 h-5" />
                     </button>
                 </div>
                 @error('password')
-                    <p class="mt-2 text-xs font-bold text-rose-600">✕ {{ $message }}</p>
+                    <p class="mt-2 text-xs font-bold text-rose-600 dark:text-rose-400">✕ {{ $message }}</p>
                 @enderror
             </div>
 
             {{-- Konfirmasi Password --}}
             <div>
-                <label for="password_confirmation" class="block text-xs font-black uppercase tracking-wider text-black mb-2">
+                <label for="password_confirmation" class="block text-xs font-black uppercase tracking-wider text-black mb-2 dark:text-white">
                     Konfirmasi Kata Sandi
                 </label>
                 <div class="relative flex items-center" x-data="{ show: false }">
                     <input wire:model="password_confirmation" :type="show ? 'text' : 'password'" id="password_confirmation" autocomplete="new-password"
-                        class="block w-full px-4 pr-12 py-3 text-sm bg-zinc-50 border-3 border-black rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:bg-[#FFE500]/10 focus:border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                        class="block w-full px-4 pr-12 py-3 text-sm bg-zinc-50 border-3 border-black rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:bg-[#FFE500]/10 focus:border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:bg-zinc-900 dark:border-zinc-700 dark:text-white dark:placeholder-zinc-500 dark:focus:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] dark:focus:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]"
                         placeholder="Ulangi kata sandi">
                     <button type="button" @click="show = !show" :aria-label="show ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'"
-                        class="absolute inset-y-0 right-1 flex items-center px-3 text-zinc-500 hover:text-black transition-colors cursor-pointer focus:outline-none">
+                        class="absolute inset-y-0 right-1 flex items-center px-3 text-zinc-500 hover:text-black transition-colors cursor-pointer focus:outline-none dark:text-zinc-400 dark:hover:text-white">
                         <x-icon x-show="!show" name="lucide-eye" class="w-5 h-5" />
                         <x-icon x-cloak x-show="show" name="lucide-eye-off" class="w-5 h-5" />
                     </button>
@@ -117,39 +117,39 @@
 
             {{-- Nomor WhatsApp / Telepon --}}
             <div>
-                <label for="phone_number" class="block text-xs font-black uppercase tracking-wider text-black mb-2">
+                <label for="phone_number" class="block text-xs font-black uppercase tracking-wider text-black mb-2 dark:text-white">
                     Nomor WhatsApp <span class="text-rose-500">*</span>
                 </label>
                 <input wire:model="phone_number" type="tel" id="phone_number" inputmode="numeric" oninput="let v = this.value.replace(/[^0-9]/g, ''); if(v.startsWith('62')) v = '0' + v.slice(2); else if(v.length > 0 && v[0] !== '0') v = '0' + v; this.value = v;" maxlength="16"
-                    class="w-full px-4 py-3 text-sm bg-zinc-50 border-3 border-black rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:bg-[#FFE500]/10 focus:border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                    class="w-full px-4 py-3 text-sm bg-zinc-50 border-3 border-black rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:bg-[#FFE500]/10 focus:border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:bg-zinc-900 dark:border-zinc-700 dark:text-white dark:placeholder-zinc-500 dark:focus:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] dark:focus:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]"
                     placeholder="Contoh: 081234567890">
                 @error('phone_number')
-                    <p class="mt-2 text-xs font-bold text-rose-600">✕ {{ $message }}</p>
+                    <p class="mt-2 text-xs font-bold text-rose-600 dark:text-rose-400">✕ {{ $message }}</p>
                 @enderror
             </div>
 
             {{-- ===== Dynamic Owner Fields ===== --}}
             @if ($role === 'owner')
-                <div class="rounded-lg border-4 border-black bg-zinc-50 p-5 space-y-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                <div class="rounded-lg border-4 border-black bg-zinc-50 p-5 space-y-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]"
                     x-data x-show="true"
                     x-transition:enter="transition ease-out duration-200"
                     x-transition:enter-start="opacity-0 -translate-y-2"
                     x-transition:enter-end="opacity-100 translate-y-0">
-                    <div class="flex items-center gap-2 pb-1 border-b-2 border-black text-black">
-                        <x-icon name="lucide-house" class="w-5 h-5 text-black" />
-                        <p class="text-xs font-black uppercase tracking-wider text-black">Data Pemilik Kost</p>
+                    <div class="flex items-center gap-2 pb-1 border-b-2 border-black text-black dark:border-zinc-700 dark:text-white">
+                        <x-icon name="lucide-house" class="w-5 h-5 text-black dark:text-white" />
+                        <p class="text-xs font-black uppercase tracking-wider text-black dark:text-white">Data Pemilik Kost</p>
                     </div>
 
                     {{-- Nama Properti / Usaha Kost --}}
                     <div>
-                        <label for="business_name" class="block text-xs font-black uppercase tracking-wider text-black mb-2">
+                        <label for="business_name" class="block text-xs font-black uppercase tracking-wider text-black mb-2 dark:text-white">
                             Nama Properti / Usaha Kost <span class="text-rose-500">*</span>
                         </label>
                         <input wire:model="business_name" type="text" id="business_name"
-                            class="w-full px-4 py-3 text-sm bg-white border-3 border-black rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:bg-[#FFE500]/10 focus:border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                            class="w-full px-4 py-3 text-sm bg-white border-3 border-black rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:bg-[#FFE500]/10 focus:border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:bg-zinc-900 dark:border-zinc-700 dark:text-white dark:placeholder-zinc-500 dark:focus:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] dark:focus:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]"
                             placeholder="Contoh: Kost Putra Sejahtera">
                         @error('business_name')
-                            <p class="mt-2 text-xs font-bold text-rose-600">✕ {{ $message }}</p>
+                            <p class="mt-2 text-xs font-bold text-rose-600 dark:text-rose-400">✕ {{ $message }}</p>
                         @enderror
                     </div>
                 </div>
@@ -158,7 +158,7 @@
 
             {{-- Submit Button --}}
             <button type="submit"
-                class="w-full py-4 px-6 bg-[#FFE500] hover:bg-yellow-400 text-black border-4 border-black font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all duration-75 rounded-lg flex items-center justify-center gap-2 cursor-pointer mt-2"
+                class="w-full py-4 px-6 bg-[#FFE500] hover:bg-yellow-400 text-black border-4 border-black font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all duration-75 rounded-lg flex items-center justify-center gap-2 cursor-pointer mt-2 dark:border-zinc-600 dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] dark:hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)]"
                 wire:loading.attr="disabled"
                 wire:target="register"
                 wire:loading.class="opacity-60 cursor-not-allowed">
@@ -171,13 +171,13 @@
         </form>
 
         {{-- Divider --}}
-        <div class="my-7 border-t-4 border-dashed border-black"></div>
+        <div class="my-7 border-t-4 border-dashed border-black dark:border-zinc-700"></div>
 
         {{-- Login Link --}}
-        <p class="text-center text-xs font-bold text-black">
+        <p class="text-center text-xs font-bold text-black dark:text-white">
             Sudah punya akun?
             <a href="{{ route('login') }}" wire:navigate
-                class="font-black text-black underline decoration-2 underline-offset-2 hover:bg-[#FFE500] hover:no-underline px-1 rounded transition-all">
+                class="font-black text-black underline decoration-2 underline-offset-2 hover:bg-[#FFE500] hover:no-underline px-1 rounded transition-all dark:text-white">
                 Masuk Di Sini
             </a>
         </p>

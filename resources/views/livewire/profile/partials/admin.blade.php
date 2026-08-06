@@ -9,25 +9,25 @@
 </div>
 
 <!-- Moderation Link -->
-<div class="bg-white border-4 border-black rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
-    <div class="bg-yellow-300 border-b-4 border-black px-6 py-4 flex items-center gap-3">
+<div class="bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] overflow-hidden">
+    <div class="bg-yellow-300 border-b-4 border-black dark:border-zinc-700 px-6 py-4 flex items-center gap-3">
         <div class="w-9 h-9 bg-black rounded flex items-center justify-center shrink-0">
             <x-icon name="lucide-shield-check" class="w-5 h-5 text-yellow-300 stroke-[2.5]" />
         </div>
         <div>
-            <h2 class="text-xl font-black text-black uppercase tracking-tight">Panel Moderasi</h2>
-            <p class="text-xs font-bold text-black/70">Tinjau pengajuan kost dan fasilitas dari pemilik.</p>
+            <h2 class="text-xl font-black text-black dark:text-white uppercase tracking-tight">Panel Moderasi</h2>
+            <p class="text-xs font-bold text-black dark:text-white/70">Tinjau pengajuan kost dan fasilitas dari pemilik.</p>
         </div>
     </div>
 
     <div class="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <p class="text-sm font-bold text-zinc-600 max-w-2xl">
-            Anda memiliki <span class="bg-yellow-200 border-b-2 border-black px-1 font-black text-black">{{ $stats['pendingKosts'] }} kost</span>
-            dan <span class="bg-yellow-200 border-b-2 border-black px-1 font-black text-black">{{ $stats['pendingFacilities'] }} fasilitas</span>
+        <p class="text-sm font-bold text-zinc-600 dark:text-zinc-400 max-w-2xl">
+            Anda memiliki <span class="bg-yellow-200 border-b-2 border-black dark:border-zinc-700 px-1 font-black text-black dark:text-white">{{ $stats['pendingKosts'] }} kost</span>
+            dan <span class="bg-yellow-200 border-b-2 border-black dark:border-zinc-700 px-1 font-black text-black dark:text-white">{{ $stats['pendingFacilities'] }} fasilitas</span>
             yang menunggu keputusan moderasi.
         </p>
         <a href="{{ route('admin.moderation') }}"
-            class="inline-flex items-center gap-2 bg-lime-400 hover:bg-lime-300 text-black border-3 border-black font-black text-sm uppercase px-6 py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all rounded-lg shrink-0">
+            class="inline-flex items-center gap-2 bg-lime-400 hover:bg-lime-300 text-black dark:text-white border-3 border-black dark:border-zinc-700 font-black text-sm uppercase px-6 py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all rounded-lg shrink-0">
             <x-icon name="lucide-shield-check" class="w-5 h-5 stroke-[2.5]" />
             <span>Buka Moderasi</span>
         </a>

@@ -10,6 +10,31 @@
 let catalogLeafletRetries = 0;
 const CATALOG_LEAFLET_MAX_RETRIES = 5;
 
+/* Dark-styled Google Maps tile palette (applied to roadmap/street only;
+   satellite stays natural). Exposed globally so the inline detail map
+   component can reuse the same palette. */
+const KOST_DARK_MAP_STYLES = [
+    { elementType: 'geometry', stylers: [{ color: '#18181b' }] },
+    { elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
+    { elementType: 'labels.text.fill', stylers: [{ color: '#a1a1aa' }] },
+    { elementType: 'labels.text.stroke', stylers: [{ color: '#09090b' }] },
+    { featureType: 'administrative', elementType: 'geometry', stylers: [{ color: '#27272a' }] },
+    { featureType: 'administrative.country', elementType: 'geometry.stroke', stylers: [{ color: '#3f3f46' }] },
+    { featureType: 'landscape', elementType: 'geometry', stylers: [{ color: '#18181b' }] },
+    { featureType: 'poi', elementType: 'geometry', stylers: [{ color: '#27272a' }] },
+    { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#27272a' }] },
+    { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#09090b' }] },
+    { featureType: 'road.highway', elementType: 'geometry', stylers: [{ color: '#3f3f46' }] },
+    { featureType: 'road.highway', elementType: 'geometry.stroke', stylers: [{ color: '#09090b' }] },
+    { featureType: 'transit', elementType: 'geometry', stylers: [{ color: '#27272a' }] },
+    { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0a0a0f' }] },
+    { featureType: 'water', elementType: 'labels.text.fill', stylers: [{ color: '#3f3f46' }] },
+];
+window.KOST_DARK_MAP_STYLES = KOST_DARK_MAP_STYLES;
+
+const CATALOG_DARK_TILE_URL = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+const CATALOG_LIGHT_TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+
 window.catalogMap = function (config) {
     return {
         viewMode: 'list',
@@ -23,6 +48,11 @@ window.catalogMap = function (config) {
         mapFailed: false,
         districtBounds: config.districtBounds || {},
         currentLayer: 'street', // 'street' or 'satellite'
+        themeObserver: null,
+
+        isDarkMode() {
+            return document.documentElement.classList.contains('dark');
+        },
 
         /** Called from x-init — sets up watchers and eagerly loads map in background */
         init() {
@@ -89,6 +119,20 @@ window.catalogMap = function (config) {
                     this.resizeMap();
                 }
             });
+
+            // React to theme changes (dark mode toggle) and re-skin the map in place
+            this.themeObserver = new MutationObserver(() => {
+                if (!this.map) return;
+                if (this.mapEngine === 'google') {
+                    this.applyGoogleDarkMode();
+                } else if (this.mapEngine === 'leaflet') {
+                    this.applyLeafletDarkMode();
+                }
+            });
+            this.themeObserver.observe(document.documentElement, {
+                attributes: true,
+                attributeFilter: ['class'],
+            });
         },
 
         get items() {
@@ -102,12 +146,19 @@ window.catalogMap = function (config) {
             if (this.mapEngine === 'google') {
                 const mapTypeId = layer === 'satellite' ? 'hybrid' : 'roadmap';
                 this.map.setMapTypeId(mapTypeId);
+                this.applyGoogleDarkMode();
             } else if (this.mapEngine === 'leaflet') {
                 if (this.currentTileLayer) this.map.removeLayer(this.currentTileLayer);
-                const url = layer === 'satellite'
-                    ? 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
-                    : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-                this.currentTileLayer = L.tileLayer(url, { maxZoom: 19 }).addTo(this.map);
+                let url;
+                const opts = { maxZoom: 19 };
+                if (layer === 'satellite') {
+                    url = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+                } else {
+                    url = this.isDarkMode() ? CATALOG_DARK_TILE_URL : CATALOG_LIGHT_TILE_URL;
+                    opts.subdomains = 'abcd';
+                    opts.attribution = '© OpenStreetMap';
+                }
+                this.currentTileLayer = L.tileLayer(url, opts).addTo(this.map);
             }
         },
 
@@ -119,6 +170,27 @@ window.catalogMap = function (config) {
             } else if (this.mapEngine === 'leaflet' && typeof L !== 'undefined' && this.map.invalidateSize) {
                 this.map.invalidateSize();
             }
+        },
+
+        /** Apply/remove the dark tile palette on an existing Google map */
+        applyGoogleDarkMode() {
+            if (this.mapEngine !== 'google' || !this.map) return;
+            this.map.setOptions({
+                styles: this.isDarkMode() ? KOST_DARK_MAP_STYLES : null,
+            });
+        },
+
+        /** Swap the Leaflet street tiles between light and dark basemaps */
+        applyLeafletDarkMode() {
+            if (this.mapEngine !== 'leaflet' || !this.map) return;
+            if (this.currentLayer !== 'street') return;
+            if (this.currentTileLayer) this.map.removeLayer(this.currentTileLayer);
+            const url = this.isDarkMode() ? CATALOG_DARK_TILE_URL : CATALOG_LIGHT_TILE_URL;
+            this.currentTileLayer = L.tileLayer(url, {
+                maxZoom: 19,
+                subdomains: 'abcd',
+                attribution: '© OpenStreetMap'
+            }).addTo(this.map);
         },
 
         /** Load the appropriate map library then set up the map */
@@ -240,6 +312,7 @@ window.catalogMap = function (config) {
                         mapTypeControl: false, // We use custom buttons for this
                         streetViewControl: false,
                         fullscreenControl: true,
+                        styles: this.isDarkMode() ? KOST_DARK_MAP_STYLES : null,
                     });
                     this.infoWindow = new google.maps.InfoWindow();
                     this.mapEngine = 'google';
@@ -354,9 +427,10 @@ window.catalogMap = function (config) {
                 if (this.currentLayer === 'satellite') {
                     this.switchLayer('satellite');
                 } else {
-                    const url = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+                    const url = this.isDarkMode() ? CATALOG_DARK_TILE_URL : CATALOG_LIGHT_TILE_URL;
                     this.currentTileLayer = L.tileLayer(url, {
                         maxZoom: 19,
+                        subdomains: 'abcd',
                         attribution: '© OpenStreetMap'
                     }).addTo(this.map);
                 }

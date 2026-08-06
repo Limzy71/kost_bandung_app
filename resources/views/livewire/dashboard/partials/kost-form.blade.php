@@ -6,44 +6,44 @@
 
             <!-- Seksi 1: Informasi Dasar -->
             <x-brutal-card class="space-y-6">
-                <div class="flex items-center gap-3 border-b-3 border-black pb-4">
+                <div class="flex items-center gap-3 border-b-3 border-black dark:border-zinc-700 pb-4">
                     <div
-                        class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                        class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black dark:border-zinc-700 font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
                         1
                     </div>
                     <div>
-                        <h2 class="text-xl font-black text-black uppercase tracking-tight">Informasi Dasar</h2>
-                        <p class="text-xs font-bold text-zinc-600">Nama kost, jenis penghuni, dan deskripsi singkat</p>
+                        <h2 class="text-xl font-black text-black dark:text-white uppercase tracking-tight">Informasi Dasar</h2>
+                        <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400">Nama kost, jenis penghuni, dan deskripsi singkat</p>
                     </div>
                 </div>
 
                 <!-- Nama Kost -->
                 <div class="space-y-2">
-                    <label for="name" class="block text-xs font-black uppercase tracking-wider text-black">
-                        Nama Properti Kost <span class="text-rose-600">*</span>
+                    <label for="name" class="block text-xs font-black uppercase tracking-wider text-black dark:text-white">
+                        Nama Properti Kost <span class="text-rose-600 dark:text-rose-400">*</span>
                     </label>
                     <input type="text" id="name" wire:model="name"
                         placeholder="Contoh: Kost Eksklusif Dago Asri"
-                        class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
+                        class="w-full bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg px-4 py-3 text-sm font-bold text-black dark:text-white focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all">
                     @error('name')
                         <p
-                            class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                            class="text-xs font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border-2 border-rose-500 dark:border-rose-500/60 px-2.5 py-1 rounded-md mt-1 inline-block">
                             {{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Tipe Penghuni -->
                 <div class="space-y-2">
-                    <label class="block text-xs font-black uppercase tracking-wider text-black">
-                        Tipe Penghuni Kost <span class="text-rose-600">*</span>
+                    <label class="block text-xs font-black uppercase tracking-wider text-black dark:text-white">
+                        Tipe Penghuni Kost <span class="text-rose-600 dark:text-rose-400">*</span>
                     </label>
                     <div class="grid grid-cols-3 gap-3">
                         <label class="cursor-pointer h-full">
                             <input type="radio" wire:model="gender_type" value="campur" class="peer sr-only">
                             <div
-                                class="h-full min-h-[68px] px-2 py-3 rounded-lg border-2 border-black text-center font-black text-xs md:text-sm text-black bg-zinc-50 hover:bg-yellow-100 peer-checked:bg-yellow-400 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex flex-col items-center justify-center gap-1.5">
+                                class="h-full min-h-[68px] px-2 py-3 rounded-lg border-2 border-black dark:border-zinc-700 text-center font-black text-xs md:text-sm text-black dark:text-white bg-zinc-50 dark:bg-zinc-900 hover:bg-yellow-100 dark:hover:bg-yellow-950/40 peer-checked:bg-yellow-400 dark:peer-checked:bg-yellow-500 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all flex flex-col items-center justify-center gap-1.5">
                                 <x-icon name="lucide-users"
-                                    class="w-5 h-5 text-black stroke-[2.5] shrink-0" />
+                                    class="w-5 h-5 text-black dark:text-white stroke-[2.5] shrink-0" />
                                 <span class="leading-tight">Campur</span>
                             </div>
                         </label>
@@ -51,8 +51,8 @@
                         <label class="cursor-pointer h-full">
                             <input type="radio" wire:model="gender_type" value="putri" class="peer sr-only">
                             <div
-                                class="h-full min-h-[68px] px-2 py-3 rounded-lg border-2 border-black text-center font-black text-xs md:text-sm text-black bg-zinc-50 hover:bg-pink-100 peer-checked:bg-pink-300 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex flex-col items-center justify-center gap-1.5">
-                                <x-icon name="lucide-user" class="w-5 h-5 text-black stroke-[2.5] shrink-0" />
+                                class="h-full min-h-[68px] px-2 py-3 rounded-lg border-2 border-black dark:border-zinc-700 text-center font-black text-xs md:text-sm text-black dark:text-white bg-zinc-50 dark:bg-zinc-900 hover:bg-pink-100 dark:hover:bg-pink-950/40 peer-checked:bg-pink-300 dark:peer-checked:bg-pink-500 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all flex flex-col items-center justify-center gap-1.5">
+                                <x-icon name="lucide-user" class="w-5 h-5 text-black dark:text-white stroke-[2.5] shrink-0" />
                                 <span class="leading-tight">Khusus Putri</span>
                             </div>
                         </label>
@@ -60,15 +60,15 @@
                         <label class="cursor-pointer h-full">
                             <input type="radio" wire:model="gender_type" value="putra" class="peer sr-only">
                             <div
-                                class="h-full min-h-[68px] px-2 py-3 rounded-lg border-2 border-black text-center font-black text-xs md:text-sm text-black bg-zinc-50 hover:bg-cyan-100 peer-checked:bg-cyan-300 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex flex-col items-center justify-center gap-1.5">
-                                <x-icon name="lucide-user" class="w-5 h-5 text-black stroke-[2.5] shrink-0" />
+                                class="h-full min-h-[68px] px-2 py-3 rounded-lg border-2 border-black dark:border-zinc-700 text-center font-black text-xs md:text-sm text-black dark:text-white bg-zinc-50 dark:bg-zinc-900 hover:bg-cyan-100 dark:hover:bg-cyan-950/40 peer-checked:bg-cyan-300 dark:peer-checked:bg-cyan-500 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all flex flex-col items-center justify-center gap-1.5">
+                                <x-icon name="lucide-user" class="w-5 h-5 text-black dark:text-white stroke-[2.5] shrink-0" />
                                 <span class="leading-tight">Khusus Putra</span>
                             </div>
                         </label>
                     </div>
                     @error('gender_type')
                         <p
-                            class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                            class="text-xs font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border-2 border-rose-500 dark:border-rose-500/60 px-2.5 py-1 rounded-md mt-1 inline-block">
                             {{ $message }}</p>
                     @enderror
                 </div>
@@ -79,10 +79,10 @@
                     get count() { return (this.desc || '').length }
                 }" class="space-y-2">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                        <label for="description" class="block text-xs font-black uppercase tracking-wider text-black">
-                            Deskripsi Lengkap <span class="text-rose-600">*</span>
+                        <label for="description" class="block text-xs font-black uppercase tracking-wider text-black dark:text-white">
+                            Deskripsi Lengkap <span class="text-rose-600 dark:text-rose-400">*</span>
                         </label>
-                        <span class="text-[11px] font-bold italic text-zinc-600">
+                        <span class="text-[11px] font-bold italic text-zinc-600 dark:text-zinc-400">
                             Tips: sebutkan lokasi, fasilitas unggulan, dan lingkungan sekitar dalam 3–5 kalimat singkat.
                         </span>
                     </div>
@@ -90,16 +90,16 @@
                     <div class="relative">
                         <textarea id="description" x-model="desc" rows="4" maxlength="500"
                             placeholder="Contoh: Kost khusus putra di Coblong, 5 menit dari kampus. Kamar full furnished, AC, WiFi cepat. Lingkungan aman, dekat minimarket & warung makan. Cocok untuk mahasiswa/karyawan."
-                            class="w-full bg-white border-2 border-black rounded-lg p-4 pb-10 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"></textarea>
+                            class="w-full bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg p-4 pb-10 text-sm font-bold text-black dark:text-white focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all"></textarea>
 
                         <!-- Neo-Brutalist Live Character Counter Badge -->
                         <div class="absolute bottom-3 right-3 pointer-events-none">
                             <span
-                                class="px-2.5 py-1 text-[10px] font-black uppercase rounded border-2 transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-block"
+                                class="px-2.5 py-1 text-[10px] font-black uppercase rounded border-2 transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] inline-block"
                                 :class="{
-                                    'bg-zinc-100 text-zinc-700 border-black': count <= 299,
-                                    'bg-yellow-300 text-black border-black': count >= 300 && count < 500,
-                                    'bg-rose-100 text-rose-700 border-rose-500': count >= 500
+                                    'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border-black dark:border-zinc-700': count <= 299,
+                                    'bg-yellow-300 text-black border-black dark:border-zinc-700': count >= 300 && count < 500,
+                                    'bg-rose-100 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border-rose-500 dark:border-rose-500/60': count >= 500
                                 }">
                                 <span x-text="count"></span>/500 karakter
                             </span>
@@ -108,7 +108,7 @@
 
                     @error('description')
                         <p
-                            class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                            class="text-xs font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border-2 border-rose-500 dark:border-rose-500/60 px-2.5 py-1 rounded-md mt-1 inline-block">
                             {{ $message }}</p>
                     @enderror
                 </div>
@@ -532,16 +532,16 @@
                     address: @entangle('address')
                 })"
                 x-init="initMap()"
-                class="bg-white rounded-xl p-6 md:p-8 border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6">
-                <div class="flex items-center gap-3 border-b-3 border-black pb-4">
+                class="bg-white dark:bg-zinc-900 rounded-xl p-6 md:p-8 border-3 border-black dark:border-zinc-700 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] space-y-6">
+                <div class="flex items-center gap-3 border-b-3 border-black dark:border-zinc-700 pb-4">
                     <div
-                        class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                        class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black dark:border-zinc-700 font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
                         2
                     </div>
                     <div>
-                        <h2 class="text-xl font-black text-black uppercase tracking-tight">Lokasi Kost & Geofencing
+                        <h2 class="text-xl font-black text-black dark:text-white uppercase tracking-tight">Lokasi Kost & Geofencing
                             Bandung</h2>
-                        <p class="text-xs font-bold text-zinc-600">Area kecamatan, alamat fisik, dan penentuan titik
+                        <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400">Area kecamatan, alamat fisik, dan penentuan titik
                             presisi lokasi pada peta</p>
                     </div>
                 </div>
@@ -549,44 +549,44 @@
                 <div class="flex flex-col sm:flex-row gap-6 items-start">
                     <!-- Dropdown Kecamatan -->
                     <div class="space-y-2 w-full sm:w-52 shrink-0">
-                        <label for="district" class="block text-xs font-black uppercase tracking-wider text-black">
-                            Kecamatan <span class="text-rose-600">*</span>
+                        <label for="district" class="block text-xs font-black uppercase tracking-wider text-black dark:text-white">
+                            Kecamatan <span class="text-rose-600 dark:text-rose-400">*</span>
                         </label>
                         <div class="relative w-full">
                             <select id="district" x-model="district" @change="districtAutoMessage = null"
                                 style="padding-left: 1.25rem !important;"
-                                class="w-full bg-white border-2 border-black rounded-lg !pl-5 pr-10 py-3.5 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer transition-all appearance-none">
+                                class="w-full bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg !pl-5 pr-10 py-3.5 text-sm font-bold text-black dark:text-white focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] cursor-pointer transition-all appearance-none">
                                 <option value="" disabled>-- Pilih Kecamatan --</option>
                                 @foreach ($districts as $dist)
-                                    <option value="{{ $dist }}" class="font-bold text-sm text-black">Kec.
+                                    <option value="{{ $dist }}" class="font-bold text-sm text-black dark:text-white">Kec.
                                         {{ $dist }}</option>
                                 @endforeach
                             </select>
                             <div
-                                class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-black">
+                                class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-black dark:text-white">
                                 <x-icon name="lucide-chevron-down" class="w-4 h-4 stroke-[3]" />
                             </div>
                         </div>
                         @error('district')
                             <p
-                                class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                                class="text-xs font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border-2 border-rose-500 dark:border-rose-500/60 px-2.5 py-1 rounded-md mt-1 inline-block">
                                 {{ $message }}</p>
                         @enderror
                     </div>
 
                     <!-- Alamat Lengkap dengan Tombol Clear (X) Neo-Brutalist -->
                     <div class="space-y-2 flex-1 w-full min-w-0">
-                        <label for="address" class="block text-xs font-black uppercase tracking-wider text-black">
-                            Alamat Lengkap / Nama Kost <span class="text-rose-600">*</span>
+                        <label for="address" class="block text-xs font-black uppercase tracking-wider text-black dark:text-white">
+                            Alamat Lengkap / Nama Kost <span class="text-rose-600 dark:text-rose-400">*</span>
                         </label>
                         <div class="relative w-full">
                             <input type="text" id="address" x-model="address"
                                 x-on:keydown.enter.prevent="$el.blur()"
                                 placeholder="Contoh: Jl. Dipatiukur No. 80 atau nama kost"
                                 style="padding-left: 1.25rem !important;"
-                                class="w-full bg-white border-2 border-black rounded-lg !pl-5 pr-12 py-3.5 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
+                                class="w-full bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg !pl-5 pr-12 py-3.5 text-sm font-bold text-black dark:text-white focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all">
                             <button type="button" x-show="address && !isGeocoding" x-cloak @click="resetToDefaultLocation()"
-                                class="absolute right-2.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded bg-rose-400 hover:bg-rose-500 text-black border-2 border-black flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-[1px] active:translate-y-[1px] transition-all cursor-pointer"
+                                class="absolute right-2.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded bg-rose-400 hover:bg-rose-500 text-black border-2 border-black dark:border-zinc-700 flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:shadow-none active:translate-x-[1px] active:translate-y-[1px] transition-all cursor-pointer"
                                 title="Hapus alamat dan reset lokasi">
                                 <x-icon name="lucide-x" class="w-4 h-4 stroke-[3]" />
                             </button>
@@ -596,36 +596,36 @@
                         </div>
                         @error('address')
                             <p
-                                class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                                class="text-xs font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border-2 border-rose-500 dark:border-rose-500/60 px-2.5 py-1 rounded-md mt-1 inline-block">
                                 {{ $message }}</p>
                         @enderror
                         <div x-show="geocodeMessage" x-cloak
-                            class="text-xs font-bold text-amber-700 bg-amber-100 border-2 border-amber-500 px-3 py-1.5 rounded-md mt-1 inline-block shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)]">
+                            class="text-xs font-bold text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-950/40 border-2 border-amber-500 dark:border-amber-500/60 px-3 py-1.5 rounded-md mt-1 inline-block shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)]">
                             <span x-text="geocodeMessage"></span>
                         </div>
                     </div>
                 </div>
                 <!-- District Auto Message -->
                 <div x-show="districtAutoMessage" x-cloak
-                    class="text-xs font-bold text-zinc-600 bg-zinc-100 border-2 border-zinc-400 px-3 py-1.5 rounded-md shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)] inline-block whitespace-nowrap">
+                    class="text-xs font-bold text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 border-2 border-zinc-400 dark:border-zinc-600 px-3 py-1.5 rounded-md shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)] inline-block whitespace-nowrap">
                     <span x-text="districtAutoMessage"></span>
                 </div>
 
                 <!-- Peta Interaktif & Pin Picker (Geofencing Bandung) -->
                 <div class="space-y-3 pt-2">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                        <label class="block text-xs font-black uppercase tracking-wider text-black">
+                        <label class="block text-xs font-black uppercase tracking-wider text-black dark:text-white">
                             Tentukan Titik Presisi Lokasi (Peta Interaktif Bandung) <span
-                                class="text-rose-600">*</span>
+                                class="text-rose-600 dark:text-rose-400">*</span>
                         </label>
                         <div
-                            class="inline-flex items-center gap-1.5 bg-yellow-300 border-2 border-black px-3 py-1 rounded text-xs font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                            class="inline-flex items-center gap-1.5 bg-yellow-300 border-2 border-black dark:border-zinc-700 px-3 py-1 rounded text-xs font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
                             <x-icon name="lucide-map-pin" class="w-3.5 h-3.5 text-black stroke-[2.5] shrink-0" />
                             <span>Lat: <span x-text="lat"></span> | Lng: <span x-text="lng"></span></span>
                         </div>
                     </div>
 
-                    <p class="text-xs font-bold text-zinc-600">
+                    <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400">
                         Geser marker/pin merah atau klik di mana saja pada peta untuk menandai titik fisik kost Anda.
                         Titik harus berada di dalam batas administratif Kota Bandung.
                     </p>
@@ -633,36 +633,36 @@
                     <!-- Google Maps / Leaflet Canvas -->
                     <div class="relative" wire:ignore>
                         <div x-ref="mapElement"
-                            class="w-full h-80 rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] z-0 bg-zinc-100">
+                            class="w-full h-80 rounded-xl border-4 border-black dark:border-zinc-700 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] z-0 bg-zinc-100 dark:bg-zinc-800">
                         </div>
                     </div>
 
                     <!-- Client-Side Geofencing Warning -->
                     <div x-show="isOutOfBounds" x-cloak
-                        class="p-4 bg-rose-100 border-3 border-black rounded-xl text-rose-700 font-black text-xs shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] space-y-1">
+                        class="p-4 bg-rose-100 dark:bg-rose-950/40 border-3 border-black dark:border-zinc-700 rounded-xl text-rose-700 dark:text-rose-400 font-black text-xs shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] space-y-1">
                         <div class="flex items-center gap-2">
-                            <x-icon name="lucide-triangle-alert" class="w-5 h-5 text-rose-600 shrink-0 stroke-[2.5]" />
-                            <span class="text-sm font-black text-rose-800 uppercase">Lokasi Di Luar Batas
+                            <x-icon name="lucide-triangle-alert" class="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 stroke-[2.5]" />
+                            <span class="text-sm font-black text-rose-800 dark:text-rose-300 uppercase">Lokasi Di Luar Batas
                                 Kecamatan!</span>
                         </div>
-                        <p class="text-xs font-bold text-rose-900 pl-7">
+                        <p class="text-xs font-bold text-rose-900 dark:text-rose-200 pl-7">
                             Titik lokasi yang Anda pilih berada di luar wilayah administratif kecamatan <span
-                                class="underline font-black text-rose-950" x-text="district"></span> Kota Bandung.
+                                class="underline font-black text-rose-950 dark:text-rose-100" x-text="district"></span> Kota Bandung.
                             Silakan geser pin kembali ke dalam area kecamatan ini atau ubah pilihan kecamatan.
                         </p>
                     </div>
 
                     @error('latitude')
                         <div
-                            class="p-3 bg-rose-100 border-3 border-black rounded-xl text-rose-700 font-black text-xs shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] flex items-center gap-2">
-                            <x-icon name="lucide-triangle-alert" class="w-5 h-5 text-rose-600 shrink-0 stroke-[2.5]" />
+                            class="p-3 bg-rose-100 dark:bg-rose-950/40 border-3 border-black dark:border-zinc-700 rounded-xl text-rose-700 dark:text-rose-400 font-black text-xs shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] flex items-center gap-2">
+                            <x-icon name="lucide-triangle-alert" class="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 stroke-[2.5]" />
                             <span>{{ $message }}</span>
                         </div>
                     @enderror
                     @error('longitude')
                         <div
-                            class="p-3 bg-rose-100 border-3 border-black rounded-xl text-rose-700 font-black text-xs shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] flex items-center gap-2">
-                            <x-icon name="lucide-triangle-alert" class="w-5 h-5 text-rose-600 shrink-0 stroke-[2.5]" />
+                            class="p-3 bg-rose-100 dark:bg-rose-950/40 border-3 border-black dark:border-zinc-700 rounded-xl text-rose-700 dark:text-rose-400 font-black text-xs shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] flex items-center gap-2">
+                            <x-icon name="lucide-triangle-alert" class="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 stroke-[2.5]" />
                             <span>{{ $message }}</span>
                         </div>
                     @enderror
@@ -671,15 +671,15 @@
 
             <!-- Seksi 3: Harga, Periode & Fasilitas -->
             <x-brutal-card class="space-y-6">
-                <div class="flex items-center gap-3 border-b-3 border-black pb-4">
+                <div class="flex items-center gap-3 border-b-3 border-black dark:border-zinc-700 pb-4">
                     <div
-                        class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                        class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black dark:border-zinc-700 font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
                         3
                     </div>
                     <div>
-                        <h2 class="text-xl font-black text-black uppercase tracking-tight">Harga, Periode Sewa &
+                        <h2 class="text-xl font-black text-black dark:text-white uppercase tracking-tight">Harga, Periode Sewa &
                             Fasilitas</h2>
-                        <p class="text-xs font-bold text-zinc-600">Tarif sewa, periode pembayaran, dan fasilitas
+                        <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400">Tarif sewa, periode pembayaran, dan fasilitas
                             pendukung yang disediakan</p>
                     </div>
                 </div>
@@ -690,26 +690,26 @@
                     $rentUnit = \App\Models\Kost::rentPeriodUnit($rent_period);
                 @endphp
                 <div class="space-y-2">
-                    <label for="rent_period" class="block text-xs font-black uppercase tracking-wider text-black">
-                        Periode Sewa Utama <span class="text-rose-600">*</span>
+                    <label for="rent_period" class="block text-xs font-black uppercase tracking-wider text-black dark:text-white">
+                        Periode Sewa Utama <span class="text-rose-600 dark:text-rose-400">*</span>
                     </label>
                     <div class="relative w-full">
                         <select id="rent_period" wire:model.live="rent_period"
-                            class="w-full bg-white border-2 border-black rounded-lg px-4 pr-10 py-3 text-sm font-black text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer appearance-none">
+                            class="w-full bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg px-4 pr-10 py-3 text-sm font-black text-black dark:text-white focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all cursor-pointer appearance-none">
                             @foreach ($rentPeriodOptions as $value => $label)
-                                <option value="{{ $value }}" class="font-bold text-sm text-black">{{ $label }}</option>
+                                <option value="{{ $value }}" class="font-bold text-sm text-black dark:text-white">{{ $label }}</option>
                             @endforeach
                         </select>
-                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-black">
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-black dark:text-white">
                             <x-icon name="lucide-chevron-down" class="w-4 h-4 stroke-[3]" />
                         </div>
                     </div>
-                    <p class="text-[11px] font-bold italic text-zinc-500">
+                    <p class="text-[11px] font-bold italic text-zinc-500 dark:text-zinc-400">
                         Periode penyewaan utama kost. Harga utama di bawah mengikuti satuan periode ini.
                     </p>
                     @error('rent_period')
                         <p
-                            class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                            class="text-xs font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border-2 border-rose-500 dark:border-rose-500/60 px-2.5 py-1 rounded-md mt-1 inline-block">
                             {{ $message }}</p>
                     @enderror
                 </div>
@@ -737,25 +737,25 @@
                             }
                         }">
                         <label for="price_monthly_display"
-                            class="block text-xs font-black uppercase tracking-wider text-black">
-                            Harga Sewa Utama <span class="text-rose-600">*</span>
+                            class="block text-xs font-black uppercase tracking-wider text-black dark:text-white">
+                            Harga Sewa Utama <span class="text-rose-600 dark:text-rose-400">*</span>
                         </label>
-                        <div class="relative rounded-lg overflow-hidden flex border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                            <div class="bg-yellow-300 border-r-2 border-black px-4 flex items-center font-black text-sm text-black shrink-0">
+                        <div class="relative rounded-lg overflow-hidden flex border-2 border-black dark:border-zinc-700 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
+                            <div class="bg-yellow-300 border-r-2 border-black dark:border-zinc-700 px-4 flex items-center font-black text-sm text-black shrink-0">
                                 Rp
                             </div>
                             <input type="text" id="price_monthly_display" inputmode="numeric"
                                 x-model="formatted"
                                 @input="onInput($event)"
                                 placeholder="1.500.000"
-                                class="w-full bg-white px-4 py-3 text-sm font-black text-black focus:outline-none focus:bg-yellow-50">
-                            <div class="bg-zinc-100 border-l-2 border-black px-4 flex items-center justify-center text-xs font-black text-black uppercase whitespace-nowrap shrink-0">
+                                class="w-full bg-white dark:bg-zinc-900 px-4 py-3 text-sm font-black text-black dark:text-white focus:outline-none focus:bg-yellow-50 dark:focus:bg-yellow-950/30">
+                            <div class="bg-zinc-100 dark:bg-zinc-800 border-l-2 border-black dark:border-zinc-700 px-4 flex items-center justify-center text-xs font-black text-black dark:text-white uppercase whitespace-nowrap shrink-0">
                                 {{ $rentUnit }}
                             </div>
                         </div>
-                        <p class="text-[11px] font-bold italic text-zinc-500">Harga utama sesuai periode yang dipilih; untuk filter pencarian dikonversi ke per bulan.</p>
+                        <p class="text-[11px] font-bold italic text-zinc-500 dark:text-zinc-400">Harga utama sesuai periode yang dipilih; untuk filter pencarian dikonversi ke per bulan.</p>
                         @error('price_monthly')
-                            <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
+                            <p class="text-xs font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border-2 border-rose-500 dark:border-rose-500/60 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -780,22 +780,22 @@
                             }
                         }">
                         <label for="price_deposit_display"
-                            class="block text-xs font-black uppercase tracking-wider text-black">
+                            class="block text-xs font-black uppercase tracking-wider text-black dark:text-white">
                             Uang Deposit (Opsional)
                         </label>
-                        <div class="relative rounded-lg overflow-hidden flex border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                            <div class="bg-yellow-300 border-r-2 border-black px-4 flex items-center font-black text-sm text-black shrink-0">
+                        <div class="relative rounded-lg overflow-hidden flex border-2 border-black dark:border-zinc-700 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
+                            <div class="bg-yellow-300 border-r-2 border-black dark:border-zinc-700 px-4 flex items-center font-black text-sm text-black shrink-0">
                                 Rp
                             </div>
                             <input type="text" id="price_deposit_display" inputmode="numeric"
                                 x-model="formatted"
                                 @input="onInput($event)"
                                 placeholder="500.000"
-                                class="w-full bg-white px-4 py-3 text-sm font-black text-black focus:outline-none focus:bg-yellow-50">
+                                class="w-full bg-white dark:bg-zinc-900 px-4 py-3 text-sm font-black text-black dark:text-white focus:outline-none focus:bg-yellow-50 dark:focus:bg-yellow-950/30">
                         </div>
-                        <p class="text-[11px] font-bold italic text-zinc-500">Uang jaminan yang dibayarkan saat masuk. <span class="text-black font-black">Dikembalikan saat keluar.</span></p>
+                        <p class="text-[11px] font-bold italic text-zinc-500 dark:text-zinc-400">Uang jaminan yang dibayarkan saat masuk. <span class="text-black dark:text-white font-black">Dikembalikan saat keluar.</span></p>
                         @error('price_deposit')
-                            <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
+                            <p class="text-xs font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border-2 border-rose-500 dark:border-rose-500/60 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
@@ -804,15 +804,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Total Kamar -->
                     <div class="space-y-2">
-                        <label for="total_rooms" class="block text-xs font-black uppercase tracking-wider text-black">
-                            Total Jumlah Kamar <span class="text-rose-600">*</span>
+                        <label for="total_rooms" class="block text-xs font-black uppercase tracking-wider text-black dark:text-white">
+                            Total Jumlah Kamar <span class="text-rose-600 dark:text-rose-400">*</span>
                         </label>
                         <input type="number" id="total_rooms" wire:model="total_rooms" placeholder="10"
                             min="0" oninput="var n = parseInt(this.value, 10); this.value = isNaN(n) ? '' : Math.max(0, n)"
-                            class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-black text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                            class="w-full bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg px-4 py-3 text-sm font-black text-black dark:text-white focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                         @error('total_rooms')
                             <p
-                                class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                                class="text-xs font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border-2 border-rose-500 dark:border-rose-500/60 px-2.5 py-1 rounded-md mt-1 inline-block">
                                 {{ $message }}</p>
                         @enderror
                     </div>
@@ -820,27 +820,27 @@
                     <!-- Kamar Tersedia -->
                     <div class="space-y-2">
                         <label for="available_rooms"
-                            class="block text-xs font-black uppercase tracking-wider text-black">
-                            Sisa Kamar Kosong <span class="text-rose-600">*</span>
+                            class="block text-xs font-black uppercase tracking-wider text-black dark:text-white">
+                            Sisa Kamar Kosong <span class="text-rose-600 dark:text-rose-400">*</span>
                         </label>
                         <input type="number" id="available_rooms" wire:model="available_rooms" placeholder="2"
                             min="0" oninput="var n = parseInt(this.value, 10); this.value = isNaN(n) ? '' : Math.max(0, n)"
-                            class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-black text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                            class="w-full bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg px-4 py-3 text-sm font-black text-black dark:text-white focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                         @error('available_rooms')
                             <p
-                                class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                                class="text-xs font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border-2 border-rose-500 dark:border-rose-500/60 px-2.5 py-1 rounded-md mt-1 inline-block">
                                 {{ $message }}</p>
                         @enderror
                     </div>
                 </div>
 
                 <!-- Harga Sewa Periode Lain (Opsional) -->
-                <div class="space-y-3 pt-2 border-t-2 border-black">
+                <div class="space-y-3 pt-2 border-t-2 border-black dark:border-zinc-700">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                        <label class="block text-xs font-black uppercase tracking-wider text-black">
-                            Harga Sewa Periode Lain <span class="text-[10px] font-bold normal-case text-zinc-500">(Opsional)</span>
+                        <label class="block text-xs font-black uppercase tracking-wider text-black dark:text-white">
+                            Harga Sewa Periode Lain <span class="text-[10px] font-bold normal-case text-zinc-500 dark:text-zinc-400">(Opsional)</span>
                         </label>
-                        <span class="text-[11px] font-bold italic text-zinc-600">
+                        <span class="text-[11px] font-bold italic text-zinc-600 dark:text-zinc-400">
                             Centang lalu isi total bayar untuk periode tersebut. Wajib diisi jika dicentang.
                         </span>
                     </div>
@@ -859,15 +859,15 @@
                                 @php $label = $extraPeriodLabels[$period]; @endphp
                                 <div
                                     @click="periods.includes('{{ $period }}') ? periods = periods.filter(p => p !== '{{ $period }}') : periods.push('{{ $period }}')"
-                                    :class="periods.includes('{{ $period }}') ? 'bg-lime-300' : 'bg-zinc-50 hover:bg-yellow-100'"
-                                    class="rounded-lg border-2 border-black p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-colors duration-300 cursor-pointer select-none">
+                                    :class="periods.includes('{{ $period }}') ? 'bg-lime-300 dark:bg-lime-500' : 'bg-zinc-50 dark:bg-zinc-900 hover:bg-yellow-100 dark:hover:bg-yellow-950/40'"
+                                    class="rounded-lg border-2 border-black dark:border-zinc-700 p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-colors duration-300 cursor-pointer select-none">
                                     <input type="checkbox" id="extra-period-{{ $period }}" value="{{ $period }}"
                                         :checked="periods.includes('{{ $period }}')" tabindex="-1" class="sr-only">
-                                    <span class="flex items-center justify-between gap-2 text-black font-black text-xs md:text-sm">
+                                    <span class="flex items-center justify-between gap-2 text-black dark:text-white font-black text-xs md:text-sm">
                                         <span>{{ $label }}</span>
                                         <span
                                             :class="periods.includes('{{ $period }}') ? 'bg-black text-lime-300' : ''"
-                                            class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black font-black text-xs shrink-0 transition-colors duration-300">
+                                            class="w-5 h-5 rounded border-2 border-black dark:border-zinc-700 bg-white flex items-center justify-center text-black font-black text-xs shrink-0 transition-colors duration-300">
                                             <x-icon name="lucide-check" class="w-3.5 h-3.5 stroke-[3]" />
                                         </span>
                                     </span>
@@ -877,15 +877,15 @@
                                         :inert="!periods.includes('{{ $period }}')">
                                         <div class="overflow-hidden min-h-0">
                                             <div class="pt-2">
-                                                <div class="relative rounded-lg overflow-hidden flex border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                                    <span class="bg-yellow-300 border-r-2 border-black px-3 flex items-center font-black text-xs text-black shrink-0">Rp</span>
+                                                <div class="relative rounded-lg overflow-hidden flex border-2 border-black dark:border-zinc-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
+                                                    <span class="bg-yellow-300 border-r-2 border-black dark:border-zinc-700 px-3 flex items-center font-black text-xs text-black shrink-0">Rp</span>
                                                     <input type="number" wire:model="extraPeriodPrices.{{ $period }}"
                                                         placeholder="Total bayar {{ strtolower($label) }}"
                                                         min="0" oninput="var n = parseInt(this.value, 10); this.value = isNaN(n) ? '' : Math.max(0, n)"
-                                                        class="w-full bg-white px-3 py-2 text-sm font-black text-black focus:outline-none focus:bg-yellow-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                                        class="w-full bg-white dark:bg-zinc-900 px-3 py-2 text-sm font-black text-black dark:text-white focus:outline-none focus:bg-yellow-50 dark:focus:bg-yellow-950/30 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                                                 </div>
                                                 @error('extraPeriodPrices.' . $period)
-                                                    <span class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</span>
+                                                    <span class="text-xs font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border-2 border-rose-500 dark:border-rose-500/60 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</span>
                                                 @enderror
                                             </div>
                                         </div>
@@ -899,15 +899,15 @@
                                 @php $label = $extraPeriodLabels[$period]; @endphp
                                 <div
                                     @click="periods.includes('{{ $period }}') ? periods = periods.filter(p => p !== '{{ $period }}') : periods.push('{{ $period }}')"
-                                    :class="periods.includes('{{ $period }}') ? 'bg-lime-300' : 'bg-zinc-50 hover:bg-yellow-100'"
-                                    class="rounded-lg border-2 border-black p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-colors duration-300 cursor-pointer select-none">
+                                    :class="periods.includes('{{ $period }}') ? 'bg-lime-300 dark:bg-lime-500' : 'bg-zinc-50 dark:bg-zinc-900 hover:bg-yellow-100 dark:hover:bg-yellow-950/40'"
+                                    class="rounded-lg border-2 border-black dark:border-zinc-700 p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-colors duration-300 cursor-pointer select-none">
                                     <input type="checkbox" id="extra-period-{{ $period }}" value="{{ $period }}"
                                         :checked="periods.includes('{{ $period }}')" tabindex="-1" class="sr-only">
-                                    <span class="flex items-center justify-between gap-2 text-black font-black text-xs md:text-sm">
+                                    <span class="flex items-center justify-between gap-2 text-black dark:text-white font-black text-xs md:text-sm">
                                         <span>{{ $label }}</span>
                                         <span
                                             :class="periods.includes('{{ $period }}') ? 'bg-black text-lime-300' : ''"
-                                            class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black font-black text-xs shrink-0 transition-colors duration-300">
+                                            class="w-5 h-5 rounded border-2 border-black dark:border-zinc-700 bg-white flex items-center justify-center text-black font-black text-xs shrink-0 transition-colors duration-300">
                                             <x-icon name="lucide-check" class="w-3.5 h-3.5 stroke-[3]" />
                                         </span>
                                     </span>
@@ -917,15 +917,15 @@
                                         :inert="!periods.includes('{{ $period }}')">
                                         <div class="overflow-hidden min-h-0">
                                             <div class="pt-2">
-                                                <div class="relative rounded-lg overflow-hidden flex border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                                    <span class="bg-yellow-300 border-r-2 border-black px-3 flex items-center font-black text-xs text-black shrink-0">Rp</span>
+                                                <div class="relative rounded-lg overflow-hidden flex border-2 border-black dark:border-zinc-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
+                                                    <span class="bg-yellow-300 border-r-2 border-black dark:border-zinc-700 px-3 flex items-center font-black text-xs text-black shrink-0">Rp</span>
                                                     <input type="number" wire:model="extraPeriodPrices.{{ $period }}"
                                                         placeholder="Total bayar {{ strtolower($label) }}"
                                                         min="0" oninput="var n = parseInt(this.value, 10); this.value = isNaN(n) ? '' : Math.max(0, n)"
-                                                        class="w-full bg-white px-3 py-2 text-sm font-black text-black focus:outline-none focus:bg-yellow-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                                        class="w-full bg-white dark:bg-zinc-900 px-3 py-2 text-sm font-black text-black dark:text-white focus:outline-none focus:bg-yellow-50 dark:focus:bg-yellow-950/30 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                                                 </div>
                                                 @error('extraPeriodPrices.' . $period)
-                                                    <span class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</span>
+                                                    <span class="text-xs font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border-2 border-rose-500 dark:border-rose-500/60 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</span>
                                                 @enderror
                                             </div>
                                         </div>
@@ -935,7 +935,7 @@
                         </div>
                     </div>
                     @error('extraPeriods')
-                        <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
+                        <p class="text-xs font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border-2 border-rose-500 dark:border-rose-500/60 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -956,12 +956,12 @@
                     <!-- Fasilitas Kamar -->
                     <div class="space-y-3">
                         <div class="flex items-center justify-between gap-2">
-                            <label class="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-black">
+                            <label class="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-black dark:text-white">
                                 <x-icon name="lucide-user" class="w-4 h-4 stroke-[2.5]" />
                                 Fasilitas Kamar
                             </label>
                             <span
-                                class="text-[10px] font-black uppercase bg-lime-200 border-2 border-black px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                                class="text-[10px] font-black uppercase bg-lime-200 dark:bg-lime-500 border-2 border-black dark:border-zinc-700 px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">
                                 {{ $combinedRoomFacilities->count() }} pilihan
                             </span>
                         </div>
@@ -972,10 +972,10 @@
                                         <input type="checkbox" wire:model="include_utilities" value="1"
                                             class="peer sr-only">
                                         <div
-                                            class="px-4 py-3 rounded-lg border-2 border-black bg-zinc-50 text-black text-xs font-black flex items-center justify-between peer-checked:bg-lime-300 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-yellow-100 transition-all">
+                                            class="px-4 py-3 rounded-lg border-2 border-black dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 text-black dark:text-white text-xs font-black flex items-center justify-between peer-checked:bg-lime-300 dark:peer-checked:bg-lime-500 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-yellow-100 dark:hover:bg-yellow-950/40 transition-all">
                                             <span>Listrik & Air</span>
                                             <span
-                                                class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs shrink-0">✓</span>
+                                                class="w-5 h-5 rounded border-2 border-black dark:border-zinc-700 bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs shrink-0">✓</span>
                                         </div>
                                     </label>
                                 @else
@@ -983,15 +983,15 @@
                                         <input type="checkbox" wire:model="selectedFacilities" value="{{ $facility->id }}"
                                             class="peer sr-only">
                                         <div
-                                            class="px-4 py-3 rounded-lg border-2 border-black bg-zinc-50 text-black text-xs font-black flex items-center justify-between peer-checked:bg-lime-300 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-yellow-100 transition-all">
+                                            class="px-4 py-3 rounded-lg border-2 border-black dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 text-black dark:text-white text-xs font-black flex items-center justify-between peer-checked:bg-lime-300 dark:peer-checked:bg-lime-500 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-yellow-100 dark:hover:bg-yellow-950/40 transition-all">
                                             <span>{{ $facility->name }}</span>
                                             <span
-                                                class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs">✓</span>
+                                                class="w-5 h-5 rounded border-2 border-black dark:border-zinc-700 bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs">✓</span>
                                         </div>
                                     </label>
                                 @endif
                             @empty
-                                <p class="text-zinc-500 font-bold text-sm col-span-full">Belum ada fasilitas kamar.</p>
+                                <p class="text-zinc-500 dark:text-zinc-400 font-bold text-sm col-span-full">Belum ada fasilitas kamar.</p>
                             @endforelse
                         </div>
 
@@ -1000,24 +1000,24 @@
                                 wire:keydown.enter.prevent="addFacility('room')"
                                 placeholder="Fasilitas kamar lainnya (kustom)..."
                                 maxlength="50"
-                                class="w-full bg-white border-2 border-black rounded-lg px-3 py-2 text-xs font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all">
+                                class="w-full bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg px-3 py-2 text-xs font-bold text-black dark:text-white focus:outline-none focus:ring-0 focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] transition-all">
                             <button type="button" wire:click="addFacility('room')"
-                                class="px-4 py-2 bg-yellow-300 hover:bg-yellow-400 text-black border-2 border-black font-black text-[10px] uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer shrink-0">
+                                class="px-4 py-2 bg-yellow-300 hover:bg-yellow-400 text-black border-2 border-black dark:border-zinc-700 font-black text-[10px] uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer shrink-0">
                                 + Tambah
                             </button>
                         </div>
                         @error('newRoomFacility')
-                            <p class="text-[10px] font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2 py-0.5 rounded-md inline-block">{{ $message }}</p>
+                            <p class="text-[10px] font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border-2 border-rose-500 dark:border-rose-500/60 px-2 py-0.5 rounded-md inline-block">{{ $message }}</p>
                         @enderror
 
                         @if(collect($customFacilities)->where('type', 'room')->count() > 0)
                             <div class="flex flex-wrap gap-2.5 mt-2.5">
                                 @foreach ($customFacilities as $index => $customItem)
                                     @if($customItem['type'] === 'room')
-                                        <span class="inline-flex items-center gap-2 px-3.5 py-2 border-2 border-black rounded-lg text-xs font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] bg-lime-200">
+                                        <span class="inline-flex items-center gap-2 px-3.5 py-2 border-2 border-black dark:border-zinc-700 rounded-lg text-xs font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] bg-lime-200 dark:bg-lime-500">
                                             {{ $customItem['name'] }}
                                             <button type="button" wire:click="removeCustomFacility({{ $index }})"
-                                                class="w-5 h-5 rounded-md bg-rose-400 hover:bg-rose-500 text-black border-2 border-black flex items-center justify-center cursor-pointer shrink-0 transition-colors shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:shadow-none"
+                                                class="w-5 h-5 rounded-md bg-rose-400 hover:bg-rose-500 text-black border-2 border-black dark:border-zinc-700 flex items-center justify-center cursor-pointer shrink-0 transition-colors shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)] active:shadow-none"
                                                 title="Hapus fasilitas">
                                                 <svg class="w-3 h-3 text-black stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -1033,12 +1033,12 @@
                     <!-- Fasilitas Umum -->
                     <div class="space-y-3">
                         <div class="flex items-center justify-between gap-2">
-                            <label class="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-black">
+                            <label class="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-black dark:text-white">
                                 <x-icon name="lucide-building-2" class="w-4 h-4 stroke-[2.5]" />
                                 Fasilitas Umum
                             </label>
                             <span
-                                class="text-[10px] font-black uppercase bg-cyan-200 border-2 border-black px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                                class="text-[10px] font-black uppercase bg-cyan-200 dark:bg-cyan-500 border-2 border-black dark:border-zinc-700 px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">
                                 {{ $buildingFacilities->count() }} pilihan
                             </span>
                         </div>
@@ -1047,15 +1047,15 @@
                                 <label class="cursor-pointer">
                                     <input type="checkbox" wire:model="selectedFacilities" value="{{ $facility->id }}"
                                         class="peer sr-only">
-                                    <div
-                                        class="px-4 py-3 rounded-lg border-2 border-black bg-zinc-50 text-black text-xs font-black flex items-center justify-between peer-checked:bg-cyan-300 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-yellow-100 transition-all">
+                                        <div
+                                            class="px-4 py-3 rounded-lg border-2 border-black dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 text-black dark:text-white text-xs font-black flex items-center justify-between peer-checked:bg-cyan-300 dark:peer-checked:bg-cyan-500 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-yellow-100 dark:hover:bg-yellow-950/40 transition-all">
                                         <span>{{ $facility->name }}</span>
                                         <span
-                                            class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs">✓</span>
+                                            class="w-5 h-5 rounded border-2 border-black dark:border-zinc-700 bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs">✓</span>
                                     </div>
                                 </label>
                             @empty
-                                <p class="text-zinc-500 font-bold text-sm col-span-full">Belum ada fasilitas umum.</p>
+                                <p class="text-zinc-500 dark:text-zinc-400 font-bold text-sm col-span-full">Belum ada fasilitas umum.</p>
                             @endforelse
                         </div>
 
@@ -1064,24 +1064,24 @@
                                 wire:keydown.enter.prevent="addFacility('building')"
                                 placeholder="Fasilitas umum lainnya (kustom)..."
                                 maxlength="50"
-                                class="w-full bg-white border-2 border-black rounded-lg px-3 py-2 text-xs font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all">
+                                class="w-full bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg px-3 py-2 text-xs font-bold text-black dark:text-white focus:outline-none focus:ring-0 focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] transition-all">
                             <button type="button" wire:click="addFacility('building')"
-                                class="px-4 py-2 bg-cyan-300 hover:bg-cyan-400 text-black border-2 border-black font-black text-[10px] uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer shrink-0">
+                                class="px-4 py-2 bg-cyan-300 hover:bg-cyan-400 text-black border-2 border-black dark:border-zinc-700 font-black text-[10px] uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer shrink-0">
                                 + Tambah
                             </button>
                         </div>
                         @error('newBuildingFacility')
-                            <p class="text-[10px] font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2 py-0.5 rounded-md inline-block">{{ $message }}</p>
+                            <p class="text-[10px] font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border-2 border-rose-500 dark:border-rose-500/60 px-2 py-0.5 rounded-md inline-block">{{ $message }}</p>
                         @enderror
 
                         @if(collect($customFacilities)->where('type', 'building')->count() > 0)
                             <div class="flex flex-wrap gap-2.5 mt-2.5">
                                 @foreach ($customFacilities as $index => $customItem)
                                     @if($customItem['type'] === 'building')
-                                        <span class="inline-flex items-center gap-2 px-3.5 py-2 border-2 border-black rounded-lg text-xs font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] bg-cyan-200">
+                                        <span class="inline-flex items-center gap-2 px-3.5 py-2 border-2 border-black dark:border-zinc-700 rounded-lg text-xs font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] bg-cyan-200 dark:bg-cyan-500">
                                             {{ $customItem['name'] }}
                                             <button type="button" wire:click="removeCustomFacility({{ $index }})"
-                                                class="w-5 h-5 rounded-md bg-rose-400 hover:bg-rose-500 text-black border-2 border-black flex items-center justify-center cursor-pointer shrink-0 transition-colors shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:shadow-none"
+                                                class="w-5 h-5 rounded-md bg-rose-400 hover:bg-rose-500 text-black border-2 border-black dark:border-zinc-700 flex items-center justify-center cursor-pointer shrink-0 transition-colors shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)] active:shadow-none"
                                                 title="Hapus fasilitas">
                                                 <svg class="w-3 h-3 text-black stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -1097,12 +1097,12 @@
                     <!-- Fasilitas Parkir -->
                     <div class="space-y-3">
                         <div class="flex items-center justify-between gap-2">
-                            <label class="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-black">
+                            <label class="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-black dark:text-white">
                                 <x-icon name="lucide-square-parking" class="w-4 h-4 stroke-[2.5]" />
                                 Fasilitas Parkir
                             </label>
                             <span
-                                class="text-[10px] font-black uppercase bg-yellow-200 border-2 border-black px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                                class="text-[10px] font-black uppercase bg-yellow-200 dark:bg-yellow-500 border-2 border-black dark:border-zinc-700 px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">
                                 {{ $parkingFacilities->count() }} pilihan
                             </span>
                         </div>
@@ -1111,22 +1111,22 @@
                                 <label class="cursor-pointer">
                                     <input type="checkbox" wire:model="selectedFacilities" value="{{ $facility->id }}"
                                         class="peer sr-only">
-                                    <div
-                                        class="px-4 py-3 rounded-lg border-2 border-black bg-zinc-50 text-black text-xs font-black flex items-center justify-between peer-checked:bg-yellow-300 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-yellow-100 transition-all">
+                                        <div
+                                            class="px-4 py-3 rounded-lg border-2 border-black dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 text-black dark:text-white text-xs font-black flex items-center justify-between peer-checked:bg-yellow-300 dark:peer-checked:bg-yellow-500 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-yellow-100 dark:hover:bg-yellow-950/40 transition-all">
                                         <span>{{ $facility->name }}</span>
                                         <span
-                                            class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs">✓</span>
+                                            class="w-5 h-5 rounded border-2 border-black dark:border-zinc-700 bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs">✓</span>
                                     </div>
                                 </label>
                             @empty
-                                <p class="text-zinc-500 font-bold text-sm col-span-full">Belum ada fasilitas parkir.</p>
+                                <p class="text-zinc-500 dark:text-zinc-400 font-bold text-sm col-span-full">Belum ada fasilitas parkir.</p>
                             @endforelse
                         </div>
                     </div>
 
                     @error('selectedFacilities')
                         <p
-                            class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                            class="text-xs font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border-2 border-rose-500 dark:border-rose-500/60 px-2.5 py-1 rounded-md mt-1 inline-block">
                             {{ $message }}</p>
                     @enderror
                 </div>
@@ -1134,21 +1134,21 @@
 
             <!-- Seksi 4: Aturan Kost -->
             <x-brutal-card class="space-y-6">
-                <div class="flex items-center gap-3 border-b-3 border-black pb-4">
+                <div class="flex items-center gap-3 border-b-3 border-black dark:border-zinc-700 pb-4">
                     <div
-                        class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                        class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black dark:border-zinc-700 font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
                         4
                     </div>
                     <div>
-                        <h2 class="text-xl font-black text-black uppercase tracking-tight">Aturan Kost</h2>
-                        <p class="text-xs font-bold text-zinc-600">Aturan yang berlaku agar calon penghuni tahu
+                        <h2 class="text-xl font-black text-black dark:text-white uppercase tracking-tight">Aturan Kost</h2>
+                        <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400">Aturan yang berlaku agar calon penghuni tahu
                             sejak awal</p>
                     </div>
                 </div>
 
                 <!-- Checkbox Master Aturan -->
                 <div class="space-y-3">
-                    <label class="block text-xs font-black uppercase tracking-wider text-black">
+                    <label class="block text-xs font-black uppercase tracking-wider text-black dark:text-white">
                         Aturan yang Berlaku (Pilih yang sesuai)
                     </label>
 
@@ -1158,24 +1158,24 @@
                                 <input type="checkbox" wire:model="selectedRules" value="{{ $rule->id }}"
                                     class="peer sr-only">
                                 <div
-                                    class="px-4 py-3 rounded-lg border-2 border-black bg-zinc-50 text-black text-xs font-black flex items-center justify-between peer-checked:bg-cyan-200 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-yellow-100 transition-all">
+                                    class="px-4 py-3 rounded-lg border-2 border-black dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 text-black dark:text-white text-xs font-black flex items-center justify-between peer-checked:bg-cyan-200 dark:peer-checked:bg-cyan-500 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-yellow-100 dark:hover:bg-yellow-950/40 transition-all">
                                     <span>{{ $rule->name }}</span>
                                     <span
-                                        class="w-5 h-5 rounded border-2 border-black bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs">✓</span>
+                                        class="w-5 h-5 rounded border-2 border-black dark:border-zinc-700 bg-white flex items-center justify-center text-black opacity-0 peer-checked:opacity-100 font-black text-xs">✓</span>
                                 </div>
                             </label>
                         @endforeach
                     </div>
                     @error('selectedRules')
                         <p
-                            class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                            class="text-xs font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border-2 border-rose-500 dark:border-rose-500/60 px-2.5 py-1 rounded-md mt-1 inline-block">
                             {{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Aturan Lainnya (Custom) -->
-                <div class="space-y-3 pt-2 border-t-2 border-black">
-                    <label class="block text-xs font-black uppercase tracking-wider text-black">
+                <div class="space-y-3 pt-2 border-t-2 border-black dark:border-zinc-700">
+                    <label class="block text-xs font-black uppercase tracking-wider text-black dark:text-white">
                         Aturan Lainnya (Kustom)
                     </label>
 
@@ -1184,16 +1184,16 @@
                             wire:keydown.enter.prevent="addRule"
                             placeholder="Ketik aturan baru jika tidak ada di atas..."
                             maxlength="50"
-                            class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
+                            class="w-full bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg px-4 py-3 text-sm font-bold text-black dark:text-white focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all">
                         <button type="button" wire:click="addRule"
-                            class="px-5 py-3 bg-cyan-300 hover:bg-cyan-200 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer shrink-0">
+                            class="px-5 py-3 bg-cyan-300 hover:bg-cyan-200 text-black border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer shrink-0">
                             + Tambah
                         </button>
                     </div>
 
                     @error('newRule')
                         <p
-                            class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">
+                            class="text-xs font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border-2 border-rose-500 dark:border-rose-500/60 px-2.5 py-1 rounded-md mt-1 inline-block">
                             {{ $message }}</p>
                     @enderror
 
@@ -1201,10 +1201,10 @@
                         <div class="flex flex-wrap gap-2.5 mt-2.5">
                             @foreach ($customRules as $index => $customName)
                                 <span
-                                    class="inline-flex items-center gap-2 px-3.5 py-2 bg-cyan-200 border-2 border-black rounded-lg text-xs font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                    class="inline-flex items-center gap-2 px-3.5 py-2 bg-cyan-200 dark:bg-cyan-500 border-2 border-black dark:border-zinc-700 rounded-lg text-xs font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
                                     {{ $customName }}
                                     <button type="button" wire:click="removeCustomRule({{ $index }})"
-                                        class="w-5 h-5 rounded-md bg-rose-400 hover:bg-rose-500 text-black border-2 border-black flex items-center justify-center cursor-pointer shrink-0 transition-colors shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:shadow-none"
+                                        class="w-5 h-5 rounded-md bg-rose-400 hover:bg-rose-500 text-black border-2 border-black dark:border-zinc-700 flex items-center justify-center cursor-pointer shrink-0 transition-colors shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)] active:shadow-none"
                                         title="Hapus aturan">
                                         <svg class="w-3 h-3 text-black stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -1219,14 +1219,14 @@
 
             <!-- Seksi 5: Sekitar Kost -->
             <x-brutal-card class="space-y-6">
-                <div class="flex items-center gap-3 border-b-3 border-black pb-4">
+                <div class="flex items-center gap-3 border-b-3 border-black dark:border-zinc-700 pb-4">
                     <div
-                        class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                        class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black dark:border-zinc-700 font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
                         5
                     </div>
                     <div>
-                        <h2 class="text-xl font-black text-black uppercase tracking-tight">Sekitar Kost & Landmark</h2>
-                        <p class="text-xs font-bold text-zinc-600">Informasi titik terdekat dan lokasi strategis lingkungan sekitar</p>
+                        <h2 class="text-xl font-black text-black dark:text-white uppercase tracking-tight">Sekitar Kost & Landmark</h2>
+                        <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400">Informasi titik terdekat dan lokasi strategis lingkungan sekitar</p>
                     </div>
                 </div>
 
@@ -1313,7 +1313,7 @@
                         }
                     }"
                     @landmarks-added.window="showDetectMsg($event.detail.added > 0 ? $event.detail.added + ' titik terdekat berhasil ditambahkan!' : 'Semua titik terdekat sudah ditambahkan atau batas 12 tercapai.', $event.detail.added > 0 ? 'ok' : 'warn')">
-                    <label class="block text-xs font-black uppercase tracking-wider text-black">
+                    <label class="block text-xs font-black uppercase tracking-wider text-black dark:text-white">
                         Titik Terdekat / Landmark (Opsional - Bisa Banyak)
                     </label>
                     <div class="flex gap-2">
@@ -1321,15 +1321,15 @@
                             wire:keydown.enter.prevent="addLandmark"
                             placeholder="Contoh: 300m dari UNPAD, 500m RS Borromeus, Dekat Tol..."
                             maxlength="80"
-                            class="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
+                            class="w-full bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg px-4 py-3 text-sm font-bold text-black dark:text-white focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all">
                         <button type="button" wire:click="addLandmark"
-                            class="px-5 py-3 bg-yellow-300 hover:bg-yellow-400 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer shrink-0">
+                            class="px-5 py-3 bg-yellow-300 hover:bg-yellow-400 text-black border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer shrink-0">
                             + Tambah
                         </button>
                     </div>
                     <div class="flex flex-wrap items-center gap-2.5">
                         <button type="button" @click="detect()" :disabled="detecting"
-                            class="px-5 py-3 bg-emerald-300 hover:bg-emerald-400 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer shrink-0 disabled:opacity-60 disabled:cursor-wait inline-flex items-center gap-2">
+                            class="px-5 py-3 bg-emerald-300 hover:bg-emerald-400 text-black border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer shrink-0 disabled:opacity-60 disabled:cursor-wait inline-flex items-center gap-2">
                             <svg x-show="detecting" class="animate-spin w-3.5 h-3.5 text-black shrink-0" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
@@ -1339,28 +1339,28 @@
                         </button>
                         <p x-show="detectMsg !== ''" x-cloak x-text="detectMsg"
                             class="text-xs font-black px-2.5 py-1 rounded-md border-2"
-                            :class="detectType === 'ok' ? 'bg-emerald-100 text-emerald-700 border-emerald-500' : 'bg-amber-100 text-amber-700 border-amber-500'"></p>
+                            :class="detectType === 'ok' ? 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-500 dark:border-emerald-500/60' : 'bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-500 dark:border-amber-500/60'"></p>
                     </div>
-                    <p class="text-[11px] font-bold italic text-zinc-500">
+                    <p class="text-[11px] font-bold italic text-zinc-500 dark:text-zinc-400">
                         Masukkan lokasi strategis terdekat satu per satu, atau klik "Deteksi Otomatis" untuk mengisi
                         titik terdekat dalam 500m (minimarket, rumah makan, tempat ibadah, kampus, rumah sakit, gym, ATM, transportasi, tol).
                     </p>
                     @error('newLandmark')
-                        <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
+                        <p class="text-xs font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border-2 border-rose-500 dark:border-rose-500/60 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
                     @enderror
                     @error('nearby_landmarks')
-                        <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
+                        <p class="text-xs font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border-2 border-rose-500 dark:border-rose-500/60 px-2.5 py-1 rounded-md mt-1 inline-block">{{ $message }}</p>
                     @enderror
 
                     @if (count($landmarkList) > 0)
                         <div class="flex flex-wrap gap-2.5 mt-2.5">
                             @foreach ($landmarkList as $index => $landmarkItem)
                                 <span
-                                    class="inline-flex items-center gap-2 px-3.5 py-2 bg-yellow-200 border-2 border-black rounded-lg text-xs font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                    class="inline-flex items-center gap-2 px-3.5 py-2 bg-yellow-200 dark:bg-yellow-500 border-2 border-black dark:border-zinc-700 rounded-lg text-xs font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
                                     <x-icon name="lucide-map-pin" class="w-3.5 h-3.5 text-black stroke-[2.5] shrink-0" />
                                     <span>{{ $landmarkItem }}</span>
                                     <button type="button" wire:click="removeLandmark({{ $index }})"
-                                        class="w-5 h-5 rounded-md bg-rose-400 hover:bg-rose-500 text-black border-2 border-black flex items-center justify-center cursor-pointer shrink-0 transition-colors shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:shadow-none"
+                                        class="w-5 h-5 rounded-md bg-rose-400 hover:bg-rose-500 text-black border-2 border-black dark:border-zinc-700 flex items-center justify-center cursor-pointer shrink-0 transition-colors shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)] active:shadow-none"
                                         title="Hapus landmark">
                                         <svg class="w-3 h-3 text-black stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -1375,14 +1375,14 @@
 
             <!-- Seksi 6: Foto Utama Properti -->
             <x-brutal-card class="space-y-6">
-                <div class="flex items-center gap-3 border-b-3 border-black pb-4">
+                <div class="flex items-center gap-3 border-b-3 border-black dark:border-zinc-700 pb-4">
                     <div
-                        class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                        class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black dark:border-zinc-700 font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
                         6
                     </div>
                     <div>
-                        <h2 class="text-xl font-black text-black uppercase tracking-tight">Foto Utama Properti</h2>
-                        <p class="text-xs font-bold text-zinc-600">Unggah foto fasad atau kamar terbaik properti kost
+                        <h2 class="text-xl font-black text-black dark:text-white uppercase tracking-tight">Foto Utama Properti</h2>
+                        <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400">Unggah foto fasad atau kamar terbaik properti kost
                             Anda. Klik "Jadikan Foto Utama" untuk memilih sampul.</p>
                     </div>
                 </div>
@@ -1413,27 +1413,27 @@
                     x-on:livewire-upload-finish="finishUpload()" x-on:livewire-upload-error="errorUpload()"
                     x-on:livewire-upload-progress="updateProgress($event.detail.progress)" class="space-y-4">
                     <div
-                        class="relative border-3 border-dashed border-black rounded-xl p-8 text-center bg-yellow-100/70 hover:bg-yellow-200/80 transition-all cursor-pointer group shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                        class="relative border-3 border-dashed border-black dark:border-zinc-700 rounded-xl p-8 text-center bg-yellow-100/70 dark:bg-yellow-950/40 hover:bg-yellow-200/80 dark:hover:bg-yellow-950/50 transition-all cursor-pointer group shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]">
                         <input type="file" wire:model="photos" multiple accept="image/*"
                             class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
 
                         <div class="space-y-3 pointer-events-none">
                             <div
-                                class="w-14 h-14 rounded-lg bg-white border-2 border-black flex items-center justify-center mx-auto text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] group-hover:scale-110 transition-transform">
+                                class="w-14 h-14 rounded-lg bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 flex items-center justify-center mx-auto text-black dark:text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] group-hover:scale-110 transition-transform">
                                 <x-icon name="lucide-image" class="w-7 h-7 stroke-[2]" />
                             </div>
 
                             <div>
-                                <p class="text-sm font-black text-black uppercase">
+                                <p class="text-sm font-black text-black dark:text-white uppercase">
                                     Klik atau seret file foto ke area ini
                                 </p>
                                 <p
-                                    class="text-xs font-black text-black mt-2 bg-black text-yellow-300 inline-block px-3 py-1 rounded border border-black">
+                                    class="text-xs font-black text-black mt-2 bg-black text-yellow-300 inline-block px-3 py-1 rounded border border-black dark:border-zinc-700">
                                     WAJIB UNGGAH MINIMAL 4 FOTO, MAKSIMAL 10 FOTO (MAKS 2MB/FOTO)
                                 </p>
-                                <p class="text-xs font-bold text-zinc-600 mt-1.5">Format: JPG, PNG, WEBP</p>
+                                <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400 mt-1.5">Format: JPG, PNG, WEBP</p>
                                 <span
-                                    class="inline-block mt-3 bg-yellow-400 text-black font-black text-xs uppercase px-4 py-2 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] group-hover:bg-yellow-300 transition-all rounded">
+                                    class="inline-block mt-3 bg-yellow-400 text-black font-black text-xs uppercase px-4 py-2 border-2 border-black dark:border-zinc-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] group-hover:bg-yellow-300 transition-all rounded">
                                     Pilih File Foto
                                 </span>
                             </div>
@@ -1445,23 +1445,23 @@
                         $photoTotal = $isEdit ? count($existingPhotos) + count($photos) : count($photos);
                     @endphp
                     <div x-show="isUploading || {{ $photoTotal > 0 ? 'true' : 'false' }}" x-cloak
-                        class="bg-lime-100 border-3 border-black p-4 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200">
+                        class="bg-lime-100 dark:bg-lime-950/40 border-3 border-black dark:border-zinc-700 p-4 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] transition-all duration-200">
                         <!-- State 1: Upload Progress in Track -->
-                        <div x-show="isUploading" class="space-y-2.5 font-black text-black">
+                        <div x-show="isUploading" class="space-y-2.5 font-black text-black dark:text-white">
                             <div class="flex items-center justify-between text-xs uppercase">
                                 <span class="flex items-center gap-2">
                                     <x-icon name="lucide-loader-circle" class="animate-spin h-4 w-4 text-black" />
                                     <span>Mengunggah Foto...</span>
                                 </span>
                                 <span x-text="progress + '%'"
-                                    class="bg-yellow-300 border-2 border-black px-2.5 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] text-xs font-black">0%</span>
+                                    class="bg-yellow-300 border-2 border-black dark:border-zinc-700 px-2.5 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)] text-xs font-black">0%</span>
                             </div>
 
                             <!-- Progress Track -->
                             <div
-                                class="w-full bg-white border-2 border-black rounded-lg h-6 p-0.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden">
+                                class="w-full bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg h-6 p-0.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] relative overflow-hidden">
                                 <!-- Progress Fill -->
-                                <div class="bg-lime-400 border-r-2 border-black h-full transition-all duration-300 ease-out rounded-sm"
+                                <div class="bg-lime-400 border-r-2 border-black dark:border-zinc-700 h-full transition-all duration-300 ease-out rounded-sm"
                                     :style="'width: ' + progress + '%'"></div>
                             </div>
                         </div>
@@ -1469,44 +1469,44 @@
                         <!-- State 2: Upload Complete & Photo Preview -->
                         @if ($photoTotal > 0)
                             <div class="space-y-4">
-                                <div class="flex items-center justify-between border-b-2 border-black pb-2">
-                                    <div class="text-xs font-black text-black uppercase flex items-center gap-2" wire:key="photo-preview-header">
+                                <div class="flex items-center justify-between border-b-2 border-black dark:border-zinc-700 pb-2">
+                                    <div class="text-xs font-black text-black dark:text-white uppercase flex items-center gap-2" wire:key="photo-preview-header">
                                         Preview Foto
                                         <span
-                                            class="transition-colors duration-300 px-2 py-0.5 rounded border-2 border-black text-xs font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] {{ $photoTotal < 4 ? 'bg-rose-300 text-black' : ($photoTotal > 10 ? 'bg-rose-400 text-black' : 'bg-lime-300 text-black') }}">
+                                            class="transition-colors duration-300 px-2 py-0.5 rounded border-2 border-black dark:border-zinc-700 text-xs font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] {{ $photoTotal < 4 ? 'bg-rose-300 dark:bg-rose-500 text-black' : ($photoTotal > 10 ? 'bg-rose-400 dark:bg-rose-500 text-black' : 'bg-lime-300 dark:bg-lime-500 text-black') }}">
                                             {{ $photoTotal }}/10
                                         </span>
                                         <div class="relative flex items-center min-h-[24px]">
                                             @if ($photoTotal < 4)
                                                 <span wire:key="kurang"
-                                                    class="text-[10px] font-black text-rose-600 bg-rose-100 border border-rose-400 px-1.5 py-0.5 rounded uppercase transition-all duration-300">Kurang
+                                                    class="text-[10px] font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border border-rose-400 px-1.5 py-0.5 rounded uppercase transition-all duration-300">Kurang
                                                     {{ 4 - $photoTotal }} foto lagi</span>
                                             @elseif($photoTotal > 10)
                                                 <span wire:key="lebih"
-                                                    class="text-[10px] font-black text-rose-600 bg-rose-100 border border-rose-400 px-1.5 py-0.5 rounded uppercase transition-all duration-300">Melebihi
+                                                    class="text-[10px] font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border border-rose-400 px-1.5 py-0.5 rounded uppercase transition-all duration-300">Melebihi
                                                     batas maksimum!</span>
                                             @else
                                                 <span wire:key="valid"
-                                                    class="text-[10px] font-black text-lime-700 bg-lime-100 border border-lime-500 px-1.5 py-0.5 rounded uppercase transition-all duration-300 inline-flex items-center gap-1">
-                                                    <x-icon name="lucide-check" class="w-3 h-3 text-lime-700 stroke-[3]" />
+                                                    class="text-[10px] font-black text-lime-700 dark:text-lime-300 bg-lime-100 dark:bg-lime-950/40 border border-lime-500 px-1.5 py-0.5 rounded uppercase transition-all duration-300 inline-flex items-center gap-1">
+                                                    <x-icon name="lucide-check" class="w-3 h-3 text-lime-700 dark:text-lime-300 stroke-[3]" />
                                                     Jumlah valid</span>
                                             @endif
                                         </div>
                                     </div>
                                     @error('photos')
                                         <span
-                                            class="text-xs font-bold text-rose-500 bg-rose-100 border-2 border-black px-2 py-0.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">{{ $message }}</span>
+                                            class="text-xs font-bold text-rose-500 dark:text-rose-300 bg-rose-100 dark:bg-rose-950/40 border-2 border-black dark:border-zinc-700 px-2 py-0.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">{{ $message }}</span>
                                     @enderror
                                 </div>
 
                                 @if ($isEdit && count($existingPhotos) > 0)
                                     <div class="space-y-2">
-                                        <p class="text-[11px] font-black uppercase tracking-wider text-zinc-600">
+                                        <p class="text-[11px] font-black uppercase tracking-wider text-zinc-600 dark:text-zinc-400">
                                             Foto Tersimpan</p>
                                         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                                             @foreach ($existingPhotos as $img)
                                                 <div
-                                                    class="relative group aspect-[4/3] rounded-lg border-3 border-black overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-zinc-200 {{ $primaryPhotoId === $img['id'] ? 'ring-4 ring-yellow-400' : '' }}">
+                                                    class="relative group aspect-[4/3] rounded-lg border-3 border-black dark:border-zinc-700 overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] bg-zinc-200 dark:bg-zinc-800 {{ $primaryPhotoId === $img['id'] ? 'ring-4 ring-yellow-400' : '' }}">
                                                     <img src="{{ $img['url'] }}"
                                                         alt="Foto Kost"
                                                         class="w-full h-full object-cover">
@@ -1514,7 +1514,7 @@
                                                     <!-- Remove Button -->
                                                     <button type="button"
                                                         wire:click="removeExistingPhoto({{ $img['id'] }})"
-                                                        class="absolute top-2 right-2 w-7 h-7 bg-rose-400 hover:bg-rose-300 border-2 border-black rounded text-black font-black text-[10px] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none z-20"
+                                                        class="absolute top-2 right-2 w-7 h-7 bg-rose-400 hover:bg-rose-300 border-2 border-black dark:border-zinc-700 rounded text-black font-black text-[10px] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none z-20"
                                                         title="Hapus Foto">
                                                         &#x2715;
                                                     </button>
@@ -1522,13 +1522,13 @@
                                                     <!-- Primary / Set Primary -->
                                                     @if ($primaryPhotoId === $img['id'])
                                                         <div
-                                                            class="absolute bottom-2 left-2 bg-yellow-400 text-black text-[9px] font-black uppercase px-2 py-0.5 border-2 border-black rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] pointer-events-none">
+                                                            class="absolute bottom-2 left-2 bg-yellow-400 text-black text-[9px] font-black uppercase px-2 py-0.5 border-2 border-black dark:border-zinc-700 rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] pointer-events-none">
                                                             Foto Utama
                                                         </div>
                                                     @else
                                                         <button type="button"
                                                             wire:click="setExistingPrimary({{ $img['id'] }})"
-                                                            class="absolute bottom-2 left-2 bg-white text-black text-[9px] font-black uppercase px-2 py-0.5 border-2 border-black rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] opacity-0 group-hover:opacity-100 transition-all cursor-pointer z-20">
+                                                            class="absolute bottom-2 left-2 bg-white dark:bg-zinc-900 text-black dark:text-white text-[9px] font-black uppercase px-2 py-0.5 border-2 border-black dark:border-zinc-700 rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] opacity-0 group-hover:opacity-100 transition-all cursor-pointer z-20">
                                                             Jadikan Utama
                                                         </button>
                                                     @endif
@@ -1541,20 +1541,20 @@
                                 @if (count($photos) > 0)
                                     <div class="space-y-2">
                                         @if ($isEdit)
-                                            <p class="text-[11px] font-black uppercase tracking-wider text-zinc-600">
+                                            <p class="text-[11px] font-black uppercase tracking-wider text-zinc-600 dark:text-zinc-400">
                                                 Foto Baru</p>
                                         @endif
                                         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                                             @foreach ($photos as $index => $photo)
                                                 <div
-                                                    class="relative group aspect-[4/3] rounded-lg border-3 border-black overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-zinc-200">
+                                                    class="relative group aspect-[4/3] rounded-lg border-3 border-black dark:border-zinc-700 overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] bg-zinc-200 dark:bg-zinc-800">
                                                     <img src="{{ $photo->temporaryUrl() }}"
                                                         alt="Preview Foto {{ $index + 1 }}"
                                                         class="w-full h-full object-cover">
 
                                                     <!-- Remove Button -->
                                                     <button type="button" wire:click="removePhoto({{ $index }})"
-                                                        class="absolute top-2 right-2 w-7 h-7 bg-rose-400 hover:bg-rose-300 border-2 border-black rounded text-black font-black text-[10px] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none z-20"
+                                                        class="absolute top-2 right-2 w-7 h-7 bg-rose-400 hover:bg-rose-300 border-2 border-black dark:border-zinc-700 rounded text-black font-black text-[10px] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none z-20"
                                                         title="Hapus Foto">
                                                         &#x2715;
                                                     </button>
@@ -1562,18 +1562,18 @@
                                                     <!-- Primary Badge / Set Primary -->
                                                     @if (!$isEdit && $index === 0)
                                                         <div
-                                                            class="absolute bottom-2 left-2 bg-yellow-400 text-black text-[9px] font-black uppercase px-2 py-0.5 border-2 border-black rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] pointer-events-none">
+                                                            class="absolute bottom-2 left-2 bg-yellow-400 text-black text-[9px] font-black uppercase px-2 py-0.5 border-2 border-black dark:border-zinc-700 rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] pointer-events-none">
                                                             Foto Utama
                                                         </div>
                                                     @elseif($isEdit && $primaryPhotoId === null && $index === 0)
                                                         <div
-                                                            class="absolute bottom-2 left-2 bg-yellow-400 text-black text-[9px] font-black uppercase px-2 py-0.5 border-2 border-black rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] pointer-events-none">
+                                                            class="absolute bottom-2 left-2 bg-yellow-400 text-black text-[9px] font-black uppercase px-2 py-0.5 border-2 border-black dark:border-zinc-700 rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] pointer-events-none">
                                                             Foto Utama
                                                         </div>
                                                     @else
                                                         <button type="button"
                                                             wire:click="setPrimaryPhoto({{ $index }})"
-                                                            class="absolute bottom-2 left-2 bg-white text-black text-[9px] font-black uppercase px-2 py-0.5 border-2 border-black rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] opacity-0 group-hover:opacity-100 transition-all cursor-pointer z-20"
+                                                            class="absolute bottom-2 left-2 bg-white dark:bg-zinc-900 text-black dark:text-white text-[9px] font-black uppercase px-2 py-0.5 border-2 border-black dark:border-zinc-700 rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] opacity-0 group-hover:opacity-100 transition-all cursor-pointer z-20"
                                                             title="Jadikan Foto Utama">
                                                             Jadikan Utama
                                                         </button>
@@ -1587,7 +1587,7 @@
                                 @foreach ($photos as $index => $photo)
                                     @error("photos.{$index}")
                                         <span
-                                            class="block text-[10px] font-bold text-rose-500 bg-rose-100 border-2 border-black px-2 py-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] mt-1">Foto
+                                            class="block text-[10px] font-bold text-rose-500 dark:text-rose-300 bg-rose-100 dark:bg-rose-950/40 border-2 border-black dark:border-zinc-700 px-2 py-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] mt-1">Foto
                                             ke-{{ $index + 1 }}: {{ $message }}</span>
                                     @enderror
                                 @endforeach
@@ -1604,33 +1604,33 @@
                 $ownershipRejection = $isEdit ? $kost->ownership_rejection_note : null;
             @endphp
             <x-brutal-card class="space-y-6">
-                <div class="flex items-center gap-3 border-b-3 border-black pb-4">
+                <div class="flex items-center gap-3 border-b-3 border-black dark:border-zinc-700 pb-4">
                     <div
-                        class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                        class="w-10 h-10 rounded bg-black text-yellow-300 border-2 border-black dark:border-zinc-700 font-black text-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
                         7
                     </div>
                     <div>
-                        <h2 class="flex items-center gap-2 text-xl font-black text-black uppercase tracking-tight">
+                        <h2 class="flex items-center gap-2 text-xl font-black text-black dark:text-white uppercase tracking-tight">
                             <span>Verifikasi Kepemilikan</span>
-                            <span class="text-[10px] px-2 py-0.5 bg-cyan-300 border-2 border-black rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">Opsional</span>
+                            <span class="text-[10px] px-2 py-0.5 bg-cyan-300 border-2 border-black dark:border-zinc-700 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">Opsional</span>
                         </h2>
-                        <p class="text-xs font-bold text-zinc-600">Sukarela — dapatkan badge "Terverifikasi" untuk meningkatkan kepercayaan calon penghuni. Kost tetap dapat ditayangkan tanpa dokumen ini.</p>
+                        <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400">Sukarela — dapatkan badge "Terverifikasi" untuk meningkatkan kepercayaan calon penghuni. Kost tetap dapat ditayangkan tanpa dokumen ini.</p>
                     </div>
                 </div>
 
                 <!-- Penjelasan & Privasi -->
-                <div class="p-4 bg-zinc-100 border-2 border-black rounded-xl space-y-2">
-                    <p class="text-xs font-black text-black uppercase flex items-center gap-2">
+                <div class="p-4 bg-zinc-100 dark:bg-zinc-800 border-2 border-black dark:border-zinc-700 rounded-xl space-y-2">
+                    <p class="text-xs font-black text-black dark:text-white uppercase flex items-center gap-2">
                         <x-icon name="lucide-shield-check" class="w-4 h-4 text-black stroke-[2.5] shrink-0" />
                         Mengapa dokumen ini diperlukan?
                     </p>
-                    <p class="text-xs font-bold text-zinc-700 leading-relaxed">
+                    <p class="text-xs font-bold text-zinc-700 dark:text-zinc-300 leading-relaxed">
                         Dokumen berikut digunakan untuk memverifikasi keaslian kost dan status Anda sebagai pemilik/pengelola
                         secara sukarela. Setelah diverifikasi, properti Anda akan mendapatkan badge
-                        <span class="font-black text-black">"Terverifikasi"</span> sebagai tanda kepercayaan bagi calon penghuni.
+                        <span class="font-black text-black dark:text-white">"Terverifikasi"</span> sebagai tanda kepercayaan bagi calon penghuni.
                     </p>
-                    <p class="text-xs font-bold text-zinc-700 leading-relaxed flex items-start gap-1.5">
-                        <x-icon name="lucide-lock-keyhole" class="w-4 h-4 text-zinc-600 stroke-[2] shrink-0 mt-0.5" />
+                    <p class="text-xs font-bold text-zinc-700 dark:text-zinc-300 leading-relaxed flex items-start gap-1.5">
+                        <x-icon name="lucide-lock-keyhole" class="w-4 h-4 text-zinc-600 dark:text-zinc-400 stroke-[2] shrink-0 mt-0.5" />
                         <span>
                             Dokumen disimpan secara <span class="font-black">rahasia dan terenkripsi akses</span>, hanya dapat
                             dilihat oleh tim admin KostBandung untuk keperluan verifikasi, dan tidak pernah ditampilkan kepada publik.
@@ -1639,37 +1639,37 @@
                 </div>
 
                 <!-- 7a. Verifikasi Identitas Pemilik (KTP) -->
-                <div class="space-y-3 pt-2 border-t-2 border-black">
+                <div class="space-y-3 pt-2 border-t-2 border-black dark:border-zinc-700">
                     <div class="flex items-center justify-between gap-2">
-                        <label class="block text-xs font-black uppercase tracking-wider text-black flex items-center gap-2">
+                        <label class="block text-xs font-black uppercase tracking-wider text-black dark:text-white flex items-center gap-2">
                             <x-icon name="lucide-id-card" class="w-4 h-4 stroke-[2.5] shrink-0" />
                             Verifikasi Identitas Pemilik (KTP)
                         </label>
-                        <span class="text-[10px] font-bold italic text-zinc-500">Akun &middot; sekali unggah, berlaku untuk semua kost Anda</span>
+                        <span class="text-[10px] font-bold italic text-zinc-500 dark:text-zinc-400">Akun &middot; sekali unggah, berlaku untuk semua kost Anda</span>
                     </div>
 
                     @if ($identityVerified)
-                        <div class="p-4 bg-emerald-100 border-2 border-black rounded-xl flex items-center gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                            <div class="w-10 h-10 rounded bg-emerald-400 border-2 border-black flex items-center justify-center shrink-0">
+                        <div class="p-4 bg-emerald-100 dark:bg-emerald-950/40 border-2 border-black dark:border-zinc-700 rounded-xl flex items-center gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
+                            <div class="w-10 h-10 rounded bg-emerald-400 border-2 border-black dark:border-zinc-700 flex items-center justify-center shrink-0">
                                 <x-icon name="lucide-badge-check" class="w-5 h-5 text-black stroke-[2.5]" />
                             </div>
                             <div>
-                                <p class="text-xs font-black text-black uppercase">Identitas Anda Telah Terverifikasi</p>
-                                <p class="text-xs font-bold text-emerald-800">KTP pemilik telah disetujui oleh tim KostBandung. Tidak perlu mengunggah ulang.</p>
+                                <p class="text-xs font-black text-black dark:text-white uppercase">Identitas Anda Telah Terverifikasi</p>
+                                <p class="text-xs font-bold text-emerald-800 dark:text-emerald-300">KTP pemilik telah disetujui oleh tim KostBandung. Tidak perlu mengunggah ulang.</p>
                             </div>
                         </div>
                     @else
-                        <div class="p-4 bg-yellow-100 border-2 border-black rounded-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                            <p class="text-xs font-bold text-zinc-700 leading-relaxed flex items-start gap-1.5">
+                        <div class="p-4 bg-yellow-100 dark:bg-yellow-950/40 border-2 border-black dark:border-zinc-700 rounded-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
+                            <p class="text-xs font-bold text-zinc-700 dark:text-zinc-300 leading-relaxed flex items-start gap-1.5">
                                 <x-icon name="lucide-info" class="w-4 h-4 text-black stroke-[2.5] shrink-0 mt-0.5" />
                                 <span>
                                     Upload foto KTP dilakukan di halaman
-                                    <span class="font-black text-black">Profil</span>, bukan di form ini. Dokumen
+                                    <span class="font-black text-black dark:text-white">Profil</span>, bukan di form ini. Dokumen
                                     disimpan rahasia, hanya admin yang dapat melihatnya (sesuai UU PDP).
                                 </span>
                             </p>
                             <a href="{{ route('profile.show') }}"
-                                class="inline-flex items-center justify-center gap-1.5 bg-lime-400 hover:bg-lime-300 text-black border-2 border-black font-black text-xs uppercase px-4 py-2.5 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg shrink-0">
+                                class="inline-flex items-center justify-center gap-1.5 bg-lime-400 hover:bg-lime-300 text-black border-2 border-black dark:border-zinc-700 font-black text-xs uppercase px-4 py-2.5 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg shrink-0">
                                 <x-icon name="lucide-id-card" class="w-4 h-4 stroke-[2.5]" />
                                 Kelola di Profil
                             </a>
@@ -1678,67 +1678,67 @@
                 </div>
 
                 <!-- 7b. Bukti Kepemilikan Properti -->
-                <div class="space-y-3 pt-2 border-t-2 border-black" x-data="{ showDeleteOwnership: false }">
+                <div class="space-y-3 pt-2 border-t-2 border-black dark:border-zinc-700" x-data="{ showDeleteOwnership: false }">
                     <div class="flex items-center justify-between gap-2">
-                        <label class="block text-xs font-black uppercase tracking-wider text-black flex items-center gap-2">
+                        <label class="block text-xs font-black uppercase tracking-wider text-black dark:text-white flex items-center gap-2">
                             <x-icon name="lucide-file-text" class="w-4 h-4 stroke-[2.5] shrink-0" />
                             Bukti Kepemilikan Properti
                         </label>
-                        <span class="text-[10px] font-bold italic text-zinc-500">Opsional &middot; diunggah untuk setiap kost</span>
+                        <span class="text-[10px] font-bold italic text-zinc-500 dark:text-zinc-400">Opsional &middot; diunggah untuk setiap kost</span>
                     </div>
 
                     @if (isset($ownershipDocDeleted) && $ownershipDocDeleted)
-                        <div class="p-3 bg-lime-100 border-2 border-black rounded-xl flex items-center gap-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                        <div class="p-3 bg-lime-100 dark:bg-lime-950/40 border-2 border-black dark:border-zinc-700 rounded-xl flex items-center gap-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
                             <x-icon name="lucide-circle-check" class="w-4 h-4 text-black stroke-[2.5] shrink-0" />
-                            <p class="text-xs font-bold text-zinc-700">
+                            <p class="text-xs font-bold text-zinc-700 dark:text-zinc-300">
                                 Dokumen kepemilikan berhasil dihapus. Silakan unggah ulang dokumen yang sesuai jika diperlukan.
                             </p>
                         </div>
                     @endif
 
                     @if ($ownershipStatus === 'verified')
-                        <div class="p-4 bg-emerald-100 border-2 border-black rounded-xl flex items-center gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                            <div class="w-10 h-10 rounded bg-emerald-400 border-2 border-black flex items-center justify-center shrink-0">
+                        <div class="p-4 bg-emerald-100 dark:bg-emerald-950/40 border-2 border-black dark:border-zinc-700 rounded-xl flex items-center gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
+                            <div class="w-10 h-10 rounded bg-emerald-400 border-2 border-black dark:border-zinc-700 flex items-center justify-center shrink-0">
                                 <x-icon name="lucide-badge-check" class="w-5 h-5 text-black stroke-[2.5]" />
                             </div>
                             <div>
-                                <p class="text-xs font-black text-black uppercase">Kepemilikan Properti Terverifikasi</p>
-                                <p class="text-xs font-bold text-emerald-800">Bukti kepemilikan kost ini telah disetujui. Badge "Terverifikasi" aktif di halaman publik.</p>
+                                <p class="text-xs font-black text-black dark:text-white uppercase">Kepemilikan Properti Terverifikasi</p>
+                                <p class="text-xs font-bold text-emerald-800 dark:text-emerald-300">Bukti kepemilikan kost ini telah disetujui. Badge "Terverifikasi" aktif di halaman publik.</p>
                             </div>
                             <button type="button" @click="showDeleteOwnership = true"
-                                class="ml-auto shrink-0 inline-flex items-center gap-1.5 bg-rose-500 hover:bg-rose-600 text-white border-2 border-black font-black text-[10px] uppercase px-3 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all rounded cursor-pointer">
+                                class="ml-auto shrink-0 inline-flex items-center gap-1.5 bg-rose-500 hover:bg-rose-600 text-white border-2 border-black dark:border-zinc-700 font-black text-[10px] uppercase px-3 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all rounded cursor-pointer">
                                 <x-icon name="lucide-trash-2" class="w-3.5 h-3.5 stroke-[2.5]" />
                                 Hapus
                             </button>
                         </div>
                     @else
                         @if ($ownershipStatus === 'pending')
-                            <div class="p-4 bg-amber-100 border-2 border-black rounded-xl flex items-center gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                                <div class="w-10 h-10 rounded bg-amber-400 border-2 border-black flex items-center justify-center shrink-0">
+                            <div class="p-4 bg-amber-100 dark:bg-amber-950/40 border-2 border-black dark:border-zinc-700 rounded-xl flex items-center gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
+                                <div class="w-10 h-10 rounded bg-amber-400 border-2 border-black dark:border-zinc-700 flex items-center justify-center shrink-0">
                                     <x-icon name="lucide-hourglass" class="w-5 h-5 text-black stroke-[2.5]" />
                                 </div>
                                 <div>
-                                    <p class="text-xs font-black text-black uppercase">Menunggu Verifikasi Admin</p>
-                                    <p class="text-xs font-bold text-amber-800">Dokumen kepemilikan kost ini sedang ditinjau.</p>
+                                    <p class="text-xs font-black text-black dark:text-white uppercase">Menunggu Verifikasi Admin</p>
+                                    <p class="text-xs font-bold text-amber-800 dark:text-amber-300">Dokumen kepemilikan kost ini sedang ditinjau.</p>
                                 </div>
                                 <button type="button" @click="showDeleteOwnership = true"
-                                    class="ml-auto shrink-0 inline-flex items-center gap-1.5 bg-rose-500 hover:bg-rose-600 text-white border-2 border-black font-black text-[10px] uppercase px-3 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all rounded cursor-pointer">
+                                    class="ml-auto shrink-0 inline-flex items-center gap-1.5 bg-rose-500 hover:bg-rose-600 text-white border-2 border-black dark:border-zinc-700 font-black text-[10px] uppercase px-3 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all rounded cursor-pointer">
                                     <x-icon name="lucide-trash-2" class="w-3.5 h-3.5 stroke-[2.5]" />
                                     Hapus
                                 </button>
                             </div>
                         @elseif ($ownershipStatus === 'rejected' && $ownershipRejection)
-                            <div class="p-4 bg-rose-100 border-2 border-black rounded-xl flex items-start gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                                <div class="w-10 h-10 rounded bg-rose-400 border-2 border-black flex items-center justify-center shrink-0">
+                            <div class="p-4 bg-rose-100 dark:bg-rose-950/40 border-2 border-black dark:border-zinc-700 rounded-xl flex items-start gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
+                                <div class="w-10 h-10 rounded bg-rose-400 border-2 border-black dark:border-zinc-700 flex items-center justify-center shrink-0">
                                     <x-icon name="lucide-x-circle" class="w-5 h-5 text-black stroke-[2.5]" />
                                 </div>
                                 <div class="space-y-1">
-                                    <p class="text-xs font-black text-black uppercase">Dokumen Kepemilikan Ditolak</p>
-                                    <p class="text-xs font-bold text-rose-800">Alasan: {{ $ownershipRejection }}</p>
-                                    <p class="text-xs font-bold text-zinc-700">Silakan unggah ulang dokumen yang sesuai di bawah ini.</p>
+                                    <p class="text-xs font-black text-black dark:text-white uppercase">Dokumen Kepemilikan Ditolak</p>
+                                    <p class="text-xs font-bold text-rose-800 dark:text-rose-300">Alasan: {{ $ownershipRejection }}</p>
+                                    <p class="text-xs font-bold text-zinc-700 dark:text-zinc-300">Silakan unggah ulang dokumen yang sesuai di bawah ini.</p>
                                 </div>
                                 <button type="button" @click="showDeleteOwnership = true"
-                                    class="ml-auto shrink-0 inline-flex items-center gap-1.5 bg-rose-500 hover:bg-rose-600 text-white border-2 border-black font-black text-[10px] uppercase px-3 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all rounded cursor-pointer">
+                                    class="ml-auto shrink-0 inline-flex items-center gap-1.5 bg-rose-500 hover:bg-rose-600 text-white border-2 border-black dark:border-zinc-700 font-black text-[10px] uppercase px-3 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all rounded cursor-pointer">
                                     <x-icon name="lucide-trash-2" class="w-3.5 h-3.5 stroke-[2.5]" />
                                     Hapus
                                 </button>
@@ -1747,25 +1747,25 @@
                     @endif
 
                         <div class="space-y-2">
-                            <label for="ownership_doc_type" class="block text-xs font-black uppercase tracking-wider text-black">
+                            <label for="ownership_doc_type" class="block text-xs font-black uppercase tracking-wider text-black dark:text-white">
                                 Jenis Dokumen
                             </label>
                             <div class="relative w-full">
                                 <select id="ownership_doc_type" wire:model="ownership_doc_type"
-                                    class="w-full bg-white border-2 border-black rounded-lg px-4 pr-10 py-3 text-sm font-black text-black focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer appearance-none">
-                                    <option value="" disabled class="font-bold text-sm text-black">-- Pilih Jenis Dokumen --</option>
+                                    class="w-full bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg px-4 pr-10 py-3 text-sm font-black text-black dark:text-white focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all cursor-pointer appearance-none">
+                                    <option value="" disabled class="font-bold text-sm text-black dark:text-white">-- Pilih Jenis Dokumen --</option>
                                     @foreach (\App\Models\Kost::ownershipDocTypeLabels() as $value => $label)
-                                        <option value="{{ $value }}" class="font-bold text-sm text-black">{{ $label }}</option>
+                                        <option value="{{ $value }}" class="font-bold text-sm text-black dark:text-white">{{ $label }}</option>
                                     @endforeach
                                 </select>
-                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-black">
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-black dark:text-white">
                                     <x-icon name="lucide-chevron-down" class="w-4 h-4 stroke-[3]" />
                                 </div>
                             </div>
                             @error('ownership_doc_type')
-                                <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md inline-block">{{ $message }}</p>
+                                <p class="text-xs font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border-2 border-rose-500 dark:border-rose-500/60 px-2.5 py-1 rounded-md inline-block">{{ $message }}</p>
                             @enderror
-                            <p class="text-[11px] font-bold italic text-zinc-500">
+                            <p class="text-[11px] font-bold italic text-zinc-500 dark:text-zinc-400">
                                 Untuk pengelola/penyewa-ulang: gunakan "Surat Kuasa dari Pemilik". Pastikan nama pada dokumen sesuai dengan nama pemilik.
                             </p>
                         </div>
@@ -1776,46 +1776,46 @@
                             x-on:livewire-upload-finish="uploading = false; progress = 100"
                             x-on:livewire-upload-error="uploading = false; progress = 0"
                             x-on:livewire-upload-progress="progress = $event.detail.progress">
-                            <div class="relative border-3 border-dashed border-black rounded-xl p-6 text-center bg-zinc-50 hover:bg-lime-100/70 transition-all cursor-pointer shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                            <div class="relative border-3 border-dashed border-black dark:border-zinc-700 rounded-xl p-6 text-center bg-zinc-50 dark:bg-zinc-900 hover:bg-lime-100/70 dark:hover:bg-lime-950/40 transition-all cursor-pointer shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
                                 <input type="file" wire:model="ownership_doc" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
                                 <div class="space-y-2 pointer-events-none">
-                                    <div class="w-11 h-11 rounded-lg bg-white border-2 border-black flex items-center justify-center mx-auto text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                    <div class="w-11 h-11 rounded-lg bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 flex items-center justify-center mx-auto text-black dark:text-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
                                         <x-icon name="lucide-file-up" class="w-5 h-5 stroke-[2]" />
                                     </div>
-                                    <p class="text-xs font-black text-black uppercase">
+                                    <p class="text-xs font-black text-black dark:text-white uppercase">
                                         {{ $ownershipStatus === 'rejected' ? 'Unggah Ulang Dokumen Kepemilikan' : 'Klik atau seret dokumen ke area ini' }}
                                     </p>
-                                    <p class="text-xs font-bold text-zinc-600">Format: JPG, PNG, WEBP &middot; Maks 2MB</p>
+                                    <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400">Format: JPG, PNG, WEBP &middot; Maks 2MB</p>
                                 </div>
                             </div>
 
                             @if ($ownership_doc)
-                                <div class="bg-lime-100 border-3 border-black p-3 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] space-y-2 relative">
+                                <div class="bg-lime-100 dark:bg-lime-950/40 border-3 border-black dark:border-zinc-700 p-3 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] space-y-2 relative">
                                     <div class="flex items-center justify-between gap-2">
-                                        <p class="text-[10px] font-black uppercase text-black flex items-center gap-2">
+                                        <p class="text-[10px] font-black uppercase text-black dark:text-white flex items-center gap-2">
                                             <x-icon name="lucide-file-check" class="w-3.5 h-3.5 stroke-[2.5]" />
                                             Pratinjau Dokumen Terpilih
                                         </p>
                                         <button type="button" wire:click="$set('ownership_doc', null)"
-                                            class="inline-flex items-center gap-1 bg-rose-500 hover:bg-rose-600 text-white border-2 border-black font-black text-[10px] uppercase px-2 py-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all rounded cursor-pointer shrink-0">
+                                            class="inline-flex items-center gap-1 bg-rose-500 hover:bg-rose-600 text-white border-2 border-black dark:border-zinc-700 font-black text-[10px] uppercase px-2 py-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all rounded cursor-pointer shrink-0">
                                             <x-icon name="lucide-trash-2" class="w-3 h-3 stroke-[3]" />
                                             Batal
                                         </button>
                                     </div>
                                     <img src="{{ $ownership_doc->temporaryUrl() }}" alt="Pratinjau Dokumen Kepemilikan"
-                                        class="w-full max-h-52 object-contain rounded-lg border-2 border-black bg-white">
+                                        class="w-full max-h-52 object-contain rounded-lg border-2 border-black dark:border-zinc-700 bg-white dark:bg-zinc-900">
                                 </div>
                             @endif
 
                             <div x-show="uploading" x-cloak class="space-y-1.5">
-                                <div class="w-full bg-white border-2 border-black rounded-lg h-5 p-0.5 relative overflow-hidden">
-                                    <div class="bg-lime-400 border-r-2 border-black h-full transition-all duration-300" :style="'width: ' + progress + '%'"></div>
+                                <div class="w-full bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg h-5 p-0.5 relative overflow-hidden">
+                                    <div class="bg-lime-400 border-r-2 border-black dark:border-zinc-700 h-full transition-all duration-300" :style="'width: ' + progress + '%'"></div>
                                 </div>
-                                <p class="text-[10px] font-black uppercase text-zinc-600" x-text="'Mengunggah ' + progress + '%'"></p>
+                                <p class="text-[10px] font-black uppercase text-zinc-600 dark:text-zinc-400" x-text="'Mengunggah ' + progress + '%'"></p>
                             </div>
 
                             @error('ownership_doc')
-                                <p class="text-xs font-black text-rose-600 bg-rose-100 border-2 border-rose-500 px-2.5 py-1 rounded-md inline-block">{{ $message }}</p>
+                                <p class="text-xs font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border-2 border-rose-500 dark:border-rose-500/60 px-2.5 py-1 rounded-md inline-block">{{ $message }}</p>
                             @enderror
                         </div>
 
@@ -1827,22 +1827,22 @@
                             x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
                             x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 scale-100"
                             x-transition:leave-end="opacity-0 scale-95"
-                            class="relative w-full max-w-md bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-2xl p-6">
+                            class="relative w-full max-w-md bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.25)] rounded-2xl p-6">
                             <div class="flex items-start justify-between gap-4">
-                                <div class="w-12 h-12 bg-rose-500 border-2 border-black rounded-lg flex items-center justify-center text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] shrink-0">
+                                <div class="w-12 h-12 bg-rose-500 border-2 border-black dark:border-zinc-700 rounded-lg flex items-center justify-center text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] shrink-0">
                                     <x-icon name="lucide-trash-2" class="w-6 h-6 stroke-[2.5]" />
                                 </div>
                                 <button type="button" @click="showDeleteOwnership = false"
-                                    class="text-black hover:bg-black/10 p-1.5 rounded font-black cursor-pointer transition-colors">
+                                    class="text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/10 p-1.5 rounded font-black cursor-pointer transition-colors">
                                     <x-icon name="lucide-x" class="w-4 h-4 stroke-[2.5]" />
                                 </button>
                             </div>
 
-                            <h3 class="text-xl font-black text-black uppercase tracking-tight mt-4">Hapus Dokumen Kepemilikan?</h3>
-                            <p class="text-xs font-bold text-zinc-600 mt-2 leading-relaxed">
+                            <h3 class="text-xl font-black text-black dark:text-white uppercase tracking-tight mt-4">Hapus Dokumen Kepemilikan?</h3>
+                            <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400 mt-2 leading-relaxed">
                                 @if ($ownershipStatus === 'verified')
                                     Dokumen kepemilikan kost ini akan dihapus dari sistem dan status verifikasi dikembalikan ke
-                                    <span class="bg-rose-100 border-b-2 border-rose-400 px-1 font-black">"Belum Diverifikasi"</span>.
+                                    <span class="bg-rose-100 dark:bg-rose-950/40 border-b-2 border-rose-400 px-1 font-black">"Belum Diverifikasi"</span>.
                                 @else
                                     Data pengajuan kepemilikan kost ini akan dibatalkan dan dihapus dari sistem.
                                 @endif
@@ -1850,16 +1850,16 @@
                             </p>
 
                             @if ($ownershipStatus === 'verified')
-                                <div class="mt-4 border-2 border-black bg-rose-50 p-3 rounded-lg flex items-start gap-2">
-                                    <x-icon name="lucide-triangle-alert" class="w-4 h-4 text-rose-700 stroke-[2.5] shrink-0 mt-0.5" />
-                                    <p class="text-[11px] font-black uppercase text-rose-700 leading-relaxed">
+                                <div class="mt-4 border-2 border-black dark:border-zinc-700 bg-rose-50 dark:bg-rose-950/40 p-3 rounded-lg flex items-start gap-2">
+                                    <x-icon name="lucide-triangle-alert" class="w-4 h-4 text-rose-700 dark:text-rose-400 stroke-[2.5] shrink-0 mt-0.5" />
+                                    <p class="text-[11px] font-black uppercase text-rose-700 dark:text-rose-400 leading-relaxed">
                                         Badge "Terverifikasi" di kost ini akan hilang hingga dokumen baru disetujui admin.
                                     </p>
                                 </div>
                             @else
-                                <div class="mt-4 border-2 border-black bg-amber-50 p-3 rounded-lg flex items-start gap-2">
-                                    <x-icon name="lucide-info" class="w-4 h-4 text-amber-700 stroke-[2.5] shrink-0 mt-0.5" />
-                                    <p class="text-[11px] font-black uppercase text-amber-700 leading-relaxed">
+                                <div class="mt-4 border-2 border-black dark:border-zinc-700 bg-amber-50 dark:bg-amber-950/40 p-3 rounded-lg flex items-start gap-2">
+                                    <x-icon name="lucide-info" class="w-4 h-4 text-amber-700 dark:text-amber-400 stroke-[2.5] shrink-0 mt-0.5" />
+                                    <p class="text-[11px] font-black uppercase text-amber-700 dark:text-amber-400 leading-relaxed">
                                         Data pengajuan kepemilikan saat ini akan dihapus dari sistem.
                                     </p>
                                 </div>
@@ -1867,11 +1867,11 @@
 
                             <div class="flex items-center gap-2 mt-6">
                                 <button type="button" @click="showDeleteOwnership = false"
-                                    class="flex-1 h-10 px-3 bg-zinc-100 hover:bg-zinc-200 text-black border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer">
+                                    class="flex-1 h-10 px-3 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-black dark:text-white border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer">
                                     Batal
                                 </button>
                                 <button type="button" wire:click="deleteOwnershipDocument" @click="showDeleteOwnership = false"
-                                    class="flex-1 h-10 px-3 bg-rose-500 hover:bg-rose-600 text-white border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer">
+                                    class="flex-1 h-10 px-3 bg-rose-500 hover:bg-rose-600 text-white border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer">
                                     Ya, Hapus Dokumen
                                 </button>
                             </div>

@@ -224,7 +224,7 @@
 
         <!-- Verification Review List -->
         @if($activeTab === 'verification')
-            <div x-data="{
+            <div class="space-y-8" x-data="{
                 rejectOpen: false,
                 rejectType: '',
                 rejectId: null,
@@ -335,7 +335,7 @@
                 </div>
 
                 <!-- Pending Ownership Documents -->
-                <div class="space-y-4 pt-2">
+                <div class="space-y-4">
                     <div class="flex items-center justify-between gap-3">
                         <h2 class="text-2xl font-black text-black dark:text-white uppercase tracking-tight flex items-center gap-2">
                             <x-icon name="lucide-file-text" class="w-6 h-6 stroke-[2.5]" />

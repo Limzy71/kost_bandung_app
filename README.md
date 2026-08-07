@@ -59,7 +59,3 @@ Dokumen requirement tersedia di folder `docs/`:
 - Input teks listing disanitasi saat penyimpanan.
 - Dokumen verifikasi disimpan pada disk privat.
 - Rate limiter diterapkan pada register, pembuatan kost, dan chat.
-
-## Lisensi
-
-Project ini menggunakan basis Laravel starter kit. Sesuaikan lisensi repository sesuai kebutuhan pemilik project.

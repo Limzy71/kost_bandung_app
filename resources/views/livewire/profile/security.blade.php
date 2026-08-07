@@ -144,6 +144,26 @@
                                 </button>
                             </div>
                         </div>
+                    @elseif ($showRecoveryStep)
+                        <div class="space-y-4">
+                            @if (filled($recoveryCodes))
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 p-4 bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg font-mono text-xs font-bold text-black dark:text-white">
+                                    @foreach($recoveryCodes as $code)
+                                        <div class="p-1.5 bg-zinc-100 dark:bg-zinc-800 rounded border border-zinc-300 dark:border-zinc-700 select-all text-center">
+                                            {{ $code }}
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <p class="text-[11px] font-bold text-zinc-500 dark:text-zinc-400 leading-normal">
+                                    Setiap kode pemulihan hanya dapat digunakan satu kali. Simpan kode ini baik-baik.
+                                </p>
+                            @endif
+
+                            <button type="button" wire:click="closeModal"
+                                class="w-full py-3 bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer">
+                                Selesai
+                            </button>
+                        </div>
                     @else
                         @error('setupData')
                             <p class="text-xs font-black text-rose-500 uppercase">{{ $message }}</p>

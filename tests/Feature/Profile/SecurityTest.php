@@ -1,10 +1,12 @@
 <?php
 
 use App\Livewire\Profile\Security;
+use App\Livewire\Profile\TwoFactor\RecoveryCodes;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Fortify\Features;
 use Livewire\Livewire;
+use PragmaRX\Google2FA\Google2FA;
 
 beforeEach(function () {
     $this->skipUnlessFortifyHas(Features::twoFactorAuthentication());
@@ -133,4 +135,136 @@ test('correct password must be provided to update password', function () {
         ->call('updatePassword');
 
     $response->assertHasErrors(['current_password']);
+});
+
+test('two factor is not enabled until a valid otp code is confirmed', function () {
+    $secret = app(Google2FA::class)->generateSecretKey();
+
+    $user = User::factory()->create(['email_verified_at' => now()]);
+    $user->forceFill([
+        'two_factor_secret' => encrypt($secret),
+        'two_factor_recovery_codes' => encrypt(json_encode(['code1', 'code2'])),
+        'two_factor_confirmed_at' => null,
+    ])->save();
+
+    $this->actingAs($user)
+        ->withSession(['auth.password_confirmed_at' => time()]);
+
+    $component = Livewire::test(Security::class);
+
+    $component->assertSet('twoFactorEnabled', false)
+        ->call('enable')
+        ->assertSet('showModal', true)
+        ->call('showVerificationIfNecessary')
+        ->assertSet('showVerificationStep', true)
+        ->assertSet('showRecoveryStep', false);
+});
+
+test('wrong otp code shows indonesian error and keeps modal in verification step', function () {
+    $secret = app(Google2FA::class)->generateSecretKey();
+
+    $user = User::factory()->create(['email_verified_at' => now()]);
+    $user->forceFill([
+        'two_factor_secret' => encrypt($secret),
+        'two_factor_recovery_codes' => encrypt(json_encode(['code1', 'code2'])),
+        'two_factor_confirmed_at' => null,
+    ])->save();
+
+    $this->actingAs($user)
+        ->withSession(['auth.password_confirmed_at' => time()]);
+
+    $component = Livewire::test(Security::class)
+        ->call('enable')
+        ->call('showVerificationIfNecessary')
+        ->set('code', '000000')
+        ->call('confirmTwoFactor');
+
+    $component->assertHasErrors(['code'])
+        ->assertSet('showVerificationStep', true)
+        ->assertSet('showRecoveryStep', false)
+        ->assertSet('twoFactorEnabled', false)
+        ->assertSee('Kode 2FA yang Anda masukkan salah');
+
+    expect($user->refresh()->two_factor_confirmed_at)->toBeNull();
+});
+
+test('correct otp code enables two factor and reveals recovery codes in the modal', function () {
+    $user = User::factory()->create(['email_verified_at' => now()]);
+
+    $this->actingAs($user)
+        ->withSession(['auth.password_confirmed_at' => time()]);
+
+    $component = Livewire::test(Security::class)->call('enable');
+
+    $secret = decrypt($user->refresh()->two_factor_secret);
+
+    $component->call('showVerificationIfNecessary')
+        ->set('code', app(Google2FA::class)->getCurrentOtp($secret))
+        ->call('confirmTwoFactor');
+
+    $component->assertHasNoErrors()
+        ->assertSet('twoFactorEnabled', true)
+        ->assertSet('showVerificationStep', false)
+        ->assertSet('showRecoveryStep', true)
+        ->assertCount('recoveryCodes', 8);
+
+    $this->assertCount(8, json_decode(decrypt($user->refresh()->two_factor_recovery_codes), true));
+    $this->assertNotNull($user->refresh()->two_factor_confirmed_at);
+});
+
+test('two factor secret and recovery codes are stored encrypted', function () {
+    $user = User::factory()->create(['email_verified_at' => now()]);
+
+    $this->actingAs($user)
+        ->withSession(['auth.password_confirmed_at' => time()]);
+
+    Livewire::test(Security::class)->call('enable');
+
+    $fresh = $user->refresh();
+
+    expect($fresh->two_factor_secret)->not->toBeNull();
+    expect($fresh->two_factor_recovery_codes)->not->toBeNull();
+
+    $plainSecret = decrypt($fresh->two_factor_secret);
+    $plainCodes = decrypt($fresh->two_factor_recovery_codes);
+
+    expect($fresh->two_factor_secret)->not->toContain($plainSecret);
+    expect($fresh->two_factor_recovery_codes)->not->toContain($plainCodes);
+    expect(is_array(json_decode($plainCodes, true)))->toBeTrue();
+});
+
+test('disabling two factor requires password confirmation', function () {
+    $secret = app(Google2FA::class)->generateSecretKey();
+
+    $user = User::factory()->create(['email_verified_at' => now()]);
+    $user->forceFill([
+        'two_factor_secret' => encrypt($secret),
+        'two_factor_recovery_codes' => encrypt(json_encode(['code1', 'code2'])),
+        'two_factor_confirmed_at' => now(),
+    ])->save();
+
+    $this->actingAs($user);
+
+    $component = Livewire::test(Security::class)->call('disable');
+
+    $component->assertRedirect(route('password.confirm'));
+    $this->assertNotNull($user->refresh()->two_factor_confirmed_at);
+});
+
+test('regenerating recovery codes requires password confirmation and stores intended url', function () {
+    $secret = app(Google2FA::class)->generateSecretKey();
+
+    $user = User::factory()->create(['email_verified_at' => now()]);
+    $user->forceFill([
+        'two_factor_secret' => encrypt($secret),
+        'two_factor_recovery_codes' => encrypt(json_encode(['code1', 'code2'])),
+        'two_factor_confirmed_at' => now(),
+    ])->save();
+
+    $this->actingAs($user);
+
+    $component = Livewire::test(RecoveryCodes::class)->call('regenerateRecoveryCodes');
+
+    $component->assertRedirect(route('password.confirm'));
+    expect(session('url.intended'))->toBe(route('profile.show'));
 });

@@ -46,8 +46,16 @@ class Security extends Component
 
     public bool $showVerificationStep = false;
 
-    #[Validate('required|string|size:6', onUpdate: false)]
+    public bool $showRecoveryStep = false;
+
+    #[Validate('required|digits:6', onUpdate: false)]
     public string $code = '';
+
+    /**
+     * @var list<string>
+     */
+    #[Locked]
+    public array $recoveryCodes = [];
 
     #[Locked]
     public bool $canManagePasskeys;
@@ -241,6 +249,24 @@ class Security extends Component
     }
 
     /**
+     * Load the two-factor recovery codes for the user.
+     */
+    private function loadRecoveryCodes(): void
+    {
+        $user = auth()->user();
+
+        if ($user?->hasEnabledTwoFactorAuthentication() && $user->two_factor_recovery_codes) {
+            try {
+                $this->recoveryCodes = json_decode(decrypt($user->two_factor_recovery_codes), true);
+            } catch (Exception) {
+                $this->addError('code', 'Gagal memuat kode pemulihan.');
+
+                $this->recoveryCodes = [];
+            }
+        }
+    }
+
+    /**
      * Show the two-factor verification step if necessary.
      */
     public function showVerificationIfNecessary(): void
@@ -261,13 +287,27 @@ class Security extends Component
      */
     public function confirmTwoFactor(ConfirmTwoFactorAuthentication $confirmTwoFactorAuthentication): void
     {
-        $this->validate();
+        $this->validate(rules: null, messages: [
+            'code.required' => 'Kode 2FA wajib diisi.',
+            'code.digits' => 'Kode 2FA harus terdiri dari 6 digit angka.',
+        ]);
 
-        $confirmTwoFactorAuthentication(auth()->user(), $this->code);
+        try {
+            $confirmTwoFactorAuthentication(auth()->user(), $this->code);
+        } catch (ValidationException) {
+            $this->addError('code', 'Kode 2FA yang Anda masukkan salah. Silakan periksa kembali dan coba lagi.');
 
-        $this->closeModal();
+            return;
+        }
 
+        $this->loadRecoveryCodes();
+
+        $this->reset('code', 'showVerificationStep');
+
+        $this->showRecoveryStep = true;
         $this->twoFactorEnabled = true;
+
+        $this->resetErrorBag();
 
         $this->dispatch('show-toast', message: 'Autentikasi dua faktor berhasil diaktifkan.');
     }
@@ -307,8 +347,10 @@ class Security extends Component
             'code',
             'manualSetupKey',
             'qrCodeSvg',
+            'recoveryCodes',
             'showModal',
             'showVerificationStep',
+            'showRecoveryStep',
         );
 
         $this->resetErrorBag();
@@ -326,19 +368,27 @@ class Security extends Component
     #[Computed]
     public function modalConfig(): array
     {
-        if ($this->twoFactorEnabled) {
-            return [
-                'title' => 'Autentikasi Dua Faktor Aktif',
-                'description' => 'Autentikasi dua faktor telah aktif. Pindai kode QR atau masukkan kunci penyiapan manual di aplikasi otentikator Anda.',
-                'buttonText' => 'Tutup',
-            ];
-        }
-
         if ($this->showVerificationStep) {
             return [
                 'title' => 'Verifikasi Kode Otentikasi',
                 'description' => 'Masukkan 6 digit kode dari aplikasi otentikator Anda.',
                 'buttonText' => 'Lanjutkan',
+            ];
+        }
+
+        if ($this->showRecoveryStep) {
+            return [
+                'title' => '2FA Berhasil Diaktifkan',
+                'description' => 'Simpan kode pemulihan berikut di tempat yang aman. Setiap kode hanya dapat digunakan satu kali untuk masuk jika Anda kehilangan akses ke aplikasi otentikator.',
+                'buttonText' => 'Selesai',
+            ];
+        }
+
+        if ($this->twoFactorEnabled) {
+            return [
+                'title' => 'Autentikasi Dua Faktor Aktif',
+                'description' => 'Autentikasi dua faktor telah aktif. Pindai kode QR atau masukkan kunci penyiapan manual di aplikasi otentikator Anda.',
+                'buttonText' => 'Tutup',
             ];
         }
 

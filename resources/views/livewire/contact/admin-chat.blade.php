@@ -69,11 +69,11 @@
             <!-- Left: Conversation List -->
             <div class="lg:col-span-2 space-y-4">
                 <div class="flex flex-wrap items-center gap-2">
-                    <button wire:click="$set('tab', 'active')" class="px-4 py-2 border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg {{ $tab === 'active' ? 'bg-emerald-400 text-black' : 'bg-white dark:bg-zinc-900 text-black dark:text-white hover:bg-emerald-100 dark:hover:bg-emerald-950/40' }}">
-                        <x-icon name="lucide-message-circle" class="w-3.5 h-3.5 inline -mt-0.5 mr-1 {{ $tab === 'active' ? 'fill-black' : '' }}" />
+                    <button wire:click="$set('tab', 'active')" class="px-4 py-2 border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg {{ $tab === 'active' ? 'bg-emerald-400 text-black dark:text-white' : 'bg-white dark:bg-zinc-900 text-black dark:text-white hover:bg-emerald-100 dark:hover:bg-emerald-950/40' }}">
+                        <x-icon name="lucide-message-circle" class="w-3.5 h-3.5 inline -mt-0.5 mr-1 {{ $tab === 'active' ? 'fill-black dark:fill-white text-black dark:text-white' : '' }}" />
                         Percakapan Aktif
                     </button>
-                    <button wire:click="$set('tab', 'history')" class="px-4 py-2 border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg {{ $tab === 'history' ? 'bg-zinc-400 text-black' : 'bg-white dark:bg-zinc-900 text-black dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800' }}">
+                    <button wire:click="$set('tab', 'history')" class="px-4 py-2 border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg {{ $tab === 'history' ? 'bg-zinc-400 text-black dark:text-white' : 'bg-white dark:bg-zinc-900 text-black dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800' }}">
                         <x-icon name="lucide-history" class="w-3.5 h-3.5 inline -mt-0.5 mr-1" />
                         Riwayat
                     </button>
@@ -99,17 +99,12 @@
                                 </div>
                                 <span class="text-[10px] font-black text-zinc-500 dark:text-zinc-400 uppercase shrink-0">{{ $conversation->created_at->diffForHumans() }}</span>
                             </div>
-                            <p class="text-sm font-black text-black mt-2 line-clamp-2">
-                                {{ $conversation->latestMessage?->body ?? 'Belum ada pesan.' }}
-                            </p>
-                        </button>
-                    @empty
                         <div class="bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 rounded-2xl p-10 text-center shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] space-y-3">
-                            <div class="w-16 h-16 bg-emerald-200 border-3 border-black dark:border-zinc-700 rounded-2xl flex items-center justify-center mx-auto shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
-                                <x-icon name="lucide-message-circle" class="w-8 h-8 text-black stroke-[2.5]" />
+                            <div class="w-16 h-16 bg-emerald-200 dark:bg-emerald-950/50 border-3 border-black dark:border-zinc-700 rounded-2xl flex items-center justify-center mx-auto text-black dark:text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
+                                <x-icon name="lucide-message-circle" class="w-8 h-8 stroke-[2.5]" />
                             </div>
                             <div>
-                                <h3 class="text-lg font-black text-black uppercase">
+                                <h3 class="text-lg font-black text-black dark:text-white uppercase">
                                     {{ $tab === 'active' ? 'Belum Ada Percakapan Aktif' : 'Belum Ada Riwayat' }}
                                 </h3>
                                 <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400 mt-1">
@@ -223,11 +218,11 @@
                     </div>
                 @else
                     <div class="bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.25)] space-y-4">
-                        <div class="w-20 h-20 bg-zinc-200 dark:bg-zinc-800 border-3 border-black dark:border-zinc-700 rounded-2xl flex items-center justify-center mx-auto text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] -rotate-3">
+                        <div class="w-20 h-20 bg-zinc-200 dark:bg-zinc-800 border-3 border-black dark:border-zinc-700 rounded-2xl flex items-center justify-center mx-auto text-black dark:text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] -rotate-3">
                             <x-icon name="lucide-message-square-text" class="w-10 h-10 stroke-[2.5]" />
                         </div>
                         <div>
-                            <h3 class="text-xl font-black text-black uppercase">Pilih Percakapan</h3>
+                            <h3 class="text-xl font-black text-black dark:text-white uppercase">Pilih Percakapan</h3>
                             <p class="text-sm font-bold text-zinc-600 dark:text-zinc-400 mt-1">Klik salah satu percakapan di sebelah kiri untuk melihat pesan dan balasan.</p>
                         </div>
                     </div>
@@ -242,7 +237,7 @@
             <div class="absolute inset-0 bg-black/60" wire:click="closeCompose"></div>
             <div class="relative bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.25)] w-full max-w-lg p-6 space-y-5">
                 <div class="flex items-center justify-between gap-4">
-                    <h2 class="text-xl font-black text-black uppercase">Pesan Baru ke Admin</h2>
+                    <h2 class="text-xl font-black text-black dark:text-white uppercase">Pesan Baru ke Admin</h2>
                     <button wire:click="closeCompose" class="p-1.5 bg-rose-500 hover:bg-rose-400 border-2 border-black dark:border-zinc-700 rounded text-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer">
                         <x-icon name="lucide-x" class="w-4 h-4 stroke-[2.5]" />
                     </button>

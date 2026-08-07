@@ -152,7 +152,7 @@
         </div>
 
         <!-- Filter & Search Bar -->
-        <div class="bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 p-5 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 p-5 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
             <!-- Filter Tabs -->
             <div class="flex flex-wrap items-center gap-2">
                 <button 
@@ -242,7 +242,7 @@
                 }
             }" @keydown.escape.window="rejectOpen = false">
                 <!-- Info Banner -->
-                <div class="bg-teal-100 dark:bg-teal-900 border-4 border-black dark:border-teal-400 p-5 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(45,212,191,0.5)] space-y-2">
+                <div class="bg-teal-100 dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 p-5 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] space-y-2">
                     <p class="text-xs font-black uppercase text-black dark:text-white flex items-center gap-2">
                         <x-icon name="lucide-shield-check" class="w-5 h-5 stroke-[2.5]" />
                         Verifikasi Dokumen Kepemilikan
@@ -324,7 +324,7 @@
                             @endforeach
                         </div>
                     @else
-                        <div class="bg-emerald-100 dark:bg-emerald-900 border-4 border-black dark:border-emerald-400 rounded-2xl p-8 text-center shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(52,211,153,0.5)]">
+                        <div class="bg-emerald-100 dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 rounded-2xl p-8 text-center shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)]">
                             <div class="w-14 h-14 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl flex items-center justify-center mx-auto text-black dark:text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
                                 <x-icon name="lucide-badge-check" class="w-7 h-7" />
                             </div>
@@ -398,7 +398,7 @@
                             @endforeach
                         </div>
                     @else
-                        <div class="bg-emerald-100 dark:bg-emerald-900 border-4 border-black dark:border-emerald-400 rounded-2xl p-8 text-center shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(52,211,153,0.5)]">
+                        <div class="bg-emerald-100 dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 rounded-2xl p-8 text-center shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)]">
                             <div class="w-14 h-14 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl flex items-center justify-center mx-auto text-black dark:text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
                                 <x-icon name="lucide-badge-check" class="w-7 h-7" />
                             </div>
@@ -509,7 +509,7 @@
                 </div>
             @else
                 <!-- Empty State -->
-                <div class="bg-yellow-100 dark:bg-yellow-900 border-4 border-black dark:border-yellow-400 rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(250,204,21,0.5)] space-y-4">
+                <div class="bg-yellow-100 dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.25)] space-y-4">
                     <div class="w-20 h-20 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-2xl flex items-center justify-center mx-auto text-black dark:text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] -rotate-3">
                         <x-icon name="lucide-circle-check" class="w-10 h-10" />
                     </div>
@@ -681,7 +681,7 @@
             </div>
         @else
             <!-- Empty State -->
-            <div class="bg-yellow-100 dark:bg-yellow-900 border-4 border-black dark:border-yellow-400 rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(250,204,21,0.5)] space-y-4">
+            <div class="bg-yellow-100 dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.25)] space-y-4">
                 <div class="w-20 h-20 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-2xl flex items-center justify-center mx-auto text-black dark:text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] -rotate-3">
                     <x-icon name="lucide-circle-check" class="w-10 h-10" />
                 </div>

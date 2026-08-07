@@ -6,6 +6,8 @@ use App\Models\KostConversation;
 use App\Models\KostImage;
 use App\Models\KostMessage;
 use App\Models\User;
+use App\Notifications\EmailAddressChanged;
+use App\Notifications\VerifyNewEmailAddress;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Notification;
@@ -113,6 +115,7 @@ it('updates the profile name and email', function () {
 
 it('sends a verification notification and resets verification when the email is changed', function () {
     $user = User::factory()->create(['role' => 'user']);
+    $oldEmail = $user->email;
     Notification::fake();
 
     Livewire::actingAs($user)
@@ -123,7 +126,11 @@ it('sends a verification notification and resets verification when the email is 
 
     expect($user->fresh()->email_verified_at)->toBeNull();
 
-    Notification::assertSentTo($user, VerifyEmail::class);
+    Notification::assertSentTo($user, VerifyNewEmailAddress::class);
+    Notification::assertNotSentTo($user, VerifyEmail::class);
+    Notification::assertSentOnDemand(EmailAddressChanged::class, function ($notification, $channels, $notifiable) use ($oldEmail) {
+        return $notifiable->routes['mail'] === $oldEmail;
+    });
 });
 
 it('does not send a verification notification when the email is unchanged', function () {

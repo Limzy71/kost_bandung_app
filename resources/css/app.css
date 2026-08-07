@@ -154,12 +154,6 @@ select:focus[data-flux-control] {
     }
 }
 
-.dark select {
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3e%3cpath d='M7 7l3-3 3 3m0 6l-3 3-3-3' stroke='%23fafafa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e") !important;
-  background-repeat: no-repeat !important;
-  background-position: right 0.75rem center !important;
-  background-size: 1.25em 1.25em !important;
-}
 .dark select option {
   background-color: #18181b;
   color: #fafafa;

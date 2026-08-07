@@ -1645,7 +1645,7 @@
                             <x-icon name="lucide-id-card" class="w-4 h-4 text-black dark:text-white stroke-[2.5] shrink-0" />
                             Verifikasi Identitas Pemilik (KTP)
                         </label>
-                        <span class="text-[10px] font-bold italic text-zinc-500 dark:text-zinc-400">Cukup unggah 1x di Profil untuk semua kost Anda</span>
+                        <span class="text-[10px] font-bold italic text-black dark:text-white">Cukup unggah 1x di Profil untuk semua kost Anda</span>
                     </div>
 
                     @if ($identityVerified)
@@ -1684,7 +1684,7 @@
                             <x-icon name="lucide-file-text" class="w-4 h-4 text-black dark:text-white stroke-[2.5] shrink-0" />
                             Bukti Kepemilikan Properti
                         </label>
-                        <span class="text-[10px] font-bold italic text-zinc-500 dark:text-zinc-400">Opsional &middot; diunggah untuk setiap kost</span>
+                        <span class="text-[10px] font-bold italic text-black dark:text-white">Dokumen Opsional &middot; Khusus properti ini</span>
                     </div>
 
                     @if (isset($ownershipDocDeleted) && $ownershipDocDeleted)
@@ -1765,8 +1765,8 @@
                             @error('ownership_doc_type')
                                 <p class="text-xs font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border-2 border-rose-500 dark:border-rose-500/60 px-2.5 py-1 rounded-md inline-block">{{ $message }}</p>
                             @enderror
-                            <p class="text-[11px] font-bold italic text-zinc-500 dark:text-zinc-400">
-                                Untuk pengelola/penyewa-ulang: gunakan "Surat Kuasa dari Pemilik". Pastikan nama pada dokumen sesuai dengan nama pemilik.
+                            <p class="text-[11px] font-bold italic text-black dark:text-white">
+                                Bila Anda pengelola atau perantara, sertakan Surat Kuasa resmi dari pemilik asli.
                             </p>
                         </div>
 

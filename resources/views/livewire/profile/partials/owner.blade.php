@@ -13,8 +13,8 @@
             <x-icon name="lucide-id-card" class="w-5 h-5 text-cyan-300 stroke-[2.5]" />
         </div>
         <div>
-            <h2 class="text-xl font-black text-black dark:text-white uppercase tracking-tight">Verifikasi Identitas (KTP)</h2>
-            <p class="text-xs font-bold text-black dark:text-white/70">Unggah sekali, berlaku untuk semua kost Anda.</p>
+            <h2 class="text-xl font-black text-black uppercase tracking-tight">Verifikasi Identitas (KTP)</h2>
+            <p class="text-xs font-bold text-black">Unggah sekali, berlaku untuk semua kost Anda.</p>
         </div>
     </div>
 

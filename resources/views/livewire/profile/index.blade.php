@@ -106,7 +106,7 @@
                         @if ($user->avatar_url)
                             <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="w-full h-full object-cover" />
                         @else
-                            <span class="text-3xl md:text-4xl font-black text-black dark:text-white uppercase">{{ $user->initials() }}</span>
+                            <span class="text-3xl md:text-4xl font-black text-black uppercase">{{ $user->initials() }}</span>
                         @endif
                     </div>
 

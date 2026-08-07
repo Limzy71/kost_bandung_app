@@ -69,13 +69,13 @@
             <!-- Left: Conversation List -->
             <div class="lg:col-span-2 space-y-4">
                 <div class="flex flex-wrap items-center gap-2">
-                    <button wire:click="$set('tab', 'active')" class="px-4 py-2 border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg {{ $tab === 'active' ? 'bg-emerald-400 text-black dark:text-white' : 'bg-white dark:bg-zinc-900 text-black dark:text-white hover:bg-emerald-100 dark:hover:bg-zinc-800' }}">
-                        <x-icon name="lucide-message-circle" class="w-3.5 h-3.5 inline -mt-0.5 mr-1 {{ $tab === 'active' ? 'fill-black dark:fill-white text-black dark:text-white' : '' }}" />
-                        Percakapan Aktif
+                    <button wire:click="$set('tab', 'active')" class="px-4 py-2 border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1.5 {{ $tab === 'active' ? 'bg-emerald-400 text-black' : 'bg-white dark:bg-zinc-900 text-black dark:text-white hover:bg-emerald-100 dark:hover:bg-zinc-800' }}">
+                        <x-icon name="lucide-message-circle" class="w-4 h-4 stroke-[2.5]" />
+                        <span>Percakapan Aktif</span>
                     </button>
-                    <button wire:click="$set('tab', 'history')" class="px-4 py-2 border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg {{ $tab === 'history' ? 'bg-zinc-400 text-black dark:text-white' : 'bg-white dark:bg-zinc-900 text-black dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800' }}">
-                        <x-icon name="lucide-history" class="w-3.5 h-3.5 inline -mt-0.5 mr-1" />
-                        Riwayat
+                    <button wire:click="$set('tab', 'history')" class="px-4 py-2 border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1.5 {{ $tab === 'history' ? 'bg-zinc-400 text-black' : 'bg-white dark:bg-zinc-900 text-black dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800' }}">
+                        <x-icon name="lucide-history" class="w-4 h-4 stroke-[2.5]" />
+                        <span>Riwayat</span>
                     </button>
                 </div>
 

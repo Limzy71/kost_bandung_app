@@ -54,24 +54,17 @@
             <!-- Left: Conversation List -->
             <div class="lg:col-span-2 space-y-4">
                 <div class="flex flex-wrap items-center gap-2">
-                    <button wire:click="setFilter('unanswered')" class="px-4 py-2 border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg {{ $filter === 'unanswered' ? 'bg-amber-400 text-black' : 'bg-white dark:bg-zinc-900 text-black dark:text-white hover:bg-amber-100 dark:hover:bg-zinc-800' }}">
-                        <span class="relative inline-flex h-2 w-2 -mt-0.5 mr-1">
-                            @if ($counts['unanswered'] > 0)
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-600 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-700"></span>
-                            @else
-                                <span class="relative inline-flex rounded-full h-2 w-2 bg-zinc-400"></span>
-                            @endif
-                        </span>
-                        Belum Dibalas ({{ $counts['unanswered'] }})
+                    <button wire:click="setFilter('unanswered')" class="px-4 py-2 border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1.5 {{ $filter === 'unanswered' ? 'bg-amber-400 text-black' : 'bg-white dark:bg-zinc-900 text-black dark:text-white hover:bg-amber-100 dark:hover:bg-zinc-800' }}">
+                        <x-icon name="lucide-clock" class="w-4 h-4 stroke-[2.5]" />
+                        <span>Belum Dibalas ({{ $counts['unanswered'] }})</span>
                     </button>
-                    <button wire:click="setFilter('open')" class="px-4 py-2 border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg {{ $filter === 'open' ? 'bg-emerald-400 text-black' : 'bg-white dark:bg-zinc-900 text-black dark:text-white hover:bg-emerald-100 dark:hover:bg-zinc-800' }}">
-                        <x-icon name="lucide-circle" class="w-3.5 h-3.5 inline -mt-0.5 mr-1 {{ $filter === 'open' ? 'fill-black text-black' : 'text-black dark:text-white' }}" />
-                        Aktif ({{ $counts['open'] }})
+                    <button wire:click="setFilter('open')" class="px-4 py-2 border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1.5 {{ $filter === 'open' ? 'bg-emerald-400 text-black' : 'bg-white dark:bg-zinc-900 text-black dark:text-white hover:bg-emerald-100 dark:hover:bg-zinc-800' }}">
+                        <x-icon name="lucide-message-circle" class="w-4 h-4 stroke-[2.5]" />
+                        <span>Aktif ({{ $counts['open'] }})</span>
                     </button>
-                    <button wire:click="setFilter('history')" class="px-4 py-2 border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg {{ $filter === 'history' ? 'bg-zinc-400 text-black' : 'bg-white dark:bg-zinc-900 text-black dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800' }}">
-                        <x-icon name="lucide-history" class="w-3.5 h-3.5 inline -mt-0.5 mr-1" />
-                        Riwayat ({{ $counts['history'] }})
+                    <button wire:click="setFilter('history')" class="px-4 py-2 border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1.5 {{ $filter === 'history' ? 'bg-zinc-400 text-black' : 'bg-white dark:bg-zinc-900 text-black dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800' }}">
+                        <x-icon name="lucide-history" class="w-4 h-4 stroke-[2.5]" />
+                        <span>Riwayat ({{ $counts['history'] }})</span>
                     </button>
                 </div>
 

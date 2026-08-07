@@ -230,7 +230,7 @@
                     @empty
                         <div class="p-6 text-center space-y-2">
                             <div class="w-12 h-12 mx-auto rounded-xl bg-zinc-100 dark:bg-zinc-800 border-2 border-black dark:border-zinc-700 flex items-center justify-center">
-                                <x-icon name="lucide-key" class="w-6 h-6 text-zinc-400 dark:text-zinc-500 stroke-[2.5]" />
+                                <x-icon name="lucide-key" class="w-6 h-6 text-black dark:text-white stroke-[2.5]" />
                             </div>
                             <p class="font-black text-sm text-black dark:text-white uppercase">Belum ada Passkey</p>
                             <p class="text-xs font-bold text-zinc-500 dark:text-zinc-400">Tambahkan passkey untuk masuk tanpa ketik kata sandi.</p>

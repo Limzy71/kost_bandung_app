@@ -1621,7 +1621,7 @@
                 <!-- Penjelasan & Privasi -->
                 <div class="p-4 bg-zinc-100 dark:bg-zinc-800 border-2 border-black dark:border-zinc-700 rounded-xl space-y-2">
                     <p class="text-xs font-black text-black dark:text-white uppercase flex items-center gap-2">
-                        <x-icon name="lucide-shield-check" class="w-4 h-4 text-black stroke-[2.5] shrink-0" />
+                        <x-icon name="lucide-shield-check" class="w-4 h-4 text-black dark:text-white stroke-[2.5] shrink-0" />
                         Mengapa dokumen ini diperlukan?
                     </p>
                     <p class="text-xs font-bold text-zinc-700 dark:text-zinc-300 leading-relaxed">
@@ -1630,7 +1630,7 @@
                         <span class="font-black text-black dark:text-white">"Terverifikasi"</span> sebagai tanda kepercayaan bagi calon penghuni.
                     </p>
                     <p class="text-xs font-bold text-zinc-700 dark:text-zinc-300 leading-relaxed flex items-start gap-1.5">
-                        <x-icon name="lucide-lock-keyhole" class="w-4 h-4 text-zinc-600 dark:text-zinc-400 stroke-[2] shrink-0 mt-0.5" />
+                        <x-icon name="lucide-lock-keyhole" class="w-4 h-4 text-black dark:text-white stroke-[2] shrink-0 mt-0.5" />
                         <span>
                             Dokumen disimpan secara <span class="font-black">rahasia dan terenkripsi akses</span>, hanya dapat
                             dilihat oleh tim admin KostBandung untuk keperluan verifikasi, dan tidak pernah ditampilkan kepada publik.
@@ -1642,10 +1642,10 @@
                 <div class="space-y-3 pt-2 border-t-2 border-black dark:border-zinc-700">
                     <div class="flex items-center justify-between gap-2">
                         <label class="block text-xs font-black uppercase tracking-wider text-black dark:text-white flex items-center gap-2">
-                            <x-icon name="lucide-id-card" class="w-4 h-4 stroke-[2.5] shrink-0" />
+                            <x-icon name="lucide-id-card" class="w-4 h-4 text-black dark:text-white stroke-[2.5] shrink-0" />
                             Verifikasi Identitas Pemilik (KTP)
                         </label>
-                        <span class="text-[10px] font-bold italic text-zinc-500 dark:text-zinc-400">Akun &middot; sekali unggah, berlaku untuk semua kost Anda</span>
+                        <span class="text-[10px] font-bold italic text-zinc-500 dark:text-zinc-400">Cukup unggah 1x di Profil untuk semua kost Anda</span>
                     </div>
 
                     @if ($identityVerified)
@@ -1661,7 +1661,7 @@
                     @else
                         <div class="p-4 bg-yellow-100 dark:bg-yellow-950/40 border-2 border-black dark:border-zinc-700 rounded-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
                             <p class="text-xs font-bold text-zinc-700 dark:text-zinc-300 leading-relaxed flex items-start gap-1.5">
-                                <x-icon name="lucide-info" class="w-4 h-4 text-black stroke-[2.5] shrink-0 mt-0.5" />
+                                <x-icon name="lucide-info" class="w-4 h-4 text-black dark:text-white stroke-[2.5] shrink-0 mt-0.5" />
                                 <span>
                                     Upload foto KTP dilakukan di halaman
                                     <span class="font-black text-black dark:text-white">Profil</span>, bukan di form ini. Dokumen
@@ -1681,7 +1681,7 @@
                 <div class="space-y-3 pt-2 border-t-2 border-black dark:border-zinc-700" x-data="{ showDeleteOwnership: false }">
                     <div class="flex items-center justify-between gap-2">
                         <label class="block text-xs font-black uppercase tracking-wider text-black dark:text-white flex items-center gap-2">
-                            <x-icon name="lucide-file-text" class="w-4 h-4 stroke-[2.5] shrink-0" />
+                            <x-icon name="lucide-file-text" class="w-4 h-4 text-black dark:text-white stroke-[2.5] shrink-0" />
                             Bukti Kepemilikan Properti
                         </label>
                         <span class="text-[10px] font-bold italic text-zinc-500 dark:text-zinc-400">Opsional &middot; diunggah untuk setiap kost</span>

@@ -48,6 +48,22 @@ test('sensitive action requires password confirmation when not confirmed', funct
     $component->assertRedirect(route('password.confirm'));
 });
 
+test('sensitive action stores intended profile url before redirecting to password confirmation', function () {
+    $user = User::factory()->create(['email_verified_at' => now()]);
+
+    $this->actingAs($user);
+
+    $component = Livewire::test(Security::class)
+        ->set('current_password', 'password')
+        ->set('password', 'new-password')
+        ->set('password_confirmation', 'new-password')
+        ->call('updatePassword');
+
+    $component->assertRedirect(route('password.confirm'));
+
+    expect(session('url.intended'))->toBe(route('profile.show'));
+});
+
 test('security section renders without two factor when feature is disabled', function () {
     config(['fortify.features' => []]);
 

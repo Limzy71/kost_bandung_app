@@ -131,6 +131,8 @@ class Security extends Component
             return true;
         }
 
+        session()->put('url.intended', route('profile.show'));
+
         $this->redirect(route('password.confirm'));
 
         return false;

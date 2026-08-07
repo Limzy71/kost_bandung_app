@@ -1,36 +1,70 @@
-<x-layouts::auth :title="__('Confirm password')">
-    <div class="flex flex-col gap-6">
-        <x-auth-header
-            :title="__('Confirm password')"
-            :description="__('This is a secure area of the application. Please confirm your password before continuing.')"
-        />
+<x-layouts::auth title="Konfirmasi Kata Sandi">
+    <div class="w-full">
+        {{-- ===== Neo-Brutalist Card ===== --}}
+        <div class="bg-white border-4 border-black p-8 md:p-10 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] rounded-lg w-full dark:bg-zinc-900 dark:border-zinc-700 dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,0.25)]">
 
-        <x-auth-session-status class="text-center" :status="session('status')" />
+            {{-- Card Header --}}
+            <div class="mb-8">
+                <div class="inline-flex items-center gap-2 bg-[#FFE500] border-2 border-black px-3 py-1 rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] mb-4 dark:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
+                    <span class="text-[10px] font-black uppercase tracking-widest text-black">Keamanan Akun</span>
+                </div>
+                <h1 class="text-3xl sm:text-4xl font-black text-black uppercase tracking-tight leading-tight dark:text-white">
+                    Konfirmasi Sandi
+                </h1>
+                <p class="mt-2 text-sm font-bold text-zinc-600 dark:text-zinc-400">
+                    Ini adalah area aman aplikasi. Silakan konfirmasi kata sandi Anda sebelum melanjutkan ke langkah berikutnya.
+                </p>
+            </div>
 
-        <x-passkey-verify
-            options-route="passkey.confirm-options"
-            submit-route="passkey.confirm"
-            :label="__('Confirm with passkey')"
-            :loading-label="__('Confirming...')"
-            :separator="__('Or confirm with password')"
-        />
+            {{-- Divider --}}
+            <div class="border-t-4 border-black mb-8 dark:border-zinc-700"></div>
 
-        <form method="POST" action="{{ route('password.confirm.store') }}" class="flex flex-col gap-6">
-            @csrf
+            @if(session('status'))
+                <div class="mb-6 flex items-center gap-3 bg-emerald-400 border-4 border-black p-4 rounded-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:border-zinc-700 dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]">
+                    <x-icon name="lucide-check-circle" class="w-5 h-5 text-black shrink-0 stroke-[3]" />
+                    <span class="text-xs font-black uppercase text-black">{{ session('status') }}</span>
+                </div>
+            @endif
 
-            <flux:input
-                name="password"
-                :label="__('Password')"
-                type="password"
-                required
-                autocomplete="current-password"
-                :placeholder="__('Password')"
-                viewable
+            <x-passkey-verify
+                options-route="passkey.confirm-options"
+                submit-route="passkey.confirm"
+                label="Konfirmasi dengan Passkey"
+                loading-label="Memproses..."
+                separator="Atau gunakan kata sandi"
             />
 
-            <flux:button variant="primary" type="submit" class="w-full" data-test="confirm-password-button">
-                {{ __('Confirm') }}
-            </flux:button>
-        </form>
+            <form method="POST" action="{{ route('password.confirm.store') }}" class="space-y-5">
+                @csrf
+
+                {{-- Password --}}
+                <div x-data="{ show: false }">
+                    <label for="password" class="block text-xs font-black uppercase tracking-wider text-black mb-2 dark:text-white">
+                        Kata Sandi
+                    </label>
+                    <div class="relative flex items-center">
+                        <input name="password" :type="show ? 'text' : 'password'" id="password" required autocomplete="current-password"
+                            class="block w-full px-4 pr-12 py-3 text-sm bg-zinc-50 border-3 border-black rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:bg-[#FFE500]/10 focus:border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:bg-zinc-900 dark:border-zinc-700 dark:text-white dark:placeholder-zinc-500 dark:focus:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] dark:focus:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]"
+                            placeholder="••••••••">
+                        <button type="button" @click="show = !show" :aria-label="show ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'"
+                            class="absolute inset-y-0 right-1 flex items-center px-3 text-zinc-500 hover:text-black transition-colors cursor-pointer focus:outline-none dark:text-zinc-400 dark:hover:text-white">
+                            <x-icon x-show="!show" name="lucide-eye" class="w-5 h-5" />
+                            <x-icon x-cloak x-show="show" name="lucide-eye-off" class="w-5 h-5" />
+                        </button>
+                    </div>
+                    @error('password')
+                        <p class="mt-2 text-xs font-bold text-rose-600 flex items-center gap-1 dark:text-rose-400">
+                            <span class="font-black">✕</span> {{ $message }}
+                        </p>
+                    @enderror
+                </div>
+
+                {{-- Submit Button --}}
+                <button type="submit"
+                    class="w-full py-4 px-6 bg-[#FFE500] hover:bg-yellow-400 text-black border-4 border-black font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all duration-75 rounded-lg flex items-center justify-center gap-2 cursor-pointer mt-2 dark:border-zinc-600 dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] dark:hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)]">
+                    Konfirmasi Sandi
+                </button>
+            </form>
+        </div>
     </div>
 </x-layouts::auth>

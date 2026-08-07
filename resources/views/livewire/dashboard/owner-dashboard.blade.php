@@ -23,8 +23,8 @@
                 <h1 class="text-3xl md:text-5xl font-black text-black dark:text-white tracking-tight uppercase">
                     Dashboard Pemilik
                 </h1>
-                <p class="text-zinc-700 dark:text-zinc-300 text-sm md:text-base font-bold">
-                    Selamat datang kembali, <span class="bg-yellow-200 border-b-2 border-black dark:border-zinc-700 px-1" title="{{ $owner->name }}">{{ Str::limit(trim($owner->name), 30) }}</span>! Kelola iklan & ketersediaan kost Anda.
+                <p class="text-zinc-700 dark:text-white text-sm md:text-base font-bold">
+                    Selamat datang kembali, <span class="bg-yellow-200 dark:bg-yellow-400 border-b-2 border-black px-1 text-black font-extrabold" title="{{ $owner->name }}">{{ Str::limit(trim($owner->name), 30) }}</span>! Kelola iklan & ketersediaan kost Anda.
                 </p>
             </div>
             
@@ -41,7 +41,7 @@
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 p-4 rounded-xl shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-lg bg-cyan-300 border-2 border-black dark:border-zinc-700 flex items-center justify-center shrink-0">
-                        <x-icon name="lucide-id-card" class="w-5 h-5 stroke-[2.5]" />
+                        <x-icon name="lucide-id-card" class="w-5 h-5 text-black stroke-[2.5]" />
                     </div>
                     <div>
                         <p class="text-xs font-black uppercase text-black dark:text-white">
@@ -500,7 +500,7 @@
                 </div>
             @else
                 <!-- Empty State -->
-                <div class="bg-yellow-100 dark:bg-yellow-950/40 border-3 border-black dark:border-zinc-700 rounded-xl p-12 text-center shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] space-y-4">
+                <div class="bg-yellow-100 dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl p-12 text-center shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] space-y-4">
                     <div class="w-16 h-16 bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg flex items-center justify-center mx-auto text-black dark:text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
                         <x-icon name="lucide-building-2" class="w-8 h-8 stroke-[2]" />
                     </div>

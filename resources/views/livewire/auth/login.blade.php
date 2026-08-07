@@ -46,9 +46,14 @@
 
             {{-- Password --}}
             <div>
-                <label for="password" class="block text-xs font-black uppercase tracking-wider text-black mb-2 dark:text-white">
-                    Kata Sandi
-                </label>
+                <div class="flex items-center justify-between mb-2">
+                    <label for="password" class="block text-xs font-black uppercase tracking-wider text-black dark:text-white">
+                        Kata Sandi
+                    </label>
+                    <a href="{{ route('password.request') }}" wire:navigate class="text-xs font-bold text-black underline decoration-2 underline-offset-2 hover:bg-[#FFE500] hover:no-underline rounded transition-all dark:text-white dark:hover:text-black">
+                        Lupa Kata Sandi?
+                    </a>
+                </div>
                 <div class="relative flex items-center" x-data="{ show: false }">
                     <input wire:model="password" :type="show ? 'text' : 'password'" id="password" autocomplete="current-password"
                         class="block w-full px-4 pr-12 py-3 text-sm bg-zinc-50 border-3 border-black rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:bg-[#FFE500]/10 focus:border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:bg-zinc-900 dark:border-zinc-700 dark:text-white dark:placeholder-zinc-500 dark:focus:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] dark:focus:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]"

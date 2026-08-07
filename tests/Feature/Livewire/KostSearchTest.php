@@ -98,13 +98,16 @@ it('seeds the reset filter button state from active filters after a page refresh
     // Simulates a refresh with a search filter that has no results: the empty
     // state card is rendered server-side, so the reset filter button (hasFilter)
     // must also be initialized to true from the server state.
+    makePublishedKost('Kost Andir Raya', 'kost-andir-raya', 1000000, 'monthly');
+
     $this->get('/?search=tidak-ada')
         ->assertOk()
         ->assertSee('Tidak Ada Hunian Ditemukan');
 
-    // Without any active filter the page loads normally.
+    // Without any active filter the page loads normally and lists the kost.
     $this->get('/')
-        ->assertOk();
+        ->assertOk()
+        ->assertSee('Kost Andir Raya');
 });
 
 it('keeps active filter properties for every filter type', function () {

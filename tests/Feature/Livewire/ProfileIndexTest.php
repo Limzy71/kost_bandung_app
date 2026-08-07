@@ -461,3 +461,73 @@ it('does not let an admin delete their account from the profile page', function 
 
     expect($admin->fresh())->not->toBeNull();
 });
+
+it('deleting an account purges files of soft-deleted kosts too', function () {
+    Storage::fake('verification_docs');
+    Storage::fake('local');
+
+    $owner = User::factory()->create(['role' => 'owner', 'email_verified_at' => now()]);
+
+    $kost = profileTestKost($owner);
+    $kost->update(['ownership_doc_path' => 'verification-docs/ownership/pbb.jpg']);
+    KostImage::create([
+        'kost_id' => $kost->id,
+        'image_path' => 'kosts/softdeleted.jpg',
+        'is_primary' => true,
+    ]);
+
+    Storage::disk('local')->put('kosts/softdeleted.jpg', 'bytes');
+    Storage::disk('verification_docs')->put('verification-docs/ownership/pbb.jpg', 'bytes');
+
+    $kost->delete();
+
+    Livewire::actingAs($owner)
+        ->test(Index::class)
+        ->set('deletePassword', 'password')
+        ->call('deleteAccount')
+        ->assertHasNoErrors();
+
+    expect(Kost::withTrashed()->count())->toBe(0);
+
+    Storage::disk('local')->assertMissing('kosts/softdeleted.jpg');
+    Storage::disk('verification_docs')->assertMissing('verification-docs/ownership/pbb.jpg');
+});
+
+it('deleting an account of a non-owner purges the avatar file', function () {
+    Storage::fake('local');
+
+    $user = User::factory()->create([
+        'email_verified_at' => now(),
+        'avatar' => 'avatars/searcher.jpg',
+    ]);
+    Storage::disk('local')->put('avatars/searcher.jpg', 'bytes');
+
+    Livewire::actingAs($user)
+        ->test(Index::class)
+        ->set('deletePassword', 'password')
+        ->call('deleteAccount')
+        ->assertHasNoErrors();
+
+    expect($user->fresh())->toBeNull();
+
+    Storage::disk('local')->assertMissing('avatars/searcher.jpg');
+});
+
+it('redirects legacy settings routes to /profil', function () {
+    $user = User::factory()->create(['email_verified_at' => now()]);
+
+    $this->actingAs($user)->get('/settings')->assertRedirect('/profil');
+    $this->actingAs($user)->get('/settings/profile')->assertRedirect('/profil');
+    $this->actingAs($user)->get('/settings/appearance')->assertRedirect('/profil');
+    $this->actingAs($user)->get('/settings/security')->assertRedirect('/profil');
+});
+
+it('points well-known passkey endpoints to profile.show', function () {
+    $response = $this->get(route('well-known.passkeys'));
+
+    $response->assertOk()
+        ->assertJson([
+            'enroll' => route('profile.show'),
+            'manage' => route('profile.show'),
+        ]);
+});

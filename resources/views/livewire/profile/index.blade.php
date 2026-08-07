@@ -240,6 +240,9 @@
             @include('livewire.profile.partials.user', ['user' => $user, 'stats' => $stats])
         @endif
 
+        <!-- Security Section -->
+        <livewire:profile.security />
+
         @if ($this->showDeleteAccount)
             @php
                 $deleteData = $user->role === 'owner'

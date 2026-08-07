@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Livewire\Settings;
+namespace App\Livewire\Profile;
 
 use App\Concerns\PasswordValidationRules;
 use Exception;
-use Flux\Flux;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Actions\ConfirmTwoFactorAuthentication;
@@ -15,11 +14,9 @@ use Laravel\Fortify\Fortify;
 use Laravel\Passkeys\Actions\DeletePasskey;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Locked;
-use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
-#[Title('Security settings')]
 class Security extends Component
 {
     use PasswordValidationRules;
@@ -97,6 +94,10 @@ class Security extends Component
      */
     public function updatePassword(): void
     {
+        if (! $this->requirePasswordConfirmation()) {
+            return;
+        }
+
         try {
             $validated = $this->validate([
                 'current_password' => $this->currentPasswordRules(),
@@ -114,7 +115,25 @@ class Security extends Component
 
         $this->reset('current_password', 'password', 'password_confirmation');
 
-        Flux::toast(variant: 'success', text: __('Password updated.'));
+        $this->dispatch('show-toast', message: 'Kata sandi berhasil diperbarui.');
+    }
+
+    /**
+     * Ensure the user has recently confirmed their password before a
+     * sensitive action runs. Redirects to the password confirmation page
+     * and skips the action when the password has not been confirmed.
+     */
+    private function requirePasswordConfirmation(): bool
+    {
+        $confirmedAt = (int) session('auth.password_confirmed_at');
+
+        if ($confirmedAt !== 0 && (time() - $confirmedAt) <= (int) config('auth.password_timeout', 10800)) {
+            return true;
+        }
+
+        $this->redirect(route('password.confirm'));
+
+        return false;
     }
 
     /**
@@ -153,6 +172,10 @@ class Security extends Component
      */
     public function deletePasskey(DeletePasskey $deletePasskey): void
     {
+        if (! $this->requirePasswordConfirmation()) {
+            return;
+        }
+
         if (! $this->deletingPasskeyId) {
             return;
         }
@@ -164,6 +187,8 @@ class Security extends Component
 
         $this->closeDeleteModal();
         $this->loadPasskeys();
+
+        $this->dispatch('show-toast', message: 'Passkey berhasil dihapus.');
     }
 
     /**
@@ -181,6 +206,10 @@ class Security extends Component
      */
     public function enable(EnableTwoFactorAuthentication $enableTwoFactorAuthentication): void
     {
+        if (! $this->requirePasswordConfirmation()) {
+            return;
+        }
+
         $enableTwoFactorAuthentication(auth()->user());
 
         if (! $this->requiresConfirmation) {
@@ -203,7 +232,7 @@ class Security extends Component
             $this->qrCodeSvg = $user?->twoFactorQrCodeSvg();
             $this->manualSetupKey = decrypt($user->two_factor_secret);
         } catch (Exception) {
-            $this->addError('setupData', 'Failed to fetch setup data.');
+            $this->addError('setupData', 'Gagal mengambil data setup 2FA.');
 
             $this->reset('qrCodeSvg', 'manualSetupKey');
         }
@@ -237,6 +266,8 @@ class Security extends Component
         $this->closeModal();
 
         $this->twoFactorEnabled = true;
+
+        $this->dispatch('show-toast', message: 'Autentikasi dua faktor berhasil diaktifkan.');
     }
 
     /**
@@ -254,9 +285,15 @@ class Security extends Component
      */
     public function disable(DisableTwoFactorAuthentication $disableTwoFactorAuthentication): void
     {
+        if (! $this->requirePasswordConfirmation()) {
+            return;
+        }
+
         $disableTwoFactorAuthentication(auth()->user());
 
         $this->twoFactorEnabled = false;
+
+        $this->dispatch('show-toast', message: 'Autentikasi dua faktor berhasil dinonaktifkan.');
     }
 
     /**
@@ -289,24 +326,29 @@ class Security extends Component
     {
         if ($this->twoFactorEnabled) {
             return [
-                'title' => __('Two-factor authentication enabled'),
-                'description' => __('Two-factor authentication is now enabled. Scan the QR code or enter the setup key in your authenticator app.'),
-                'buttonText' => __('Close'),
+                'title' => 'Autentikasi Dua Faktor Aktif',
+                'description' => 'Autentikasi dua faktor telah aktif. Pindai kode QR atau masukkan kunci penyiapan manual di aplikasi otentikator Anda.',
+                'buttonText' => 'Tutup',
             ];
         }
 
         if ($this->showVerificationStep) {
             return [
-                'title' => __('Verify authentication code'),
-                'description' => __('Enter the 6-digit code from your authenticator app.'),
-                'buttonText' => __('Continue'),
+                'title' => 'Verifikasi Kode Otentikasi',
+                'description' => 'Masukkan 6 digit kode dari aplikasi otentikator Anda.',
+                'buttonText' => 'Lanjutkan',
             ];
         }
 
         return [
-            'title' => __('Enable two-factor authentication'),
-            'description' => __('To finish enabling two-factor authentication, scan the QR code or enter the setup key in your authenticator app.'),
-            'buttonText' => __('Continue'),
+            'title' => 'Aktifkan Autentikasi Dua Faktor',
+            'description' => 'Untuk menyelesaikan pendaftaran 2FA, pindai kode QR atau masukkan kunci penyiapan manual di aplikasi otentikator Anda.',
+            'buttonText' => 'Lanjutkan',
         ];
+    }
+
+    public function render()
+    {
+        return view('livewire.profile.security');
     }
 }

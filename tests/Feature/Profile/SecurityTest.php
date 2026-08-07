@@ -1,6 +1,6 @@
 <?php
 
-use App\Livewire\Settings\Security;
+use App\Livewire\Profile\Security;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Fortify\Features;
@@ -18,43 +18,47 @@ beforeEach(function () {
     ]);
 });
 
-test('security settings page can be rendered', function () {
+test('profile page renders security section', function () {
     $user = User::factory()->create(['email_verified_at' => now()]);
 
     $response = $this->actingAs($user)
         ->withSession(['auth.password_confirmed_at' => time()])
-        ->get(route('security.edit'));
+        ->get('/profil');
 
     $response->assertOk();
 
     $response->assertSee('Passkeys');
-    $response->assertSee('No passkeys yet');
-    $response->assertSee('Two-factor authentication');
-    $response->assertSee('Enable 2FA');
+    $response->assertSee('Belum ada Passkey');
+    $response->assertSee('Autentikasi Dua Faktor');
+    $response->assertSee('Aktifkan 2FA');
+    $response->assertSee('Ubah Kata Sandi');
 });
 
-test('security settings page requires password confirmation when enabled', function () {
+test('sensitive action requires password confirmation when not confirmed', function () {
     $user = User::factory()->create(['email_verified_at' => now()]);
 
-    $response = $this->actingAs($user)
-        ->get(route('security.edit'));
+    $this->actingAs($user);
 
-    $response->assertRedirect(route('password.confirm'));
+    $component = Livewire::test(Security::class)
+        ->set('current_password', 'password')
+        ->set('password', 'new-password')
+        ->set('password_confirmation', 'new-password')
+        ->call('updatePassword');
+
+    $component->assertRedirect(route('password.confirm'));
 });
 
-test('security settings page renders without two factor when feature is disabled', function () {
+test('security section renders without two factor when feature is disabled', function () {
     config(['fortify.features' => []]);
 
     $user = User::factory()->create(['email_verified_at' => now()]);
 
     $this->actingAs($user)
         ->withSession(['auth.password_confirmed_at' => time()])
-        ->get(route('security.edit'))
+        ->get('/profil')
         ->assertOk()
-        ->assertSee('Update password')
-        ->assertDontSee('Manage your passkeys for passwordless sign-in')
-        ->assertDontSee('Add a passkey to sign in without a password')
-        ->assertDontSee('Two-factor authentication');
+        ->assertSee('Ubah Kata Sandi')
+        ->assertDontSee('Autentikasi Dua Faktor');
 });
 
 test('two factor authentication disabled when confirmation abandoned between requests', function () {
@@ -79,12 +83,13 @@ test('two factor authentication disabled when confirmation abandoned between req
     ]);
 });
 
-test('password can be updated', function () {
+test('password can be updated when password confirmed', function () {
     $user = User::factory()->create([
         'password' => Hash::make('password'),
     ]);
 
-    $this->actingAs($user);
+    $this->actingAs($user)
+        ->withSession(['auth.password_confirmed_at' => time()]);
 
     $response = Livewire::test(Security::class)
         ->set('current_password', 'password')
@@ -102,7 +107,8 @@ test('correct password must be provided to update password', function () {
         'password' => Hash::make('password'),
     ]);
 
-    $this->actingAs($user);
+    $this->actingAs($user)
+        ->withSession(['auth.password_confirmed_at' => time()]);
 
     $response = Livewire::test(Security::class)
         ->set('current_password', 'wrong-password')

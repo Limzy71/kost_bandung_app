@@ -66,50 +66,57 @@
     }"
 >
     <template x-if="!supported">
-        <flux:text>{{ __('Passkeys are not supported in this browser.') }}</flux:text>
+        <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400">Passkey tidak didukung pada peramban ini.</p>
     </template>
 
     <template x-if="supported && !showForm">
         <div>
-            <flux:button
-                variant="primary"
-                icon="plus"
+            <button
+                type="button"
                 x-on:click="showForm = true"
+                class="bg-yellow-400 hover:bg-yellow-300 text-black border-2 border-black dark:border-zinc-700 font-black text-xs uppercase px-4 py-2.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer inline-flex items-center gap-1.5"
             >
-                {{ __('Add passkey') }}
-            </flux:button>
+                <x-icon name="lucide-plus" class="w-4 h-4 text-black stroke-[2.5]" />
+                <span>Tambah Passkey</span>
+            </button>
         </div>
     </template>
 
     <template x-if="supported && showForm">
-        <div class="space-y-4 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 p-4">
-            <flux:input
-                label="{{ __('Passkey name') }}"
-                x-model="name"
-                placeholder="{{ __('e.g., MacBook Pro, iPhone') }}"
-                x-on:keydown.enter.prevent="register()"
-                x-ref="passkeyNameInput"
-                x-init="$nextTick(() => $refs.passkeyNameInput?.focus())"
-            />
-            <flux:text class="!mt-1">{{ __('Give this passkey a name to help you identify it later.') }}</flux:text>
+        <div class="space-y-4 rounded-xl border-3 border-black dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/60 p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]">
+            <div>
+                <label class="block text-xs font-black uppercase text-black dark:text-white mb-1.5">Nama Passkey</label>
+                <input
+                    type="text"
+                    x-model="name"
+                    placeholder="Contoh: MacBook Pro, iPhone"
+                    x-on:keydown.enter.prevent="register()"
+                    x-ref="passkeyNameInput"
+                    x-init="$nextTick(() => $refs.passkeyNameInput?.focus())"
+                    class="w-full px-4 py-2.5 text-sm bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg text-black dark:text-white font-bold placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all"
+                />
+                <p class="text-[11px] font-bold text-zinc-500 dark:text-zinc-400 mt-1">Beri nama passkey ini agar mudah dikenali nantinya.</p>
+            </div>
 
-            <p x-show="error" x-text="error" x-cloak class="text-sm text-red-600 dark:text-red-400"></p>
+            <p x-show="error" x-text="error" x-cloak class="text-xs font-black text-rose-500 uppercase"></p>
 
-            <div class="flex gap-2">
-                <flux:button
-                    variant="primary"
+            <div class="flex items-center gap-2">
+                <button
+                    type="button"
                     x-on:click="register()"
                     x-bind:disabled="loading || !name.trim()"
+                    class="bg-lime-400 hover:bg-lime-300 text-black border-2 border-black dark:border-zinc-700 font-black text-xs uppercase px-4 py-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer disabled:opacity-50"
                 >
-                    <span x-show="!loading">{{ __('Register passkey') }}</span>
-                    <span x-show="loading" x-cloak>{{ __('Registering...') }}</span>
-                </flux:button>
-                <flux:button
-                    variant="ghost"
+                    <span x-show="!loading">Daftarkan Passkey</span>
+                    <span x-show="loading" x-cloak>Mendaftarkan...</span>
+                </button>
+                <button
+                    type="button"
                     x-on:click="cancel()"
+                    class="bg-zinc-200 dark:bg-zinc-700 hover:bg-zinc-300 text-black dark:text-white border-2 border-black dark:border-zinc-700 font-black text-xs uppercase px-4 py-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer"
                 >
-                    {{ __('Cancel') }}
-                </flux:button>
+                    Batal
+                </button>
             </div>
         </div>
     </template>

@@ -3,7 +3,7 @@
     <head>
         @include('partials.head')
     </head>
-    <body class="min-h-screen antialiased bg-[#f8f9fa] bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:24px_24px] dark:bg-zinc-950 dark:bg-[linear-gradient(to_right,#27272a_1px,transparent_1px),linear-gradient(to_bottom,#27272a_1px,transparent_1px)]">
+    <body class="flex flex-col min-h-screen antialiased bg-[#f8f9fa] bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:24px_24px] dark:bg-zinc-950 dark:bg-[linear-gradient(to_right,#27272a_1px,transparent_1px),linear-gradient(to_bottom,#27272a_1px,transparent_1px)]">
 
         {{-- ===== Neo-Brutalist Auth Top Bar ===== --}}
         <header class="bg-white border-b-4 border-black shadow-[0_4px_0_0_rgba(0,0,0,1)] sticky top-0 z-50 dark:bg-zinc-900 dark:border-zinc-700 dark:shadow-[0_4px_0_0_rgba(255,255,255,0.25)]">
@@ -33,11 +33,11 @@
         </header>
         {{-- ===== End Top Bar ===== --}}
 
-        <div class="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center gap-6 p-6 md:p-10">
+        <main class="flex flex-1 flex-col items-center justify-center gap-6 p-6 md:p-10">
             <div class="flex w-full max-w-lg flex-col gap-6">
                 {{ $slot }}
             </div>
-        </div>
+        </main>
 
         @persist('toast')
             <flux:toast.group>

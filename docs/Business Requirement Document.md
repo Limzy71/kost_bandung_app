@@ -1,130 +1,193 @@
-# **BUSINESS REQUIREMENT DOCUMENT (BRD)** 
+# Business Requirement Document (BRD)
 
-## **Platform Pencarian & Manajemen Kost Hyper-Local Bandung** 
+## Platform Directory Kost Hyper-Local Bandung
 
-Versi Dokumen: 1.0 | Target Lokasi: Kota Bandung 
+Versi Dokumen: 1.1  
+Status: Disesuaikan dengan implementasi aplikasi saat ini  
+Target Lokasi: Kota Bandung
 
-## **1. Pendahuluan & Tujuan Bisnis (Business Goals)** 
+## 1. Pendahuluan & Tujuan Bisnis
 
-## **1.1 Latar Belakang** 
+### 1.1 Latar Belakang
 
-Pasar pencarian kost di area sekitar kampus Kota Bandung memiliki volume yang sangat besar, namun saat ini informasinya masih sangat tersebar di berbagai grup media sosial dan platform tidak resmi. Di sisi lain, pemilik kost membutuhkan platform yang efisien dan terarah untuk memasarkan kamar mereka. Sementara itu, mahasiswa sebagai pencari kost sangat membutuhkan transparansi data terkait lokasi presisi, ketersediaan kamar secara berkala, serta kemudahan untuk menghubungi langsung pihak pemilik tanpa perantara yang rumit. 
+Pasar pencarian kost di Kota Bandung sangat aktif, terutama di area kampus dan pusat aktivitas mahasiswa. Informasi kost masih banyak tersebar di grup media sosial, chat pribadi, dan platform umum yang tidak selalu memiliki data lokasi, harga, ketersediaan kamar, atau status verifikasi yang jelas.
 
-## **1.2 Tujuan Utama (Objectives)** 
+Platform ini dibangun sebagai direktori kost hyper-local Bandung yang menghubungkan pencari kost, pemilik kost, dan administrator dalam satu sistem terverifikasi. Fokus utama produk adalah akurasi lokasi, transparansi informasi, keamanan data listing, komunikasi langsung, serta proses moderasi untuk mengurangi risiko listing palsu.
 
-Untuk memfasilitasi kebutuhan pasar tersebut, platform ini menetapkan tiga pilar tujuan utama: 
+### 1.2 Tujuan Utama
 
-- **Pencari Kost (Mahasiswa):** Menyediakan platform pencarian berbasis peta interaktif ( _interactive map_ ) yang akurat, cepat, transparan, dan terfokus pada wilayah Kota Bandung. 
+- **Pencari Kost:** Menyediakan pencarian kost berbasis daftar dan peta interaktif yang cepat, mobile-first, dan fokus pada wilayah Kota Bandung.
+- **Pemilik Kost:** Menyediakan portal self-service untuk mendaftarkan, mengedit, menghapus, dan memperbarui status ketersediaan kost.
+- **Administrator:** Menyediakan panel moderasi untuk menjaga kualitas listing, memverifikasi identitas pemilik, memverifikasi dokumen kepemilikan kost, serta menangani pesan bantuan pengguna.
+- **Tujuan Bisnis:** Membangun densitas data kost Bandung melalui pendaftaran gratis pada tahap awal, dengan fondasi monetisasi melalui prioritas listing/boost atau fitur premium di tahap berikutnya.
 
-- **Pemilik Kost (Mitra):** Menyediakan portal pendaftaran _self-service_ yang praktis dan mudah digunakan untuk mengelola detail properti serta status ketersediaan kamar. 
+## 2. Cakupan Wilayah & Pembatasan
 
-- **Tujuan Bisnis:** Membangun densitas ( _density_ ) data kost yang tinggi di Kota Bandung melalui strategi pendaftaran tanpa biaya (gratis) di tahap awal, sekaligus memvalidasi model bisnis melalui fitur Iklan Premium (Sundul). 
+### 2.1 In-Scope
 
-## **2. Cakupan Wilayah & Pembatasan (Scope & Geofencing)** 
+- Seluruh kecamatan dalam wilayah administratif Kota Bandung.
+- Area sekitar kampus dan pusat aktivitas mahasiswa di Kota Bandung.
+- Listing kost dengan titik koordinat yang berada dalam batas konfigurasi kecamatan Bandung.
 
-- **_In-Scope_ :** Seluruh wilayah administratif Kota Bandung. Hal ini mencakup seluruh area sekitar kampus-kampus besar di Bandung, seperti Universitas Pasundan (Unpas), Institut Teknologi Bandung (ITB), Universitas Padjadjaran (Unpad) Dipatiukur, Telkom University (area kota), Universitas Katolik Parahyangan (Unpar), dan universitas lain di dalam batas kota. 
+### 2.2 Out-of-Scope
 
-- **_Out-of-Scope_ :** Seluruh wilayah yang berada di luar batas administratif resmi Kota Bandung, seperti Soreang, Kabupaten Bandung, Cimahi, Lembang, 
+- Wilayah luar Kota Bandung seperti Kabupaten Bandung, Cimahi, Lembang, Soreang, dan wilayah sekitarnya.
+- Transaksi pembayaran sewa kamar secara langsung di platform.
+- Booking otomatis dengan pembayaran internal.
 
-1 
+### 2.3 Geofencing
 
-dan sekitarnya. 
+Sistem memvalidasi koordinat latitude dan longitude pada form pembuatan/edit kost berdasarkan konfigurasi batas wilayah kecamatan Bandung. Jika titik lokasi berada di luar batas kecamatan yang dipilih, penyimpanan listing ditolak.
 
-- **Teknis** **_Geofencing_ :** Sistem akan secara otomatis melakukan validasi koordinat geografis ( _Latitude_ dan _Longitude_ ) pemilik kost saat mendaftarkan propertinya. Validasi menggunakan parameter batas kotak ( _Bounding Box_ ) resmi Kota Bandung untuk memastikan penanda lokasi berada di dalam cakupan wilayah yang ditentukan. 
+## 3. Profil Pengguna
 
-## **3. Profil Pengguna (User Personas)** 
+### 3.1 Pencari Kost
 
-Dokumen ini mendefinisikan tiga aktor utama yang akan berinteraksi di dalam sistem: 
+Pengguna yang mencari kost berdasarkan lokasi, harga, tipe hunian, periode sewa, status ketersediaan, dan status verifikasi. Pencari kost dapat menghubungi pemilik melalui chat internal dan dapat menghubungi admin melalui fitur bantuan.
 
-1. **Pencari Kost (Mahasiswa):** Pengguna aktif yang membutuhkan hunian sementara. Kriteria pencarian mereka didasarkan pada kedekatan lokasi kampus, kesesuaian harga, ketersediaan fasilitas penunjang, dan kemudahan dalam membangun komunikasi dengan pemilik. 
+### 3.2 Pemilik Kost
 
-2. **Pemilik Kost (** **_Landlord_ ):** Mitra penyedia properti yang bertanggung jawab mendaftarkan data kost, memperbarui jumlah kamar kosong, serta merespons pesan atau minat dari calon penghuni. 
+Mitra penyedia kost yang mendaftarkan data properti, mengelola foto, fasilitas, aturan, harga, periode sewa, dokumen kepemilikan, dan status ketersediaan kamar. Pemilik juga menerima dan membalas chat dari pencari kost.
 
-3. **Administrator Web:** Tim internal pengelola platform yang bertugas memverifikasi kelayakan data kost, memitigasi risiko penipuan, mengelola fitur iklan premium, dan memantau stabilitas aktivitas sistem secara keseluruhan. 
+### 3.3 Administrator
 
-## **4. Persyaratan Fitur Utama (Functional Requirements)** 
+Pengelola internal platform yang bertanggung jawab melakukan moderasi listing, approval/rejection fasilitas custom, verifikasi identitas pemilik, verifikasi dokumen kepemilikan kost, dan pengelolaan inbox bantuan admin.
 
-## **4.1 Modul Pencari Kost (Mahasiswa)** 
+## 4. Persyaratan Fitur Utama
 
-Pencari kost difasilitasi dengan antarmuka pencarian yang intuitif melalui fiturfitur berikut: 
+### 4.1 Modul Pencarian Kost Publik
 
-- **Pencarian Berbasis Peta Interaktif (Google Maps API):** 
+- Halaman beranda menampilkan listing kost yang sudah berstatus `published` dan tersedia.
+- Filter pencarian meliputi kata kunci, tipe gender (`putra`, `putri`, `campur`), kecamatan, rentang harga, periode sewa, dan filter hanya terverifikasi.
+- Listing diprioritaskan berdasarkan `boosted_at` jika fitur boost aktif pada data.
+- Peta interaktif menampilkan marker kost menggunakan Google Maps API.
+- Data marker memuat nama, slug, kecamatan, alamat, tipe gender, harga, koordinat, gambar utama, dan status boost.
+- Sistem menggunakan eager loading untuk relasi gambar utama, pemilik, dan fasilitas agar performa listing tetap baik.
 
-   - Menampilkan penanda posisi ( _pin marker_ ) kost secara akurat di wilayah Kota Bandung. 
+### 4.2 Modul Detail Kost
 
-   - Menyediakan filter pencarian instan berdasarkan: rentang harga (minimum hingga maksimum), fasilitas utama (WiFi, Kamar Mandi Dalam, AC, dll.), tipe hunian (Putra, Putri, Campur), serta jarak radius dari kampus terdekat. 
+- Menampilkan informasi lengkap kost: nama, deskripsi, alamat, kecamatan, tipe gender, harga utama, periode sewa, harga deposit, fasilitas, aturan, foto, lokasi, dan kontak.
+- Kost non-published hanya dapat dilihat oleh admin atau pemilik kost terkait.
+- Pencari kost login dapat memulai chat ke pemilik melalui detail kost.
+- Pemilik tidak dapat mengirim pesan ke listing miliknya sendiri.
+- Chat awal dilindungi rate limiter untuk mengurangi spam.
+- Kost penuh atau non-published tidak menerima pesan baru.
 
-## • **Halaman Detail Kost:** 
+### 4.3 Modul Portal Pemilik Kost
 
-- Menyediakan galeri foto dan video representatif untuk setiap kamar dan area fasilitas bersama. 
+- Pemilik wajib login, email verified, dan memiliki role owner untuk mengakses dashboard.
+- Dashboard menampilkan total properti, jumlah kamar tersedia, jumlah pesan masuk, daftar kost, dan pencarian internal.
+- Pemilik dapat membuat, mengedit, menghapus permanen, dan mengubah status ketersediaan kost.
+- Aksi edit dan delete dilindungi ownership check berdasarkan `auth()->id() === kost.user_id` atau query melalui relasi kost milik user.
+- Form kost mendukung:
+  - nama, deskripsi, alamat, kecamatan, koordinat peta;
+  - tipe gender;
+  - harga bulanan/utama dan periode sewa (`daily`, `weekly`, `monthly`, `three_monthly`, `six_monthly`, `yearly`);
+  - harga deposit dan opsi include utilities;
+  - total kamar dan kamar tersedia;
+  - WhatsApp kontak;
+  - landmark terdekat;
+  - fasilitas standar dan fasilitas custom;
+  - aturan standar dan aturan custom;
+  - catatan aturan tambahan;
+  - upload 4-10 foto;
+  - pemilihan foto utama;
+  - upload dokumen kepemilikan kost.
+- Input teks disanitasi saat penyimpanan untuk mengurangi risiko XSS tersimpan.
+- Pembuatan kost dilindungi rate limiter.
 
-2 
+### 4.4 Modul Chat Pencari Kost & Pemilik
 
-- Menampilkan status ketersediaan kamar secara _real-time_ atau status indikator umum (“Tersedia” / “Penuh”). 
-
-- Menyajikan lokasi presisi pada peta beserta estimasi jarak tempuh nyata ke kampus terdekat. 
-
-## • **Interaksi Fleksibel (Opsi Dual Interaksi):** 
-
-- **Opsi A (** **_Direct WhatsApp_ ):** Tombol CTA ( _Call to Action_ ) khusus untuk menghubungi pemilik secara langsung melalui WhatsApp dengan pesan pembuka otomatis ( _pre-filled message_ ). 
-
-- **Opsi B (** **_In-App Booking/Chat_ ):** Formulir pengajuan minat atau pemesanan internal di dalam platform untuk mencatat rekam ketertarikan calon penghuni. 
-
-## **4.2 Modul Portal Pemilik Kost (** **_Landlord Portal_ )** 
-
-Portal khusus yang didedikasikan bagi para pemilik kost untuk mengelola aset digital mereka: 
-
-- **Autentikasi & Registrasi:** Proses pendaftaran akun yang aman dan cepat menggunakan alamat email aktif atau verifikasi nomor WhatsApp menggunakan sistem _One-Time Password_ (OTP). 
-
-- **Manajemen Properti (CRUD):** Formulir pendaftaran properti baru yang lengkap untuk mengisi nama kost, alamat fisik, deskripsi, fasilitas, penentuan titik koordinat via fitur _drag-and-drop pin_ Google Maps, serta mengunggah galeri foto properti. 
-
-## • **Kelola Ketersediaan Kamar (Dual Mode):** 
-
-   - **Mode Sederhana:** Pemilik cukup menggeser tombol alih ( _toggle status_ ) umum antara “Masih Ada Kamar” atau “Kamar Penuh”. 
-
-   - **Mode Rinci:** Pengaturan jumlah kamar secara mendetail (contoh: Total 10 Kamar, Terisi 8, Sisa 2 Kamar). 
-
-- **Dashboard Pemilik:** Panel analisis ringkas untuk memantau performa tayangan iklan kost, jumlah klik, serta mengajukan aktivasi fitur Iklan Premium (Sundul). 
-
-## **4.3 Modul Admin & Verifikasi (** **_Admin Panel_ )** 
-
-Modul khusus kontrol internal untuk menjaga kualitas dan keamanan ekosistem platform: 
-
-- **Moderasi Data & Pencegahan Penipuan:** Menerapkan sistem _Draf & Review_ . Setiap iklan kost baru yang diajukan pemilik tidak akan langsung dita- 
-
-3 
-
-yangkan kepada publik sebelum melalui pemeriksaan manual dan persetujuan ( _Approve_ ) oleh Admin. Admin berhak menolak ( _Reject_ ) iklan dengan menyertakan alasan yang jelas. 
-
-- **Manajemen Fitur Sundul / Iklan Premium:** Pengelolaan persetujuan manual atau otomatis atas pengajuan fitur “Sundul” agar posisi kost berada pada urutan teratas hasil pencarian. 
-
-## **4.4 Modul Layanan Bantuan & Pengaduan (Hubungi Admin)** 
-
-Modul komunikasi langsung antara pengguna (Pencari Kost & Pemilik Kost) dengan tim Admin untuk menangani komplain, pertanyaan, dan masukan: 
-
-- **Hubungi Admin (CS / Pengaduan):** Pencari kost dan pemilik kost yang telah masuk (login) dapat membuka percakapan baru dengan Admin. Kategori tersedia: Komplain, Pertanyaan, Masukan / Saran, dan Lainnya. Admin tidak dapat memulai percakapan sebagai pengirim. 
-
-- **Kanal & Balasan:** Percakapan berbentuk thread berkelanjutan. Setiap pesan pengguna memperbarui tenggat balasan maksimal 1x24 jam (SLA). Percakapan yang tidak dibalas Admin dalam 24 jam sejak pesan terakhir pengguna akan otomatis ditutup (_expired_ ) dan muncul pada riwayat pengguna. 
-
-- **Inbox Bantuan Admin (Admin Panel):** Admin memiliki inbox khusus untuk melihat percakapan yang belum dibalas, yang sedang berlangsung, serta riwayat yang telah ditutup. Admin dapat membalas, menutup, dan menghapus percakapan yang telah ditutup (riwayat tersimpan 30 hari sebelum dibersihkan otomatis). 
-
-- **Notifikasi:** Badge jumlah pesan belum dibalas untuk pengguna dan jumlah percakapan yang menunggu balasan untuk Admin ditampilkan pada navbar. 
-
-## **5. Model Bisnis & Fitur Monetisasi (Monetization Strategy)** 
-
-Platform ini mengadopsi model pendapatan hibrida yang mengutamakan akuisisi data di tahap awal: 
-
-- **Pendaftaran Gratis (** **_Freemium Model_ ):** Seluruh pemilik kost dibebaskan dari biaya registrasi akun dan penayangan iklan tingkat dasar (100% gratis). Hal ini ditujukan untuk membangun basis data kost yang padat ( _supply density_ ) di area Kota Bandung secara cepat. 
-
-- **Fitur Iklan Premium / Sundul (** **_Operational Revenue_ ):** Sebagai sumber pendapatan utama, pemilik kost dapat membayar biaya nominal tertentu untuk mengaktifkan paket “Sundul”. Fitur ini memungkinkan properti mereka berada di daftar teratas hasil pencarian ( _Top List_ ) dan memperoleh lencana verifikasi khusus (badge “Rekomendasi” / “Verified”). 
-
-## **6. Persyaratan Non-Fungsional (Non-Functional Requirements)** 
-
-- **Performa & Kecepatan:** Mengingat mayoritas mahasiswa mengakses platform melalui ponsel pintar, desain web wajib menerapkan pendekatan _mobile-first_ yang responsif dan memiliki waktu muat ( _page load time_ ) yang sangat cepat demi menjaga kenyamanan pengguna. 
-
-- **Keamanan Data:** Perlindungan ketat pada enkripsi data pribadi sensitif milik pengguna dan pemilik kost (terutama nomor telepon) guna mencegah aktivitas pengambilan data massal secara ilegal ( _data scraping_ ) oleh pihak ketiga. 
-
-- **Kemudahan Penggunaan (** **_Usability_ ):** Antarmuka dan alur pendaftaran properti pada Portal Pemilik dirancang sesederhana mungkin agar mudah digunakan secara intuitif oleh pemilik kost dari berbagai latar belakang usia dan literasi teknologi. 
-
-4 
-
+- Pencari kost dan pemilik memiliki dashboard chat masing-masing.
+- Percakapan dibuat per kombinasi kost dan pencari.
+- Pesan memiliki status terbaca (`read_at`) dan badge jumlah pesan belum dibaca.
+- Pengguna dapat mengarsipkan percakapan dari sisi masing-masing.
+- Pengiriman pesan dilindungi validasi server-side dan rate limiter.
+- Akses percakapan dilindungi ownership check:
+  - pencari hanya melihat percakapan dengan `seeker_id` miliknya;
+  - pemilik hanya melihat percakapan pada kost yang dimilikinya.
+
+### 4.5 Modul Profil, Keamanan Akun, dan Verifikasi
+
+- Pengguna dapat mengelola profil, avatar, nomor WhatsApp, dan data bisnis untuk pemilik.
+- Perubahan email memicu reset verifikasi email dan notifikasi perubahan email.
+- Sistem mendukung email verification.
+- Sistem mendukung two-factor authentication (2FA) Fortify dengan konfirmasi password.
+- Sistem mendukung passkeys/WebAuthn dengan konfirmasi password.
+- Pemilik dapat mengunggah dokumen identitas dan dokumen kepemilikan kost untuk diverifikasi admin.
+- Dokumen verifikasi disimpan pada disk privat dan hanya dapat diakses oleh admin melalui route khusus.
+
+### 4.6 Modul Admin & Moderasi
+
+- Admin wajib login, email verified, dan memiliki role admin.
+- Admin dapat melihat dashboard moderasi dengan tab pending, published, rejected, all, facilities, dan verification.
+- Admin dapat approve/reject listing kost.
+- Admin dapat approve/reject fasilitas custom.
+- Admin dapat approve/reject verifikasi identitas pemilik.
+- Admin dapat approve/reject verifikasi kepemilikan kost.
+- Rejection dapat menyimpan catatan alasan penolakan.
+- Admin dapat membuka dokumen verifikasi melalui route admin yang dilindungi middleware.
+
+### 4.7 Modul Hubungi Admin
+
+- Pengguna non-admin yang login dan verified dapat membuka percakapan bantuan dengan kategori `komplain`, `pertanyaan`, `masukan`, atau `lainnya`.
+- Admin tidak dapat menggunakan halaman Hubungi Admin sebagai pengirim.
+- Setiap pesan user mengisi atau memperbarui `awaiting_reply_at`.
+- Percakapan yang tidak dibalas admin dalam 24 jam otomatis ditutup sebagai expired.
+- Admin memiliki inbox bantuan dengan filter belum dibalas, open, dan history.
+- Admin dapat membalas, menutup, dan soft delete percakapan yang sudah ditutup.
+- Percakapan soft-deleted dipertahankan selama 30 hari sebelum dipruning permanen.
+
+## 5. Model Bisnis & Monetisasi
+
+### 5.1 Tahap Akuisisi
+
+- Pendaftaran akun dan listing dasar gratis.
+- Prioritas awal adalah membangun supply density kost Bandung dan meningkatkan kepercayaan melalui moderasi serta verifikasi.
+
+### 5.2 Tahap Monetisasi
+
+- Fondasi data sudah mendukung listing priority melalui kolom `boosted_at`.
+- Fitur pembayaran/aktivasi boost belum menjadi transaksi internal penuh pada versi saat ini.
+- Monetisasi lanjutan dapat berupa paket boost manual, badge rekomendasi, atau promosi berbayar setelah traffic dan supply stabil.
+
+## 6. Persyaratan Non-Fungsional
+
+### 6.1 Keamanan
+
+- Route sensitif dilindungi middleware `auth`, `verified`, `owner`, dan `admin`.
+- Aksi pemilik dilindungi ownership check untuk mencegah IDOR.
+- Form menggunakan CSRF Laravel/Livewire dan validasi server-side.
+- Input teks penting disanitasi saat penyimpanan.
+- Password menggunakan hashing Laravel.
+- Login, register, chat, dan pembuatan kost memiliki rate limiting sesuai konteks.
+- Dokumen verifikasi disimpan privat.
+
+### 6.2 Performa
+
+- Listing menggunakan eager loading untuk relasi utama.
+- Dashboard menggunakan pagination untuk daftar kost dan inbox admin.
+- Build frontend diproses melalui Vite/Tailwind.
+- Production wajib menggunakan cache config, route, view, dan event.
+
+### 6.3 UX & Aksesibilitas
+
+- Desain mobile-first dengan gaya Neo-Brutalism dan dukungan dark mode.
+- Komponen UI konsisten menggunakan Blade components dan styling Tailwind.
+- Pesan error validasi ditampilkan dalam bahasa Indonesia.
+- Alur dashboard pemilik dan admin dibuat berbasis tab/filter agar mudah dipahami.
+
+## 7. Batasan Versi Saat Ini
+
+- Belum ada pembayaran online atau transaksi booking internal.
+- Belum ada OTP WhatsApp; WhatsApp digunakan sebagai nomor kontak dan field profil.
+- Belum ada analitik tayangan/klik listing yang lengkap.
+- Fitur boost sudah memiliki fondasi pengurutan, tetapi proses pembelian/aktivasi otomatis belum menjadi modul transaksi penuh.
+- PWA/offline mode belum menjadi fokus implementasi utama.
+
+## 8. Kriteria Kesiapan Production
+
+- Semua route sensitif harus tetap terlindungi middleware role dan verified.
+- `.env` production wajib menggunakan `APP_ENV=production`, `APP_DEBUG=false`, domain production, database production, mailer valid, dan secret yang tidak tersimpan di git.
+- Jalankan `composer lint:check`, `composer types:check`, `php artisan test`, dan `npm run build` sebelum deployment.
+- Jalankan `php artisan migrate --force` dan `php artisan optimize` di server production.

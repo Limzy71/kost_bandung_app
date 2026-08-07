@@ -1,111 +1,369 @@
-# **PRODUCT REQUIREMENT DOCUMENT (PRD)** 
+# Product Requirement Document (PRD)
 
-## **Nama Produk: Platform Pencarian & Manajemen Kost Hyper-Local Bandung** 
+## Platform Directory Kost Hyper-Local Bandung
 
-Platform: Web Application (Mobile-Responsive / PWA) | Versi Dokumen: 2.0 (Updated Stack) 
+Versi Dokumen: 2.1  
+Status: Disesuaikan dengan implementasi aplikasi saat ini  
+Platform: Web Application Mobile-Responsive
 
-## **1. Visi & Lingkup Produk** 
+## 1. Visi & Lingkup Produk
 
-Membangun platform direktori kost berbasis peta interaktif yang berfokus secara eksklusif di wilayah administratif Kota Bandung. Sistem dirancang untuk memberikan kemudahan bagi mahasiswa dalam mencari dan menghubungi pemilik kost, serta menyediakan portal _self-service_ yang intuitif bagi pemilik properti. Pengembangan menggunakan arsitektur monolith modern untuk memastikan kecepatan _development_ , kinerja SEO yang unggul, dan kemudahan skalabilitas. 
+Platform Directory Kost Hyper-Local Bandung adalah aplikasi web untuk membantu pencari kost menemukan listing kost valid di Kota Bandung dan membantu pemilik kost mengelola listing secara mandiri. Produk mengutamakan pencarian cepat, peta interaktif, dashboard pemilik, chat internal, verifikasi dokumen, dan moderasi admin.
 
-## **2. Arsitektur Sistem & Tech Stack** 
+Produk saat ini bukan marketplace transaksi sewa penuh. Fokusnya adalah direktori, discovery, verifikasi, dan komunikasi awal antara pencari kost dan pemilik.
 
-Sistem dikembangkan menggunakan perpaduan teknologi yang mengutamakan kecepatan interaksi (layaknya _Single Page Application_ ) namun tetap mempertahankan keunggulan _Server-Side Rendering_ (SSR).
+## 2. Tech Stack Aktual
 
-|**Lapisan Sistem**|**Teknologi**<br>**Pilihan**|**Peran & Fungsi Utama**|
-|---|---|---|
-|Back-end & Core<br>Engine|Laravel 12|Menangani logika bisnis, database, ru-<br>te, dan autentikasi.|
-|Interaktivitas &<br>Logika UI|Laravel Livewire<br>3|Menjalankan pencarian, flter, dan pro-<br>ses form tanpa_page reload_.|
-|Interaksi Klien &|Alpine.js +|Menangani_drag-and-drop_pin peta, mo-|
-|Peta|Google Maps API|dal, dan_dropdown_di_browser_.|
-|Styling &|Tailwind CSS|Menyediakan utilitas desain responsif|
-|Tampilan|v4.1|dengan pendekatan_mobile-frst_.|
-|Lingkungan|Laravel Herd|Menyediakan server lokal yang sangat|
-|Pengembangan|(Windows)|cepat, bersih, dan terisolasi.|
-|Database|PostgreSQL /<br>MySQL|Menyimpan relasi entitas pengguna,<br>data kost, dan transaksi ftur sundul.|
+| Lapisan | Teknologi | Fungsi |
+| --- | --- | --- |
+| Backend | Laravel 13 | Routing, model, validasi, auth, middleware, database, notification |
+| Interaktivitas Server UI | Livewire 4 | Komponen pencarian, dashboard, form, chat, admin panel |
+| Auth & Security | Laravel Fortify | Login, register, reset password, email verification, 2FA, passkeys |
+| Frontend Build | Vite 8 | Build asset production |
+| Styling | Tailwind CSS 4 | UI mobile-first, dark mode, Neo-Brutalism |
+| Client Interaction | Alpine.js | Interaksi ringan, peta, modal, state UI |
+| Maps | Google Maps API | Peta katalog dan pemilihan lokasi kost |
+| Database | MySQL/PostgreSQL compatible | Penyimpanan user, kost, fasilitas, chat, verifikasi |
+| Testing & Quality | Pest, Pint, PHPStan/Larastan | Test suite, lint, type check |
 
+## 3. Role & Hak Akses
 
+### 3.1 Guest
 
-## **3. Profil Pengguna (User Personas)** 
+- Melihat beranda dan hasil pencarian kost.
+- Melihat detail kost yang sudah published.
+- Mengakses login dan register.
+- Jika mencoba memulai chat dari detail kost, diarahkan ke login.
 
-1 
+### 3.2 User / Pencari Kost
 
-- **Pencari Kost (Mahasiswa):** Pengguna utama, khususnya mahasiswa Teknik Informatika atau fakultas lainnya yang membutuhkan kost strategis, memprioritaskan fitur pencarian berbasis lokasi, filter harga, dan kejelasan status kamar. 
+- Mengelola profil dan keamanan akun.
+- Mengirim pesan ke pemilik kost dari halaman detail.
+- Membuka dashboard chat pencari.
+- Mengarsipkan percakapan dari sisi pencari.
+- Menghubungi admin melalui fitur Hubungi Admin.
 
-- **Pemilik Kost (** **_Landlord_ ):** Pengguna mitra yang membutuhkan portal sederhana tanpa kerumitan teknis untuk mendaftarkan properti, memperbarui ketersediaan kamar, dan memanfaatkan fitur promosi. 
+### 3.3 Owner / Pemilik Kost
 
-- **Administrator Web:** Pengelola sistem yang bertugas memoderasi iklan baru, mencegah penipuan, dan memantau performa pendapatan dari fitur promosi. 
+- Mengakses dashboard pemilik setelah login dan email verified.
+- Membuat, mengedit, menghapus, dan mengubah status ketersediaan kost miliknya.
+- Mengelola fasilitas, aturan, foto, harga, periode sewa, lokasi, dan dokumen kepemilikan.
+- Membalas chat dari pencari kost.
+- Menghubungi admin melalui fitur Hubungi Admin.
 
-## **4. User Stories (Kebutuhan Pengguna)** 
+### 3.4 Admin
 
-- Sebagai mahasiswa pencari kost, saya ingin memfilter daftar kost menggunakan Livewire tanpa harus memuat ulang halaman agar proses pencarian lebih cepat. 
+- Mengakses dashboard moderasi dan inbox bantuan admin.
+- Approve/reject listing kost.
+- Approve/reject fasilitas custom.
+- Approve/reject dokumen identitas owner.
+- Approve/reject dokumen kepemilikan kost.
+- Membuka dokumen verifikasi privat.
+- Membalas, menutup, dan menghapus percakapan bantuan.
 
-- Sebagai mahasiswa pencari kost, saya ingin melihat informasi kost yang dirender di sisi server agar tautan yang saya bagikan memunculkan _preview_ (SEO/Open Graph) yang akurat. 
+## 4. Routing Produk
 
-- Sebagai pemilik kost, saya ingin menandai lokasi properti saya di Google Maps secara presisi agar mahasiswa mudah menemukan alamat saya. 
+| Route | Akses | Fungsi |
+| --- | --- | --- |
+| `/` | Public | Beranda dan pencarian kost |
+| `/kost/{slug}` | Public terbatas | Detail kost published; non-published hanya admin/pemilik |
+| `/owner/{user}` | Public | Profil publik pemilik |
+| `/login` | Guest | Login Livewire |
+| `/register` | Guest | Register user/owner |
+| `/dashboard` | Auth + verified + owner | Dashboard pemilik |
+| `/dashboard/kost/create` | Auth + verified + owner | Form tambah kost |
+| `/dashboard/kost/{slug}/edit` | Auth + verified + owner | Form edit kost milik owner |
+| `/dashboard/chats` | Auth + verified + owner | Chat pemilik |
+| `/dashboard/user/chats` | Auth + verified | Chat pencari |
+| `/profil` | Auth + verified | Profil dan keamanan akun |
+| `/hubungi-admin` | Auth + verified, non-admin | Chat bantuan ke admin |
+| `/admin/moderation` | Auth + verified + admin | Dashboard moderasi |
+| `/admin/messages` | Auth + verified + admin | Inbox bantuan admin |
+| `/admin/verification-document/{kind}/{id}` | Auth + verified + admin | Akses dokumen verifikasi privat |
 
-- Sebagai pemilik kost, saya ingin menekan satu tombol _toggle_ untuk mengubah status sisa kamar agar data selalu _up-to-date_ . 
+## 5. User Stories
 
-- Sebagai admin, saya ingin meninjau draf pendaftaran kost baru dan menyetujuinya sebelum tampil di halaman utama untuk menjaga keamanan platform. 
+### 5.1 Pencari Kost
 
-- Sebagai pencari kost / pemilik kost, saya ingin mengirim komplain, pertanyaan, atau masukan ke Admin melalui halaman "Hubungi Admin" agar kendala saya ditangani langsung oleh tim internal. 
+- Sebagai pencari kost, saya ingin mencari kost berdasarkan kata kunci agar menemukan listing yang relevan.
+- Sebagai pencari kost, saya ingin memfilter kost berdasarkan gender, kecamatan, harga, periode sewa, dan status verifikasi.
+- Sebagai pencari kost, saya ingin melihat lokasi kost pada peta agar memahami posisi relatifnya.
+- Sebagai pencari kost, saya ingin melihat foto, fasilitas, aturan, harga, dan ketersediaan kamar sebelum menghubungi pemilik.
+- Sebagai pencari kost, saya ingin mengirim pesan ke pemilik dari halaman detail kost.
+- Sebagai pencari kost, saya ingin melihat riwayat chat dan mengarsipkan percakapan.
+- Sebagai pencari kost, saya ingin menghubungi admin jika ada pertanyaan atau komplain.
 
-- Sebagai admin, saya ingin melihat inbox percakapan bantuan yang belum dibalas agar dapat merespons pengguna dalam maksimal 1x24 jam. 
+### 5.2 Pemilik Kost
 
-## **5. Spesifikasi Fungsional Utama** 
+- Sebagai pemilik, saya ingin mendaftar akun owner dengan data bisnis dan nomor WhatsApp.
+- Sebagai pemilik, saya ingin membuat listing kost lengkap dengan foto, fasilitas, aturan, harga, lokasi, dan dokumen kepemilikan.
+- Sebagai pemilik, saya ingin mengedit listing hanya jika listing tersebut milik saya.
+- Sebagai pemilik, saya ingin mengubah status ketersediaan kamar secara cepat dari dashboard.
+- Sebagai pemilik, saya ingin menerima dan membalas pesan dari pencari kost.
+- Sebagai pemilik, saya ingin mengunggah dokumen identitas dan kepemilikan agar listing saya dapat dipercaya.
 
-## **Modul Pemetaan & Geofencing** 
+### 5.3 Admin
 
-- **Fungsi** **_Bounding Box_ :** Alpine.js akan menangkap koordinat dari Google Maps API dan mengirimkannya ke Livewire untuk divalidasi apakah titik tersebut berada di dalam batas Kota Bandung. 
+- Sebagai admin, saya ingin meninjau listing pending sebelum tayang publik.
+- Sebagai admin, saya ingin menolak listing bermasalah.
+- Sebagai admin, saya ingin memverifikasi identitas owner dan dokumen kepemilikan kost.
+- Sebagai admin, saya ingin mengelola fasilitas custom agar daftar fasilitas tetap berkualitas.
+- Sebagai admin, saya ingin melihat inbox bantuan berdasarkan status belum dibalas, aktif, dan riwayat.
+- Sebagai admin, saya ingin menutup dan menghapus percakapan bantuan yang sudah selesai.
 
-- **_Clustering Marker_ :** Menyatukan pin penanda kost yang berdekatan menjadi satu indikator angka agar tampilan peta tidak menumpuk saat _zoomout_ . 
+## 6. Spesifikasi Fungsional
 
-## **Manajemen Iklan Kost (Listing)** 
+### 6.1 Auth & Account Security
 
-2 
+- Login dan register berbasis Livewire.
+- Register mendukung role `user` dan `owner`; role admin tidak dibuka dari form publik.
+- Password minimal 8 karakter, mengandung huruf dan angka.
+- Register dibatasi rate limiter maksimal 5 akun valid per IP per jam.
+- Fortify mengaktifkan:
+  - registration;
+  - reset password;
+  - email verification;
+  - two-factor authentication dengan `confirm` dan `confirmPassword`;
+  - passkeys dengan `confirmPassword`.
+- Profil mendukung update nama, email, nomor WhatsApp, business name, avatar, dan dokumen identitas.
+- Jika email berubah, `email_verified_at` direset dan notifikasi dikirim.
 
-- **Alur Moderasi Draf:** Kost yang baru didaftarkan masuk dengan status _Pending Review_ dan baru dapat diakses publik setelah admin mengubah statusnya menjadi _Published_ . 
+### 6.2 Katalog & Pencarian Kost
 
-- **Form Ketersediaan Dinamis:** Komponen antarmuka yang memungkinkan pemilik menginput sisa jumlah kamar spesifik atau sekadar menyalakan opsi “Masih Ada/Penuh” menggunakan komponen _toggle_ . 
+- Komponen utama: `KostSearch`.
+- Query hanya menampilkan kost dengan `status = published` dan `is_available = true`.
+- Filter:
+  - search keyword;
+  - gender type;
+  - district;
+  - rent period;
+  - minimum price;
+  - maximum price;
+  - verified only.
+- District count dihitung sebelum filter district diterapkan.
+- Sorting memprioritaskan `boosted_at` kemudian `created_at` terbaru.
+- Data map disusun dari hasil pagination agar marker selaras dengan listing.
+- Relasi eager loaded: `primaryImage`, `user`, dan `facilities` approved.
 
-## **Modul Komunikasi (Dual Interaksi)** 
+### 6.3 Detail Kost
 
-- **Tanya via WhatsApp:** Tombol CTA yang melakukan _redirect_ otomatis ke aplikasi WhatsApp pemilik dengan membawa parameter teks sapaan dan URL kost terkait. 
+- Komponen utama: `KostDetail`.
+- Relasi dimuat: facilities, rules, images, user, prices.
+- Detail non-published tidak dapat dilihat publik.
+- Admin dan pemilik listing tetap dapat melihat preview listing non-published.
+- User login dapat membuat percakapan dengan pemilik.
+- Sistem menolak chat jika:
+  - kost tidak published;
+  - kost penuh;
+  - user adalah pemilik kost;
+  - rate limit terlampaui.
 
-- **Kirim Pesan /** **_Booking Internal_ :** Fitur modal _pop-up_ berbasis Alpine.js yang memungkinkan calon penyewa mengirim pesan langsung ke _dashboard_ sistem pemilik kost. 
+### 6.4 Form Create/Edit Kost
 
-## **Modul Fitur Sundul (Iklan Premium)** 
+- Komponen utama: `CreateKost` dan `EditKost`.
+- Required data:
+  - nama;
+  - deskripsi;
+  - district;
+  - alamat;
+  - latitude/longitude;
+  - gender type;
+  - harga utama;
+  - rent period;
+  - total rooms;
+  - available rooms;
+  - minimal 4 foto dan maksimal 10 foto.
+- Optional data:
+  - deposit;
+  - include utilities;
+  - WhatsApp contact;
+  - nearby landmarks;
+  - additional rules note;
+  - extra rent periods and prices;
+  - ownership document.
+- Foto wajib image `jpeg`, `png`, `jpg`, atau `webp`, maksimal 2MB per file.
+- Dokumen ownership saat ini berupa image dengan tipe dokumen `pbb` atau `surat_kuasa`.
+- Input teks utama disimpan dengan `strip_tags()`.
+- Create kost menghasilkan slug unik dan status awal `pending`.
+- Edit kost memvalidasi kepemilikan pada `mount()`.
+- Delete dan toggle availability menggunakan query kost milik user untuk mencegah IDOR.
 
-- **Mekanisme** **_Boost_ :** Sistem memperbarui data _timestamp_ khusus di database saat pemilik kost berhasil mengaktifkan paket iklan. 
+### 6.5 Dashboard Pemilik
 
-- **Logika Pengurutan Pencarian:** _Query builder_ Laravel akan secara otomatis memprioritaskan properti dengan status _boost_ aktif untuk tampil di urutan teratas hasil pencarian Livewire. 
+- Menampilkan total properti, total kamar tersedia, dan pesan masuk belum dibaca.
+- Listing owner dipaginasi 9 item.
+- Pencarian dashboard berdasarkan nama, kecamatan, dan alamat.
+- Query eager load `primaryImage` dan `facilities`, serta `withCount('conversations')`.
+- Delete membutuhkan konfirmasi teks `HAPUS`.
+- Delete dilakukan permanen (`forceDelete`) dan file foto ikut dibersihkan melalui lifecycle model.
 
-## **Modul Layanan Bantuan & Pengaduan (Hubungi Admin)** 
+### 6.6 Chat Kost
 
-- **Thread Percakapan:** Pencari kost dan pemilik kost yang sudah login dapat membuka percakapan baru dengan kategori Komplain, Pertanyaan, Masukan / Saran, atau Lainnya. Admin tidak dapat memulai percakapan sebagai pengirim (dilindungi guard 403). 
+- Model utama: `KostConversation` dan `KostMessage`.
+- Percakapan memiliki status:
+  - `open`;
+  - `archived_by_owner`;
+  - `archived_by_seeker`.
+- Owner hanya dapat membuka percakapan pada kost miliknya.
+- Seeker hanya dapat membuka percakapan miliknya.
+- Pesan dibatasi maksimal 2000 karakter.
+- Rate limiter pengiriman pesan: 20 pesan per menit per user untuk dashboard chat.
+- Badge unread dihitung berdasarkan pesan yang belum `read_at` dan bukan dikirim oleh user aktif.
 
-- **SLA 1x24 Jam:** Setiap pesan pengguna memperbarui kolom `awaiting_reply_at`. Percakapan yang tidak dibalas Admin dalam 24 jam sejak pesan terakhir pengguna otomatis ditutup (_expired_ ) dan berpindah ke tab Riwayat pengguna. 
+### 6.7 Admin Moderation
 
-- **Inbox Bantuan Admin:** Dashboard admin menampilkan tab Belum Dibalas / Aktif / Riwayat dengan jumlah percakapan. Admin dapat membalas (hanya percakapan terbuka), menutup, dan menghapus percakapan yang telah ditutup. Percakapan yang dihapus tersimpan ( _soft delete_ ) selama 30 hari sebelum dibersihkan permanen beserta pesannya. 
+- Komponen utama: `ModerationDashboard`.
+- Tab:
+  - pending;
+  - published;
+  - rejected;
+  - all;
+  - facilities;
+  - verification.
+- Admin dapat:
+  - approve listing menjadi published;
+  - reject listing;
+  - approve/reject fasilitas pending;
+  - approve/reject identitas owner;
+  - approve/reject dokumen kepemilikan kost.
+- Verification tab menampilkan owner dengan identitas pending dan kost dengan ownership pending.
+- Rejection note default digunakan jika admin tidak mengisi alasan.
 
-- **Notifikasi Badge:** Badge jumlah balasan admin belum dibaca untuk pengguna, serta badge jumlah percakapan yang menunggu balasan untuk admin, ditampilkan pada navbar. Tidak menggunakan notifikasi email/queue. 
+### 6.8 Hubungi Admin
 
-## **6. Persyaratan Non-Fungsional & SEO** 
+- Model utama: `AdminConversation` dan `AdminMessage`.
+- Kategori: `komplain`, `pertanyaan`, `masukan`, `lainnya`.
+- User dapat membuka percakapan baru dan follow-up pada percakapan open.
+- Admin tidak dapat membuka percakapan sebagai pengirim user.
+- Pesan user mengisi `awaiting_reply_at`; admin reply mengosongkannya.
+- Percakapan open dengan `awaiting_reply_at` lebih dari 24 jam otomatis ditutup sebagai expired.
+- Soft-deleted conversation dipruning setelah 30 hari.
+- Admin inbox menyediakan filter unanswered, open, dan history.
 
-- **Optimalisasi Mesin Pencari (SEO):** Detail halaman kost di-render menggunakan sintaks Blade standar untuk memastikan Google Bot dapat mengindeks nama kost, fasilitas, dan harga secara instan. 
+### 6.9 Verifikasi Dokumen
 
-- **Performa & Kecepatan Load:** Penggunaan Tailwind v4.1 mengeliminasi file CSS yang membengkak, memastikan skor performa _Core Web Vitals_ yang tinggi di perangkat seluler. 
+- User/owner identity verification disimpan di data user.
+- Ownership verification disimpan per kost.
+- Status verifikasi: unverified, pending, verified, rejected.
+- Kost dianggap verified jika identitas owner verified dan ownership kost verified.
+- Dokumen disimpan pada disk privat `verification_docs`.
+- Akses dokumen hanya melalui controller admin yang dilindungi middleware admin.
 
-- **Keamanan Form:** Seluruh pengiriman data dari form pendaftaran dan _login_ dilindungi oleh proteksi CSRF bawaan Laravel dan validasi sisi server. 
+### 6.10 UI/UX
 
-## **7. Strategi Peluncuran (** **_Rollout Phase_ )** 
+- Desain memakai gaya Neo-Brutalism dengan border tebal, shadow, warna kontras, dan dark mode.
+- Komponen UI utama memakai Blade components seperti brutal card, brutal button, badge, navbar, dan layout app/auth.
+- Layout mobile-first.
+- Pagination menggunakan view kustom agar konsisten dengan desain.
+- Validasi dan feedback menggunakan teks Bahasa Indonesia.
 
-- **Fase 1 (Pilot Project Lokasi Spesifik):** Validasi sistem secara _hyper-local_ dengan mengakuisisi data kost di sekitar kampus prioritas, seperti lingkungan area Universitas Pasundan, untuk memastikan geofencing dan manajemen database berjalan tanpa _bug_ . 
+## 7. Data Model Ringkas
 
-3 
+| Model | Fungsi |
+| --- | --- |
+| `User` | Akun user, owner, admin; profil; verifikasi identitas; 2FA/passkeys |
+| `Kost` | Listing kost, lokasi, harga utama, status, verifikasi ownership, boost |
+| `KostImage` | Foto listing dan foto utama |
+| `KostPrice` | Harga tambahan per periode sewa |
+| `Facility` | Fasilitas approved/pending/rejected, standar maupun custom |
+| `Rule` | Aturan kost |
+| `KostConversation` | Thread chat pencari-owner |
+| `KostMessage` | Pesan pada chat pencari-owner |
+| `AdminConversation` | Thread Hubungi Admin |
+| `AdminMessage` | Pesan pada thread Hubungi Admin |
 
-- **Fase 2 (Ekspansi Kota Bandung):** Membuka pendaftaran publik secara masif melalui pemasaran komunitas dan grup mahasiswa se-Bandung untuk mengumpulkan _density_ (kepadatan data). 
+## 8. Non-Functional Requirements
 
-- **Fase 3 (Monetisasi Aktif):** Mengaktifkan modul pembelian Iklan Premium (“Sundul Iklan”) bagi pemilik kost setelah mendapatkan _traffic_ organik yang stabil. 
+### 8.1 Security
 
-4 
+- Route sensitif dilindungi `auth`, `verified`, `owner`, dan `admin`.
+- Ownership check diterapkan pada edit/delete/toggle/chat.
+- CSRF Laravel/Livewire aktif pada form.
+- Validasi server-side digunakan pada seluruh input penting.
+- Sanitasi input teks dilakukan pada penyimpanan listing.
+- Rate limiter diterapkan pada register, create kost, start chat, dan pengiriman pesan.
+- Dokumen verifikasi tidak disimpan di public disk.
+
+### 8.2 Performance
+
+- Eager loading digunakan pada listing, detail, dashboard, chat, dan admin inbox.
+- Pagination digunakan pada katalog, dashboard owner, dan admin inbox.
+- Asset production dibuild menggunakan Vite.
+- Production harus menggunakan cache Laravel (`config`, `route`, `view`, `event`).
+
+### 8.3 Reliability
+
+- Test suite menggunakan Pest.
+- Static analysis menggunakan PHPStan/Larastan.
+- Code style menggunakan Pint.
+- Deployment final wajib menjalankan test dan build.
+
+### 8.4 SEO
+
+- Detail kost dirender server-side melalui Blade/Livewire layout.
+- URL detail menggunakan slug.
+- Halaman publik dapat diindeks untuk konten listing yang sudah published.
+
+## 9. Deployment Requirements
+
+### 9.1 Environment Production
+
+Wajib disiapkan pada server production:
+
+```env
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://domain-production
+DB_CONNECTION=mysql
+DB_HOST=...
+DB_DATABASE=...
+DB_USERNAME=...
+DB_PASSWORD=...
+MAIL_MAILER=smtp
+MAIL_HOST=...
+MAIL_PORT=587
+MAIL_USERNAME=...
+MAIL_PASSWORD=...
+MAIL_ENCRYPTION=tls
+QUEUE_CONNECTION=database
+CACHE_STORE=database
+SESSION_SECURE_COOKIE=true
+```
+
+### 9.2 Command Deployment
+
+```bash
+composer install --no-dev --optimize-autoloader
+npm ci
+npm run build
+php artisan migrate --force
+php artisan optimize
+```
+
+### 9.3 Command Verifikasi Sebelum Deploy
+
+```bash
+composer lint:check
+composer types:check
+php artisan test
+npm run build
+```
+
+## 10. Batasan & Roadmap
+
+### 10.1 Batasan Versi Saat Ini
+
+- Belum ada pembayaran booking/sewa internal.
+- Belum ada OTP WhatsApp.
+- Belum ada dashboard analitik tayangan dan klik yang lengkap.
+- Belum ada sistem pembelian boost otomatis.
+- Belum ada PWA/offline mode penuh.
+
+### 10.2 Roadmap Lanjutan
+
+- Paket boost/iklan premium dengan transaksi dan invoice.
+- Analytics pemilik: view, click, chat conversion.
+- Sistem laporan listing bermasalah dari pencari.
+- Radius kampus dan estimasi jarak tempuh.
+- Notifikasi email/queue untuk chat dan moderation update.
+- Optimasi SEO detail kost dengan metadata Open Graph yang lebih lengkap.

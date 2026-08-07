@@ -51,12 +51,6 @@
                         <x-icon name="lucide-moon" class="w-4 h-4 stroke-[2.5]" />
                         <span class="hidden sm:inline">Gelap</span>
                     </button>
-                    <button type="button" @click="$flux.appearance = 'system'"
-                        :class="$flux.appearance === 'system' ? 'bg-yellow-300 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white border-2 border-transparent'"
-                        class="px-3 py-1.5 rounded-lg font-black text-xs uppercase flex items-center gap-1.5 transition-all cursor-pointer">
-                        <x-icon name="lucide-monitor" class="w-4 h-4 stroke-[2.5]" />
-                        <span class="hidden sm:inline">Sistem</span>
-                    </button>
                 </div>
 
                 <button type="button" wire:click="toggleEdit"

@@ -69,7 +69,7 @@
             <!-- Left: Conversation List -->
             <div class="lg:col-span-2 space-y-4">
                 <div class="flex flex-wrap items-center gap-2">
-                    <button wire:click="$set('tab', 'active')" class="px-4 py-2 border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg {{ $tab === 'active' ? 'bg-emerald-400 text-black dark:text-white' : 'bg-white dark:bg-zinc-900 text-black dark:text-white hover:bg-emerald-100 dark:hover:bg-emerald-950/40' }}">
+                    <button wire:click="$set('tab', 'active')" class="px-4 py-2 border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg {{ $tab === 'active' ? 'bg-emerald-400 text-black dark:text-white' : 'bg-white dark:bg-zinc-900 text-black dark:text-white hover:bg-emerald-100 dark:hover:bg-zinc-800' }}">
                         <x-icon name="lucide-message-circle" class="w-3.5 h-3.5 inline -mt-0.5 mr-1 {{ $tab === 'active' ? 'fill-black dark:fill-white text-black dark:text-white' : '' }}" />
                         Percakapan Aktif
                     </button>
@@ -84,7 +84,7 @@
                         <button
                             type="button"
                             wire:click="openConversation({{ $conversation->id }})"
-                            class="w-full text-left p-4 border-3 border-black dark:border-zinc-700 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] transition-all cursor-pointer {{ $selected && $selected->id === $conversation->id ? 'bg-yellow-200 dark:bg-yellow-950/40 translate-x-0.5 translate-y-0.5 shadow-none ring-2 ring-black' : 'bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800' }}"
+                            class="w-full text-left p-4 border-3 border-black dark:border-zinc-700 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] transition-all cursor-pointer {{ $selected && $selected->id === $conversation->id ? 'bg-yellow-300 dark:bg-yellow-400 text-black [&_*]:!text-black translate-x-0.5 translate-y-0.5 shadow-none ring-2 ring-black' : 'bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800' }}"
                         >
                             <div class="flex items-center justify-between gap-3">
                                 <div class="flex items-center gap-2 min-w-0">

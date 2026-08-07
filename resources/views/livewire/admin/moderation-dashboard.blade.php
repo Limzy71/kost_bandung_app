@@ -304,7 +304,7 @@
                                         </div>
 
                                         <a href="{{ route('admin.verification.document', ['kind' => 'identity', 'id' => $verUser->id]) }}" target="_blank"
-                                            class="w-full py-3 bg-cyan-300 hover:bg-cyan-200 dark:hover:bg-cyan-950/40 text-black border-3 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 cursor-pointer">
+                                            class="w-full py-3 bg-cyan-300 hover:bg-cyan-200 dark:hover:bg-cyan-400 text-black border-3 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 cursor-pointer">
                                             <x-icon name="lucide-eye" class="w-4 h-4 stroke-[2.5]" />
                                             Lihat Dokumen KTP
                                         </a>
@@ -377,7 +377,7 @@
                                                 <span class="text-xs font-black text-black dark:text-white">{{ $verKost->ownershipDocTypeLabel() }}</span>
                                             </div>
                                             <a href="{{ route('admin.verification.document', ['kind' => 'ownership', 'id' => $verKost->id]) }}" target="_blank"
-                                                class="w-full py-3 bg-cyan-300 hover:bg-cyan-200 dark:hover:bg-cyan-950/40 text-black border-3 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 cursor-pointer">
+                                                class="w-full py-3 bg-cyan-300 hover:bg-cyan-200 dark:hover:bg-cyan-400 text-black border-3 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl flex items-center justify-center gap-2 cursor-pointer">
                                                 <x-icon name="lucide-eye" class="w-4 h-4 stroke-[2.5]" />
                                                 Lihat Dokumen Kepemilikan
                                             </a>
@@ -615,7 +615,7 @@
                             <!-- View Full Detail Button for Admin -->
                             <a 
                                 href="{{ route('kost.show', $kost->slug) }}?from=moderation" 
-                                class="w-full py-2.5 bg-cyan-300 hover:bg-cyan-200 dark:hover:bg-cyan-950/40 active:bg-cyan-400 text-black border-3 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl cursor-pointer flex items-center justify-center gap-1.5"
+                                class="w-full py-2.5 bg-cyan-300 hover:bg-cyan-200 dark:hover:bg-cyan-400 active:bg-cyan-400 text-black border-3 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl cursor-pointer flex items-center justify-center gap-1.5"
                             >
                                 <x-icon name="lucide-eye" class="w-4 h-4 stroke-[2.5]" />
                                 <span>Lihat Detail & Pratinjau Lengkap</span>

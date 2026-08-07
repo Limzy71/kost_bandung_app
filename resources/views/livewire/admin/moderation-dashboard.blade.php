@@ -62,7 +62,7 @@
             <button 
                 type="button" 
                 wire:click="setTab('pending')" 
-                class="text-left p-5 border-3 border-black dark:border-zinc-700 rounded-xl shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)] transition-all cursor-pointer {{ $activeTab === 'pending' ? 'bg-amber-300 ring-4 ring-black dark:bg-amber-950/40 dark:ring-amber-300 translate-x-0.5 translate-y-0.5' : 'bg-amber-100 dark:bg-amber-950/40 hover:bg-amber-200 dark:hover:bg-amber-950/40' }}"
+                class="text-left p-5 border-3 rounded-xl transition-all cursor-pointer {{ $activeTab === 'pending' ? 'bg-amber-400 border-black dark:border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] translate-x-0.5 translate-y-0.5 [&_*]:!text-black [&_*]:!opacity-100' : 'bg-amber-100 border-black dark:border-zinc-700 dark:bg-zinc-800 hover:bg-amber-200 dark:hover:bg-zinc-700 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]' }}"
             >
                 <p class="text-xs font-black uppercase tracking-wider text-black dark:text-white flex items-center gap-1.5">
                     <span class="relative flex h-2 w-2 shrink-0">
@@ -80,7 +80,7 @@
             <button 
                 type="button" 
                 wire:click="setTab('published')" 
-                class="text-left p-5 border-3 border-black dark:border-zinc-700 rounded-xl shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)] transition-all cursor-pointer {{ $activeTab === 'published' ? 'bg-emerald-300 ring-4 ring-black dark:bg-emerald-950/40 dark:ring-emerald-300 translate-x-0.5 translate-y-0.5' : 'bg-emerald-100 dark:bg-emerald-950/40 hover:bg-emerald-200 dark:hover:bg-emerald-950/40' }}"
+                class="text-left p-5 border-3 rounded-xl transition-all cursor-pointer {{ $activeTab === 'published' ? 'bg-emerald-400 border-black dark:border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] translate-x-0.5 translate-y-0.5 [&_*]:!text-black [&_*]:!opacity-100' : 'bg-emerald-100 border-black dark:border-zinc-700 dark:bg-zinc-800 hover:bg-emerald-200 dark:hover:bg-zinc-700 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]' }}"
             >
                 <p class="text-xs font-black uppercase tracking-wider text-black dark:text-white flex items-center gap-1.5">
                     <x-icon name="lucide-check-circle-2" class="w-4 h-4 text-black stroke-[2.5]" />
@@ -94,7 +94,7 @@
             <button 
                 type="button" 
                 wire:click="setTab('rejected')" 
-                class="text-left p-5 border-3 border-black dark:border-zinc-700 rounded-xl shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)] transition-all cursor-pointer {{ $activeTab === 'rejected' ? 'bg-rose-300 ring-4 ring-black dark:bg-rose-950/40 dark:ring-rose-300 translate-x-0.5 translate-y-0.5' : 'bg-rose-100 dark:bg-rose-950/40 hover:bg-rose-200 dark:hover:bg-rose-950/40' }}"
+                class="text-left p-5 border-3 rounded-xl transition-all cursor-pointer {{ $activeTab === 'rejected' ? 'bg-rose-400 border-black dark:border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] translate-x-0.5 translate-y-0.5 [&_*]:!text-black [&_*]:!opacity-100' : 'bg-rose-100 border-black dark:border-zinc-700 dark:bg-zinc-800 hover:bg-rose-200 dark:hover:bg-zinc-700 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]' }}"
             >
                 <p class="text-xs font-black uppercase tracking-wider text-black dark:text-white flex items-center gap-1.5">
                     <x-icon name="lucide-x-circle" class="w-4 h-4 text-black stroke-[2.5]" />
@@ -108,7 +108,7 @@
             <button 
                 type="button" 
                 wire:click="setTab('all')" 
-                class="text-left p-5 border-3 border-black dark:border-zinc-700 rounded-xl shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)] transition-all cursor-pointer {{ $activeTab === 'all' ? 'bg-cyan-300 ring-4 ring-black dark:bg-cyan-950/40 dark:ring-cyan-300 translate-x-0.5 translate-y-0.5' : 'bg-cyan-100 dark:bg-cyan-950/40 hover:bg-cyan-200 dark:hover:bg-cyan-950/40' }}"
+                class="text-left p-5 border-3 rounded-xl transition-all cursor-pointer {{ $activeTab === 'all' ? 'bg-cyan-400 border-black dark:border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] translate-x-0.5 translate-y-0.5 [&_*]:!text-black [&_*]:!opacity-100' : 'bg-cyan-100 border-black dark:border-zinc-700 dark:bg-zinc-800 hover:bg-cyan-200 dark:hover:bg-zinc-700 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]' }}"
             >
                 <p class="text-xs font-black uppercase tracking-wider text-black dark:text-white flex items-center gap-1.5">
                     <x-icon name="lucide-building-2" class="w-4 h-4 text-black stroke-[2.5]" />
@@ -122,7 +122,7 @@
             <button 
                 type="button" 
                 wire:click="setTab('facilities')" 
-                class="text-left p-5 border-3 border-black dark:border-zinc-700 rounded-xl shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)] transition-all cursor-pointer {{ $activeTab === 'facilities' ? 'bg-violet-300 ring-4 ring-black dark:bg-violet-950/40 dark:ring-violet-300 translate-x-0.5 translate-y-0.5' : 'bg-violet-100 dark:bg-violet-950/40 hover:bg-violet-200 dark:hover:bg-violet-950/40' }}"
+                class="text-left p-5 border-3 rounded-xl transition-all cursor-pointer {{ $activeTab === 'facilities' ? 'bg-violet-400 border-black dark:border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] translate-x-0.5 translate-y-0.5 [&_*]:!text-black [&_*]:!opacity-100' : 'bg-violet-100 border-black dark:border-zinc-700 dark:bg-zinc-800 hover:bg-violet-200 dark:hover:bg-zinc-700 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]' }}"
             >
                 <p class="text-xs font-black uppercase tracking-wider text-black dark:text-white flex items-center gap-1.5">
                     <x-icon name="lucide-layers" class="w-4 h-4 text-black stroke-[2.5]" />
@@ -136,7 +136,7 @@
             <button 
                 type="button" 
                 wire:click="setTab('verification')" 
-                class="text-left p-5 border-3 border-black dark:border-zinc-700 rounded-xl shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)] transition-all cursor-pointer {{ $activeTab === 'verification' ? 'bg-teal-300 ring-4 ring-black dark:bg-teal-950/40 dark:ring-teal-300 translate-x-0.5 translate-y-0.5' : 'bg-teal-100 dark:bg-teal-950/40 hover:bg-teal-200 dark:hover:bg-teal-950/40' }}"
+                class="text-left p-5 border-3 rounded-xl transition-all cursor-pointer {{ $activeTab === 'verification' ? 'bg-teal-400 border-black dark:border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] translate-x-0.5 translate-y-0.5 [&_*]:!text-black [&_*]:!opacity-100' : 'bg-teal-100 border-black dark:border-zinc-700 dark:bg-zinc-800 hover:bg-teal-200 dark:hover:bg-zinc-700 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]' }}"
             >
                 <p class="text-xs font-black uppercase tracking-wider text-black dark:text-white flex items-center gap-1.5">
                     <span class="relative flex h-2 w-2 shrink-0">
@@ -324,7 +324,7 @@
                             @endforeach
                         </div>
                     @else
-                        <div class="bg-emerald-100 dark:bg-emerald-950/40 border-4 border-black dark:border-zinc-700 rounded-2xl p-8 text-center shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)]">
+                        <div class="bg-zinc-50 dark:bg-zinc-800 border-4 border-black dark:border-zinc-700 rounded-2xl p-8 text-center shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)]">
                             <div class="w-14 h-14 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl flex items-center justify-center mx-auto text-black dark:text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
                                 <x-icon name="lucide-badge-check" class="w-7 h-7" />
                             </div>
@@ -398,7 +398,7 @@
                             @endforeach
                         </div>
                     @else
-                        <div class="bg-emerald-100 dark:bg-emerald-950/40 border-4 border-black dark:border-zinc-700 rounded-2xl p-8 text-center shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)]">
+                        <div class="bg-zinc-50 dark:bg-zinc-800 border-4 border-black dark:border-zinc-700 rounded-2xl p-8 text-center shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)]">
                             <div class="w-14 h-14 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl flex items-center justify-center mx-auto text-black dark:text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
                                 <x-icon name="lucide-badge-check" class="w-7 h-7" />
                             </div>
@@ -509,7 +509,7 @@
                 </div>
             @else
                 <!-- Empty State -->
-                <div class="bg-yellow-100 dark:bg-yellow-950/40 border-4 border-black dark:border-zinc-700 rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.25)] space-y-4">
+                <div class="bg-zinc-50 dark:bg-zinc-800 border-4 border-black dark:border-zinc-700 rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.25)] space-y-4">
                     <div class="w-20 h-20 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-2xl flex items-center justify-center mx-auto text-black dark:text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] -rotate-3">
                         <x-icon name="lucide-circle-check" class="w-10 h-10" />
                     </div>
@@ -533,7 +533,7 @@
                                 @if($kost->primaryImage)
                                     <img src="{{ Str::startsWith($kost->primaryImage->image_path, 'http') ? $kost->primaryImage->image_path : Storage::url($kost->primaryImage->image_path) }}" alt="{{ $kost->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                 @else
-                                    <div class="w-full h-full flex items-center justify-center bg-yellow-100 dark:bg-yellow-950/40 text-black dark:text-white">
+                                    <div class="w-full h-full flex items-center justify-center bg-zinc-50 dark:bg-zinc-800 text-black dark:text-white">
                                         <x-icon name="lucide-image" class="w-12 h-12" />
                                     </div>
                                 @endif
@@ -681,7 +681,7 @@
             </div>
         @else
             <!-- Empty State -->
-            <div class="bg-yellow-100 dark:bg-yellow-950/40 border-4 border-black dark:border-zinc-700 rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.25)] space-y-4">
+            <div class="bg-zinc-50 dark:bg-zinc-800 border-4 border-black dark:border-zinc-700 rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.25)] space-y-4">
                 <div class="w-20 h-20 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-2xl flex items-center justify-center mx-auto text-black dark:text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] -rotate-3">
                     <x-icon name="lucide-circle-check" class="w-10 h-10" />
                 </div>

@@ -113,8 +113,8 @@
                         <div class="w-10 h-10 bg-cyan-300 border-2 border-black dark:border-zinc-700 rounded-lg flex items-center justify-center text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] shrink-0">
                             <x-icon name="lucide-qr-code" class="w-5 h-5 text-black stroke-[2.5]" />
                         </div>
-                        <button type="button" wire:click="closeModal" class="text-black dark:text-white hover:bg-black/10 p-1.5 rounded font-black cursor-pointer transition-colors">
-                            <x-icon name="lucide-x" class="w-4 h-4 stroke-[2.5]" />
+                        <button type="button" wire:click="closeModal" class="bg-rose-500 hover:bg-rose-400 text-white border-2 border-black dark:border-zinc-700 p-1.5 rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none font-black cursor-pointer transition-all">
+                            <x-icon name="lucide-x" class="w-4 h-4 stroke-[3]" />
                         </button>
                     </div>
 

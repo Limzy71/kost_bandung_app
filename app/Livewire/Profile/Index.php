@@ -113,9 +113,9 @@ class Index extends Component
         $user->save();
 
         if ($user->wasChanged('email')) {
-            $user->notify(new VerifyNewEmailAddress());
+            $user->notify(new VerifyNewEmailAddress);
 
-            Notification::route('mail', $oldEmail)->notify(new EmailAddressChanged());
+            Notification::route('mail', $oldEmail)->notify(new EmailAddressChanged);
         }
 
         $this->editing = false;

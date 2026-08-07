@@ -671,23 +671,23 @@ class EditKost extends Component
         $kost = $this->kost;
 
         $kost->fill([
-            'name' => $this->name,
-            'description' => $this->description,
+            'name' => strip_tags($this->name),
+            'description' => strip_tags($this->description),
             'gender_type' => $this->gender_type,
             'price_monthly' => $this->price_monthly,
             'rent_period' => $this->rent_period,
             'price_deposit' => $this->price_deposit !== '' ? $this->price_deposit : null,
             'include_utilities' => $this->include_utilities,
-            'address' => $this->address,
+            'address' => strip_tags($this->address),
             'district' => $this->district,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
             'is_available' => ((int) $this->available_rooms > 0),
             'total_rooms' => (int) $this->total_rooms,
             'available_rooms' => (int) $this->available_rooms,
-            'whatsapp_contact' => $this->whatsapp_contact !== '' ? $this->whatsapp_contact : null,
-            'nearby_landmarks' => $this->nearby_landmarks !== '' ? $this->nearby_landmarks : null,
-            'additional_rules_note' => $this->additional_rules_note !== '' ? $this->additional_rules_note : null,
+            'whatsapp_contact' => $this->whatsapp_contact !== '' ? strip_tags($this->whatsapp_contact) : null,
+            'nearby_landmarks' => $this->nearby_landmarks !== '' ? strip_tags($this->nearby_landmarks) : null,
+            'additional_rules_note' => $this->additional_rules_note !== '' ? strip_tags($this->additional_rules_note) : null,
         ]);
 
         if ($this->ownership_doc_type !== '') {

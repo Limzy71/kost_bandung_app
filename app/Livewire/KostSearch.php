@@ -203,7 +203,7 @@ class KostSearch extends Component
         $this->dispatch('map-items-updated');
 
         $totalKostInDb = Kost::where('status', 'published')->where('is_available', true)->count();
-        $hasSearch = !empty(trim($this->search));
+        $hasSearch = ! empty(trim($this->search));
         $hasOtherFilters = (bool) ($this->gender || $this->district || $this->rent_period || $this->price_min || $this->price_max || $this->verified_only);
 
         return view('livewire.kost-search', [
@@ -212,7 +212,7 @@ class KostSearch extends Component
             'districtBounds' => config('bandung.districts', []),
             'googleMapsApiKey' => config('services.google.maps_api_key'),
             'hasActiveFilter' => $hasSearch || $hasOtherFilters,
-            'hasSearchOnly' => $hasSearch && !$hasOtherFilters,
+            'hasSearchOnly' => $hasSearch && ! $hasOtherFilters,
             'hasBothSearchAndFilters' => $hasSearch && $hasOtherFilters,
             'totalKostInDb' => $totalKostInDb,
         ]);

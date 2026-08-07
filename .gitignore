@@ -26,5 +26,5 @@ yarn-error.log
 # Ignore AI Agent logs
 msg.txt
 
-# Folder sementara lokal
-/Folder_Sementara
+# OpenCode
+opencode.json

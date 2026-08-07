@@ -62,7 +62,7 @@
             <button 
                 type="button" 
                 wire:click="setTab('pending')" 
-                class="text-left p-5 border-3 rounded-xl transition-all cursor-pointer {{ $activeTab === 'pending' ? 'bg-amber-400 border-black dark:border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] translate-x-0.5 translate-y-0.5 [&_*]:!text-black [&_*]:!opacity-100' : 'bg-amber-100 border-black dark:border-zinc-700 dark:bg-zinc-800 hover:bg-amber-200 dark:hover:bg-zinc-700 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]' }}"
+                class="text-left p-5 border-3 rounded-xl transition-all cursor-pointer {{ $activeTab === 'pending' ? 'bg-amber-400 border-black dark:border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] translate-x-0.5 translate-y-0.5 [&_*]:!text-black [&_*]:!opacity-100' : 'bg-amber-100 border-black dark:border-zinc-700 dark:bg-amber-950 hover:bg-amber-200 dark:hover:bg-amber-900 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]' }}"
             >
                 <p class="text-xs font-black uppercase tracking-wider text-black dark:text-white flex items-center gap-1.5">
                     <span class="relative flex h-2 w-2 shrink-0">
@@ -80,7 +80,7 @@
             <button 
                 type="button" 
                 wire:click="setTab('published')" 
-                class="text-left p-5 border-3 rounded-xl transition-all cursor-pointer {{ $activeTab === 'published' ? 'bg-emerald-400 border-black dark:border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] translate-x-0.5 translate-y-0.5 [&_*]:!text-black [&_*]:!opacity-100' : 'bg-emerald-100 border-black dark:border-zinc-700 dark:bg-zinc-800 hover:bg-emerald-200 dark:hover:bg-zinc-700 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]' }}"
+                class="text-left p-5 border-3 rounded-xl transition-all cursor-pointer {{ $activeTab === 'published' ? 'bg-emerald-400 border-black dark:border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] translate-x-0.5 translate-y-0.5 [&_*]:!text-black [&_*]:!opacity-100' : 'bg-emerald-100 border-black dark:border-zinc-700 dark:bg-emerald-950 hover:bg-emerald-200 dark:hover:bg-emerald-900 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]' }}"
             >
                 <p class="text-xs font-black uppercase tracking-wider text-black dark:text-white flex items-center gap-1.5">
                     <x-icon name="lucide-check-circle-2" class="w-4 h-4 text-black stroke-[2.5]" />
@@ -94,7 +94,7 @@
             <button 
                 type="button" 
                 wire:click="setTab('rejected')" 
-                class="text-left p-5 border-3 rounded-xl transition-all cursor-pointer {{ $activeTab === 'rejected' ? 'bg-rose-400 border-black dark:border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] translate-x-0.5 translate-y-0.5 [&_*]:!text-black [&_*]:!opacity-100' : 'bg-rose-100 border-black dark:border-zinc-700 dark:bg-zinc-800 hover:bg-rose-200 dark:hover:bg-zinc-700 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]' }}"
+                class="text-left p-5 border-3 rounded-xl transition-all cursor-pointer {{ $activeTab === 'rejected' ? 'bg-rose-400 border-black dark:border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] translate-x-0.5 translate-y-0.5 [&_*]:!text-black [&_*]:!opacity-100' : 'bg-rose-100 border-black dark:border-zinc-700 dark:bg-rose-950 hover:bg-rose-200 dark:hover:bg-rose-900 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]' }}"
             >
                 <p class="text-xs font-black uppercase tracking-wider text-black dark:text-white flex items-center gap-1.5">
                     <x-icon name="lucide-x-circle" class="w-4 h-4 text-black stroke-[2.5]" />
@@ -108,7 +108,7 @@
             <button 
                 type="button" 
                 wire:click="setTab('all')" 
-                class="text-left p-5 border-3 rounded-xl transition-all cursor-pointer {{ $activeTab === 'all' ? 'bg-cyan-400 border-black dark:border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] translate-x-0.5 translate-y-0.5 [&_*]:!text-black [&_*]:!opacity-100' : 'bg-cyan-100 border-black dark:border-zinc-700 dark:bg-zinc-800 hover:bg-cyan-200 dark:hover:bg-zinc-700 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]' }}"
+                class="text-left p-5 border-3 rounded-xl transition-all cursor-pointer {{ $activeTab === 'all' ? 'bg-cyan-400 border-black dark:border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] translate-x-0.5 translate-y-0.5 [&_*]:!text-black [&_*]:!opacity-100' : 'bg-cyan-100 border-black dark:border-zinc-700 dark:bg-cyan-950 hover:bg-cyan-200 dark:hover:bg-cyan-900 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]' }}"
             >
                 <p class="text-xs font-black uppercase tracking-wider text-black dark:text-white flex items-center gap-1.5">
                     <x-icon name="lucide-building-2" class="w-4 h-4 text-black stroke-[2.5]" />
@@ -122,7 +122,7 @@
             <button 
                 type="button" 
                 wire:click="setTab('facilities')" 
-                class="text-left p-5 border-3 rounded-xl transition-all cursor-pointer {{ $activeTab === 'facilities' ? 'bg-violet-400 border-black dark:border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] translate-x-0.5 translate-y-0.5 [&_*]:!text-black [&_*]:!opacity-100' : 'bg-violet-100 border-black dark:border-zinc-700 dark:bg-zinc-800 hover:bg-violet-200 dark:hover:bg-zinc-700 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]' }}"
+                class="text-left p-5 border-3 rounded-xl transition-all cursor-pointer {{ $activeTab === 'facilities' ? 'bg-violet-400 border-black dark:border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] translate-x-0.5 translate-y-0.5 [&_*]:!text-black [&_*]:!opacity-100' : 'bg-violet-100 border-black dark:border-zinc-700 dark:bg-violet-950 hover:bg-violet-200 dark:hover:bg-violet-900 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]' }}"
             >
                 <p class="text-xs font-black uppercase tracking-wider text-black dark:text-white flex items-center gap-1.5">
                     <x-icon name="lucide-layers" class="w-4 h-4 text-black stroke-[2.5]" />
@@ -136,7 +136,7 @@
             <button 
                 type="button" 
                 wire:click="setTab('verification')" 
-                class="text-left p-5 border-3 rounded-xl transition-all cursor-pointer {{ $activeTab === 'verification' ? 'bg-teal-400 border-black dark:border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] translate-x-0.5 translate-y-0.5 [&_*]:!text-black [&_*]:!opacity-100' : 'bg-teal-100 border-black dark:border-zinc-700 dark:bg-zinc-800 hover:bg-teal-200 dark:hover:bg-zinc-700 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]' }}"
+                class="text-left p-5 border-3 rounded-xl transition-all cursor-pointer {{ $activeTab === 'verification' ? 'bg-teal-400 border-black dark:border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] translate-x-0.5 translate-y-0.5 [&_*]:!text-black [&_*]:!opacity-100' : 'bg-teal-100 border-black dark:border-zinc-700 dark:bg-teal-950 hover:bg-teal-200 dark:hover:bg-teal-900 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]' }}"
             >
                 <p class="text-xs font-black uppercase tracking-wider text-black dark:text-white flex items-center gap-1.5">
                     <span class="relative flex h-2 w-2 shrink-0">

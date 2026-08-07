@@ -9,8 +9,11 @@ use App\Models\Facility;
 use App\Models\Kost;
 use App\Models\KostMessage;
 use App\Models\User;
+use App\Notifications\EmailAddressChanged;
+use App\Notifications\VerifyNewEmailAddress;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
@@ -99,6 +102,8 @@ class Index extends Component
 
         $validated = $this->validate($rules);
 
+        $oldEmail = $user->email;
+
         $user->fill($validated);
 
         if ($user->isDirty('email')) {
@@ -108,7 +113,9 @@ class Index extends Component
         $user->save();
 
         if ($user->wasChanged('email')) {
-            $user->sendEmailVerificationNotification();
+            $user->notify(new VerifyNewEmailAddress());
+
+            Notification::route('mail', $oldEmail)->notify(new EmailAddressChanged());
         }
 
         $this->editing = false;

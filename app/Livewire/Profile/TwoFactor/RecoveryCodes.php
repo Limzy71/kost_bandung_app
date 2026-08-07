@@ -3,6 +3,7 @@
 namespace App\Livewire\Profile\TwoFactor;
 
 use Exception;
+use Illuminate\Contracts\View\View;
 use Laravel\Fortify\Actions\GenerateNewRecoveryCodes;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
@@ -75,7 +76,7 @@ class RecoveryCodes extends Component
         }
     }
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.profile.two-factor.recovery-codes');
     }

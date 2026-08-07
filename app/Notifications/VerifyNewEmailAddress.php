@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\User;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Carbon;
@@ -10,12 +11,15 @@ use Illuminate\Support\Facades\URL;
 
 class VerifyNewEmailAddress extends Notification
 {
+    /**
+     * @return array<int, string>
+     */
     public function via(object $notifiable): array
     {
         return ['mail'];
     }
 
-    public function toMail(object $notifiable): MailMessage
+    public function toMail(User $notifiable): MailMessage
     {
         $verificationUrl = $this->verificationUrl($notifiable);
 
@@ -28,10 +32,7 @@ class VerifyNewEmailAddress extends Notification
             ->line('Jika Anda tidak melakukan perubahan ini, harap segera hubungi kami agar akun Anda diamankan.');
     }
 
-    /**
-     * Get the verification URL for the given notifiable (based on the new email).
-     */
-    protected function verificationUrl(object $notifiable): string
+    protected function verificationUrl(User $notifiable): string
     {
         return URL::temporarySignedRoute(
             'verification.verify',

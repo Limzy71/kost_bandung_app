@@ -4,6 +4,7 @@ namespace App\Livewire\Profile;
 
 use App\Concerns\PasswordValidationRules;
 use Exception;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Actions\ConfirmTwoFactorAuthentication;
@@ -399,7 +400,7 @@ class Security extends Component
         ];
     }
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.profile.security');
     }

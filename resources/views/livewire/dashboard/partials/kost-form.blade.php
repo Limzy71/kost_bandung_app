@@ -121,9 +121,17 @@
                 if (!window.kostMapInit) {
                     window.kostMapInit = function() {
                         return {
-                            map: null, marker: null, isOutOfBounds: false, isReverseGeocoding: false, reverseGeocodeTimeout: null, ignoreNextAddressWatch: false, markerManuallyMoved: false, isGeocoding: false, _updatingPosition: false, geocodeMessage: '',
+                            map: null, marker: null, currentLayer: 'street', isOutOfBounds: false, isReverseGeocoding: false, reverseGeocodeTimeout: null, ignoreNextAddressWatch: false, markerManuallyMoved: false, isGeocoding: false, _updatingPosition: false, geocodeMessage: '',
                             hasGoogleKey: '{{ $googleMapsApiKey }}',
                             get districtsData() { return window.bandungDistricts || {}; },
+
+                            switchLayer: function(layer) {
+                                this.currentLayer = layer;
+                                if (this.map && window.google && window.google.maps) {
+                                    if (layer === 'street') this.map.setMapTypeId('roadmap');
+                                    if (layer === 'satellite') this.map.setMapTypeId('satellite');
+                                }
+                            },
 
                             pickBestNominatim: function(results, query) {
                                 if (!results || results.length === 0) return null;
@@ -429,7 +437,7 @@
                                 var setupGoogle = function() {
                                     if (self.map || !window.google || !window.google.maps) return false;
                                     try {
-                                        self.map = new google.maps.Map(self.$refs.mapElement, { center: { lat: lat0, lng: lng0 }, zoom: 13, mapTypeControl: true, streetViewControl: false, fullscreenControl: true });
+                                        self.map = new google.maps.Map(self.$refs.mapElement, { center: { lat: lat0, lng: lng0 }, zoom: 13, mapTypeControl: false, streetViewControl: false, fullscreenControl: true });
                                         self.marker = new google.maps.Marker({ position: { lat: lat0, lng: lng0 }, map: self.map, draggable: true, title: 'Lokasi Kost Anda' });
                                         self.marker.addListener('dragend', function(e) { self.markerManuallyMoved = true; self.setCoords(e.latLng.lat(), e.latLng.lng(), true); });
                                         self.map.addListener('click', function(e) { self.markerManuallyMoved = true; self.marker.setPosition(e.latLng); self.setCoords(e.latLng.lat(), e.latLng.lng(), true); });
@@ -632,6 +640,22 @@
 
                     <!-- Google Maps / Leaflet Canvas -->
                     <div class="relative" wire:ignore>
+                        <!-- Custom Map Controls (Neo-Brutalist) -->
+                        <div x-show="hasGoogleKey" class="absolute top-4 left-4 z-[400] flex gap-2">
+                            <button type="button" @click.prevent="switchLayer('street')"
+                                :class="currentLayer === 'street' ?
+                                    'bg-[#FFE500] border-black dark:border-zinc-700 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]' :
+                                    'bg-white dark:bg-zinc-900 border-black dark:border-zinc-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] hover:bg-zinc-100 dark:hover:bg-zinc-800'"
+                                class="px-3.5 py-1.5 text-xs font-black uppercase border-2 rounded-lg text-black dark:text-white transition-all cursor-pointer"
+                                title="Peta Standard">Peta</button>
+                            <button type="button" @click.prevent="switchLayer('satellite')"
+                                :class="currentLayer === 'satellite' ?
+                                    'bg-cyan-300 border-black dark:border-zinc-700 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]' :
+                                    'bg-white dark:bg-zinc-900 border-black dark:border-zinc-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] hover:bg-zinc-100 dark:hover:bg-zinc-800'"
+                                class="px-3.5 py-1.5 text-xs font-black uppercase border-2 rounded-lg text-black dark:text-white transition-all cursor-pointer"
+                                title="Tampilan Satelit">Satelit</button>
+                        </div>
+
                         <div x-ref="mapElement"
                             class="w-full h-80 rounded-xl border-4 border-black dark:border-zinc-700 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] z-0 bg-zinc-100 dark:bg-zinc-800">
                         </div>

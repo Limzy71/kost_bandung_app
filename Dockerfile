@@ -28,7 +28,8 @@ COPY --from=node --chown=www-data:www-data /app/public/build ./public/build
 COPY --chown=www-data:www-data . .
 
 COPY docker/entrypoint.d/20-ensure-storage.sh /etc/entrypoint.d/20-ensure-storage.sh
-RUN COMPOSER_MEMORY_LIMIT=-1 composer dump-autoload --optimize --no-dev \
+RUN mkdir -p storage/app/public storage/app/private storage/app/verification_docs storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs bootstrap/cache \
+    && COMPOSER_MEMORY_LIMIT=-1 composer dump-autoload --optimize --no-dev \
     && php artisan package:discover --ansi \
     && chmod +x /etc/entrypoint.d/20-ensure-storage.sh \
     && chown -R www-data:www-data /var/www/html

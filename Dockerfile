@@ -1,9 +1,9 @@
 # Build stage: frontend assets
-FROM node:22-alpine AS node
+FROM node:20-alpine AS node
 WORKDIR /app
 
-COPY package.json package-lock.json .npmrc ./
-RUN npm ci
+COPY package.json package-lock.json* ./
+RUN npm install
 
 COPY . .
 RUN npm run build

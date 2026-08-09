@@ -3,6 +3,8 @@
 # Ensures a freshly mounted Railway volume at /var/www/html/storage has the
 # required directory structure and is writable by the www-data process user.
 
+rm -rf /var/www/html/public/storage
+
 mkdir -p \
     /var/www/html/storage/app/public \
     /var/www/html/storage/app/private \

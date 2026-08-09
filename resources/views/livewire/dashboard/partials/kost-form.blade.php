@@ -429,7 +429,7 @@
                                 var setupGoogle = function() {
                                     if (self.map || !window.google || !window.google.maps) return false;
                                     try {
-                                        self.map = new google.maps.Map(self.$refs.mapElement, { center: { lat: lat0, lng: lng0 }, zoom: 13, mapTypeControl: false, streetViewControl: false, fullscreenControl: false });
+                                        self.map = new google.maps.Map(self.$refs.mapElement, { center: { lat: lat0, lng: lng0 }, zoom: 13, mapTypeControl: true, streetViewControl: false, fullscreenControl: true });
                                         self.marker = new google.maps.Marker({ position: { lat: lat0, lng: lng0 }, map: self.map, draggable: true, title: 'Lokasi Kost Anda' });
                                         self.marker.addListener('dragend', function(e) { self.markerManuallyMoved = true; self.setCoords(e.latLng.lat(), e.latLng.lng(), true); });
                                         self.map.addListener('click', function(e) { self.markerManuallyMoved = true; self.marker.setPosition(e.latLng); self.setCoords(e.latLng.lat(), e.latLng.lng(), true); });

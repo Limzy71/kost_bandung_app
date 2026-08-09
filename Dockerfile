@@ -19,15 +19,16 @@ ENV AUTORUN_ENABLED=true \
 
 # Composer dependencies (no-scripts: artisan runs later after full app copy)
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction --no-scripts
+RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --prefer-dist --no-interaction --no-scripts --no-autoloader
 
 # Frontend build + application code
 COPY --from=node --chown=www-data:www-data /app/public/build ./public/build
 COPY --chown=www-data:www-data . .
 
-# Laravel package discovery + storage dirs for fresh Railway volume
+# Generate optimized autoloader and run package discovery
 COPY docker/entrypoint.d/20-ensure-storage.sh /etc/entrypoint.d/20-ensure-storage.sh
-RUN php artisan package:discover --ansi \
+RUN COMPOSER_MEMORY_LIMIT=-1 composer dump-autoload --optimize --no-dev \
+    && php artisan package:discover --ansi \
     && chmod +x /etc/entrypoint.d/20-ensure-storage.sh \
     && chown -R www-data:www-data /var/www/html
 

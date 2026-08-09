@@ -18,6 +18,7 @@ FROM serversideup/php:8.4-fpm-nginx
 WORKDIR /var/www/html
 
 ENV AUTORUN_ENABLED=true \
+    AUTORUN_LARAVEL_STORAGE_LINK=false \
     HEALTHCHECK_PATH=/up \
     PORT=8080 \
     NGINX_HTTP_PORT=8080
@@ -30,7 +31,8 @@ COPY --chown=www-data:www-data . .
 COPY --chmod=755 docker/entrypoint.d/20-ensure-storage.sh /etc/entrypoint.d/20-ensure-storage.sh
 RUN rm -rf public/storage \
     && mkdir -p storage/app/public storage/app/private storage/app/verification_docs storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs bootstrap/cache \
-    && chown -R www-data:www-data storage bootstrap/cache \
+    && ln -s /var/www/html/storage/app/public public/storage \
+    && chown -R www-data:www-data storage bootstrap/cache public/storage \
     && COMPOSER_MEMORY_LIMIT=-1 composer dump-autoload --optimize --no-dev \
     && php artisan package:discover --ansi \
     && chown -R www-data:www-data /var/www/html

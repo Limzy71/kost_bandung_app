@@ -107,7 +107,7 @@
                     <label class="block text-xs font-black uppercase text-black dark:text-white mb-2 tracking-wide flex items-center justify-between">
                         <span>Batas Harga Sewa <span class="text-zinc-500 dark:text-zinc-400 font-bold normal-case text-[10px] ml-1">(per tipe)</span></span>
                     </label>
-                    <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <select x-ref="minSelect" wire:model="price_min"
                             class="w-full bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-3 py-3 text-sm font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer transition-all duration-150 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_10px_center] pr-8">
                             <option value="" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Min Harga</option>
@@ -271,8 +271,8 @@
                                         </h3>
                                         <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400 mt-1 line-clamp-1">{{ $kost->address }}</p>
                                     </div>
-                                    <div class="pt-3 border-t-2 border-black dark:border-zinc-700 flex items-center justify-between gap-2 overflow-hidden">
-                                        <div class="shrink-0">
+                                    <div class="pt-3 border-t-2 border-black dark:border-zinc-700 flex items-center justify-between gap-2 overflow-hidden min-w-0">
+                                        <div class="shrink-0 min-w-0">
                                             <p class="text-[10px] font-black uppercase text-zinc-500 dark:text-zinc-400">Harga Sewa</p>
                                             <span class="bg-yellow-300 border-2 border-black dark:border-zinc-700 font-black text-black px-2.5 py-1 rounded text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] inline-flex items-center whitespace-nowrap mt-0.5">
                                                 Rp {{ number_format($kost->price_monthly, 0, ',', '.') }}<span class="text-[10px] font-bold ml-0.5">{{ \App\Models\Kost::rentPeriodUnit($kost->rent_period) }}</span>
@@ -281,7 +281,7 @@
                                         <div class="flex flex-wrap justify-end gap-1 overflow-hidden shrink min-w-0">
                                             @if ($kost->facilities && $kost->facilities->count() > 0)
                                                 @foreach ($kost->facilities->take(2) as $facility)
-                                                    <span class="bg-zinc-100 dark:bg-zinc-800 border-2 border-black dark:border-zinc-700 text-[10px] font-bold text-black dark:text-white px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)] inline-flex items-center gap-1 truncate max-w-[110px]">
+                                                    <span class="bg-zinc-100 dark:bg-zinc-800 border-2 border-black dark:border-zinc-700 text-[10px] font-bold text-black dark:text-white px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)] inline-flex items-center gap-1 truncate max-w-[110px] min-w-0">
                                                         <span class="truncate">{{ $facility->name }}</span>
                                                     </span>
                                                 @endforeach

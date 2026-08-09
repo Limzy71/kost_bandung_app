@@ -158,3 +158,11 @@ select:focus[data-flux-control] {
   background-color: #18181b;
   color: #fafafa;
 }
+
+/* Fix Leaflet map tiles being distorted by Tailwind's global img rules */
+.leaflet-container img {
+    max-width: none !important;
+    max-height: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+}

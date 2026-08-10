@@ -1,4 +1,4 @@
-<x-layouts.app>
+<x-app-layout>
     <x-slot name="title">Syarat & Ketentuan - KostBandung</x-slot>
 
     <div class="max-w-4xl mx-auto py-12 px-6 min-h-[60vh]">
@@ -33,4 +33,4 @@
             </div>
         </section>
     </div>
-</x-layouts.app>
+</x-app-layout>

@@ -57,7 +57,7 @@
                     Nama Lengkap
                 </label>
                 <input wire:model="name" type="text" id="name" autocomplete="name"
-                    class="w-full px-4 py-3 text-sm bg-zinc-50 border-3 border-black rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:bg-[#FFE500]/10 focus:border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:bg-zinc-900 dark:border-zinc-700 dark:text-white dark:placeholder-zinc-500 dark:focus:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] dark:focus:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]"
+                    class="w-full px-4 py-3 text-sm bg-zinc-50 border-3 @error('name') border-rose-600 @else border-black @enderror rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:bg-[#FFE500]/10 focus:border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:bg-zinc-900 dark:border-zinc-700 dark:text-white dark:placeholder-zinc-500 dark:focus:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] dark:focus:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]"
                     placeholder="Nama lengkap Anda">
                 @error('name')
                     <p class="mt-2 text-xs font-bold text-rose-600 dark:text-rose-400">✕ {{ $message }}</p>
@@ -70,7 +70,7 @@
                     Alamat Email
                 </label>
                 <input wire:model="email" type="email" id="email" autocomplete="email"
-                    class="w-full px-4 py-3 text-sm bg-zinc-50 border-3 border-black rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:bg-[#FFE500]/10 focus:border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:bg-zinc-900 dark:border-zinc-700 dark:text-white dark:placeholder-zinc-500 dark:focus:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] dark:focus:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]"
+                    class="w-full px-4 py-3 text-sm bg-zinc-50 border-3 @error('email') border-rose-600 @else border-black @enderror rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:bg-[#FFE500]/10 focus:border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:bg-zinc-900 dark:border-zinc-700 dark:text-white dark:placeholder-zinc-500 dark:focus:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] dark:focus:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]"
                     placeholder="nama@email.com">
                 @error('email')
                     <p class="mt-2 text-xs font-bold text-rose-600 dark:text-rose-400">✕ {{ $message }}</p>
@@ -155,6 +155,20 @@
                 </div>
             @endif
             {{-- ===== End Dynamic Owner Fields ===== --}}
+
+            {{-- Terms & Conditions --}}
+            <div class="flex items-start gap-2.5">
+                <input wire:model="terms" type="checkbox" id="terms"
+                    class="w-4 h-4 mt-1 border-2 border-black rounded-sm bg-zinc-50 checked:bg-[#FFE500] checked:border-black focus:ring-0 focus:ring-offset-0 cursor-pointer dark:border-zinc-700 dark:bg-zinc-900 dark:checked:border-zinc-700">
+                <label for="terms" class="text-xs font-bold text-black cursor-pointer dark:text-white">
+                    Saya menyetujui
+                    <a href="{{ route('terms') }}" target="_blank" class="font-black underline underline-offset-2 hover:text-yellow-600">Syarat & Ketentuan</a>
+                    penggunaan layanan KostBandung.
+                </label>
+            </div>
+            @error('terms')
+                <p class="text-xs font-bold text-rose-600 dark:text-rose-400">✕ {{ $message }}</p>
+            @enderror
 
             {{-- Submit Button --}}
             <button type="submit"

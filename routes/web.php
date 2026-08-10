@@ -20,6 +20,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [KostController::class, 'index'])->name('home');
 Route::get('/kost/{kost:slug}', KostDetail::class)->name('kost.show');
+Route::get('/syarat-ketentuan', function () {
+    return view('terms');
+})->name('terms');
 Route::get('/owner/{user}', PublicOwnerProfile::class)->name('profile.owner');
 
 Route::middleware('guest')->group(function () {

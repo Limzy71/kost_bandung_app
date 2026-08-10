@@ -42,6 +42,8 @@ class Register extends Component
         }
     }
 
+    public bool $terms = false;
+
     /**
      * @return array<string, mixed>
      */
@@ -52,7 +54,8 @@ class Register extends Component
             'email' => 'required|email|max:255|unique:users,email',
             'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()],
             'role' => ['required', Rule::in(['user', 'owner'])],
-            'phone_number' => 'required|string|min:10|max:15',
+            'phone_number' => 'required|string|regex:/^0[0-9]{9,14}$/',
+            'terms' => 'required|accepted',
         ];
 
         if ($this->role === 'owner') {
@@ -81,8 +84,9 @@ class Register extends Component
         'role.required' => 'Tipe akun wajib dipilih.',
         'role.in' => 'Tipe akun tidak valid.',
         'phone_number.required' => 'Nomor WhatsApp wajib diisi.',
-        'phone_number.min' => 'Nomor WhatsApp minimal 10 digit.',
-        'phone_number.max' => 'Nomor WhatsApp maksimal 15 digit.',
+        'phone_number.regex' => 'Format nomor WhatsApp tidak valid (harus diawali 0 dan terdiri dari 10-15 angka).',
+        'terms.required' => 'Anda harus menyetujui syarat dan ketentuan.',
+        'terms.accepted' => 'Anda harus menyetujui syarat dan ketentuan.',
         'business_name.required' => 'Nama properti/usaha kost wajib diisi untuk Pemilik Kost.',
     ];
 

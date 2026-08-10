@@ -92,6 +92,7 @@
                                     @kost-chats-updated.window="count = $event.detail.count"
                                 @endif
                                 x-show="count > 0"
+                                x-cloak
                                 x-text="count"
                                 class="bg-rose-500 text-white border-2 border-black rounded-full px-1.5 py-0.5 text-[9px] min-w-[20px] text-center ml-1 dark:border-zinc-700"></span>
                         @endif
@@ -160,6 +161,7 @@
                                     @kost-chats-updated.window="count = $event.detail.count"
                                 @endif
                                 x-show="count > 0"
+                                x-cloak
                                 x-text="count"
                                 class="ml-auto bg-rose-500 text-white border-2 border-black rounded-full px-2 py-0.5 text-[10px] min-w-[24px] text-center dark:border-zinc-700"></span>
                         @endif

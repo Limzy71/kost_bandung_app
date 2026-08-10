@@ -196,6 +196,9 @@ class KostDetail extends Component
     {
         return view('livewire.kost-detail', [
             'googleMapsApiKey' => config('services.google.maps_api_key'),
-        ])->layout('layouts.app');
+        ])->layout('layouts.app', [
+            'title' => $this->kost->name . ' - Kost Bandung',
+            'meta' => view('components.kost-meta', ['kost' => $this->kost]),
+        ]);
     }
 }

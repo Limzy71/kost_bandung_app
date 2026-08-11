@@ -7,7 +7,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
             
             <!-- Hero Banner Neo-Brutalist -->
-            <div class="bg-white border-4 border-black p-8 md:p-12 rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-8 dark:bg-zinc-900 dark:border-zinc-700 dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.25)]">
+            <div class="bg-white border-4 border-black p-5 sm:p-8 md:p-12 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 dark:bg-zinc-900 dark:border-zinc-700 dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]">
                 <div class="space-y-4 max-w-2xl">
                     <div class="flex flex-wrap items-center justify-center md:justify-start gap-2">
                         <span class="px-3.5 py-1 bg-yellow-300 text-black border-2 border-black font-extrabold text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1.5 dark:border-zinc-600 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
@@ -19,8 +19,8 @@
                             <span>Kontak Langsung Pemilik</span>
                         </span>
                     </div>
-                    <h1 class="text-4xl sm:text-6xl md:text-7xl font-black text-black tracking-tight uppercase leading-none dark:text-white">
-                        Cari. Pilih. <span class="bg-yellow-300 px-3 border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] inline-block rotate-1 dark:border-zinc-700 dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]">Huni!</span>
+                    <h1 class="text-3xl sm:text-6xl md:text-7xl font-black text-black tracking-tight uppercase leading-none dark:text-white">
+                        Cari. Pilih. <span class="bg-yellow-300 px-2.5 sm:px-3 border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] inline-block rotate-1 dark:border-zinc-700 dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">Huni!</span>
                     </h1>
                     <p class="text-zinc-700 text-base sm:text-lg font-bold leading-relaxed dark:text-zinc-300">
                         Temukan pilihan kost terbaik di Bandung. Dekat area kampus utama, fasilitas transparan, dan terhubung langsung dengan pemilik kost.

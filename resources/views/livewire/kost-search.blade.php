@@ -23,7 +23,7 @@
             }
         }"
         @reset-filters.window="query = ''; wasApplied = false"
-        class="bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 p-6 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] space-y-4"
+        class="bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 p-4 sm:p-6 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] space-y-4"
     >
         <!-- Header -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b-3 border-black dark:border-zinc-700 pb-3.5 gap-3">
@@ -162,9 +162,9 @@
 
     <!-- Section Title & Layout Switcher -->
     <div id="home-list-section" class="scroll-mt-20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div class="flex items-center gap-3">
-            <h3 class="text-xl font-black text-black dark:text-white uppercase tracking-tight">Daftar Properti Kost</h3>
-            <span class="px-3 py-1 bg-yellow-300 text-black border-2 border-black dark:border-zinc-700 font-black text-xs rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] uppercase">
+        <div class="flex items-center justify-between sm:justify-start gap-2 sm:gap-3 w-full sm:w-auto flex-wrap sm:flex-nowrap">
+            <h3 class="text-base sm:text-xl font-black text-black dark:text-white uppercase tracking-tight">Daftar Properti Kost</h3>
+            <span class="px-2.5 py-1 sm:px-3 sm:py-1 bg-yellow-300 text-black border-2 border-black dark:border-zinc-700 font-black text-xs rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] uppercase whitespace-nowrap shrink-0">
                 {{ $kosts->total() }} Ditemukan
             </span>
         </div>
@@ -320,19 +320,19 @@
                 x-transition:leave="transition ease-in duration-200"
                 x-transition:leave-start="opacity-100 translate-y-0"
                 x-transition:leave-end="opacity-0 translate-y-2"
-                class="bg-yellow-100 dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.25)] space-y-4">
-                <div class="w-20 h-20 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-2xl flex items-center justify-center mx-auto text-black dark:text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] -rotate-3">
-                    <x-icon name="lucide-search" class="w-10 h-10" />
+                class="bg-yellow-100 dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 rounded-2xl p-5 sm:p-12 text-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] space-y-4">
+                <div class="w-16 h-16 sm:w-20 sm:h-20 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-2xl flex items-center justify-center mx-auto text-black dark:text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] -rotate-3">
+                    <x-icon name="lucide-search" class="w-8 h-8 sm:w-10 sm:h-10" />
                 </div>
                 <div>
-                    <h3 class="text-3xl font-black text-black dark:text-white uppercase">
+                    <h3 class="text-xl sm:text-3xl font-black text-black dark:text-white uppercase leading-tight">
                         @if($totalKostInDb === 0)
                             Belum Ada Kost Terdaftar
                         @else
                             Tidak Ada Hunian Ditemukan
                         @endif
                     </h3>
-                    <p class="text-sm font-bold text-zinc-700 dark:text-zinc-300 max-w-md mx-auto mt-2">
+                    <p class="text-xs sm:text-sm font-bold text-zinc-700 dark:text-zinc-300 max-w-md mx-auto mt-2 leading-relaxed">
                         @if($totalKostInDb === 0)
                             Belum ada daftar kost yang terdaftar atau tersedia saat ini.
                         @elseif($hasBothSearchAndFilters)
@@ -348,7 +348,7 @@
                 </div>
                 <button type="button" wire:click="resetFilters"
                     @click="$dispatch('reset-filters'); if(viewMode==='map') { $nextTick(() => window.dispatchEvent(new Event('resize'))); }"
-                    class="px-6 py-3 bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black dark:border-zinc-700 font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl inline-flex items-center gap-2 cursor-pointer">
+                    class="w-full sm:w-auto px-5 py-3 bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black dark:border-zinc-700 font-black text-xs sm:text-sm uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl inline-flex items-center justify-center gap-2 cursor-pointer">
                     <x-icon name="lucide-refresh-cw" class="w-4 h-4 stroke-[3]" />
                     @if($hasActiveFilter)
                         <span>Reset Semua Filter</span>

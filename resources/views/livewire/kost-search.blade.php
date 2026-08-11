@@ -325,14 +325,14 @@
                     <x-icon name="lucide-search" class="w-8 h-8 sm:w-10 sm:h-10" />
                 </div>
                 <div>
-                    <h3 class="text-xl sm:text-3xl font-black text-black dark:text-white uppercase leading-tight">
+                    <h3 class="text-xl sm:text-3xl font-black text-black dark:text-white uppercase leading-tight text-balance">
                         @if($totalKostInDb === 0)
                             Belum Ada Kost Terdaftar
                         @else
                             Tidak Ada Hunian Ditemukan
                         @endif
                     </h3>
-                    <p class="text-xs sm:text-sm font-bold text-zinc-700 dark:text-zinc-300 max-w-md mx-auto mt-2 leading-relaxed">
+                    <p class="text-xs sm:text-sm font-bold text-zinc-700 dark:text-zinc-300 max-w-xs sm:max-w-md mx-auto mt-2 leading-relaxed text-balance">
                         @if($totalKostInDb === 0)
                             Belum ada daftar kost yang terdaftar atau tersedia saat ini.
                         @elseif($hasBothSearchAndFilters)

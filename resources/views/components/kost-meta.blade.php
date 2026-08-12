@@ -6,12 +6,12 @@
 
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org/",
-  "@type": "Product",
+  "{{ '@context' }}": "https://schema.org/",
+  "{{ '@type' }}": "Product",
   "name": {{ json_encode($kost->name) }},
   "description": {{ json_encode(Str::limit($kost->description, 500)) }},
   "offers": {
-    "@type": "Offer",
+    "{{ '@type' }}": "Offer",
     "priceCurrency": "IDR",
     "price": {{ $kost->price_monthly ?? 0 }}
   }

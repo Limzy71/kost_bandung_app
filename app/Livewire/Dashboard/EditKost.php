@@ -4,6 +4,7 @@ namespace App\Livewire\Dashboard;
 
 use App\Models\Facility;
 use App\Models\Kost;
+use App\Models\KostChangeRequest;
 use App\Models\KostImage;
 use App\Models\KostPrice;
 use App\Models\Rule;
@@ -140,11 +141,17 @@ class EditKost extends Component
         'yearly' => '',
     ];
 
+    public bool $hasPendingChangeRequest = false;
+
     public function mount(Kost $kost): void
     {
         abort_unless(auth()->id() === $kost->user_id, 403);
 
         $this->kost = $kost;
+
+        $this->hasPendingChangeRequest = $kost->changeRequests()
+            ->where('status', KostChangeRequest::STATUS_PENDING)
+            ->exists();
 
         $this->name = $kost->name;
         $this->gender_type = $kost->gender_type;
@@ -696,6 +703,43 @@ class EditKost extends Component
 
         $kost = $this->kost;
 
+        $proposalCreated = false;
+
+        if ($kost->status === 'published') {
+            if ($this->coreFieldsChanged()) {
+                if ($this->hasPendingChangeRequest) {
+                    if (! app()->runningUnitTests()) {
+                        usleep(1000000);
+                    }
+                    $this->addError('name', 'Masih ada pengajuan perubahan data utama yang menunggu persetujuan admin. Perubahan data utama belum dapat diajukan lagi.');
+
+                    return null;
+                }
+
+                KostChangeRequest::create([
+                    'kost_id' => $kost->id,
+                    'user_id' => $kost->user_id,
+                    'name' => strip_tags($this->name),
+                    'gender_type' => $this->gender_type,
+                    'district' => $this->district,
+                    'address' => strip_tags($this->address),
+                    'latitude' => $this->latitude,
+                    'longitude' => $this->longitude,
+                ]);
+
+                $proposalCreated = true;
+            }
+        } else {
+            $kost->fill([
+                'name' => strip_tags($this->name),
+                'gender_type' => $this->gender_type,
+                'address' => strip_tags($this->address),
+                'district' => $this->district,
+                'latitude' => $this->latitude,
+                'longitude' => $this->longitude,
+            ]);
+        }
+
         $kost->fill([
             'description' => strip_tags($this->description),
             'price_monthly' => $this->price_monthly,
@@ -709,17 +753,6 @@ class EditKost extends Component
             'nearby_landmarks' => $this->nearby_landmarks !== '' ? strip_tags($this->nearby_landmarks) : null,
             'additional_rules_note' => $this->additional_rules_note !== '' ? strip_tags($this->additional_rules_note) : null,
         ]);
-
-        if (! $this->coreFieldsLocked()) {
-            $kost->fill([
-                'name' => strip_tags($this->name),
-                'gender_type' => $this->gender_type,
-                'address' => strip_tags($this->address),
-                'district' => $this->district,
-                'latitude' => $this->latitude,
-                'longitude' => $this->longitude,
-            ]);
-        }
 
         if ($this->ownership_doc_type !== '') {
             $kost->ownership_doc_type = $this->ownership_doc_type;
@@ -865,7 +898,11 @@ class EditKost extends Component
             ]);
         }
 
-        session()->flash('status', 'Properti kost "'.$kost->name.'" berhasil diperbarui!');
+        if ($proposalCreated) {
+            session()->flash('status', 'Perubahan data utama kost "'.$kost->name.'" telah dikirim ke admin untuk disetujui. Perubahan lainnya berhasil disimpan.');
+        } else {
+            session()->flash('status', 'Properti kost "'.$kost->name.'" berhasil diperbarui!');
+        }
 
         return redirect()->route('dashboard');
     }
@@ -908,6 +945,8 @@ class EditKost extends Component
             'districts' => $districts,
             'googleMapsApiKey' => config('services.google.maps_api_key'),
             'coreFieldsLocked' => $this->coreFieldsLocked(),
+            'isPublished' => $this->kost->status === 'published',
+            'hasPendingChangeRequest' => $this->hasPendingChangeRequest,
         ])->layout('layouts.app', [
             'title' => 'Edit Kost — KostBandung.web.id',
         ]);
@@ -915,7 +954,19 @@ class EditKost extends Component
 
     private function coreFieldsLocked(): bool
     {
-        return $this->kost->status === 'published';
+        return $this->kost->status === 'published' && $this->hasPendingChangeRequest;
+    }
+
+    private function coreFieldsChanged(): bool
+    {
+        $kost = $this->kost;
+
+        return $this->name !== (string) $kost->name
+            || $this->gender_type !== (string) $kost->gender_type
+            || $this->district !== (string) $kost->district
+            || $this->address !== (string) $kost->address
+            || (float) $this->latitude !== (float) $kost->latitude
+            || (float) $this->longitude !== (float) $kost->longitude;
     }
 
     private function photoHash(string $path): ?string

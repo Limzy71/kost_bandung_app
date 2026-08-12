@@ -2,10 +2,14 @@
 
 namespace App\Livewire\Admin;
 
+use App\Mail\ChangeRequest\ReviewedMail;
 use App\Models\Facility;
 use App\Models\Kost;
+use App\Models\KostChangeRequest;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -15,7 +19,7 @@ class ModerationDashboard extends Component
 
     public string $search = '';
 
-    public string $activeTab = 'pending'; // 'pending', 'published', 'rejected', 'all', 'facilities', 'verification'
+    public string $activeTab = 'pending'; // 'pending', 'published', 'rejected', 'all', 'facilities', 'verification', 'changes'
 
     public function updatingSearch(): void
     {
@@ -116,6 +120,72 @@ class ModerationDashboard extends Component
         }
     }
 
+    public function approveChange(int $requestId): void
+    {
+        $request = KostChangeRequest::with(['kost', 'user'])->find($requestId);
+
+        if (! $request || $request->status !== KostChangeRequest::STATUS_PENDING) {
+            return;
+        }
+
+        $kost = $request->kost;
+
+        if ($request->name !== $kost->name) {
+            $slug = Str::slug($request->name);
+            $originalSlug = $slug;
+            $count = 1;
+            while (Kost::where('slug', $slug)->where('id', '!=', $kost->id)->exists()) {
+                $slug = "{$originalSlug}-{$count}";
+                $count++;
+            }
+            $kost->slug = $slug;
+        }
+
+        $kost->fill([
+            'name' => $request->name,
+            'gender_type' => $request->gender_type,
+            'district' => $request->district,
+            'address' => $request->address,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+        ])->save();
+
+        $request->update([
+            'status' => KostChangeRequest::STATUS_APPROVED,
+            'reviewed_at' => now(),
+        ]);
+
+        if ($request->user->email) {
+            Mail::to($request->user->email)->send(new ReviewedMail($kost, KostChangeRequest::STATUS_APPROVED));
+        }
+
+        $this->dispatch('show-toast', message: 'Perubahan data utama "'.$kost->name.'" telah DISETUJUI & DITERAPKAN!');
+    }
+
+    public function rejectChange(int $requestId, ?string $reason = null): void
+    {
+        $request = KostChangeRequest::with(['kost', 'user'])->find($requestId);
+
+        if (! $request || $request->status !== KostChangeRequest::STATUS_PENDING) {
+            return;
+        }
+
+        $note = trim((string) $reason);
+        $note = $note !== '' ? $note : 'Pengajuan perubahan data utama tidak disetujui. Silakan periksa kembali data yang diajukan.';
+
+        $request->update([
+            'status' => KostChangeRequest::STATUS_REJECTED,
+            'review_note' => $note,
+            'reviewed_at' => now(),
+        ]);
+
+        if ($request->user->email) {
+            Mail::to($request->user->email)->send(new ReviewedMail($request->kost, KostChangeRequest::STATUS_REJECTED, $note));
+        }
+
+        $this->dispatch('show-toast', message: 'Perubahan data utama "'.$request->kost->name.'" telah DITOLAK.');
+    }
+
     public function approveFacility(int $facilityId): void
     {
         $facility = Facility::find($facilityId);
@@ -148,6 +218,7 @@ class ModerationDashboard extends Component
         $rejectedCount = Kost::where('status', 'rejected')->count();
         $totalCount = Kost::count();
         $pendingFacilityCount = Facility::where('status', 'pending')->count();
+        $pendingChangeCount = KostChangeRequest::where('status', KostChangeRequest::STATUS_PENDING)->count();
         $verificationCount = User::where('identity_verification_status', 'pending')->count()
             + Kost::where('ownership_verification_status', 'pending')->count();
 
@@ -157,8 +228,22 @@ class ModerationDashboard extends Component
             'rejectedCount' => $rejectedCount,
             'totalCount' => $totalCount,
             'pendingFacilityCount' => $pendingFacilityCount,
+            'pendingChangeCount' => $pendingChangeCount,
             'verificationCount' => $verificationCount,
         ];
+
+        if ($this->activeTab === 'changes') {
+            $changeRequests = KostChangeRequest::with(['kost', 'user'])
+                ->orderByRaw("CASE WHEN status = '".KostChangeRequest::STATUS_PENDING."' THEN 1 ELSE 2 END")
+                ->latest()
+                ->paginate(9);
+
+            return view('livewire.admin.moderation-dashboard', $base + [
+                'changeRequests' => $changeRequests,
+            ])->layout('layouts.app', [
+                'title' => 'Moderation Dashboard — Admin KostBandung.web.id',
+            ]);
+        }
 
         if ($this->activeTab === 'facilities') {
             $facilities = Facility::where('status', 'pending')

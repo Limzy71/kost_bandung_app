@@ -1,11 +1,14 @@
 <!-- ============================================================
     SHARED FORM FIELDS — digunakan oleh CreateKost & EditKost
-    Variabel: $isEdit (bool), $coreFieldsLocked (bool), $facilities, $rules,
+    Variabel: $isEdit (bool), $coreFieldsLocked (bool), $isPublished (bool),
+              $hasPendingChangeRequest (bool), $facilities, $rules,
               $extraPeriodLabels, $districts, $googleMapsApiKey
     ============================================================ -->
 
             @php
                 $coreFieldsLocked = $coreFieldsLocked ?? false;
+                $isPublished = $isPublished ?? false;
+                $hasPendingChangeRequest = $hasPendingChangeRequest ?? false;
             @endphp
 
             <!-- Seksi 1: Informasi Dasar -->
@@ -23,10 +26,12 @@
 
                 @if($isEdit)
                     <div class="rounded-lg border-2 border-amber-500 bg-amber-50 dark:bg-amber-950/30 px-4 py-3 text-xs font-bold text-amber-900 dark:text-amber-200 leading-relaxed">
-                        @if($coreFieldsLocked)
-                            Nama kost, tipe penghuni, alamat, kecamatan, dan titik lokasi dikunci setelah properti disetujui admin untuk menjaga akurasi informasi serta kepercayaan pencari kost. Jika data utama perlu diperbarui, silakan hubungi admin.
+                        @if($hasPendingChangeRequest)
+                            Pengajuan perubahan data utama Anda sedang menunggu persetujuan admin. Data utama (nama, tipe penghuni, kecamatan, alamat, dan titik lokasi) dikunci sementara sampai pengajuan ditinjau.
+                        @elseif($isPublished)
+                            Kost ini sudah tayang. Perubahan data utama (nama, tipe penghuni, kecamatan, alamat, dan titik lokasi) akan dikirim sebagai pengajuan ke admin dan diterapkan setelah disetujui, untuk menjaga akurasi informasi serta kepercayaan pencari kost.
                         @else
-                            Data utama properti masih dapat diperbarui selama belum disetujui admin. Setelah properti disetujui dan tayang, nama kost, tipe penghuni, alamat, kecamatan, dan titik lokasi akan dikunci untuk menjaga akurasi informasi serta kepercayaan pencari kost.
+                            Data utama properti masih dapat diperbarui selama belum disetujui admin. Setelah properti disetujui dan tayang, perubahan nama kost, tipe penghuni, kecamatan, alamat, dan titik lokasi harus disetujui admin terlebih dahulu.
                         @endif
                     </div>
                 @endif

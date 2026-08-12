@@ -131,6 +131,14 @@ class Kost extends Model
     }
 
     /**
+     * @return HasMany<KostChangeRequest, $this>
+     */
+    public function changeRequests(): HasMany
+    {
+        return $this->hasMany(KostChangeRequest::class);
+    }
+
+    /**
      * @return array<string, string>
      */
     public function pricesByPeriod(): array

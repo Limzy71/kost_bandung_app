@@ -57,7 +57,7 @@
         </div>
 
         <!-- Metric Stat Cards -->
-        <div class="grid grid-cols-2 md:grid-cols-6 gap-4 sm:gap-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
             <!-- Pending -->
             <button 
                 type="button" 
@@ -132,6 +132,24 @@
                 <p class="text-[10px] font-bold text-black/70 dark:text-zinc-300 mt-1 uppercase">Perlu Review Admin</p>
             </button>
 
+            <!-- Change Requests Pending -->
+            <button 
+                type="button" 
+                wire:click="setTab('changes')" 
+                class="text-left p-5 border-3 rounded-xl transition-all cursor-pointer {{ $activeTab === 'changes' ? 'bg-orange-400 border-black dark:border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] translate-x-0.5 translate-y-0.5 [&_*]:!text-black [&_*]:!opacity-100' : 'bg-orange-100 border-black dark:border-zinc-700 dark:bg-orange-950 hover:bg-orange-200 dark:hover:bg-orange-900 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]' }}"
+            >
+                <p class="text-xs font-black uppercase tracking-wider text-black dark:text-white flex items-center gap-1.5">
+                    <span class="relative flex h-2 w-2 shrink-0">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-600 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-orange-700"></span>
+                    </span>
+                    <x-icon name="lucide-file-pen" class="w-4 h-4 text-black stroke-[2.5]" />
+                    <span>Proposal Perubahan</span>
+                </p>
+                <h3 class="text-3xl sm:text-4xl font-black text-black dark:text-white mt-2 tracking-tight">{{ $pendingChangeCount }}</h3>
+                <p class="text-[10px] font-bold text-black/70 dark:text-zinc-300 mt-1 uppercase">Data Utama Kost Tayang</p>
+            </button>
+
             <!-- Verification Pending -->
             <button 
                 type="button" 
@@ -196,6 +214,13 @@
                     class="px-4 py-2 border-2 border-black dark:border-zinc-700 font-black text-xs uppercase rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] transition-all cursor-pointer {{ $activeTab === 'verification' ? 'bg-teal-400 text-black' : 'bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300' }}"
                 >
                     Verifikasi ({{ $verificationCount }})
+                </button>
+                <button 
+                    type="button" 
+                    wire:click="setTab('changes')" 
+                    class="px-4 py-2 border-2 border-black dark:border-zinc-700 font-black text-xs uppercase rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] transition-all cursor-pointer {{ $activeTab === 'changes' ? 'bg-orange-400 text-black' : 'bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300' }}"
+                >
+                    Proposal ({{ $pendingChangeCount }})
                 </button>
             </div>
 
@@ -517,6 +542,160 @@
                         <h3 class="text-3xl font-black text-black dark:text-white uppercase">Tidak Ada Fasilitas Pending</h3>
                         <p class="text-sm font-bold text-zinc-700 dark:text-zinc-300 max-w-md mx-auto mt-2">
                             Semua fasilitas custom telah selesai ditinjau. Fasilitas baru akan muncul di sini setelah pemilik kost mengajukannya.
+                        </p>
+                    </div>
+                </div>
+            @endif
+        @elseif($activeTab === 'changes')
+            @if($changeRequests->count() > 0)
+                <div class="space-y-8" x-data="{ rejectOpen: false, rejectId: null, rejectReason: '' }" @keydown.escape.window="rejectOpen = false">
+                    <!-- Info Banner -->
+                    <div class="bg-orange-100 dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 p-5 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] space-y-2">
+                        <p class="text-xs font-black uppercase text-black dark:text-white flex items-center gap-2">
+                            <x-icon name="lucide-file-pen" class="w-5 h-5 stroke-[2.5]" />
+                            Proposal Perubahan Data Utama
+                        </p>
+                        <p class="text-sm font-bold text-zinc-700 dark:text-zinc-300 leading-relaxed">
+                            Pemilik kost yang sudah tayang mengajukan perubahan nama, tipe penghuni, kecamatan, alamat, atau titik lokasi. Listing tetap menampilkan data lama sampai Anda menyetujui pengajuan ini.
+                        </p>
+                    </div>
+
+                    <div class="space-y-6">
+                        @foreach($changeRequests as $change)
+                            <div class="bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 rounded-2xl overflow-hidden shadow-[7px_7px_0px_0px_rgba(0,0,0,1)] dark:shadow-[7px_7px_0px_0px_rgba(255,255,255,0.25)]">
+                                <div class="p-5 space-y-4">
+                                    <div class="flex flex-wrap items-center justify-between gap-3">
+                                        <div class="flex items-center gap-3 min-w-0">
+                                            <div class="w-11 h-11 rounded-xl bg-orange-300 border-2 border-black dark:border-zinc-700 flex items-center justify-center shrink-0 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
+                                                <x-icon name="lucide-building-2" class="w-5 h-5 text-black stroke-[2.5]" />
+                                            </div>
+                                            <div class="min-w-0">
+                                                <h3 class="text-lg font-black text-black dark:text-white leading-snug truncate">{{ $change->kost->name }}</h3>
+                                                <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400 truncate inline-flex items-center gap-1">
+                                                    <x-icon name="lucide-user" class="w-3.5 h-3.5 shrink-0 stroke-[2.5]" />
+                                                    {{ $change->user->name ?? 'Pemilik Tanpa Nama' }} &middot; {{ $change->user->email ?? '-' }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        @if($change->status === 'pending')
+                                            <span class="px-2.5 py-1 bg-amber-400 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] inline-flex items-center gap-1 animate-pulse shrink-0">
+                                                <x-icon name="lucide-hourglass" class="w-3 h-3 stroke-[2.5]" />
+                                                Pending
+                                            </span>
+                                        @elseif($change->status === 'approved')
+                                            <span class="px-2.5 py-1 bg-emerald-400 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] inline-flex items-center gap-1 shrink-0">
+                                                <x-icon name="lucide-check-circle-2" class="w-3 h-3 stroke-[2.5]" />
+                                                Disetujui
+                                            </span>
+                                        @else
+                                            <span class="px-2.5 py-1 bg-rose-400 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] inline-flex items-center gap-1 shrink-0">
+                                                <x-icon name="lucide-x-circle" class="w-3 h-3 stroke-[2.5]" />
+                                                Ditolak
+                                            </span>
+                                        @endif
+                                    </div>
+
+                                    <!-- Old vs New Diff -->
+                                    <div class="bg-zinc-50 dark:bg-zinc-800 border-2 border-black dark:border-zinc-700 rounded-xl overflow-hidden">
+                                        <div class="grid grid-cols-2 divide-x-2 divide-black dark:divide-zinc-700 border-b-2 border-black dark:border-zinc-700 bg-black text-white">
+                                            <div class="px-3 py-2 text-[10px] font-black uppercase">Saat Ini (Tayang)</div>
+                                            <div class="px-3 py-2 text-[10px] font-black uppercase text-lime-300">Usulan Baru</div>
+                                        </div>
+                                        <div class="divide-y divide-zinc-200 dark:divide-zinc-700 text-xs font-bold text-black dark:text-white">
+                                            <div class="grid grid-cols-2 divide-x-2 divide-zinc-200 dark:divide-zinc-700">
+                                                <div class="px-3 py-2"><span class="text-zinc-500 dark:text-zinc-400">Nama: </span>{{ $change->kost->name }}</div>
+                                                <div class="px-3 py-2 bg-lime-50 dark:bg-lime-950/30"><span class="text-zinc-500 dark:text-zinc-400">Nama: </span>{{ $change->name }}</div>
+                                            </div>
+                                            <div class="grid grid-cols-2 divide-x-2 divide-zinc-200 dark:divide-zinc-700">
+                                                <div class="px-3 py-2"><span class="text-zinc-500 dark:text-zinc-400">Tipe: </span>{{ $change->kost->gender_type }}</div>
+                                                <div class="px-3 py-2 bg-lime-50 dark:bg-lime-950/30"><span class="text-zinc-500 dark:text-zinc-400">Tipe: </span>{{ $change->gender_type }}</div>
+                                            </div>
+                                            <div class="grid grid-cols-2 divide-x-2 divide-zinc-200 dark:divide-zinc-700">
+                                                <div class="px-3 py-2"><span class="text-zinc-500 dark:text-zinc-400">Kecamatan: </span>{{ $change->kost->district }}</div>
+                                                <div class="px-3 py-2 bg-lime-50 dark:bg-lime-950/30"><span class="text-zinc-500 dark:text-zinc-400">Kecamatan: </span>{{ $change->district }}</div>
+                                            </div>
+                                            <div class="grid grid-cols-2 divide-x-2 divide-zinc-200 dark:divide-zinc-700">
+                                                <div class="px-3 py-2"><span class="text-zinc-500 dark:text-zinc-400">Alamat: </span>{{ $change->kost->address }}</div>
+                                                <div class="px-3 py-2 bg-lime-50 dark:bg-lime-950/30"><span class="text-zinc-500 dark:text-zinc-400">Alamat: </span>{{ $change->address }}</div>
+                                            </div>
+                                            <div class="grid grid-cols-2 divide-x-2 divide-zinc-200 dark:divide-zinc-700">
+                                                <div class="px-3 py-2"><span class="text-zinc-500 dark:text-zinc-400">Koordinat: </span>{{ $change->kost->latitude }}, {{ $change->kost->longitude }}</div>
+                                                <div class="px-3 py-2 bg-lime-50 dark:bg-lime-950/30"><span class="text-zinc-500 dark:text-zinc-400">Koordinat: </span>{{ $change->latitude }}, {{ $change->longitude }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @if($change->review_note)
+                                        <div class="bg-rose-50 dark:bg-rose-950/30 border-2 border-rose-500 dark:border-rose-500/60 rounded-xl p-3">
+                                            <p class="text-xs font-black text-rose-700 dark:text-rose-300 uppercase">Alasan Penolakan</p>
+                                            <p class="text-sm font-bold text-rose-900 dark:text-rose-200 mt-1">{{ $change->review_note }}</p>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                @if($change->status === 'pending')
+                                    <div class="p-4 bg-zinc-100 dark:bg-zinc-800 border-t-4 border-black dark:border-zinc-700 grid grid-cols-2 gap-2">
+                                        <button type="button" wire:click="approveChange({{ $change->id }})" wire:loading.attr="disabled"
+                                            class="w-full py-3 bg-lime-400 hover:bg-lime-300 text-black border-3 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl cursor-pointer">
+                                            <span wire:loading.remove wire:target="approveChange({{ $change->id }})">✓ SETUJUI & TERAPKAN</span>
+                                            <span wire:loading wire:target="approveChange({{ $change->id }})">Memproses...</span>
+                                        </button>
+                                        <button type="button" @click="rejectId = {{ $change->id }}; rejectReason = ''; rejectOpen = true"
+                                            class="w-full py-3 bg-rose-500 hover:bg-rose-400 text-white border-3 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl cursor-pointer">
+                                            ✕ TOLAK
+                                        </button>
+                                    </div>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="mt-8">
+                        {{ $changeRequests->links() }}
+                    </div>
+
+                    <!-- Reject Change Modal -->
+                    <div x-show="rejectOpen" x-cloak class="fixed inset-0 z-[60] flex items-center justify-center p-4" @click.self="rejectOpen = false">
+                        <div class="absolute inset-0 bg-black/60"></div>
+                        <div class="relative bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 rounded-2xl p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.25)] w-full max-w-md space-y-4"
+                            x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 scale-95"
+                            x-transition:enter-end="opacity-100 scale-100">
+                            <div class="flex items-center justify-between gap-3">
+                                <h3 class="text-lg font-black text-black dark:text-white uppercase flex items-center gap-2">
+                                    <x-icon name="lucide-x-circle" class="w-5 h-5 text-rose-600 dark:text-rose-400 stroke-[2.5]" />
+                                    Tolak Pengajuan Perubahan
+                                </h3>
+                                <button type="button" @click="rejectOpen = false"
+                                    class="w-8 h-8 bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-600 text-black dark:text-white border-2 border-black dark:border-zinc-700 rounded font-black text-sm cursor-pointer">✕</button>
+                            </div>
+                            <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400">Alasan penolakan akan dikirim ke email pemilik kost.</p>
+                            <textarea x-model="rejectReason" rows="3" maxlength="300"
+                                placeholder="Contoh: Alamat tidak lengkap. Nama kost tidak sesuai aturan penamaan. Titik lokasi tidak berada di kecamatan yang dipilih..."
+                                class="w-full bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-4 py-3 text-sm font-bold text-black dark:text-white focus:outline-none focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all"></textarea>
+                            <p class="text-[10px] font-bold italic text-zinc-500 dark:text-zinc-400">Kosongkan untuk menggunakan alasan default.</p>
+                            <div class="grid grid-cols-2 gap-3 pt-1">
+                                <button type="button" @click="rejectOpen = false"
+                                    class="py-3 bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-600 text-black dark:text-white border-3 border-black dark:border-zinc-700 font-black text-xs uppercase rounded-xl cursor-pointer">Batal</button>
+                                <button type="button" @click="rejectOpen = false; $wire.rejectChange(rejectId, rejectReason)"
+                                    class="py-3 bg-rose-500 hover:bg-rose-400 text-white border-3 border-black dark:border-zinc-700 font-black text-xs uppercase rounded-xl cursor-pointer shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all">
+                                    Konfirmasi Tolak
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @else
+                <!-- Empty State -->
+                <div class="bg-orange-100 dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.25)] space-y-4">
+                    <div class="w-20 h-20 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-2xl flex items-center justify-center mx-auto text-black dark:text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] -rotate-3">
+                        <x-icon name="lucide-circle-check" class="w-10 h-10" />
+                    </div>
+                    <div>
+                        <h3 class="text-3xl font-black text-black dark:text-white uppercase">Tidak Ada Pengajuan Perubahan</h3>
+                        <p class="text-sm font-bold text-zinc-700 dark:text-zinc-300 max-w-md mx-auto mt-2">
+                            Belum ada proposal perubahan data utama dari pemilik kost. Pengajuan akan muncul di sini saat pemilik mengubah data utama kost yang sudah tayang.
                         </p>
                     </div>
                 </div>

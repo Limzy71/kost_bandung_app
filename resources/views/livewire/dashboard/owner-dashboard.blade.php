@@ -318,7 +318,7 @@
                                         <span class="px-2.5 py-1 bg-pink-400 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] tracking-wider">
                                             {{ $kost->gender_type }}
                                         </span>
-                                        @if($kost->boosted_at)
+                                        @if($kost->isBoostActive())
                                             <span class="px-2.5 py-1 bg-yellow-400 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] tracking-wider flex items-center gap-1">
                                                 <x-icon name="lucide-zap" fill="#FBBF24" stroke-width="0.8" class="w-3.5 h-3.5 shrink-0" />
                                                 <span>Super Boost</span>
@@ -430,6 +430,44 @@
                                 </div>
                             </div>
 
+                            <!-- Boost Panel -->
+                            <div class="px-5 py-3 bg-amber-50 dark:bg-amber-950/20 border-t-3 border-black dark:border-zinc-700">
+                                @php
+                                    $price = config('midtrans.boost_price', 50000);
+                                    $formattedPrice = number_format($price, 0, ',', '.');
+                                    $duration = config('midtrans.boost_duration_days', 30);
+                                    $trialDuration = config('midtrans.boost_trial_days', 3);
+                                @endphp
+                                
+                                <div class="flex flex-col gap-2">
+                                    <p class="text-[10px] font-black uppercase tracking-wider text-amber-800 dark:text-amber-400 flex items-center gap-1.5">
+                                        <x-icon name="lucide-zap" class="w-3.5 h-3.5 stroke-[2.5]" />
+                                        Boost Kost
+                                    </p>
+                                    
+                                    @if(!$kost->boost_expires_at && !$hasTrial)
+                                        <button type="button" onclick="window.claimFreeTrial('{{ $kost->slug }}')" class="w-full h-8 px-2 bg-yellow-400 hover:bg-yellow-300 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] rounded-md flex items-center justify-center transition-all cursor-pointer">
+                                            Coba Boost Gratis {{ $trialDuration }} Hari
+                                        </button>
+                                    @elseif($kost->boost_type === 'free_trial' && $kost->isBoostActive())
+                                        <p class="text-[10px] font-bold text-black dark:text-white mb-1">Trial Aktif s/d {{ \Carbon\Carbon::parse($kost->boost_expires_at)->format('d M Y') }}</p>
+                                        <button type="button" onclick="window.payBoost('{{ $kost->slug }}')" class="w-full h-8 px-2 bg-yellow-400 hover:bg-yellow-300 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] rounded-md flex items-center justify-center transition-all cursor-pointer">
+                                            Perpanjang {{ $duration }} Hari - Rp {{ $formattedPrice }}
+                                        </button>
+                                    @elseif($kost->boost_type === 'paid' && $kost->isBoostActive())
+                                        <p class="text-[10px] font-bold text-black dark:text-white mb-1">Boost Aktif s/d {{ \Carbon\Carbon::parse($kost->boost_expires_at)->format('d M Y') }}</p>
+                                        <button type="button" onclick="window.payBoost('{{ $kost->slug }}')" class="w-full h-8 px-2 bg-yellow-400 hover:bg-yellow-300 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] rounded-md flex items-center justify-center transition-all cursor-pointer">
+                                            Perpanjang Boost - Rp {{ $formattedPrice }}
+                                        </button>
+                                    @else
+                                        <p class="text-[10px] font-bold text-zinc-500 mb-1">Boost Tidak Aktif</p>
+                                        <button type="button" onclick="window.payBoost('{{ $kost->slug }}')" class="w-full h-8 px-2 bg-yellow-400 hover:bg-yellow-300 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] rounded-md flex items-center justify-center transition-all cursor-pointer">
+                                            Aktifkan Boost - Rp {{ $formattedPrice }}
+                                        </button>
+                                    @endif
+                                </div>
+                            </div>
+
                             <!-- Card Footer Actions -->
                             <div class="px-5 py-4 bg-zinc-100 dark:bg-zinc-800 border-t-3 border-black dark:border-zinc-700 flex flex-col gap-2 shrink-0">
                                 <!-- Toggle Availability Button -->
@@ -530,3 +568,79 @@
 
     </div>
 </div>
+
+@php
+    $snapUrl = config('midtrans.is_production')
+        ? 'https://app.midtrans.com/snap/snap.js'
+        : 'https://app.sandbox.midtrans.com/snap/snap.js';
+@endphp
+<script src="{{ $snapUrl }}" data-client-key="{{ config('midtrans.client_key') }}"></script>
+<script>
+    // Initialize FingerprintJS
+    const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4')
+        .then(FingerprintJS => FingerprintJS.load());
+
+    window.claimFreeTrial = async function(slug) {
+        if (!confirm('Anda yakin ingin mengklaim free trial untuk properti ini?')) return;
+        
+        try {
+            const fp = await fpPromise;
+            const result = await fp.get();
+            const visitorId = result.visitorId;
+
+            const response = await fetch(`/dashboard/kost/${slug}/boost/free-trial`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ device_fingerprint: visitorId })
+            });
+            const data = await response.json();
+            
+            if (response.ok) {
+                alert(data.message);
+                window.location.reload();
+            } else {
+                alert(data.message || 'Gagal mengklaim free trial.');
+            }
+        } catch (error) {
+            alert('Terjadi kesalahan sistem.');
+        }
+    };
+
+    window.payBoost = async function(slug) {
+        try {
+            const response = await fetch(`/dashboard/kost/${slug}/boost/payment`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            });
+            const data = await response.json();
+            
+            if (response.ok && data.snap_token) {
+                snap.pay(data.snap_token, {
+                    onSuccess: function(result) {
+                        alert('Pembayaran berhasil! Halaman akan dimuat ulang.');
+                        window.location.reload();
+                    },
+                    onPending: function(result) {
+                        alert('Menunggu pembayaran Anda!');
+                    },
+                    onError: function(result) {
+                        alert('Pembayaran gagal!');
+                    },
+                    onClose: function() {
+                        console.log('User closed popup');
+                    }
+                });
+            } else {
+                alert(data.message || 'Gagal membuat transaksi.');
+            }
+        } catch (error) {
+            alert('Terjadi kesalahan saat memproses pembayaran.');
+        }
+    };
+</script>

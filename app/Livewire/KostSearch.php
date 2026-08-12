@@ -153,8 +153,11 @@ class KostSearch extends Component
             $query->where('district', $this->district);
         }
 
-        $query->orderByRaw('boosted_at IS NULL, boosted_at DESC')
-            ->orderByDesc('created_at');
+        $now = now();
+        $query->orderByRaw(
+            'CASE WHEN boost_expires_at IS NOT NULL AND boost_expires_at > ? THEN 1 ELSE 0 END DESC',
+            [$now]
+        )->orderByDesc('created_at');
 
         $districts = [];
         foreach (config('bandung.districts', []) as $key => $data) {
@@ -195,7 +198,7 @@ class KostSearch extends Component
                 'lng' => (float) $k->longitude,
                 'image' => $img,
                 'url' => route('kost.show', $k->slug),
-                'is_boosted' => (bool) $k->boosted_at,
+                'is_boosted' => $k->boost_expires_at?->isFuture() ?? false,
             ];
         })->values()->toArray();
 

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Dashboard;
 
+use App\Models\BoostTrial;
 use App\Models\Kost;
 use App\Models\KostMessage;
 use App\Models\User;
@@ -171,6 +172,7 @@ class OwnerDashboard extends Component
             'totalKamarTersedia' => $this->totalKamarTersedia,
             'pesanMasuk' => $this->pesanMasuk,
             'kosts' => $kosts,
+            'hasTrial' => BoostTrial::where('user_id', $user->id)->exists(),
         ])->layout('layouts.app', [
             'title' => 'Dashboard Pemilik Kost — KostBandung.web.id',
         ]);

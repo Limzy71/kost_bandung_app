@@ -363,6 +363,17 @@
                                                 Penuh
                                             </span>
                                         @endif
+
+                                        @if(($kost->pendingChangeCount ?? 0) > 0)
+                                            <span class="px-2.5 py-1 bg-blue-400 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] inline-flex items-center gap-1.5 animate-pulse">
+                                                <span class="relative flex h-2 w-2 shrink-0">
+                                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-700 opacity-75"></span>
+                                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-800"></span>
+                                                </span>
+                                                <x-icon name="lucide-hourglass" class="w-3 h-3 text-black stroke-[2.5] shrink-0" />
+                                                <span>Perubahan Menunggu Admin</span>
+                                            </span>
+                                        @endif
                                     </div>
                                 </div>
 

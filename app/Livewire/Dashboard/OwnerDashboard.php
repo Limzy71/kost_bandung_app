@@ -4,6 +4,7 @@ namespace App\Livewire\Dashboard;
 
 use App\Models\BoostTrial;
 use App\Models\Kost;
+use App\Models\KostChangeRequest;
 use App\Models\KostMessage;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
@@ -164,6 +165,10 @@ class OwnerDashboard extends Component
         /** @var User $user */
         $user = Auth::user();
 
+        if (session()->has('status')) {
+            $this->dispatch('show-toast', message: session('status'));
+        }
+
         $kosts = $this->searchQuery()->paginate(9);
 
         return view('livewire.dashboard.owner-dashboard', [
@@ -197,6 +202,9 @@ class OwnerDashboard extends Component
         return $this->ownerKostsQuery()->getQuery()
             ->with(['primaryImage', 'facilities'])
             ->withCount('conversations')
+            ->withCount(['changeRequests as pendingChangeCount' => function ($query) {
+                $query->where('status', KostChangeRequest::STATUS_PENDING);
+            }])
             ->when($this->search, function ($query) {
                 $term = '%'.addcslashes($this->search, '%_').'%';
 

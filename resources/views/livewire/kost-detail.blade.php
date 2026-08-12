@@ -209,13 +209,15 @@
                     <div class="space-y-4">
                         <div class="flex flex-wrap items-center gap-2">
                             <span
-                                class="px-3.5 py-1 bg-pink-400 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider dark:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">>
-                                Tipe {{ $kost->gender_type }}
+                                class="px-3.5 py-1 bg-pink-400 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider inline-flex items-center gap-1.5 dark:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
+                                <x-icon name="lucide-users" class="w-4 h-4 shrink-0 stroke-[2.5]" />
+                                <span>Tipe {{ $kost->gender_type }}</span>
                             </span>
 
                             <span
-                                class="px-3.5 py-1 bg-cyan-300 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider dark:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">>
-                                Sewa {{ $rentPeriodLabel }}
+                                class="px-3.5 py-1 bg-cyan-300 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider inline-flex items-center gap-1.5 dark:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
+                                <x-icon name="lucide-calendar" class="w-4 h-4 shrink-0 stroke-[2.5]" />
+                                <span>Sewa {{ $rentPeriodLabel }}</span>
                             </span>
 
                             @if ($kost->is_available)
@@ -230,21 +232,21 @@
 
                             @if ($kost->boosted_at)
                                 <span
-                                    class="px-3.5 py-1 bg-yellow-400 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider inline-flex items-center gap-1.5 dark:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">>
-                                    <x-icon name="lucide-zap" fill="#FBBF24" stroke-width="0.8" class="w-4 h-4 shrink-0 drop-shadow-[1px_1px_0px_rgba(0,0,0,1)]" />
+                                    class="px-3.5 py-1 bg-yellow-400 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider inline-flex items-center gap-1.5 dark:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
+                                    <x-icon name="lucide-zap" fill="#FBBF24" stroke="black" stroke-width="1.8" class="w-4 h-4 shrink-0" />
                                     <span>Properti Rekomendasi</span>
                                 </span>
                             @endif
 
                             @if ($kost->isVerified())
                                 <span
-                                    class="px-3.5 py-1 bg-emerald-400 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider inline-flex items-center gap-1.5 dark:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">>
+                                    class="px-3.5 py-1 bg-emerald-400 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider inline-flex items-center gap-1.5 dark:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
                                     <x-icon name="lucide-badge-check" class="w-4 h-4 shrink-0 stroke-[2.5]" />
                                     <span>Kepemilikan Terverifikasi</span>
                                 </span>
                             @else
                                 <span title="Kost ini belum diverifikasi kepemilikannya"
-                                    class="px-3.5 py-1 bg-rose-400 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider inline-flex items-center gap-1.5 dark:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">>
+                                    class="px-3.5 py-1 bg-rose-400 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider inline-flex items-center gap-1.5 dark:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
                                     <x-icon name="lucide-shield-alert" class="w-4 h-4 shrink-0 stroke-[2.5]" />
                                     <span>Belum Terverifikasi</span>
                                 </span>
@@ -375,14 +377,14 @@
                                     <x-icon name="lucide-bed-double" class="w-4 h-4 text-black stroke-[2.5] dark:text-white" />
                                     Fasilitas Kamar
                                     <span
-                                        class="text-[10px] font-black uppercase bg-lime-300 border-2 border-black px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:border-zinc-700 dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">>
+                                        class="text-[10px] font-black uppercase bg-lime-300 border-2 border-black px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:border-zinc-700 dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">
                                         {{ $roomFacilities->count() }}
                                     </span>
                                 </h3>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                                     @foreach ($roomFacilities as $facility)
                                         <div
-                                            class="flex items-center gap-2.5 bg-lime-100 border-2 border-black px-3.5 py-2.5 rounded-xl text-sm font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:bg-lime-950/50 dark:border-zinc-700 dark:text-white dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">>
+                                            class="flex items-center gap-2.5 bg-lime-100 border-2 border-black px-3.5 py-2.5 rounded-xl text-sm font-black text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:bg-lime-950/50 dark:border-zinc-700 dark:text-white dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
 
                                             <span>{{ $facility->name }}</span>
                                             @if (auth()->check() && auth()->id() === $kost->user_id && $facility->status === 'pending' && $facility->user_id === auth()->id())
@@ -409,7 +411,7 @@
                                     <x-icon name="lucide-building-2" class="w-4 h-4 text-black stroke-[2.5] dark:text-white" />
                                     Fasilitas Umum
                                     <span
-                                        class="text-[10px] font-black uppercase bg-cyan-300 border-2 border-black px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:border-zinc-700 dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">>
+                                        class="text-[10px] font-black uppercase bg-cyan-300 border-2 border-black px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:border-zinc-700 dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">
                                         {{ $buildingFacilities->count() }}
                                     </span>
                                 </h3>
@@ -442,7 +444,7 @@
                                 <h3 class="text-sm font-black uppercase tracking-wider text-black flex items-center gap-2 dark:text-white">
                                     <x-icon name="lucide-square-parking" class="w-4 h-4 text-black stroke-[2.5] dark:text-white" />
                                     Fasilitas Parkir
-                                    <span class="text-[10px] font-black uppercase bg-yellow-300 border-2 border-black px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:border-zinc-700 dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">>
+                                    <span class="text-[10px] font-black uppercase bg-yellow-300 border-2 border-black px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:border-zinc-700 dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">
                                         {{ $parkingFacilities->count() }}
                                     </span>
                                 </h3>

@@ -156,7 +156,7 @@ class ModerationDashboard extends Component
         ]);
 
         if ($request->user->email) {
-            Mail::to($request->user->email)->send(new ReviewedMail($kost, KostChangeRequest::STATUS_APPROVED));
+            Mail::to($request->user->email)->queue(new ReviewedMail($kost, KostChangeRequest::STATUS_APPROVED));
         }
 
         $this->dispatch('show-toast', message: 'Perubahan data utama "'.$kost->name.'" telah DISETUJUI & DITERAPKAN!');
@@ -180,7 +180,7 @@ class ModerationDashboard extends Component
         ]);
 
         if ($request->user->email) {
-            Mail::to($request->user->email)->send(new ReviewedMail($request->kost, KostChangeRequest::STATUS_REJECTED, $note));
+            Mail::to($request->user->email)->queue(new ReviewedMail($request->kost, KostChangeRequest::STATUS_REJECTED, $note));
         }
 
         $this->dispatch('show-toast', message: 'Perubahan data utama "'.$request->kost->name.'" telah DITOLAK.');

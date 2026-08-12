@@ -276,35 +276,14 @@ class EditKost extends Component
     protected function rules(): array
     {
         return [
-            'name' => [
-                'required',
-                'string',
-                'min:3',
-                'max:60',
-                'regex:/^[a-zA-Z0-9\s\.\,\-\'\(\)\/]+$/',
-                function ($attribute, $value, $fail) {
-                    $words = explode(' ', (string) $value);
-                    foreach ($words as $word) {
-                        if (strlen($word) > 25) {
-                            $fail('Nama kost tidak boleh mengandung kata acak yang terlalu panjang.');
-                            return;
-                        }
-                    }
-                },
-            ],
             'gender_type' => 'required|in:putra,putri,campur',
             'description' => 'required|string|min:10|max:500',
-            'district' => ['required', 'string', \Illuminate\Validation\Rule::in(array_keys(config('bandung.districts', [])))],
-            'address' => 'required|string|max:500',
             'price_monthly' => 'required|numeric|min:100000',
             'rent_period' => ['required', \Illuminate\Validation\Rule::in(Kost::allowedRentPeriods())],
             'price_deposit' => 'nullable|numeric|min:0',
             'include_utilities' => 'boolean',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
             'total_rooms' => 'required|integer|min:1',
             'available_rooms' => 'required|integer|min:0|lte:total_rooms',
-            'whatsapp_contact' => 'nullable|regex:/^[0-9+()\-\s]{9,16}$/',
             'nearby_landmarks' => 'nullable|string|max:1000',
             'selectedFacilities' => 'nullable|array',
             'selectedFacilities.*' => 'exists:facilities,id',
@@ -361,17 +340,10 @@ class EditKost extends Component
     protected function messages(): array
     {
         return [
-            'name.required' => 'Nama kost wajib diisi.',
-            'name.min' => 'Nama kost minimal 3 karakter.',
-            'name.max' => 'Nama kost maksimal 60 karakter.',
-            'name.regex' => 'Nama kost hanya boleh berisi huruf, angka, spasi, dan tanda baca standar (., -, \', (), /).',
             'gender_type.required' => 'Tipe kost wajib dipilih.',
             'description.required' => 'Deskripsi kost wajib diisi.',
             'description.min' => 'Deskripsi kost minimal 10 karakter.',
             'description.max' => 'Deskripsi kost maksimal 500 karakter.',
-            'district.required' => 'Kecamatan wajib dipilih.',
-            'district.in' => 'Kecamatan tidak valid.',
-            'address.required' => 'Alamat lengkap wajib diisi.',
             'price_monthly.required' => 'Harga sewa utama wajib diisi.',
             'price_monthly.numeric' => 'Harga sewa utama harus berupa angka.',
             'price_monthly.min' => 'Harga sewa utama minimal Rp 100.000.',
@@ -379,8 +351,6 @@ class EditKost extends Component
             'rent_period.in' => 'Periode sewa utama tidak valid.',
             'price_deposit.numeric' => 'Uang deposit harus berupa angka.',
             'price_deposit.min' => 'Uang deposit tidak boleh negatif.',
-            'latitude.required' => 'Titik lokasi peta wajib ditentukan.',
-            'longitude.required' => 'Titik lokasi peta wajib ditentukan.',
             'total_rooms.required' => 'Total jumlah kamar wajib diisi.',
             'total_rooms.integer' => 'Total kamar harus berupa angka bulat.',
             'total_rooms.min' => 'Total kamar minimal 1.',
@@ -388,7 +358,6 @@ class EditKost extends Component
             'available_rooms.integer' => 'Sisa kamar harus berupa angka bulat.',
             'available_rooms.min' => 'Sisa kamar minimal 0.',
             'available_rooms.lte' => 'Sisa kamar tersedia tidak boleh melebihi total jumlah kamar.',
-            'whatsapp_contact.regex' => 'Nomor WhatsApp tidak valid. Gunakan format angka 9–16 digit.',
             'photos.max' => 'MAKSIMAL 10 FOTO KOST DAPAT DIUNGGAH.',
             'photos.*.image' => 'File harus berupa gambar (JPG, PNG, WEBP).',
             'photos.*.mimes' => 'File harus berupa gambar dengan format JPG, PNG, atau WEBP.',
@@ -667,43 +636,18 @@ class EditKost extends Component
             return null;
         }
 
-        $lat = (float) $this->latitude;
-        $lng = (float) $this->longitude;
-
-        $districts = config('bandung.districts', []);
-        $bounds = $districts[$this->district]['bounds'] ?? null;
-        if ($bounds) {
-            if (
-                $lat < $bounds['lat_min'] || $lat > $bounds['lat_max'] ||
-                $lng < $bounds['lng_min'] || $lng > $bounds['lng_max']
-            ) {
-                if (! app()->runningUnitTests()) {
-                    usleep(1000000);
-                }
-                $this->addError('latitude', 'Koordinat peta tidak berada di dalam wilayah Kecamatan yang dipilih.');
-
-                return null;
-            }
-        }
-
         $kost = $this->kost;
 
         $kost->fill([
-            'name' => strip_tags($this->name),
             'description' => strip_tags($this->description),
             'gender_type' => $this->gender_type,
             'price_monthly' => $this->price_monthly,
             'rent_period' => $this->rent_period,
             'price_deposit' => $this->price_deposit !== '' ? $this->price_deposit : null,
             'include_utilities' => $this->include_utilities,
-            'address' => strip_tags($this->address),
-            'district' => $this->district,
-            'latitude' => $this->latitude,
-            'longitude' => $this->longitude,
             'is_available' => ((int) $this->available_rooms > 0),
             'total_rooms' => (int) $this->total_rooms,
             'available_rooms' => (int) $this->available_rooms,
-            'whatsapp_contact' => $this->whatsapp_contact !== '' ? strip_tags($this->whatsapp_contact) : null,
             'nearby_landmarks' => $this->nearby_landmarks !== '' ? strip_tags($this->nearby_landmarks) : null,
             'additional_rules_note' => $this->additional_rules_note !== '' ? strip_tags($this->additional_rules_note) : null,
         ]);

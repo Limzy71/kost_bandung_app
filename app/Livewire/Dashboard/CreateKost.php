@@ -49,8 +49,6 @@ class CreateKost extends Component
 
     public string $available_rooms = '1';
 
-    public string $whatsapp_contact = '';
-
     public string $nearby_landmarks = '';
 
     /**
@@ -220,7 +218,6 @@ class CreateKost extends Component
             'longitude' => 'required|numeric',
             'total_rooms' => 'required|integer|min:1',
             'available_rooms' => 'required|integer|min:0|lte:total_rooms',
-            'whatsapp_contact' => 'nullable|regex:/^[0-9+()\-\s]{9,16}$/',
             'nearby_landmarks' => 'nullable|string|max:1000',
             'selectedFacilities' => 'nullable|array',
             'selectedFacilities.*' => 'exists:facilities,id',
@@ -304,7 +301,6 @@ class CreateKost extends Component
             'available_rooms.integer' => 'Sisa kamar harus berupa angka bulat.',
             'available_rooms.min' => 'Sisa kamar minimal 0.',
             'available_rooms.lte' => 'Sisa kamar tersedia tidak boleh melebihi total jumlah kamar.',
-            'whatsapp_contact.regex' => 'Nomor WhatsApp tidak valid. Gunakan format angka 9–16 digit.',
             'photos.required' => 'MINIMAL 4 FOTO KOST WAJIB DIUNGGAH.',
             'photos.min' => 'MINIMAL 4 FOTO KOST WAJIB DIUNGGAH.',
             'photos.max' => 'MAKSIMAL 10 FOTO KOST DAPAT DIUNGGAH.',
@@ -611,7 +607,6 @@ class CreateKost extends Component
             'status' => 'pending', // Draft / Pending Admin review
             'total_rooms' => (int) $this->total_rooms,
             'available_rooms' => (int) $this->available_rooms,
-            'whatsapp_contact' => $this->whatsapp_contact !== '' ? strip_tags($this->whatsapp_contact) : null,
             'nearby_landmarks' => $this->nearby_landmarks !== '' ? strip_tags($this->nearby_landmarks) : null,
             'additional_rules_note' => $this->additional_rules_note !== '' ? strip_tags($this->additional_rules_note) : null,
         ]);

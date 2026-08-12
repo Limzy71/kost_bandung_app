@@ -22,9 +22,9 @@
                     <label for="name" class="block text-xs font-black uppercase tracking-wider text-black dark:text-white">
                         Nama Properti Kost <span class="text-rose-600 dark:text-rose-400">*</span>
                     </label>
-                    <input type="text" id="name" wire:model.blur="name" maxlength="60"
+                    <input type="text" id="name" wire:model.blur="name" maxlength="60" @disabled($isEdit)
                         placeholder="Contoh: Kost Eksklusif Dago Asri"
-                        class="w-full bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg px-4 py-3 text-sm font-bold text-black dark:text-white focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all">
+                        class="w-full bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg px-4 py-3 text-sm font-bold text-black dark:text-white focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-zinc-100 disabled:dark:bg-zinc-800">
                     @error('name')
                         <p
                             class="text-xs font-black text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-950/40 border-2 border-rose-500 dark:border-rose-500/60 px-2.5 py-1 rounded-md mt-1 inline-block">
@@ -433,14 +433,17 @@
                                 var self = this;
                                 var lat0 = parseFloat(this.lat) || DEFAULT_LAT;
                                 var lng0 = parseFloat(this.lng) || DEFAULT_LNG;
+                                var isEdit = {{ $isEdit ? 'true' : 'false' }};
 
                                 var setupGoogle = function() {
                                     if (self.map || !window.google || !window.google.maps) return false;
                                     try {
                                         self.map = new google.maps.Map(self.$refs.mapElement, { center: { lat: lat0, lng: lng0 }, zoom: 13, mapTypeControl: false, streetViewControl: false, fullscreenControl: true });
-                                        self.marker = new google.maps.Marker({ position: { lat: lat0, lng: lng0 }, map: self.map, draggable: true, title: 'Lokasi Kost Anda' });
-                                        self.marker.addListener('dragend', function(e) { self.markerManuallyMoved = true; self.setCoords(e.latLng.lat(), e.latLng.lng(), true); });
-                                        self.map.addListener('click', function(e) { self.markerManuallyMoved = true; self.marker.setPosition(e.latLng); self.setCoords(e.latLng.lat(), e.latLng.lng(), true); });
+                                        self.marker = new google.maps.Marker({ position: { lat: lat0, lng: lng0 }, map: self.map, draggable: !isEdit, title: 'Lokasi Kost Anda' });
+                                        if (!isEdit) {
+                                            self.marker.addListener('dragend', function(e) { self.markerManuallyMoved = true; self.setCoords(e.latLng.lat(), e.latLng.lng(), true); });
+                                            self.map.addListener('click', function(e) { self.markerManuallyMoved = true; self.marker.setPosition(e.latLng); self.setCoords(e.latLng.lat(), e.latLng.lng(), true); });
+                                        }
                                         return true;
                                     } catch(e) { console.warn('Google Maps init error:', e); return false; }
                                 };
@@ -449,9 +452,11 @@
                                     if (self.map || typeof L === 'undefined') return;
                                     self.map = L.map(self.$refs.mapElement).setView([lat0, lng0], 13);
                                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(self.map);
-                                    self.marker = L.marker([lat0, lng0], { draggable: true }).addTo(self.map);
-                                    self.marker.on('dragend', function(e) { self.markerManuallyMoved = true; var p = e.target.getLatLng(); self.setCoords(p.lat, p.lng, true); });
-                                    self.map.on('click', function(e) { self.markerManuallyMoved = true; self.marker.setLatLng(e.latlng); self.setCoords(e.latlng.lat, e.latlng.lng, true); });
+                                    self.marker = L.marker([lat0, lng0], { draggable: !isEdit }).addTo(self.map);
+                                    if (!isEdit) {
+                                        self.marker.on('dragend', function(e) { self.markerManuallyMoved = true; var p = e.target.getLatLng(); self.setCoords(p.lat, p.lng, true); });
+                                        self.map.on('click', function(e) { self.markerManuallyMoved = true; self.marker.setLatLng(e.latlng); self.setCoords(e.latlng.lat, e.latlng.lng, true); });
+                                    }
                                 };
 
                                 var loadLeaflet = function() {
@@ -561,9 +566,9 @@
                             Kecamatan <span class="text-rose-600 dark:text-rose-400">*</span>
                         </label>
                         <div class="relative w-full">
-                            <select id="district" x-model="district" @change="districtAutoMessage = null"
+                            <select id="district" x-model="district" @change="districtAutoMessage = null" @disabled($isEdit)
                                 style="padding-left: 1.25rem !important;"
-                                class="w-full bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg !pl-5 pr-10 py-3.5 text-sm font-bold text-black dark:text-white focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] cursor-pointer transition-all appearance-none">
+                                class="w-full bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg !pl-5 pr-10 py-3.5 text-sm font-bold text-black dark:text-white focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] cursor-pointer transition-all appearance-none disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-zinc-100 disabled:dark:bg-zinc-800">
                                 <option value="" disabled>-- Pilih Kecamatan --</option>
                                 @foreach ($districts as $dist)
                                     <option value="{{ $dist }}" class="font-bold text-sm text-black dark:text-white">Kec.
@@ -588,11 +593,12 @@
                             Alamat Lengkap / Nama Kost <span class="text-rose-600 dark:text-rose-400">*</span>
                         </label>
                         <div class="relative w-full">
-                            <input type="text" id="address" x-model="address"
+                            <input type="text" id="address" x-model="address" @disabled($isEdit)
                                 x-on:keydown.enter.prevent="$el.blur()"
                                 placeholder="Contoh: Jl. Dipatiukur No. 80 atau nama kost"
                                 style="padding-left: 1.25rem !important;"
-                                class="w-full bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg !pl-5 pr-12 py-3.5 text-sm font-bold text-black dark:text-white focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all">
+                                class="w-full bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg !pl-5 pr-12 py-3.5 text-sm font-bold text-black dark:text-white focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-zinc-100 disabled:dark:bg-zinc-800">
+                            @if(!$isEdit)
                             <button type="button" x-show="address && !isGeocoding" x-cloak @click="resetToDefaultLocation()"
                                 class="absolute right-2.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded bg-rose-400 hover:bg-rose-500 text-black border-2 border-black dark:border-zinc-700 flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:shadow-none active:translate-x-[1px] active:translate-y-[1px] transition-all cursor-pointer"
                                 title="Hapus alamat dan reset lokasi">
@@ -601,6 +607,7 @@
                             <div x-show="isGeocoding" x-cloak class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center text-zinc-400">
                                 <x-icon name="lucide-loader-circle" class="animate-spin w-5 h-5" />
                             </div>
+                            @endif
                         </div>
                         @error('address')
                             <p

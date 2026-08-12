@@ -595,9 +595,6 @@
             @endif
         </div>
 
-    </div>
-</div>
-
         <!-- Boost Free Trial Confirmation Modal -->
         <div 
             x-data="{ 

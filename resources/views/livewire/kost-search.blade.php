@@ -233,8 +233,15 @@
 
                                     <!-- Top Left Badges -->
                                     <div class="absolute top-3 left-3 flex flex-wrap items-center gap-1.5 max-w-[calc(100%-8rem)] pointer-events-none z-10">
-                                        <span class="px-2.5 py-1 bg-pink-400 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] tracking-wider">
-                                            {{ $kost->gender_type }}
+                                        <span class="px-2.5 py-1 bg-pink-400 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] tracking-wider inline-flex items-center gap-1">
+                                            @if(strtolower($kost->gender_type) === 'campur')
+                                                <x-icon name="lucide-users" class="w-3 h-3 shrink-0 stroke-[2.5]" />
+                                            @elseif(strtolower($kost->gender_type) === 'putri')
+                                                <x-icon name="lucide-user-check" class="w-3 h-3 shrink-0 stroke-[2.5]" />
+                                            @else
+                                                <x-icon name="lucide-user" class="w-3 h-3 shrink-0 stroke-[2.5]" />
+                                            @endif
+                                            <span>{{ $kost->gender_type }}</span>
                                         </span>
                                         @if ($kost->isBoostActive() || $kost->boosted_at)
                                             <span class="px-2.5 py-1 bg-yellow-400 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] tracking-wider inline-flex items-center gap-1">
@@ -254,6 +261,11 @@
                                             <span class="px-2 py-0.5 bg-emerald-400 text-black border-2 border-black dark:border-zinc-700 text-[9px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] tracking-wider inline-flex items-center gap-1">
                                                 <x-icon name="lucide-badge-check" class="w-3 h-3 shrink-0 stroke-[2.5]" />
                                                 <span>Terverifikasi</span>
+                                            </span>
+                                        @else
+                                            <span class="px-2 py-0.5 bg-rose-400 text-black border-2 border-black dark:border-zinc-700 text-[9px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] tracking-wider inline-flex items-center gap-1" title="Kost ini belum diverifikasi kepemilikannya">
+                                                <x-icon name="lucide-shield-alert" class="w-3 h-3 shrink-0 stroke-[2.5]" />
+                                                <span>Belum Terverifikasi</span>
                                             </span>
                                         @endif
                                     </div>

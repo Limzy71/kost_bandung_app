@@ -49,6 +49,8 @@ class Kost extends Model
         'nearby_landmarks',
         'additional_rules_note',
         'boosted_at',
+        'boost_type',
+        'boost_expires_at',
         'ownership_doc_type',
         'ownership_doc_path',
         'ownership_verification_status',
@@ -66,6 +68,7 @@ class Kost extends Model
         'latitude' => 'decimal:8',
         'longitude' => 'decimal:8',
         'boosted_at' => 'datetime',
+        'boost_expires_at' => 'datetime',
         'ownership_verified_at' => 'datetime',
     ];
 
@@ -264,5 +267,37 @@ class Kost extends Model
         if ($this->ownership_doc_path) {
             Storage::disk('verification_docs')->delete($this->ownership_doc_path);
         }
+    }
+
+    /**
+     * @return HasMany<BoostTrial, $this>
+     */
+    public function boostTrials(): HasMany
+    {
+        return $this->hasMany(BoostTrial::class);
+    }
+
+    /**
+     * @return HasMany<BoostTransaction, $this>
+     */
+    public function boostTransactions(): HasMany
+    {
+        return $this->hasMany(BoostTransaction::class);
+    }
+
+    /**
+     * @return HasMany<BoostReminder, $this>
+     */
+    public function boostReminders(): HasMany
+    {
+        return $this->hasMany(BoostReminder::class);
+    }
+
+    /**
+     * Check if the kost has an active boost.
+     */
+    public function isBoostActive(): bool
+    {
+        return $this->boost_expires_at && $this->boost_expires_at->isFuture();
     }
 }

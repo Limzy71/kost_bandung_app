@@ -253,7 +253,7 @@
                             @endif
                         </div>
 
-                        <h1 class="text-3xl sm:text-5xl font-black text-black tracking-tight uppercase leading-tight dark:text-white">
+                        <h1 class="text-3xl sm:text-5xl font-black text-black tracking-tight uppercase leading-tight break-words [word-break:break-word] dark:text-white">
                             {{ $kost->name }}
                         </h1>
 

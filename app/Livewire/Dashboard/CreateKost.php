@@ -192,7 +192,22 @@ class CreateKost extends Component
     protected function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
+            'name' => [
+                'required',
+                'string',
+                'min:3',
+                'max:60',
+                'regex:/^[a-zA-Z0-9\s\.\,\-\'\(\)\/]+$/',
+                function ($attribute, $value, $fail) {
+                    $words = explode(' ', (string) $value);
+                    foreach ($words as $word) {
+                        if (strlen($word) > 25) {
+                            $fail('Nama kost tidak boleh mengandung kata acak yang terlalu panjang.');
+                            return;
+                        }
+                    }
+                },
+            ],
             'gender_type' => 'required|in:putra,putri,campur',
             'description' => 'required|string|min:10|max:500',
             'district' => ['required', 'string', \Illuminate\Validation\Rule::in(array_keys(config('bandung.districts', [])))],
@@ -263,6 +278,9 @@ class CreateKost extends Component
     {
         return [
             'name.required' => 'Nama kost wajib diisi.',
+            'name.min' => 'Nama kost minimal 3 karakter.',
+            'name.max' => 'Nama kost maksimal 60 karakter.',
+            'name.regex' => 'Nama kost hanya boleh berisi huruf, angka, spasi, dan tanda baca standar (., -, \', (), /).',
             'gender_type.required' => 'Tipe kost wajib dipilih.',
             'description.required' => 'Deskripsi kost wajib diisi.',
             'description.min' => 'Deskripsi kost minimal 10 karakter.',

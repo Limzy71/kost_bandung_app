@@ -251,33 +251,35 @@
                                         @endif
                                     </div>
 
-                                    <!-- Top Right Badges -->
-                                    <div class="absolute top-3 right-3 flex flex-col items-end gap-1.5 pointer-events-none z-10">
+                                    <!-- Top Right Badge -->
+                                    <div class="absolute top-3 right-3 pointer-events-none z-10">
                                         <span class="px-2.5 py-1 bg-cyan-300 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] tracking-wider inline-flex items-center gap-1">
                                             <x-icon name="lucide-map-pin" class="w-3 h-3 shrink-0 stroke-[2.5]" />
                                             <span>{{ $kost->district }}</span>
                                         </span>
-                                        @if ($kost->isVerified())
-                                            <span class="px-2 py-0.5 bg-emerald-400 text-black border-2 border-black dark:border-zinc-700 text-[9px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] tracking-wider inline-flex items-center gap-1">
-                                                <x-icon name="lucide-badge-check" class="w-3 h-3 shrink-0 stroke-[2.5]" />
-                                                <span>Terverifikasi</span>
-                                            </span>
-                                        @else
-                                            <span class="px-2 py-0.5 bg-rose-400 text-black border-2 border-black dark:border-zinc-700 text-[9px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] tracking-wider inline-flex items-center gap-1" title="Kost ini belum diverifikasi kepemilikannya">
-                                                <x-icon name="lucide-shield-alert" class="w-3 h-3 shrink-0 stroke-[2.5]" />
-                                                <span>Belum Terverifikasi</span>
-                                            </span>
-                                        @endif
                                     </div>
                                 </div>
 
                                 <!-- Content -->
                                 <div class="p-5 space-y-4">
-                                    <div>
-                                        <h3 class="text-lg font-black text-black dark:text-white leading-snug line-clamp-1 hover:underline">
-                                            <a href="{{ route('kost.show', $kost->slug) }}">{{ $kost->name }}</a>
-                                        </h3>
-                                        <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400 mt-1 line-clamp-1">{{ $kost->address }}</p>
+                                    <div class="flex items-start justify-between gap-2">
+                                        <div class="min-w-0 flex-1">
+                                            <h3 class="text-lg font-black text-black dark:text-white leading-snug line-clamp-1 hover:underline">
+                                                <a href="{{ route('kost.show', $kost->slug) }}">{{ $kost->name }}</a>
+                                            </h3>
+                                            <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400 mt-0.5 line-clamp-1">{{ $kost->address }}</p>
+                                        </div>
+                                        @if ($kost->isVerified())
+                                            <span class="px-2 py-0.5 bg-emerald-300 text-black border-2 border-black dark:border-zinc-700 text-[9px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] tracking-wider inline-flex items-center gap-1 shrink-0 mt-0.5" title="Kepemilikan terverifikasi">
+                                                <x-icon name="lucide-badge-check" class="w-3 h-3 shrink-0 stroke-[2.5]" />
+                                                <span>Terverifikasi</span>
+                                            </span>
+                                        @else
+                                            <span class="px-2 py-0.5 bg-rose-400 text-black border-2 border-black dark:border-zinc-700 text-[9px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] tracking-wider inline-flex items-center gap-1 shrink-0 mt-0.5" title="Kost ini belum diverifikasi kepemilikannya">
+                                                <x-icon name="lucide-shield-alert" class="w-3 h-3 shrink-0 stroke-[2.5]" />
+                                                <span>Belum Terverifikasi</span>
+                                            </span>
+                                        @endif
                                     </div>
                                     <div class="pt-3 border-t-2 border-black dark:border-zinc-700 flex items-center justify-between gap-2 overflow-hidden min-w-0">
                                         <div class="shrink-0 min-w-0">

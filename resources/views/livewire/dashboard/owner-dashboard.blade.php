@@ -450,7 +450,7 @@
                                     </div>
                                     
                                     @if(!$kost->boost_expires_at && !$hasTrial)
-                                        <button type="button" onclick="window.claimFreeTrial('{{ $kost->slug }}')" class="w-full h-8 px-2 bg-yellow-400 hover:bg-yellow-300 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] rounded-md flex items-center justify-center gap-1 transition-all cursor-pointer">
+                                        <button type="button" onclick="window.openTrialModal('{{ $kost->slug }}', '{{ addslashes($kost->name) }}')" class="w-full h-8 px-2 bg-yellow-400 hover:bg-yellow-300 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] rounded-md flex items-center justify-center gap-1 transition-all cursor-pointer">
                                             <x-icon name="lucide-sparkles" class="w-3.5 h-3.5 stroke-[2.5]" />
                                             <span>Coba Boost Gratis {{ $trialDuration }} Hari</span>
                                         </button>
@@ -598,6 +598,132 @@
     </div>
 </div>
 
+        <!-- Boost Free Trial Confirmation Modal -->
+        <div 
+            x-data="{ 
+                open: false, 
+                slug: '', 
+                kostName: '',
+                loading: false,
+                init() {
+                    window.openTrialModal = (slug, name) => {
+                        this.slug = slug;
+                        this.kostName = name;
+                        this.open = true;
+                    }
+                },
+                async confirmClaim() {
+                    this.loading = true;
+                    try {
+                        const fp = await fpPromise;
+                        const result = await fp.get();
+                        const visitorId = result.visitorId;
+
+                        const response = await fetch(`/dashboard/kost/${this.slug}/boost/free-trial`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({ device_fingerprint: visitorId })
+                        });
+                        const data = await response.json();
+                        
+                        this.loading = false;
+                        this.open = false;
+                        
+                        if (response.ok) {
+                            window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: data.message } }));
+                            setTimeout(() => window.location.reload(), 1200);
+                        } else {
+                            window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: data.message || 'Gagal mengklaim free trial.' } }));
+                        }
+                    } catch (error) {
+                        this.loading = false;
+                        this.open = false;
+                        window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: 'Terjadi kesalahan sistem.' } }));
+                    }
+                }
+            }"
+            x-show="open"
+            x-cloak
+            x-transition.opacity.duration.200ms
+            class="fixed inset-0 z-50 flex items-center justify-center p-4"
+            role="dialog"
+            aria-modal="true"
+        >
+            <!-- Backdrop -->
+            <div class="absolute inset-0 bg-black/70" @click="if(!loading) open = false"></div>
+
+            <!-- Modal Card -->
+            <div 
+                x-show="open"
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 scale-95"
+                x-transition:enter-end="opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-150"
+                x-transition:leave-start="opacity-100 scale-100"
+                x-transition:leave-end="opacity-0 scale-95"
+                class="relative w-full max-w-md bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.25)] rounded-2xl p-6"
+            >
+                <div class="flex items-start justify-between gap-4">
+                    <div class="w-12 h-12 bg-yellow-400 border-2 border-black dark:border-zinc-700 rounded-lg flex items-center justify-center text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] shrink-0">
+                        <x-icon name="lucide-zap" fill="#FBBF24" stroke="black" stroke-width="1.8" class="w-6 h-6 shrink-0" />
+                    </div>
+                    <button 
+                        type="button"
+                        @click="open = false"
+                        :disabled="loading"
+                        class="text-black dark:text-white hover:bg-black/10 p-1.5 rounded font-black cursor-pointer transition-colors"
+                    >
+                        <x-icon name="lucide-x" class="w-4 h-4 stroke-[2.5]" />
+                    </button>
+                </div>
+
+                <h3 class="text-xl font-black text-black dark:text-white uppercase tracking-tight mt-4">Klaim Boost Gratis (3 Hari)?</h3>
+                <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400 mt-2 leading-relaxed">
+                    Anda akan mengaktifkan Fitur Boost Gratis selama 3 hari untuk properti 
+                    <span class="bg-yellow-200 dark:bg-yellow-950/40 border-b-2 border-yellow-400 px-1 font-black text-black dark:text-yellow-300" x-text="'&quot;' + kostName + '&quot;'"></span>.
+                </p>
+
+                <div class="mt-4 border-2 border-black dark:border-zinc-700 bg-yellow-50 dark:bg-yellow-950/40 p-3 rounded-lg flex items-start gap-2">
+                    <x-icon name="lucide-sparkles" class="w-4 h-4 text-amber-700 dark:text-amber-400 stroke-[2.5] shrink-0 mt-0.5" />
+                    <p class="text-[11px] font-black uppercase text-amber-800 dark:text-amber-300 leading-relaxed">
+                        Kost Anda akan langsung tampil di urutan paling atas hasil pencarian untuk menarik lebih banyak calon penyewa.
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-2 mt-6">
+                    <button 
+                        type="button"
+                        @click="open = false"
+                        :disabled="loading"
+                        class="flex-1 h-10 px-3 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-black dark:text-white border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer"
+                    >
+                        Batal
+                    </button>
+                    <button 
+                        type="button"
+                        @click="confirmClaim()"
+                        :disabled="loading"
+                        class="flex-1 h-10 px-3 bg-yellow-400 hover:bg-yellow-300 text-black border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer inline-flex items-center justify-center gap-1.5"
+                    >
+                        <span x-show="!loading" class="flex items-center gap-1">
+                            <x-icon name="lucide-zap" class="w-4 h-4 stroke-[2.5]" />
+                            <span>Aktifkan Sekarang</span>
+                        </span>
+                        <span x-show="loading" class="flex items-center gap-1.5">
+                            <x-icon name="lucide-loader-circle" class="animate-spin h-4 w-4 text-black shrink-0" />
+                            <span>Memproses...</span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 @php
     $snapUrl = config('midtrans.is_production')
         ? 'https://app.midtrans.com/snap/snap.js'
@@ -608,35 +734,6 @@
     // Initialize FingerprintJS
     const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4')
         .then(FingerprintJS => FingerprintJS.load());
-
-    window.claimFreeTrial = async function(slug) {
-        if (!confirm('Anda yakin ingin mengklaim free trial untuk properti ini?')) return;
-        
-        try {
-            const fp = await fpPromise;
-            const result = await fp.get();
-            const visitorId = result.visitorId;
-
-            const response = await fetch(`/dashboard/kost/${slug}/boost/free-trial`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({ device_fingerprint: visitorId })
-            });
-            const data = await response.json();
-            
-            if (response.ok) {
-                alert(data.message);
-                window.location.reload();
-            } else {
-                alert(data.message || 'Gagal mengklaim free trial.');
-            }
-        } catch (error) {
-            alert('Terjadi kesalahan sistem.');
-        }
-    };
 
     window.payBoost = async function(slug) {
         try {
@@ -652,24 +749,24 @@
             if (response.ok && data.snap_token) {
                 snap.pay(data.snap_token, {
                     onSuccess: function(result) {
-                        alert('Pembayaran berhasil! Halaman akan dimuat ulang.');
-                        window.location.reload();
+                        window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: 'Pembayaran berhasil! Halaman akan dimuat ulang.' } }));
+                        setTimeout(() => window.location.reload(), 1200);
                     },
                     onPending: function(result) {
-                        alert('Menunggu pembayaran Anda!');
+                        window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: 'Menunggu pembayaran Anda!' } }));
                     },
                     onError: function(result) {
-                        alert('Pembayaran gagal!');
+                        window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: 'Pembayaran gagal!' } }));
                     },
                     onClose: function() {
                         console.log('User closed popup');
                     }
                 });
             } else {
-                alert(data.message || 'Gagal membuat transaksi.');
+                window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: data.message || 'Gagal membuat transaksi.' } }));
             }
         } catch (error) {
-            alert('Terjadi kesalahan saat memproses pembayaran.');
+            window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: 'Terjadi kesalahan saat memproses pembayaran.' } }));
         }
     };
 </script>

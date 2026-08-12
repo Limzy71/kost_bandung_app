@@ -201,6 +201,7 @@ class CreateKost extends Component
                     foreach ($words as $word) {
                         if (strlen($word) > 25) {
                             $fail('Nama kost tidak boleh mengandung kata acak yang terlalu panjang.');
+
                             return;
                         }
                     }

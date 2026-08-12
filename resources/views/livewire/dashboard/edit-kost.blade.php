@@ -13,7 +13,7 @@
         <!-- Form Start -->
         <form wire:submit.prevent="save" x-data="{ formIsOutOfBounds: false }" @bounds-update.window="formIsOutOfBounds = $event.detail" class="space-y-8">
 
-            @include('livewire.dashboard.partials.kost-form', ['isEdit' => true])
+            @include('livewire.dashboard.partials.kost-form', ['isEdit' => true, 'coreFieldsLocked' => $coreFieldsLocked])
 
             @include('livewire.dashboard.partials.kost-form-actions', ['isEdit' => true])
 

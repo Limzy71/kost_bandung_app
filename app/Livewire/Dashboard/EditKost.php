@@ -275,8 +275,7 @@ class EditKost extends Component
      */
     protected function rules(): array
     {
-        return [
-            'gender_type' => 'required|in:putra,putri,campur',
+        $rules = [
             'description' => 'required|string|min:10|max:500',
             'price_monthly' => 'required|numeric|min:100000',
             'rent_period' => ['required', \Illuminate\Validation\Rule::in(Kost::allowedRentPeriods())],
@@ -332,6 +331,35 @@ class EditKost extends Component
             'ownership_doc' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'ownership_doc_type' => ['required_with:ownership_doc', \Illuminate\Validation\Rule::in(Kost::OWNERSHIP_DOC_TYPES)],
         ];
+
+        if (! $this->coreFieldsLocked()) {
+            $rules = array_merge([
+                'name' => [
+                    'required',
+                    'string',
+                    'min:3',
+                    'max:60',
+                    'regex:/^[a-zA-Z0-9\s\.\,\-\'\(\)\/]+$/',
+                    function ($attribute, $value, $fail) {
+                        $words = explode(' ', (string) $value);
+                        foreach ($words as $word) {
+                            if (strlen($word) > 25) {
+                                $fail('Nama kost tidak boleh mengandung kata acak yang terlalu panjang.');
+
+                                return;
+                            }
+                        }
+                    },
+                ],
+                'gender_type' => 'required|in:putra,putri,campur',
+                'district' => ['required', 'string', \Illuminate\Validation\Rule::in(array_keys(config('bandung.districts', [])))],
+                'address' => 'required|string|max:500',
+                'latitude' => 'required|numeric',
+                'longitude' => 'required|numeric',
+            ], $rules);
+        }
+
+        return $rules;
     }
 
     /**
@@ -340,7 +368,16 @@ class EditKost extends Component
     protected function messages(): array
     {
         return [
+            'name.required' => 'Nama kost wajib diisi.',
+            'name.min' => 'Nama kost minimal 3 karakter.',
+            'name.max' => 'Nama kost maksimal 60 karakter.',
+            'name.regex' => 'Nama kost hanya boleh berisi huruf, angka, spasi, dan tanda baca standar (., -, \', (), /).',
             'gender_type.required' => 'Tipe kost wajib dipilih.',
+            'district.required' => 'Kecamatan wajib dipilih.',
+            'district.in' => 'Kecamatan tidak valid.',
+            'address.required' => 'Alamat lengkap wajib diisi.',
+            'latitude.required' => 'Titik lokasi peta wajib ditentukan.',
+            'longitude.required' => 'Titik lokasi peta wajib ditentukan.',
             'description.required' => 'Deskripsi kost wajib diisi.',
             'description.min' => 'Deskripsi kost minimal 10 karakter.',
             'description.max' => 'Deskripsi kost maksimal 500 karakter.',
@@ -636,12 +673,33 @@ class EditKost extends Component
             return null;
         }
 
+        if (! $this->coreFieldsLocked()) {
+            $lat = (float) $this->latitude;
+            $lng = (float) $this->longitude;
+
+            $districts = config('bandung.districts', []);
+            $bounds = $districts[$this->district]['bounds'] ?? null;
+            if ($bounds) {
+                if (
+                    $lat < $bounds['lat_min'] || $lat > $bounds['lat_max'] ||
+                    $lng < $bounds['lng_min'] || $lng > $bounds['lng_max']
+                ) {
+                    if (! app()->runningUnitTests()) {
+                        usleep(1000000);
+                    }
+                    $this->addError('latitude', 'Koordinat peta tidak berada di dalam wilayah Kecamatan yang dipilih.');
+
+                    return null;
+                }
+            }
+        }
+
         $kost = $this->kost;
 
         $kost->fill([
             'description' => strip_tags($this->description),
-            'gender_type' => $this->gender_type,
             'price_monthly' => $this->price_monthly,
+
             'rent_period' => $this->rent_period,
             'price_deposit' => $this->price_deposit !== '' ? $this->price_deposit : null,
             'include_utilities' => $this->include_utilities,
@@ -651,6 +709,17 @@ class EditKost extends Component
             'nearby_landmarks' => $this->nearby_landmarks !== '' ? strip_tags($this->nearby_landmarks) : null,
             'additional_rules_note' => $this->additional_rules_note !== '' ? strip_tags($this->additional_rules_note) : null,
         ]);
+
+        if (! $this->coreFieldsLocked()) {
+            $kost->fill([
+                'name' => strip_tags($this->name),
+                'gender_type' => $this->gender_type,
+                'address' => strip_tags($this->address),
+                'district' => $this->district,
+                'latitude' => $this->latitude,
+                'longitude' => $this->longitude,
+            ]);
+        }
 
         if ($this->ownership_doc_type !== '') {
             $kost->ownership_doc_type = $this->ownership_doc_type;
@@ -838,9 +907,15 @@ class EditKost extends Component
             'extraPeriodLabels' => KostPrice::periodLabels(),
             'districts' => $districts,
             'googleMapsApiKey' => config('services.google.maps_api_key'),
+            'coreFieldsLocked' => $this->coreFieldsLocked(),
         ])->layout('layouts.app', [
             'title' => 'Edit Kost — KostBandung.web.id',
         ]);
+    }
+
+    private function coreFieldsLocked(): bool
+    {
+        return $this->kost->status === 'published';
     }
 
     private function photoHash(string $path): ?string

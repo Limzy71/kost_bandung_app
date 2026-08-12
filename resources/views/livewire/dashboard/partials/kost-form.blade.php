@@ -1,8 +1,12 @@
 <!-- ============================================================
     SHARED FORM FIELDS — digunakan oleh CreateKost & EditKost
-    Variabel: $isEdit (bool), $facilities, $rules,
+    Variabel: $isEdit (bool), $coreFieldsLocked (bool), $facilities, $rules,
               $extraPeriodLabels, $districts, $googleMapsApiKey
     ============================================================ -->
+
+            @php
+                $coreFieldsLocked = $coreFieldsLocked ?? false;
+            @endphp
 
             <!-- Seksi 1: Informasi Dasar -->
             <x-brutal-card class="space-y-6">
@@ -17,12 +21,22 @@
                     </div>
                 </div>
 
+                @if($isEdit)
+                    <div class="rounded-lg border-2 border-amber-500 bg-amber-50 dark:bg-amber-950/30 px-4 py-3 text-xs font-bold text-amber-900 dark:text-amber-200 leading-relaxed">
+                        @if($coreFieldsLocked)
+                            Nama kost, tipe penghuni, alamat, kecamatan, dan titik lokasi dikunci setelah properti disetujui admin untuk menjaga akurasi informasi serta kepercayaan pencari kost. Jika data utama perlu diperbarui, silakan hubungi admin.
+                        @else
+                            Data utama properti masih dapat diperbarui selama belum disetujui admin. Setelah properti disetujui dan tayang, nama kost, tipe penghuni, alamat, kecamatan, dan titik lokasi akan dikunci untuk menjaga akurasi informasi serta kepercayaan pencari kost.
+                        @endif
+                    </div>
+                @endif
+
                 <!-- Nama Kost -->
                 <div class="space-y-2">
                     <label for="name" class="block text-xs font-black uppercase tracking-wider text-black dark:text-white">
                         Nama Properti Kost <span class="text-rose-600 dark:text-rose-400">*</span>
                     </label>
-                    <input type="text" id="name" wire:model.blur="name" maxlength="60" @disabled($isEdit)
+                    <input type="text" id="name" wire:model.blur="name" maxlength="60" @disabled($coreFieldsLocked)
                         placeholder="Contoh: Kost Eksklusif Dago Asri"
                         class="w-full bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg px-4 py-3 text-sm font-bold text-black dark:text-white focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-zinc-100 disabled:dark:bg-zinc-800">
                     @error('name')
@@ -38,29 +52,29 @@
                         Tipe Penghuni Kost <span class="text-rose-600 dark:text-rose-400">*</span>
                     </label>
                     <div class="grid grid-cols-3 gap-3">
-                        <label class="cursor-pointer h-full">
-                            <input type="radio" wire:model="gender_type" value="campur" class="peer sr-only">
+                        <label class="{{ $coreFieldsLocked ? 'cursor-not-allowed' : 'cursor-pointer' }} h-full">
+                            <input type="radio" wire:model="gender_type" value="campur" class="peer sr-only" @disabled($coreFieldsLocked)>
                             <div
-                                class="h-full min-h-[68px] px-2 py-3 rounded-lg border-2 border-black dark:border-zinc-700 text-center font-black text-xs md:text-sm text-black dark:text-white bg-zinc-50 dark:bg-zinc-900 hover:bg-yellow-100 dark:hover:bg-yellow-950/40 peer-checked:bg-yellow-400 dark:peer-checked:bg-yellow-500 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all flex flex-col items-center justify-center gap-1.5">
+                                class="h-full min-h-[68px] px-2 py-3 rounded-lg border-2 border-black dark:border-zinc-700 text-center font-black text-xs md:text-sm text-black dark:text-white bg-zinc-50 dark:bg-zinc-900 hover:bg-yellow-100 dark:hover:bg-yellow-950/40 peer-disabled:opacity-60 peer-disabled:cursor-not-allowed peer-checked:bg-yellow-400 dark:peer-checked:bg-yellow-500 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all flex flex-col items-center justify-center gap-1.5">
                                 <x-icon name="lucide-users"
                                     class="w-5 h-5 text-black dark:text-white stroke-[2.5] shrink-0" />
                                 <span class="leading-tight">Campur</span>
                             </div>
                         </label>
 
-                        <label class="cursor-pointer h-full">
-                            <input type="radio" wire:model="gender_type" value="putri" class="peer sr-only">
+                        <label class="{{ $coreFieldsLocked ? 'cursor-not-allowed' : 'cursor-pointer' }} h-full">
+                            <input type="radio" wire:model="gender_type" value="putri" class="peer sr-only" @disabled($coreFieldsLocked)>
                             <div
-                                class="h-full min-h-[68px] px-2 py-3 rounded-lg border-2 border-black dark:border-zinc-700 text-center font-black text-xs md:text-sm text-black dark:text-white bg-zinc-50 dark:bg-zinc-900 hover:bg-pink-100 dark:hover:bg-pink-950/40 peer-checked:bg-pink-300 dark:peer-checked:bg-pink-500 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all flex flex-col items-center justify-center gap-1.5">
+                                class="h-full min-h-[68px] px-2 py-3 rounded-lg border-2 border-black dark:border-zinc-700 text-center font-black text-xs md:text-sm text-black dark:text-white bg-zinc-50 dark:bg-zinc-900 hover:bg-pink-100 dark:hover:bg-pink-950/40 peer-disabled:opacity-60 peer-disabled:cursor-not-allowed peer-checked:bg-pink-300 dark:peer-checked:bg-pink-500 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all flex flex-col items-center justify-center gap-1.5">
                                 <x-icon name="lucide-user" class="w-5 h-5 text-black dark:text-white stroke-[2.5] shrink-0" />
                                 <span class="leading-tight">Khusus Putri</span>
                             </div>
                         </label>
 
-                        <label class="cursor-pointer h-full">
-                            <input type="radio" wire:model="gender_type" value="putra" class="peer sr-only">
+                        <label class="{{ $coreFieldsLocked ? 'cursor-not-allowed' : 'cursor-pointer' }} h-full">
+                            <input type="radio" wire:model="gender_type" value="putra" class="peer sr-only" @disabled($coreFieldsLocked)>
                             <div
-                                class="h-full min-h-[68px] px-2 py-3 rounded-lg border-2 border-black dark:border-zinc-700 text-center font-black text-xs md:text-sm text-black dark:text-white bg-zinc-50 dark:bg-zinc-900 hover:bg-cyan-100 dark:hover:bg-cyan-950/40 peer-checked:bg-cyan-300 dark:peer-checked:bg-cyan-500 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all flex flex-col items-center justify-center gap-1.5">
+                                class="h-full min-h-[68px] px-2 py-3 rounded-lg border-2 border-black dark:border-zinc-700 text-center font-black text-xs md:text-sm text-black dark:text-white bg-zinc-50 dark:bg-zinc-900 hover:bg-cyan-100 dark:hover:bg-cyan-950/40 peer-disabled:opacity-60 peer-disabled:cursor-not-allowed peer-checked:bg-cyan-300 dark:peer-checked:bg-cyan-500 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all flex flex-col items-center justify-center gap-1.5">
                                 <x-icon name="lucide-user" class="w-5 h-5 text-black dark:text-white stroke-[2.5] shrink-0" />
                                 <span class="leading-tight">Khusus Putra</span>
                             </div>
@@ -433,7 +447,7 @@
                                 var self = this;
                                 var lat0 = parseFloat(this.lat) || DEFAULT_LAT;
                                 var lng0 = parseFloat(this.lng) || DEFAULT_LNG;
-                                var isEdit = {{ $isEdit ? 'true' : 'false' }};
+                                var isEdit = {{ $coreFieldsLocked ? 'true' : 'false' }};
 
                                 var setupGoogle = function() {
                                     if (self.map || !window.google || !window.google.maps) return false;
@@ -566,7 +580,7 @@
                             Kecamatan <span class="text-rose-600 dark:text-rose-400">*</span>
                         </label>
                         <div class="relative w-full">
-                            <select id="district" x-model="district" @change="districtAutoMessage = null" @disabled($isEdit)
+                            <select id="district" x-model="district" @change="districtAutoMessage = null" @disabled($coreFieldsLocked)
                                 style="padding-left: 1.25rem !important;"
                                 class="w-full bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg !pl-5 pr-10 py-3.5 text-sm font-bold text-black dark:text-white focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] cursor-pointer transition-all appearance-none disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-zinc-100 disabled:dark:bg-zinc-800">
                                 <option value="" disabled>-- Pilih Kecamatan --</option>
@@ -593,12 +607,12 @@
                             Alamat Lengkap / Nama Kost <span class="text-rose-600 dark:text-rose-400">*</span>
                         </label>
                         <div class="relative w-full">
-                            <input type="text" id="address" x-model="address" @disabled($isEdit)
+                            <input type="text" id="address" x-model="address" @disabled($coreFieldsLocked)
                                 x-on:keydown.enter.prevent="$el.blur()"
                                 placeholder="Contoh: Jl. Dipatiukur No. 80 atau nama kost"
                                 style="padding-left: 1.25rem !important;"
                                 class="w-full bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg !pl-5 pr-12 py-3.5 text-sm font-bold text-black dark:text-white focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-zinc-100 disabled:dark:bg-zinc-800">
-                            @if(!$isEdit)
+                            @if(!$coreFieldsLocked)
                             <button type="button" x-show="address && !isGeocoding" x-cloak @click="resetToDefaultLocation()"
                                 class="absolute right-2.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded bg-rose-400 hover:bg-rose-500 text-black border-2 border-black dark:border-zinc-700 flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:shadow-none active:translate-x-[1px] active:translate-y-[1px] transition-all cursor-pointer"
                                 title="Hapus alamat dan reset lokasi">

@@ -11,7 +11,7 @@ return new class extends Migration
     {
         if (DB::getDriverName() === 'pgsql') {
             DB::statement('ALTER TABLE kosts DROP CONSTRAINT IF EXISTS kosts_rent_period_check;');
-            DB::statement("ALTER TABLE kosts ALTER COLUMN rent_period TYPE VARCHAR(255);");
+            DB::statement('ALTER TABLE kosts ALTER COLUMN rent_period TYPE VARCHAR(255);');
             DB::statement("ALTER TABLE kosts ALTER COLUMN rent_period SET DEFAULT 'monthly';");
             DB::statement("ALTER TABLE kosts ADD CONSTRAINT kosts_rent_period_check CHECK (rent_period IN ('daily', 'weekly', 'monthly', 'three_monthly', 'six_monthly', 'yearly'));");
         } else {
@@ -27,7 +27,7 @@ return new class extends Migration
     {
         if (DB::getDriverName() === 'pgsql') {
             DB::statement('ALTER TABLE kosts DROP CONSTRAINT IF EXISTS kosts_rent_period_check;');
-            DB::statement("ALTER TABLE kosts ALTER COLUMN rent_period TYPE VARCHAR(255);");
+            DB::statement('ALTER TABLE kosts ALTER COLUMN rent_period TYPE VARCHAR(255);');
             DB::statement("ALTER TABLE kosts ALTER COLUMN rent_period SET DEFAULT 'monthly';");
             DB::statement("ALTER TABLE kosts ADD CONSTRAINT kosts_rent_period_check CHECK (rent_period IN ('daily', 'weekly', 'monthly', 'yearly'));");
         } else {

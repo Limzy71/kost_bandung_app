@@ -431,7 +431,7 @@
                             </div>
 
                             <!-- Boost Panel -->
-                            <div class="px-5 py-3 bg-amber-50 dark:bg-amber-950/20 border-t-3 border-black dark:border-zinc-700">
+                            <div class="px-5 py-3.5 bg-yellow-50/80 dark:bg-zinc-800/80 border-t-3 border-black dark:border-zinc-700 space-y-2">
                                 @php
                                     $price = config('midtrans.boost_price', 50000);
                                     $formattedPrice = number_format($price, 0, ',', '.');
@@ -442,20 +442,26 @@
                                 @endphp
                                 
                                 <div class="flex flex-col gap-2">
-                                    <p class="text-[10px] font-black uppercase tracking-wider text-amber-800 dark:text-amber-400 flex items-center gap-1.5">
-                                        <x-icon name="lucide-zap" class="w-3.5 h-3.5 stroke-[2.5]" />
-                                        Boost Kost
-                                    </p>
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-[11px] font-black uppercase tracking-wider text-black dark:text-white flex items-center gap-1.5">
+                                            <x-icon name="lucide-zap" fill="#FBBF24" stroke="black" stroke-width="1.8" class="w-4 h-4 shrink-0" />
+                                            <span>Boost Kost (Tampil Teratas)</span>
+                                        </p>
+                                    </div>
                                     
                                     @if(!$kost->boost_expires_at && !$hasTrial)
-                                        <button type="button" onclick="window.claimFreeTrial('{{ $kost->slug }}')" class="w-full h-8 px-2 bg-yellow-400 hover:bg-yellow-300 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] rounded-md flex items-center justify-center transition-all cursor-pointer">
-                                            Coba Boost Gratis {{ $trialDuration }} Hari
+                                        <button type="button" onclick="window.claimFreeTrial('{{ $kost->slug }}')" class="w-full h-8 px-2 bg-yellow-400 hover:bg-yellow-300 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] rounded-md flex items-center justify-center gap-1 transition-all cursor-pointer">
+                                            <x-icon name="lucide-sparkles" class="w-3.5 h-3.5 stroke-[2.5]" />
+                                            <span>Coba Boost Gratis {{ $trialDuration }} Hari</span>
                                         </button>
                                     @elseif($kost->boost_type === 'free_trial' && $kost->isBoostActive())
-                                        <p class="text-[10px] font-bold text-black dark:text-white mb-1">Trial Aktif s/d {{ \Carbon\Carbon::parse($kost->boost_expires_at)->format('d M Y') }}</p>
+                                        <p class="text-[10px] font-black text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
+                                            <x-icon name="lucide-check-circle-2" class="w-3.5 h-3.5 stroke-[2.5]" />
+                                            <span>Trial Gratis Aktif s/d {{ \Carbon\Carbon::parse($kost->boost_expires_at)->format('d M Y H:i') }}</span>
+                                        </p>
                                         @if($isPaymentReady)
-                                            <button type="button" onclick="window.payBoost('{{ $kost->slug }}')" class="w-full h-8 px-2 bg-yellow-400 hover:bg-yellow-300 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] rounded-md flex items-center justify-center transition-all cursor-pointer">
-                                                Perpanjang {{ $duration }} Hari - Rp {{ $formattedPrice }}
+                                            <button type="button" onclick="window.payBoost('{{ $kost->slug }}')" class="w-full h-8 px-2 bg-yellow-400 hover:bg-yellow-300 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] rounded-md flex items-center justify-center gap-1 transition-all cursor-pointer">
+                                                <span>Perpanjang {{ $duration }} Hari — Rp {{ $formattedPrice }}</span>
                                             </button>
                                         @else
                                             <button type="button" disabled class="w-full h-8 px-2 bg-zinc-200 dark:bg-zinc-800 text-zinc-500 border-2 border-zinc-400 dark:border-zinc-600 text-[10px] font-black uppercase rounded-md flex items-center justify-center cursor-not-allowed" title="Menunggu konfigurasi kunci Midtrans oleh admin">
@@ -463,10 +469,13 @@
                                             </button>
                                         @endif
                                     @elseif($kost->boost_type === 'paid' && $kost->isBoostActive())
-                                        <p class="text-[10px] font-bold text-black dark:text-white mb-1">Boost Aktif s/d {{ \Carbon\Carbon::parse($kost->boost_expires_at)->format('d M Y') }}</p>
+                                        <p class="text-[10px] font-black text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
+                                            <x-icon name="lucide-check-circle-2" class="w-3.5 h-3.5 stroke-[2.5]" />
+                                            <span>Boost Aktif s/d {{ \Carbon\Carbon::parse($kost->boost_expires_at)->format('d M Y H:i') }}</span>
+                                        </p>
                                         @if($isPaymentReady)
-                                            <button type="button" onclick="window.payBoost('{{ $kost->slug }}')" class="w-full h-8 px-2 bg-yellow-400 hover:bg-yellow-300 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] rounded-md flex items-center justify-center transition-all cursor-pointer">
-                                                Perpanjang Boost - Rp {{ $formattedPrice }}
+                                            <button type="button" onclick="window.payBoost('{{ $kost->slug }}')" class="w-full h-8 px-2 bg-yellow-400 hover:bg-yellow-300 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] rounded-md flex items-center justify-center gap-1 transition-all cursor-pointer">
+                                                <span>Perpanjang {{ $duration }} Hari — Rp {{ $formattedPrice }}</span>
                                             </button>
                                         @else
                                             <button type="button" disabled class="w-full h-8 px-2 bg-zinc-200 dark:bg-zinc-800 text-zinc-500 border-2 border-zinc-400 dark:border-zinc-600 text-[10px] font-black uppercase rounded-md flex items-center justify-center cursor-not-allowed" title="Menunggu konfigurasi kunci Midtrans oleh admin">
@@ -474,10 +483,10 @@
                                             </button>
                                         @endif
                                     @else
-                                        <p class="text-[10px] font-bold text-zinc-500 mb-1">Boost Tidak Aktif</p>
+                                        <p class="text-[10px] font-bold text-zinc-500 dark:text-zinc-400">Status: Tidak Aktif</p>
                                         @if($isPaymentReady)
-                                            <button type="button" onclick="window.payBoost('{{ $kost->slug }}')" class="w-full h-8 px-2 bg-yellow-400 hover:bg-yellow-300 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] rounded-md flex items-center justify-center transition-all cursor-pointer">
-                                                Aktifkan Boost - Rp {{ $formattedPrice }}
+                                            <button type="button" onclick="window.payBoost('{{ $kost->slug }}')" class="w-full h-8 px-2 bg-yellow-400 hover:bg-yellow-300 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] rounded-md flex items-center justify-center gap-1 transition-all cursor-pointer">
+                                                <span>Aktifkan Boost — Rp {{ $formattedPrice }} / {{ $duration }} Hari</span>
                                             </button>
                                         @else
                                             <button type="button" disabled class="w-full h-8 px-2 bg-zinc-200 dark:bg-zinc-800 text-zinc-500 border-2 border-zinc-400 dark:border-zinc-600 text-[10px] font-black uppercase rounded-md flex items-center justify-center cursor-not-allowed" title="Menunggu konfigurasi kunci Midtrans oleh admin">

@@ -30,11 +30,18 @@ Route::middleware('guest')->group(function () {
     Route::get('/register', Register::class)->name('register');
 });
 
+use App\Http\Controllers\BoostController;
+use App\Http\Controllers\PaymentController;
+
 Route::middleware(['auth', 'verified', 'owner'])->group(function () {
     Route::get('/dashboard', OwnerDashboard::class)->name('dashboard');
     Route::get('/dashboard/kost/create', CreateKost::class)->name('dashboard.kost.create');
     Route::get('/dashboard/kost/{kost:slug}/edit', EditKost::class)->name('dashboard.kost.edit');
     Route::get('/dashboard/chats', OwnerChat::class)->name('dashboard.chats');
+
+    // Boost Routes
+    Route::post('/dashboard/kost/{kost:slug}/boost/free-trial', [BoostController::class, 'claimFreeTrial'])->name('boost.trial');
+    Route::post('/dashboard/kost/{kost:slug}/boost/payment', [PaymentController::class, 'createPayment'])->name('boost.payment');
 });
 
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {

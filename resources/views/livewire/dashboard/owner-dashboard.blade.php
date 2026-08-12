@@ -314,13 +314,13 @@
                                     @endif
 
                                     <!-- Top Left Badges -->
-                                    <div class="absolute top-3 left-3 flex flex-col gap-1.5 pointer-events-none">
+                                    <div class="absolute top-3 left-3 flex flex-wrap items-center gap-1.5 max-w-[calc(100%-10rem)] pointer-events-none z-10">
                                         <span class="px-2.5 py-1 bg-pink-400 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] tracking-wider">
                                             {{ $kost->gender_type }}
                                         </span>
-                                        @if($kost->isBoostActive())
-                                            <span class="px-2.5 py-1 bg-yellow-400 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] tracking-wider flex items-center gap-1">
-                                                <x-icon name="lucide-zap" fill="#FBBF24" stroke-width="0.8" class="w-3.5 h-3.5 shrink-0" />
+                                        @if($kost->isBoostActive() || $kost->boosted_at)
+                                            <span class="px-2.5 py-1 bg-yellow-400 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] tracking-wider inline-flex items-center gap-1">
+                                                <x-icon name="lucide-zap" fill="#FBBF24" stroke="black" stroke-width="1.8" class="w-3.5 h-3.5 shrink-0" />
                                                 <span>Super Boost</span>
                                             </span>
                                         @endif

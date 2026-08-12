@@ -232,34 +232,30 @@
                                     @endif
 
                                     <!-- Top Left Badges -->
-                                    <div class="absolute top-3 left-3 flex flex-col gap-1.5 pointer-events-none">
+                                    <div class="absolute top-3 left-3 flex flex-wrap items-center gap-1.5 max-w-[calc(100%-8rem)] pointer-events-none z-10">
                                         <span class="px-2.5 py-1 bg-pink-400 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] tracking-wider">
                                             {{ $kost->gender_type }}
                                         </span>
-                                        @if ($kost->boosted_at)
-                                            <span class="px-2.5 py-1 bg-yellow-400 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] tracking-wider flex items-center gap-1">
-                                                &#9889; Super Boost
-                                            </span>
-                                        @endif
-                                        @if ($kost->isVerified())
-                                            <span class="px-2.5 py-1 bg-emerald-400 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] tracking-wider inline-flex items-center gap-1">
-                                                <x-icon name="lucide-badge-check" class="w-3 h-3 shrink-0 stroke-[3]" />
-                                                Terverifikasi
-                                            </span>
-                                        @else
-                                            <span class="px-2.5 py-1 bg-rose-400 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] tracking-wider inline-flex items-center gap-1" title="Kost ini belum diverifikasi kepemilikannya">
-                                                <x-icon name="lucide-shield-alert" class="w-3 h-3 shrink-0 stroke-[3]" />
-                                                Belum Terverifikasi
+                                        @if ($kost->isBoostActive() || $kost->boosted_at)
+                                            <span class="px-2.5 py-1 bg-yellow-400 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] tracking-wider inline-flex items-center gap-1">
+                                                <x-icon name="lucide-zap" fill="#FBBF24" stroke="black" stroke-width="1.8" class="w-3.5 h-3.5 shrink-0" />
+                                                <span>Super Boost</span>
                                             </span>
                                         @endif
                                     </div>
 
-                                    <!-- Top Right District -->
-                                    <div class="absolute top-3 right-3">
+                                    <!-- Top Right Badges -->
+                                    <div class="absolute top-3 right-3 flex flex-col items-end gap-1.5 pointer-events-none z-10">
                                         <span class="px-2.5 py-1 bg-cyan-300 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] tracking-wider inline-flex items-center gap-1">
                                             <x-icon name="lucide-map-pin" class="w-3 h-3 shrink-0 stroke-[2.5]" />
                                             <span>{{ $kost->district }}</span>
                                         </span>
+                                        @if ($kost->isVerified())
+                                            <span class="px-2 py-0.5 bg-emerald-400 text-black border-2 border-black dark:border-zinc-700 text-[9px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] tracking-wider inline-flex items-center gap-1">
+                                                <x-icon name="lucide-badge-check" class="w-3 h-3 shrink-0 stroke-[2.5]" />
+                                                <span>Terverifikasi</span>
+                                            </span>
+                                        @endif
                                     </div>
                                 </div>
 

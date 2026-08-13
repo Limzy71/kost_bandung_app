@@ -12,6 +12,7 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/js/catalog-map.js',
                 'resources/js/passkeys.js',
+                'resources/js/echo.js',
             ],
             refresh: true,
         }),

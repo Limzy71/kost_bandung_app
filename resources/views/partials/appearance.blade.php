@@ -5,18 +5,21 @@
 </style>
 <script>
     window.Flux = window.Flux || {};
-    window.Flux.applyAppearance = function (appearance) {
-        var applyDark = function () { document.documentElement.classList.add('dark'); };
-        var applyLight = function () { document.documentElement.classList.remove('dark'); };
 
+    window.Flux.applyAppearance = function (appearance) {
         if (appearance === 'dark') {
             window.localStorage.setItem('flux.appearance', 'dark');
-            applyDark();
+            document.documentElement.classList.add('dark');
         } else {
             window.localStorage.setItem('flux.appearance', 'light');
-            applyLight();
+            document.documentElement.classList.remove('dark');
         }
     };
 
-    window.Flux.applyAppearance(window.localStorage.getItem('flux.appearance'));
+    // Default tema terang. Gelap hanya aktif jika pengguna memilihnya manual
+    // melalui toggle (disimpan di localStorage).
+    if (window.localStorage.getItem('flux.appearance') === null) {
+        window.localStorage.setItem('flux.appearance', 'light');
+    }
+    window.Flux.applyAppearance(window.localStorage.getItem('flux.appearance') || 'light');
 </script>

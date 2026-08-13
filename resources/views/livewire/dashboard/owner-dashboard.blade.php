@@ -124,17 +124,18 @@
         @endif
 
         <!-- Delete Confirmation Modal -->
-        <div 
-            x-data="{ open: false }"
-            @delete-modal-opened.window="open = true"
-            @delete-modal-closed.window="open = false"
-            x-show="open"
-            x-cloak
-            x-transition.opacity.duration.200ms
-            class="fixed inset-0 z-50 flex items-center justify-center p-4"
-            role="dialog"
-            aria-modal="true"
-        >
+        <template x-teleport="body">
+            <div 
+                x-data="{ open: false }"
+                @delete-modal-opened.window="open = true"
+                @delete-modal-closed.window="open = false"
+                x-show="open"
+                x-cloak
+                x-transition.opacity.duration.200ms
+                class="fixed inset-0 z-50 flex items-center justify-center p-4"
+                role="dialog"
+                aria-modal="true"
+            >
             <!-- Backdrop -->
             <div 
                 class="absolute inset-0 bg-black/70"
@@ -159,9 +160,9 @@
                         <button 
                             type="button"
                             @click="open = false; $wire.closeDeleteModal()"
-                            class="text-black dark:text-white hover:bg-black/10 p-1.5 rounded font-black cursor-pointer transition-colors"
+                            class="w-8 h-8 bg-rose-500 hover:bg-rose-400 text-white border-3 border-black dark:border-zinc-700 rounded font-black text-sm cursor-pointer shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center shrink-0"
                         >
-                            <x-icon name="lucide-x" class="w-4 h-4 stroke-[2.5]" />
+                            ✕
                         </button>
                     </div>
 
@@ -227,6 +228,7 @@
                     </div>
             </div>
         </div>
+        </template>
 
         <!-- Quick Stats Overview Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">

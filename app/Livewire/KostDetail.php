@@ -194,11 +194,24 @@ class KostDetail extends Component
 
     public function render(): View
     {
+        $title = 'Kost Tidak Tersedia - Kost Bandung';
+        $meta = null;
+
+        if (! $this->kostUnavailable) {
+            try {
+                $kost = $this->kost;
+                $title = $kost->name.' - Kost Bandung';
+                $meta = view('components.kost-meta', ['kost' => $kost]);
+            } catch (ModelNotFoundException) {
+                $this->kostUnavailable = true;
+            }
+        }
+
         return view('livewire.kost-detail', [
             'googleMapsApiKey' => config('services.google.maps_api_key'),
         ])->layout('layouts.app', [
-            'title' => $this->kost->name.' - Kost Bandung',
-            'meta' => view('components.kost-meta', ['kost' => $this->kost]),
+            'title' => $title,
+            'meta' => $meta,
         ]);
     }
 }

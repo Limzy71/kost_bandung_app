@@ -15,6 +15,7 @@ test('user role registration succeeds with phone number and no business name', f
         ->set('password_confirmation', 'password1')
         ->set('role', 'user')
         ->set('phone_number', '081234567890')
+        ->set('terms', true)
         ->call('register')
         ->assertHasNoErrors()
         ->assertRedirect(route('home'));
@@ -68,6 +69,7 @@ test('owner role registration succeeds with all required fields and saves to dat
         ->set('role', 'owner')
         ->set('phone_number', '081234567890')
         ->set('business_name', 'Kost Putra Maju')
+        ->set('terms', true)
         ->call('register')
         ->assertHasNoErrors()
         ->assertRedirect(route('dashboard'));
@@ -178,6 +180,7 @@ test('registration accepts a valid unicode name and squishes whitespace', functi
         ->set('password_confirmation', 'password1')
         ->set('role', 'user')
         ->set('phone_number', '081234567890')
+        ->set('terms', true)
         ->call('register')
         ->assertHasNoErrors();
 

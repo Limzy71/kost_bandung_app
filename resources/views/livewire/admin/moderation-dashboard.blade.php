@@ -98,24 +98,6 @@
                 <p class="text-[10px] font-bold text-black/70 dark:text-zinc-300 mt-1 uppercase">Perlu Review Admin</p>
             </button>
 
-            <!-- Change Requests Pending -->
-            <button 
-                type="button" 
-                wire:click="setTab('changes')" 
-                class="text-left p-5 border-3 rounded-xl transition-all cursor-pointer {{ $activeTab === 'changes' ? 'bg-orange-400 border-black dark:border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] translate-x-0.5 translate-y-0.5 [&_*]:!text-black [&_*]:!opacity-100' : 'bg-orange-100 border-black dark:border-zinc-700 dark:bg-orange-950 hover:bg-orange-200 dark:hover:bg-orange-900 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]' }}"
-            >
-                <p class="text-xs font-black uppercase tracking-wider text-black dark:text-white flex items-center gap-1.5">
-                    <span class="relative flex h-2 w-2 shrink-0">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-600 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-orange-700"></span>
-                    </span>
-                    <x-icon name="lucide-file-pen" class="w-4 h-4 text-black stroke-[2.5]" />
-                    <span>Proposal Perubahan</span>
-                </p>
-                <h3 class="text-3xl sm:text-4xl font-black text-black dark:text-white mt-2 tracking-tight">{{ $pendingChangeCount }}</h3>
-                <p class="text-[10px] font-bold text-black/70 dark:text-zinc-300 mt-1 uppercase">Data Utama Kost Tayang</p>
-            </button>
-
             <!-- Verification Pending -->
             <button 
                 type="button" 
@@ -133,10 +115,28 @@
                 <h3 class="text-3xl sm:text-4xl font-black text-black dark:text-white mt-2 tracking-tight">{{ $verificationCount }}</h3>
                 <p class="text-[10px] font-bold text-black/70 dark:text-zinc-300 mt-1 uppercase">KTP &amp; Bukti Kepemilikan</p>
             </button>
+
+            <!-- Change Requests Pending -->
+            <button 
+                type="button" 
+                wire:click="setTab('changes')" 
+                class="text-left p-5 border-3 rounded-xl transition-all cursor-pointer {{ $activeTab === 'changes' ? 'bg-orange-400 border-black dark:border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] translate-x-0.5 translate-y-0.5 [&_*]:!text-black [&_*]:!opacity-100' : 'bg-orange-100 border-black dark:border-zinc-700 dark:bg-orange-950 hover:bg-orange-200 dark:hover:bg-orange-900 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]' }}"
+            >
+                <p class="text-xs font-black uppercase tracking-wider text-black dark:text-white flex items-center gap-1.5">
+                    <span class="relative flex h-2 w-2 shrink-0">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-600 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-orange-700"></span>
+                    </span>
+                    <x-icon name="lucide-file-pen" class="w-4 h-4 text-black stroke-[2.5]" />
+                    <span>Proposal Perubahan</span>
+                </p>
+                <h3 class="text-3xl sm:text-4xl font-black text-black dark:text-white mt-2 tracking-tight">{{ $pendingChangeCount }}</h3>
+                <p class="text-[10px] font-bold text-black/70 dark:text-zinc-300 mt-1 uppercase">Data Utama Kost Tayang</p>
+            </button>
         </div>
 
         <!-- Filter & Search Bar -->
-        <div class="bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 p-5 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div class="bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 p-5 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] flex flex-col gap-4 mb-8">
             <!-- Filter Tabs -->
             <div class="flex flex-wrap items-center gap-2">
                 <button 
@@ -191,7 +191,7 @@
             </div>
 
             <!-- Search Input -->
-            <div class="relative w-full sm:w-80" x-data="{ query: @entangle('search') }">
+            <div class="relative w-full" x-data="{ query: @entangle('search') }">
                 <input 
                     x-ref="searchInput"
                     type="text" 
@@ -513,19 +513,27 @@
                 </div>
             @endif
         @elseif($activeTab === 'changes')
-            @if($changeRequests->count() > 0)
-                <div class="space-y-8" x-data="{ rejectOpen: false, rejectId: null, rejectReason: '' }" @keydown.escape.window="rejectOpen = false">
-                    <!-- Info Banner -->
-                    <div class="bg-orange-100 dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 p-5 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] space-y-2">
-                        <p class="text-xs font-black uppercase text-black dark:text-white flex items-center gap-2">
-                            <x-icon name="lucide-file-pen" class="w-5 h-5 stroke-[2.5]" />
-                            Proposal Perubahan Data Utama
-                        </p>
-                        <p class="text-sm font-bold text-zinc-700 dark:text-zinc-300 leading-relaxed">
-                            Pemilik kost yang sudah tayang mengajukan perubahan nama, tipe penghuni, kecamatan, alamat, atau titik lokasi. Listing tetap menampilkan data lama sampai Anda menyetujui pengajuan ini.
-                        </p>
-                    </div>
+            <div class="space-y-8" x-data="{ rejectOpen: false, rejectId: null, rejectReason: '' }" @keydown.escape.window="rejectOpen = false">
+                <!-- Info Banner -->
+                <div class="bg-orange-100 dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 p-5 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] space-y-2">
+                    <p class="text-xs font-black uppercase text-black dark:text-white flex items-center gap-2">
+                        <x-icon name="lucide-file-pen" class="w-5 h-5 stroke-[2.5]" />
+                        Proposal Perubahan Data Utama
+                    </p>
+                    <p class="text-sm font-bold text-zinc-700 dark:text-zinc-300 leading-relaxed">
+                        Pemilik kost yang sudah tayang mengajukan perubahan nama, tipe penghuni, kecamatan, alamat, atau titik lokasi. Listing tetap menampilkan data lama sampai Anda menyetujui pengajuan ini.
+                    </p>
+                </div>
 
+                <!-- Status Filter Buttons -->
+                <div class="flex flex-wrap items-center gap-2">
+                    <button type="button" wire:click="setChangeStatusFilter('pending')" class="px-4 py-2 border-2 border-black dark:border-zinc-700 font-black text-xs uppercase rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] transition-all cursor-pointer {{ $changeStatusFilter === 'pending' ? 'bg-amber-400 text-black' : 'bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300' }}">Menunggu ({{ $pendingChangeCount }})</button>
+                    <button type="button" wire:click="setChangeStatusFilter('approved')" class="px-4 py-2 border-2 border-black dark:border-zinc-700 font-black text-xs uppercase rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] transition-all cursor-pointer {{ $changeStatusFilter === 'approved' ? 'bg-emerald-400 text-black' : 'bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300' }}">Disetujui</button>
+                    <button type="button" wire:click="setChangeStatusFilter('rejected')" class="px-4 py-2 border-2 border-black dark:border-zinc-700 font-black text-xs uppercase rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] transition-all cursor-pointer {{ $changeStatusFilter === 'rejected' ? 'bg-rose-400 text-black' : 'bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300' }}">Ditolak</button>
+                    <button type="button" wire:click="setChangeStatusFilter('all')" class="px-4 py-2 border-2 border-black dark:border-zinc-700 font-black text-xs uppercase rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] transition-all cursor-pointer {{ $changeStatusFilter === 'all' ? 'bg-cyan-300 text-black' : 'bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300' }}">Semua Riwayat</button>
+                </div>
+
+                @if($changeRequests->count() > 0)
                     <div class="space-y-6">
                         @foreach($changeRequests as $change)
                             <div class="bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 rounded-2xl overflow-hidden shadow-[7px_7px_0px_0px_rgba(0,0,0,1)] dark:shadow-[7px_7px_0px_0px_rgba(255,255,255,0.25)]">
@@ -611,6 +619,15 @@
                                             ✕ TOLAK
                                         </button>
                                     </div>
+                                @else
+                                    <div class="p-4 bg-zinc-100 dark:bg-zinc-800 border-t-4 border-black dark:border-zinc-700 flex justify-end">
+                                        <button type="button" wire:click="deleteChangeRequest({{ $change->id }})"
+                                            wire:confirm="Yakin ingin menghapus riwayat proposal ini?"
+                                            class="px-4 py-2 bg-zinc-200 dark:bg-zinc-700 hover:bg-rose-500 hover:text-white text-zinc-600 dark:text-zinc-300 border-2 border-black dark:border-zinc-700 font-black text-[10px] uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer">
+                                            <x-icon name="lucide-trash-2" class="w-3.5 h-3.5 inline-block -mt-0.5 mr-1 stroke-[2.5]" />
+                                            Hapus Riwayat
+                                        </button>
+                                    </div>
                                 @endif
                             </div>
                         @endforeach
@@ -651,21 +668,21 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            @else
-                <!-- Empty State -->
-                <div class="bg-orange-100 dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.25)] space-y-4">
-                    <div class="w-20 h-20 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-2xl flex items-center justify-center mx-auto text-black dark:text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] -rotate-3">
-                        <x-icon name="lucide-circle-check" class="w-10 h-10" />
+                @else
+                    <!-- Empty State -->
+                    <div class="bg-orange-100 dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.25)] space-y-4">
+                        <div class="w-20 h-20 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-2xl flex items-center justify-center mx-auto text-black dark:text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] -rotate-3">
+                            <x-icon name="lucide-circle-check" class="w-10 h-10" />
+                        </div>
+                        <div>
+                            <h3 class="text-3xl font-black text-black dark:text-white uppercase">Tidak Ada Pengajuan Perubahan</h3>
+                            <p class="text-sm font-bold text-zinc-700 dark:text-zinc-300 max-w-md mx-auto mt-2">
+                                Belum ada proposal perubahan data utama dari pemilik kost. Pengajuan akan muncul di sini saat pemilik mengubah data utama kost yang sudah tayang.
+                            </p>
+                        </div>
                     </div>
-                    <div>
-                        <h3 class="text-3xl font-black text-black dark:text-white uppercase">Tidak Ada Pengajuan Perubahan</h3>
-                        <p class="text-sm font-bold text-zinc-700 dark:text-zinc-300 max-w-md mx-auto mt-2">
-                            Belum ada proposal perubahan data utama dari pemilik kost. Pengajuan akan muncul di sini saat pemilik mengubah data utama kost yang sudah tayang.
-                        </p>
-                    </div>
-                </div>
-            @endif
+                @endif
+            </div>
         @else
         <!-- Moderation List Grid -->
         @if($kosts->count() > 0)

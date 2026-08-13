@@ -4,6 +4,7 @@ use App\Mail\BoostFreeTrial\ReminderMail as FreeTrialReminderMail;
 use App\Mail\BoostPaid\ReminderMail as PaidReminderMail;
 use App\Models\BoostReminder;
 use App\Models\Kost;
+use App\Models\KostChangeRequest;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
@@ -17,6 +18,12 @@ Schedule::command('queue:work --stop-when-empty --tries=3')
     ->everyMinute()
     ->withoutOverlapping()
     ->name('queue:process-emails');
+
+Schedule::call(function () {
+    KostChangeRequest::whereIn('status', ['approved', 'rejected'])
+        ->where('updated_at', '<', now()->subHours(24))
+        ->delete();
+})->hourly()->name('cleanup:processed-change-requests')->withoutOverlapping();
 
 Schedule::call(function () {
     $now = now();

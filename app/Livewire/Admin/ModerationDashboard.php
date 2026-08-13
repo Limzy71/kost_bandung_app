@@ -21,6 +21,8 @@ class ModerationDashboard extends Component
     public string $search = '';
 
     public string $activeTab = 'pending'; // 'pending', 'published', 'rejected', 'all', 'facilities', 'verification', 'changes'
+    
+    public string $changeStatusFilter = 'pending'; // 'pending', 'approved', 'rejected', 'all'
 
     public function updatingSearch(): void
     {
@@ -30,6 +32,12 @@ class ModerationDashboard extends Component
     public function setTab(string $tab): void
     {
         $this->activeTab = $tab;
+        $this->resetPage();
+    }
+
+    public function setChangeStatusFilter(string $filter): void
+    {
+        $this->changeStatusFilter = $filter;
         $this->resetPage();
     }
 
@@ -238,7 +246,23 @@ class ModerationDashboard extends Component
         ];
 
         if ($this->activeTab === 'changes') {
-            $changeRequests = KostChangeRequest::with(['kost', 'user'])
+            $query = KostChangeRequest::with(['kost', 'user']);
+
+            if ($this->search) {
+                $query->where(function($q) {
+                    $q->where('name', 'like', '%' . $this->search . '%')
+                      ->orWhereHas('user', function($uq) {
+                          $uq->where('name', 'like', '%' . $this->search . '%')
+                             ->orWhere('email', 'like', '%' . $this->search . '%');
+                      });
+                });
+            }
+
+            if ($this->changeStatusFilter !== 'all') {
+                $query->where('status', $this->changeStatusFilter);
+            }
+
+            $changeRequests = $query
                 ->orderByRaw("CASE WHEN status = '".KostChangeRequest::STATUS_PENDING."' THEN 1 ELSE 2 END")
                 ->latest()
                 ->paginate(9);

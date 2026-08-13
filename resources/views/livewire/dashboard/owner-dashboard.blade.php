@@ -116,7 +116,7 @@
                     </div>
                 @endforeach
                 <button type="button" wire:click="markChangeNotificationsRead()"
-                    class="ml-auto flex items-center gap-1.5 bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 text-black dark:text-white border-2 border-black dark:border-zinc-700 font-black text-[10px] uppercase px-4 py-2 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer">
+                    class="ml-auto flex items-center gap-1.5 bg-lime-400 hover:bg-lime-300 text-black border-2 border-black dark:border-zinc-700 font-black text-[10px] uppercase px-4 py-2 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer">
                     <x-icon name="lucide-check-check" class="w-3.5 h-3.5 stroke-[2.5]" />
                     Tandai Sudah Dibaca
                 </button>

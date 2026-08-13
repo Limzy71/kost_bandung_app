@@ -637,6 +637,7 @@
                     </div>
 
                     <!-- Reject Change Modal -->
+                    <template x-teleport="body">
                     <div x-show="rejectOpen" x-cloak class="fixed inset-0 z-[60] flex items-center justify-center p-4" @click.self="rejectOpen = false">
                         <div class="absolute inset-0 bg-black/60"></div>
                         <div class="relative bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 rounded-2xl p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.25)] w-full max-w-md space-y-4"
@@ -649,7 +650,7 @@
                                     Tolak Pengajuan Perubahan
                                 </h3>
                                 <button type="button" @click="rejectOpen = false"
-                                    class="w-8 h-8 bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-600 text-black dark:text-white border-2 border-black dark:border-zinc-700 rounded font-black text-sm cursor-pointer">✕</button>
+                                    class="w-8 h-8 bg-rose-500 hover:bg-rose-400 text-white border-3 border-black dark:border-zinc-700 rounded font-black text-sm cursor-pointer shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center shrink-0">✕</button>
                             </div>
                             <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400">Alasan penolakan akan dikirim ke email pemilik kost.</p>
                             <textarea x-model="rejectReason" rows="3" maxlength="300"
@@ -666,6 +667,7 @@
                             </div>
                         </div>
                     </div>
+                    </template>
                 @else
                     <!-- Empty State -->
                     <div class="bg-orange-100 dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 rounded-2xl p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.25)] space-y-4">

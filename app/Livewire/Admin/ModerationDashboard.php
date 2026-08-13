@@ -7,6 +7,7 @@ use App\Models\Facility;
 use App\Models\Kost;
 use App\Models\KostChangeRequest;
 use App\Models\User;
+use App\Notifications\KostChangeReviewed;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -155,6 +156,8 @@ class ModerationDashboard extends Component
             'reviewed_at' => now(),
         ]);
 
+        $request->user->notify(new KostChangeReviewed($request->refresh()));
+
         if ($request->user->email) {
             Mail::to($request->user->email)->queue(new ReviewedMail($kost, KostChangeRequest::STATUS_APPROVED));
         }
@@ -178,6 +181,8 @@ class ModerationDashboard extends Component
             'review_note' => $note,
             'reviewed_at' => now(),
         ]);
+
+        $request->user->notify(new KostChangeReviewed($request->refresh()));
 
         if ($request->user->email) {
             Mail::to($request->user->email)->queue(new ReviewedMail($request->kost, KostChangeRequest::STATUS_REJECTED, $note));

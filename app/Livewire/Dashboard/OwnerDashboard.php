@@ -7,6 +7,7 @@ use App\Models\Kost;
 use App\Models\KostChangeRequest;
 use App\Models\KostMessage;
 use App\Models\User;
+use App\Notifications\KostChangeReviewed;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -63,6 +64,19 @@ class OwnerDashboard extends Component
     public function updatedPage(): void
     {
         $this->dispatch('scroll-to-list');
+    }
+
+    public function markChangeNotificationsRead(): void
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        $user->unreadNotifications()
+            ->where('type', KostChangeReviewed::class)
+            ->get()
+            ->each->markAsRead();
+
+        $this->dispatch('change-notifications-cleared');
     }
 
     public function toggleAvailability(int $kostId): void
@@ -171,6 +185,12 @@ class OwnerDashboard extends Component
 
         $kosts = $this->searchQuery()->paginate(9);
 
+        $changeNotifications = $user->unreadNotifications()
+            ->where('type', KostChangeReviewed::class)
+            ->latest()
+            ->limit(5)
+            ->get();
+
         return view('livewire.dashboard.owner-dashboard', [
             'owner' => $user,
             'totalProperti' => $this->totalProperti,
@@ -178,6 +198,7 @@ class OwnerDashboard extends Component
             'pesanMasuk' => $this->pesanMasuk,
             'kosts' => $kosts,
             'hasTrial' => BoostTrial::where('user_id', $user->id)->exists(),
+            'changeNotifications' => $changeNotifications,
         ])->layout('layouts.app', [
             'title' => 'Dashboard Pemilik Kost — KostBandung.web.id',
         ]);

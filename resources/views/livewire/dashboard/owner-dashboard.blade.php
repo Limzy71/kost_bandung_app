@@ -76,6 +76,53 @@
             </div>
         @endif
 
+        <!-- Pemberitahuan Hasil Review Perubahan Data Utama -->
+        @if($changeNotifications->count() > 0)
+            <div class="space-y-3" x-data @change-notifications-cleared.window="$el.remove()">
+                @foreach($changeNotifications as $notification)
+                    @php
+                        $notifData = $notification->data;
+                        $approved = ($notifData['status'] ?? '') === 'approved';
+                    @endphp
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-4 border-black dark:border-zinc-700 p-4 rounded-xl shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)] {{ $approved ? 'bg-emerald-100 dark:bg-emerald-950/40' : 'bg-rose-100 dark:bg-rose-950/40' }}">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg border-2 border-black dark:border-zinc-700 flex items-center justify-center shrink-0 {{ $approved ? 'bg-emerald-400' : 'bg-rose-400' }}">
+                                @if($approved)
+                                    <x-icon name="lucide-check" class="w-5 h-5 text-black stroke-[3]" />
+                                @else
+                                    <x-icon name="lucide-x" class="w-5 h-5 text-black stroke-[3]" />
+                                @endif
+                            </div>
+                            <div>
+                                <p class="text-xs font-black uppercase {{ $approved ? 'text-emerald-900 dark:text-emerald-200' : 'text-rose-900 dark:text-rose-200' }}">
+                                    @if($approved)
+                                        Perubahan Disetujui Admin
+                                    @else
+                                        Perubahan Ditolak Admin
+                                    @endif
+                                </p>
+                                <p class="text-xs font-bold text-zinc-700 dark:text-zinc-300 mt-0.5 leading-relaxed">
+                                    Pengajuan perubahan data utama untuk kost
+                                    <a href="{{ route('kost.show', $notifData['kost_slug'] ?? '#') }}" class="font-black underline underline-offset-2">
+                                        "{{ $notifData['kost_name'] ?? 'Kost' }}"
+                                    </a>
+                                    telah {{ $approved ? 'DISETUJUI dan langsung diterapkan pada listing' : 'DITOLAK oleh admin' }}.
+                                    @if(!$approved && !empty($notifData['review_note']))
+                                        <span class="block mt-1 font-black">Alasan: {{ $notifData['review_note'] }}</span>
+                                    @endif
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+                <button type="button" wire:click="markChangeNotificationsRead()"
+                    class="ml-auto flex items-center gap-1.5 bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 text-black dark:text-white border-2 border-black dark:border-zinc-700 font-black text-[10px] uppercase px-4 py-2 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer">
+                    <x-icon name="lucide-check-check" class="w-3.5 h-3.5 stroke-[2.5]" />
+                    Tandai Sudah Dibaca
+                </button>
+            </div>
+        @endif
+
         <!-- Floating Auto-Dismiss Toast Notification -->
         <div 
             x-data="{
@@ -365,10 +412,10 @@
                                         @endif
 
                                         @if(($kost->pendingChangeCount ?? 0) > 0)
-                                            <span class="px-2.5 py-1 bg-blue-400 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] inline-flex items-center gap-1.5 animate-pulse">
+                                            <span class="px-2.5 py-1 bg-blue-300 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] inline-flex items-center gap-1.5">
                                                 <span class="relative flex h-2 w-2 shrink-0">
-                                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-700 opacity-75"></span>
-                                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-800"></span>
+                                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-600 opacity-75"></span>
+                                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-700"></span>
                                                 </span>
                                                 <x-icon name="lucide-hourglass" class="w-3 h-3 text-black stroke-[2.5] shrink-0" />
                                                 <span>Perubahan Menunggu Admin</span>

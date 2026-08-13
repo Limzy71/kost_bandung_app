@@ -182,6 +182,14 @@
         </div>
     </footer>
 
+    @persist('app-toast')
+        <x-toast />
+    @endpersist
+
+    @persist('app-confirm')
+        <x-confirm-modal />
+    @endpersist
+
     @fluxScripts
 </body>
 </html>

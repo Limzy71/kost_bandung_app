@@ -89,7 +89,7 @@ test('resetting search from empty result state on page 2 returns to page 1 with 
         ->assertViewHas('kosts', fn ($kosts) => $kosts->currentPage() === 1 && $kosts->isNotEmpty());
 });
 
-test('toggling availability syncs available_rooms', function () {
+test('toggling availability preserves available_rooms', function () {
     $user = User::factory()->create(['role' => 'owner']);
     $kost = Kost::create([
         'user_id' => $user->id,
@@ -115,7 +115,7 @@ test('toggling availability syncs available_rooms', function () {
     $this->assertDatabaseHas('kosts', [
         'id' => $kost->id,
         'is_available' => false,
-        'available_rooms' => 0,
+        'available_rooms' => 3,
     ]);
 
     Livewire::actingAs($user)
@@ -126,6 +126,6 @@ test('toggling availability syncs available_rooms', function () {
     $this->assertDatabaseHas('kosts', [
         'id' => $kost->id,
         'is_available' => true,
-        'available_rooms' => 5,
+        'available_rooms' => 3,
     ]);
 });

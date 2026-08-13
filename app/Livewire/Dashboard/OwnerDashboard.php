@@ -90,7 +90,6 @@ class OwnerDashboard extends Component
         }
 
         $kost->is_available = ! $kost->is_available;
-        $kost->available_rooms = $kost->is_available ? ($kost->total_rooms ?: 1) : 0;
         $kost->save();
 
         $statusText = $kost->is_available ? 'TERSEDIA' : 'PENUH';

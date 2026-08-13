@@ -2,7 +2,13 @@
 
 use App\Livewire\Auth\Register;
 use App\Models\User;
+use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Livewire;
+
+// Reset rate limiter register sebelum setiap test agar tidak saling kontaminasi
+beforeEach(function () {
+    RateLimiter::clear('register_127.0.0.1');
+});
 
 // ---------------------------------------------------------------------------
 // 1. Registrasi role 'user' berhasil dengan phone_number, tanpa business_name
@@ -221,6 +227,7 @@ test('password shorter than 8 characters fails validation', function () {
 // ---------------------------------------------------------------------------
 // 6. Validasi nama: terlalu pendek / karakter ilegal / whitespace berlebih
 // ---------------------------------------------------------------------------
+
 test('registration fails when the name is too short', function () {
     Livewire::test(Register::class)
         ->set('name', 'a')
@@ -261,4 +268,46 @@ test('registration accepts a valid unicode name and squishes whitespace', functi
 
     expect($user)->not->toBeNull()
         ->and($user->name)->toBe('Agus Setiawan');
+});
+
+// ---------------------------------------------------------------------------
+// 9. Setelah 5 pendaftaran dari IP yang sama, percobaan ke-6 kena rate limit
+//    dengan hitung mundur (rateLimitSeconds > 0), bukan error validasi field
+// ---------------------------------------------------------------------------
+test('after 5 registrations from the same IP the 6th is rate limited with a countdown', function () {
+    $component = Livewire::test(Register::class);
+
+    $names = ['Satu', 'Dua', 'Tiga', 'Empat', 'Lima'];
+
+    foreach ($names as $attempt => $label) {
+        $component
+            ->set('name', 'User '.$label)
+            ->set('email', 'user'.($attempt + 1).'@example.com')
+            ->set('password', 'password1')
+            ->set('password_confirmation', 'password1')
+            ->set('role', 'user')
+            ->set('phone_number', '0812'.str_pad((string) ($attempt + 1), 9, '0', STR_PAD_LEFT))
+            ->set('terms', true)
+            ->call('register')
+            ->assertHasNoErrors();
+    }
+
+    // Percobaan ke-6 — harus kena rate limit, bukan error field
+    $component
+        ->set('name', 'User Keenam')
+        ->set('email', 'user6@example.com')
+        ->set('password', 'password1')
+        ->set('password_confirmation', 'password1')
+        ->set('role', 'user')
+        ->set('phone_number', '081200000006')
+        ->set('terms', true)
+        ->call('register')
+        ->assertHasErrors(['rate_limit'])
+        ->assertHasNoErrors(['email', 'phone_number', 'name']);
+
+    // Hitung mundur harus aktif
+    $component->assertSet('rateLimitSeconds', fn (int $value) => $value > 0);
+
+    // Tidak ada akun ke-6 yang dibuat
+    expect(User::where('email', 'user6@example.com')->exists())->toBeFalse();
 });

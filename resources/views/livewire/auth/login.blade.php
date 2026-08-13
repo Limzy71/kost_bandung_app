@@ -1,10 +1,23 @@
 <div class="w-full" x-data="{
-    lockedSeconds: @entangle('rateLimitSeconds'),
+    locked: @entangle('rateLimitSeconds'),
+    lockedSeconds: 0,
     timer: null,
+    init() {
+        this.lockedSeconds = this.locked;
+        this.startTimer();
+        this.$watch('locked', (val) => {
+            this.lockedSeconds = val;
+            this.startTimer();
+        });
+    },
     startTimer() {
         if (this.timer) clearInterval(this.timer);
+        if (this.lockedSeconds <= 0) {
+            this.timer = null;
+            return;
+        }
         this.timer = setInterval(() => {
-            if(this.lockedSeconds > 0) {
+            if (this.lockedSeconds > 0) {
                 this.lockedSeconds--;
             } else {
                 clearInterval(this.timer);
@@ -12,7 +25,7 @@
             }
         }, 1000);
     }
-}" x-init="if(lockedSeconds > 0) startTimer(); $watch('lockedSeconds', val => { if(val > 0) startTimer(); })">
+}">
     {{-- ===== Neo-Brutalist Login Card ===== --}}
     <div class="bg-white border-4 border-black p-8 md:p-10 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] rounded-lg w-full dark:bg-zinc-900 dark:border-zinc-700 dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,0.25)]">
 

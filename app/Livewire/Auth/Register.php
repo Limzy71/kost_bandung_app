@@ -20,6 +20,8 @@ class Register extends Component
 {
     use ProfileValidationRules;
 
+    public int $rateLimitSeconds = 0;
+
     public string $name = '';
 
     public string $email = '';
@@ -109,7 +111,8 @@ class Register extends Component
         $key = 'register_'.request()->ip();
 
         if (RateLimiter::tooManyAttempts($key, 5)) {
-            $this->addError('email', 'Terlalu banyak pendaftaran dari perangkat ini. Silakan coba lagi nanti.');
+            $this->rateLimitSeconds = RateLimiter::availableIn($key);
+            $this->addError('rate_limit', 'TERLALU BANYAK PENDAFTARAN DARI PERANGKAT INI.');
 
             return null;
         }

@@ -6,12 +6,15 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Component;
 
 class Login extends Component
 {
     public int $rateLimitSeconds = 0;
+
+    private const MAX_FAILED_ATTEMPTS = 5;
 
     public string $email = '';
 
@@ -49,10 +52,11 @@ class Login extends Component
     {
         $this->validate();
 
-        // Anti Brute-Force Rate Limiter — max 5 attempts per IP per minute
+        // Anti Brute-Force dengan progressive lockout — makin sering gagal, makin lama dikunci.
+        // Strikes tersimpan 24 jam; lockout bertahap: 5× → 1 menit, 10× → 15 menit, 15× → 1 jam.
         $key = 'login_'.request()->ip();
 
-        if (RateLimiter::tooManyAttempts($key, 5)) {
+        if ($this->isLocked($key)) {
             $this->rateLimitSeconds = RateLimiter::availableIn($key);
             $this->addError('rate_limit', 'TERLALU BANYAK PERCOBAAN LOGIN.');
 
@@ -71,12 +75,37 @@ class Login extends Component
             return redirect()->intended('/');
         }
 
-        // Increment rate limiter on failed attempt (5 seconds block)
-        RateLimiter::hit($key, 5);
+        $this->registerFailedAttempt($key);
 
         $this->addError('email', 'Email atau kata sandi yang Anda masukkan salah.');
 
         return null;
+    }
+
+    private function isLocked(string $key): bool
+    {
+        return RateLimiter::attempts($key) >= self::MAX_FAILED_ATTEMPTS
+            && Cache::has($key.':timer');
+    }
+
+    private function registerFailedAttempt(string $key): void
+    {
+        $strikes = RateLimiter::hit($key, 86400); // jendela akumulasi percobaan: 24 jam
+
+        $lockSeconds = $this->lockoutSeconds($strikes);
+
+        // Timer lockout diperpanjang manual karena RateLimiter::hit tidak
+        // memperpanjang timer yang sudah ada (ter-anchor ke hit pertama).
+        Cache::put($key.':timer', now()->addSeconds($lockSeconds)->getTimestamp(), $lockSeconds);
+    }
+
+    private function lockoutSeconds(int $strikes): int
+    {
+        return match (true) {
+            $strikes >= 15 => 3600, // 1 jam
+            $strikes >= 10 => 900,  // 15 menit
+            default => 60,          // 1 menit
+        };
     }
 
     public function render(): View

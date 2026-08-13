@@ -32,11 +32,11 @@ test('after 5 failed login attempts the 6th returns rate limit error', function 
         ->set('email', $user->email)
         ->set('password', 'another-wrong-password')
         ->call('login')
-        ->assertHasErrors(['email']);
+        ->assertHasErrors(['rate_limit'])
+        ->assertHasNoErrors(['email']);
 
-    // Pesan errornya harus mengandung teks rate-limit, bukan pesan login gagal biasa
-    $errors = $component->errors();
-    expect($errors->first('email'))->toContain('TERLALU BANYAK PERCOBAAN LOGIN');
+    // Hitung mundur harus aktif, bukan pesan login gagal biasa
+    $component->assertSet('rateLimitSeconds', fn (int $value) => $value > 0);
 });
 
 // ---------------------------------------------------------------------------
@@ -63,6 +63,54 @@ test('successful login clears the rate limiter', function () {
     // Setelah login berhasil, key rate limiter harus di-clear
     // sehingga hit count kembali ke 0
     expect(RateLimiter::attempts('login_127.0.0.1'))->toBe(0);
+});
+
+// ---------------------------------------------------------------------------
+// 3. Lockout bertahap (progressive): 5× → 1 menit, lalu makin lama seiring
+//    percobaan gagal berulang (10× → 15 menit). Strike tersimpan 24 jam.
+// ---------------------------------------------------------------------------
+test('lockout duration escalates across repeated failed attempts', function () {
+    $this->freezeTime();
+    RateLimiter::clear('login_127.0.0.1');
+
+    $component = Livewire::test(Login::class);
+
+    $fail = function ($livewire) {
+        return $livewire
+            ->set('email', 'x@example.com')
+            ->set('password', 'wrong')
+            ->call('login');
+    };
+
+    // 5 percobaan gagal → terkunci 1 menit
+    foreach (range(1, 5) as $attempt) {
+        $fail($component);
+    }
+
+    $component->set('email', 'x@example.com')->set('password', 'wrong')->call('login')
+        ->assertHasErrors(['rate_limit']);
+    $component->assertSet('rateLimitSeconds', fn (int $value) => $value > 0 && $value <= 60);
+
+    // Strike 6..9: tiap lockout 1 menit habis, satu percobaan gagal menambah strike,
+    // dan langsung terkunci lagi selama 1 menit.
+    foreach (range(6, 9) as $strike) {
+        $this->travel(61)->seconds();
+        $fail($component);
+
+        $component->set('email', 'x@example.com')->set('password', 'wrong')->call('login')
+            ->assertHasErrors(['rate_limit']);
+        $component->assertSet('rateLimitSeconds', fn (int $value) => $value > 0 && $value <= 60);
+    }
+
+    // Strike ke-10 → tier 15 menit (900 detik)
+    $this->travel(61)->seconds();
+    $fail($component);
+
+    $component->set('email', 'x@example.com')->set('password', 'wrong')->call('login')
+        ->assertHasErrors(['rate_limit']);
+    $component->assertSet('rateLimitSeconds', fn (int $value) => $value > 60 && $value <= 900);
+
+    $this->travelBack();
 });
 
 test('user can login with remember me checked', function () {

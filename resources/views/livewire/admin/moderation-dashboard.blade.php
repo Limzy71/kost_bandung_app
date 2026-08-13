@@ -1,5 +1,4 @@
 <div class="min-h-screen bg-[#f8f9fa] dark:bg-zinc-950 bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#27272a_1px,transparent_1px),linear-gradient(to_bottom,#27272a_1px,transparent_1px)] bg-[size:24px_24px] pb-16 pt-8">
-    <x-toast />
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         
         <!-- Header Section -->
@@ -621,8 +620,7 @@
                                     </div>
                                 @else
                                     <div class="p-4 bg-zinc-100 dark:bg-zinc-800 border-t-4 border-black dark:border-zinc-700 flex justify-end">
-                                        <button type="button" wire:click="deleteChangeRequest({{ $change->id }})"
-                                            wire:confirm="Yakin ingin menghapus riwayat proposal ini?"
+                                        <button type="button" @click="window.dispatchEvent(new CustomEvent('open-confirm', { detail: { title: 'Hapus Riwayat Proposal', message: 'Yakin ingin menghapus riwayat proposal perubahan ini? Tindakan ini tidak dapat dibatalkan.', confirmLabel: 'Ya, Hapus', danger: true, action: () => $wire.deleteChangeRequest({{ $change->id }}) } }))"
                                             class="px-4 py-2 bg-zinc-200 dark:bg-zinc-700 hover:bg-rose-500 hover:text-white text-zinc-600 dark:text-zinc-300 border-2 border-black dark:border-zinc-700 font-black text-[10px] uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg cursor-pointer">
                                             <x-icon name="lucide-trash-2" class="w-3.5 h-3.5 inline-block -mt-0.5 mr-1 stroke-[2.5]" />
                                             Hapus Riwayat

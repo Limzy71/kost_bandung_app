@@ -1,6 +1,5 @@
 <div
     x-data
-    @show-toast.window="..."
     class="min-h-screen bg-[#f8f9fa] dark:bg-zinc-950 bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#27272a_1px,transparent_1px),linear-gradient(to_bottom,#27272a_1px,transparent_1px)] bg-[size:24px_24px]"
 >
     @php
@@ -59,37 +58,6 @@
                     <span>{{ $editing ? 'Batal' : 'Edit Profil' }}</span>
                 </button>
             </div>
-        </div>
-
-        <!-- Toast Notification -->
-        <div
-            x-data="{
-                show: false,
-                message: '',
-                timer: null,
-                trigger(msg) {
-                    this.message = msg;
-                    this.show = true;
-                    if (this.timer) clearTimeout(this.timer);
-                    this.timer = setTimeout(() => { this.show = false; }, 3000);
-                }
-            }"
-            x-on:show-toast.window="trigger($event.detail.message)"
-            x-show="show"
-            x-cloak
-            x-transition:enter="transition ease-out duration-300 transform"
-            x-transition:enter-start="opacity-0 translate-y-4 scale-95"
-            x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-            x-transition:leave="transition ease-in duration-200 transform"
-            x-transition:leave-start="opacity-100 translate-y-0 scale-100"
-            x-transition:leave-end="opacity-0 translate-y-4 scale-95"
-            class="fixed bottom-6 right-6 z-50 bg-lime-300 border-3 border-black dark:border-zinc-700 p-4 rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] text-black dark:text-white flex items-center gap-3 max-w-md"
-        >
-            <div class="w-7 h-7 rounded-full bg-black text-lime-300 flex items-center justify-center text-xs font-black shrink-0">✓</div>
-            <p class="text-xs font-bold text-black dark:text-white leading-relaxed">
-                <span x-text="message"></span>
-            </p>
-            <button type="button" @click="show = false" class="ml-auto text-black dark:text-white hover:bg-black/10 p-1 rounded font-black text-xs cursor-pointer transition-colors">✕</button>
         </div>
 
         <!-- Profile Card -->

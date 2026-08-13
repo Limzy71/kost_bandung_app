@@ -1,35 +1,6 @@
 <div class="min-h-screen bg-[#f8f9fa] dark:bg-zinc-950 bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#27272a_1px,transparent_1px),linear-gradient(to_bottom,#27272a_1px,transparent_1px)] bg-[size:24px_24px]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-8">
 
-        <!-- Floating Auto-Dismiss Toast Notification -->
-        <div
-            x-data="{
-                show: false,
-                message: '',
-                timer: null,
-                trigger(msg) {
-                    this.message = msg;
-                    this.show = true;
-                    if (this.timer) clearTimeout(this.timer);
-                    this.timer = setTimeout(() => { this.show = false; }, 4000);
-                }
-            }"
-            x-on:show-toast.window="trigger($event.detail.message)"
-            x-show="show"
-            x-cloak
-            x-transition:enter="transition ease-out duration-300 transform"
-            x-transition:enter-start="opacity-0 translate-y-4 scale-95"
-            x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-            x-transition:leave="transition ease-in duration-200 transform"
-            x-transition:leave-start="opacity-100 translate-y-0 scale-100"
-            x-transition:leave-end="opacity-0 translate-y-4 scale-95"
-            class="fixed bottom-6 right-6 z-50 bg-lime-300 border-4 border-black dark:border-zinc-700 p-4 rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] text-black flex items-center gap-3 max-w-md"
-        >
-            <div class="w-8 h-8 rounded-full bg-black text-lime-300 flex items-center justify-center text-xs font-black shrink-0">✓</div>
-            <p class="text-xs sm:text-sm font-black text-black leading-snug"><span x-text="message"></span></p>
-            <button type="button" @click="show = false" class="ml-auto text-black hover:bg-black/10 p-1 rounded font-black text-xs cursor-pointer transition-colors">✕</button>
-        </div>
-
         <!-- Page Header Neo-Brutalist -->
         <div class="bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 p-6 sm:p-8 rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.25)]">
             <div class="flex flex-wrap items-center gap-2 mb-3">
@@ -234,8 +205,7 @@
                                     <div class="flex flex-wrap items-center justify-between gap-3">
                                         <button
                                             type="button"
-                                            wire:click="closeConversation({{ $selected->id }})"
-                                            wire:confirm="Tutup percakapan ini? Pengguna tidak dapat membalas lagi."
+                                            @click="window.dispatchEvent(new CustomEvent('open-confirm', { detail: { title: 'Tutup Percakapan', message: 'Tutup percakapan ini? Pengguna tidak dapat membalas lagi.', confirmLabel: 'Ya, Tutup', danger: true, action: () => $wire.closeConversation({{ $selected->id }}) } }))"
                                             class="inline-flex items-center gap-2 px-4 py-2.5 bg-rose-400 hover:bg-rose-300 text-black border-3 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl cursor-pointer">
                                             <x-icon name="lucide-circle-slash" class="w-4 h-4 stroke-[2.5]" />
                                             Tutup Percakapan
@@ -255,8 +225,7 @@
                                     </div>
                                     <button
                                         type="button"
-                                        wire:click="deleteConversation({{ $selected->id }})"
-                                        wire:confirm="Hapus percakapan ini? Riwayat akan tersimpan 30 hari sebelum dibersihkan otomatis."
+                                        @click="window.dispatchEvent(new CustomEvent('open-confirm', { detail: { title: 'Hapus Percakapan', message: 'Hapus percakapan ini? Riwayat akan tersimpan 30 hari sebelum dibersihkan otomatis.', confirmLabel: 'Ya, Hapus', danger: true, action: () => $wire.deleteConversation({{ $selected->id }}) } }))"
                                         class="inline-flex items-center gap-2 px-4 py-2.5 bg-zinc-800 hover:bg-black text-white border-3 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl cursor-pointer">
                                         <x-icon name="lucide-trash-2" class="w-4 h-4 stroke-[2.5]" />
                                         Hapus Percakapan

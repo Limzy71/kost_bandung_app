@@ -37,15 +37,21 @@
 
             <div class="flex flex-wrap items-center gap-3">
                 <!-- Theme Switcher Neo-Brutalist -->
-                <div x-data class="inline-flex p-1 bg-zinc-100 dark:bg-zinc-800 border-3 border-black dark:border-zinc-700 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]">
-                    <button type="button" @click="$flux.appearance = 'light'"
-                        :class="$flux.appearance === 'light' ? 'bg-yellow-300 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white border-2 border-transparent'"
+                <div x-data="{ 
+                        theme: localStorage.getItem('flux.appearance') || 'light',
+                        setTheme(val) {
+                            this.theme = val;
+                            window.Flux.applyAppearance(val);
+                        }
+                    }" class="inline-flex p-1 bg-zinc-100 dark:bg-zinc-800 border-3 border-black dark:border-zinc-700 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]">
+                    <button type="button" @click="setTheme('light')"
+                        :class="theme === 'light' ? 'bg-yellow-300 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white border-2 border-transparent'"
                         class="px-3 py-1.5 rounded-lg font-black text-xs uppercase flex items-center gap-1.5 transition-all cursor-pointer">
                         <x-icon name="lucide-sun" class="w-4 h-4 stroke-[2.5]" />
                         <span class="hidden sm:inline">Terang</span>
                     </button>
-                    <button type="button" @click="$flux.appearance = 'dark'"
-                        :class="$flux.appearance === 'dark' ? 'bg-yellow-300 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white border-2 border-transparent'"
+                    <button type="button" @click="setTheme('dark')"
+                        :class="theme === 'dark' ? 'bg-yellow-300 text-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white border-2 border-transparent'"
                         class="px-3 py-1.5 rounded-lg font-black text-xs uppercase flex items-center gap-1.5 transition-all cursor-pointer">
                         <x-icon name="lucide-moon" class="w-4 h-4 stroke-[2.5]" />
                         <span class="hidden sm:inline">Gelap</span>

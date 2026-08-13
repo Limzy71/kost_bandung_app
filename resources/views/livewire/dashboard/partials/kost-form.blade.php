@@ -903,7 +903,6 @@
                         $rightKeys = array_filter($periodsKeys, fn($k) => array_search($k, $periodsKeys) % 2 !== 0);
                     @endphp
                     <div class="grid grid-cols-2 gap-3" wire:key="extra-periods-grid-{{ $rent_period }}" x-data="{ periods: @entangle('extraPeriods').live }">
-                        {{-- Kolom Kiri --}}
                         <div class="flex flex-col gap-3">
                             @foreach ($leftKeys as $period)
                                 @php $label = $extraPeriodLabels[$period]; @endphp
@@ -943,7 +942,6 @@
                                 </div>
                             @endforeach
                         </div>
-                        {{-- Kolom Kanan --}}
                         <div class="flex flex-col gap-3">
                             @foreach ($rightKeys as $period)
                                 @php $label = $extraPeriodLabels[$period]; @endphp

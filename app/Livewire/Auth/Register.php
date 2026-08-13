@@ -54,7 +54,7 @@ class Register extends Component
             'email' => 'required|email|max:255|unique:users,email',
             'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()],
             'role' => ['required', Rule::in(['user', 'owner'])],
-            'phone_number' => 'required|string|regex:/^0[0-9]{9,14}$/',
+            'phone_number' => ['required', 'string', 'regex:/^0[0-9]{9,14}$/', Rule::unique('users', 'phone_number')],
             'terms' => 'required|accepted',
         ];
 
@@ -85,6 +85,7 @@ class Register extends Component
         'role.in' => 'Tipe akun tidak valid.',
         'phone_number.required' => 'Nomor WhatsApp wajib diisi.',
         'phone_number.regex' => 'Format nomor WhatsApp tidak valid (harus diawali 0 dan terdiri dari 10-15 angka).',
+        'phone_number.unique' => 'Nomor WhatsApp sudah terdaftar. Silakan gunakan nomor lain atau masuk ke akun Anda.',
         'terms.required' => 'Anda harus menyetujui syarat dan ketentuan.',
         'terms.accepted' => 'Anda harus menyetujui syarat dan ketentuan.',
         'business_name.required' => 'Nama properti/usaha kost wajib diisi untuk Pemilik Kost.',

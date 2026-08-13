@@ -104,6 +104,79 @@ test('switching role from owner back to user clears business name but keeps phon
 });
 
 // ---------------------------------------------------------------------------
+// 7. Unik: nomor WhatsApp yang sudah terdaftar → validasi gagal
+// ---------------------------------------------------------------------------
+test('registration fails when the phone number is already registered', function () {
+    User::factory()->create([
+        'phone_number' => '081234567890',
+    ]);
+
+    Livewire::test(Register::class)
+        ->set('name', 'Orang Baru')
+        ->set('email', 'baru@example.com')
+        ->set('password', 'password1')
+        ->set('password_confirmation', 'password1')
+        ->set('role', 'user')
+        ->set('phone_number', '081234567890')
+        ->set('terms', true)
+        ->call('register')
+        ->assertHasErrors(['phone_number' => 'unique'])
+        ->assertSessionHasNoErrors();
+});
+
+// ---------------------------------------------------------------------------
+// 8. Unik: email yang sudah terdaftar → validasi gagal
+// ---------------------------------------------------------------------------
+test('registration fails when the email is already registered', function () {
+    User::factory()->create([
+        'email' => 'terdaftar@example.com',
+    ]);
+
+    Livewire::test(Register::class)
+        ->set('name', 'Orang Baru')
+        ->set('email', 'terdaftar@example.com')
+        ->set('password', 'password1')
+        ->set('password_confirmation', 'password1')
+        ->set('role', 'user')
+        ->set('phone_number', '089999999999')
+        ->set('terms', true)
+        ->call('register')
+        ->assertHasErrors(['email' => 'unique'])
+        ->assertSessionHasNoErrors();
+
+    $this->assertDatabaseMissing('users', [
+        'email' => 'terdaftar@example.com',
+        'name' => 'Orang Baru',
+    ]);
+});
+
+test('registration with a fresh phone number still succeeds when another user reuses the email variant', function () {
+    Livewire::test(Register::class)
+        ->set('name', 'Pemilik Satu')
+        ->set('email', 'unik@example.com')
+        ->set('password', 'password1')
+        ->set('password_confirmation', 'password1')
+        ->set('role', 'owner')
+        ->set('phone_number', '081111111111')
+        ->set('business_name', 'Kost Satu')
+        ->set('terms', true)
+        ->call('register')
+        ->assertHasNoErrors();
+
+    Livewire::test(Register::class)
+        ->set('name', 'Pemilik Dua')
+        ->set('email', 'unik2@example.com')
+        ->set('password', 'password1')
+        ->set('password_confirmation', 'password1')
+        ->set('role', 'owner')
+        ->set('phone_number', '082222222222')
+        ->set('business_name', 'Kost Dua')
+        ->set('terms', true)
+        ->call('register')
+        ->assertHasNoErrors();
+});
+
+// ---------------------------------------------------------------------------
 // 5a. Password hanya angka → gagal validasi (tidak ada huruf)
 // ---------------------------------------------------------------------------
 test('password with only numbers fails validation', function () {

@@ -391,8 +391,7 @@
                                                 <span
                                                     class="ml-auto inline-flex items-center gap-1.5 text-[9px] font-black uppercase bg-amber-300 border-2 border-black px-1.5 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:border-zinc-700 dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">
                                                     Menunggu review
-                                                    <button type="button" wire:click="removeFacility({{ $facility->id }})"
-                                                        wire:confirm="Hapus fasilitas '{{ $facility->name }}' dari kost ini?"
+                                                    <button type="button" @click="window.dispatchEvent(new CustomEvent('open-confirm', { detail: { title: 'Hapus Fasilitas', message: "Hapus fasilitas '{{ $facility->name }}' dari kost ini?", confirmLabel: 'Ya, Hapus', danger: true, action: () => $wire.removeFacility({{ $facility->id }}) } }))"
                                                         class="w-4 h-4 rounded bg-rose-500 hover:bg-rose-400 border border-black text-white text-[9px] font-black leading-none flex items-center justify-center cursor-pointer dark:border-zinc-700"
                                                         title="Hapus fasilitas">
                                                         ✕
@@ -425,8 +424,7 @@
                                                 <span
                                                     class="ml-auto inline-flex items-center gap-1.5 text-[9px] font-black uppercase bg-amber-300 border-2 border-black px-1.5 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:border-zinc-700 dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">
                                                     Menunggu review
-                                                    <button type="button" wire:click="removeFacility({{ $facility->id }})"
-                                                        wire:confirm="Hapus fasilitas '{{ $facility->name }}' dari kost ini?"
+                                                    <button type="button" @click="window.dispatchEvent(new CustomEvent('open-confirm', { detail: { title: 'Hapus Fasilitas', message: "Hapus fasilitas '{{ $facility->name }}' dari kost ini?", confirmLabel: 'Ya, Hapus', danger: true, action: () => $wire.removeFacility({{ $facility->id }}) } }))"
                                                         class="w-4 h-4 rounded bg-rose-500 hover:bg-rose-400 border border-black text-white text-[9px] font-black leading-none flex items-center justify-center cursor-pointer dark:border-zinc-700"
                                                         title="Hapus fasilitas">
                                                         ✕
@@ -457,8 +455,7 @@
                                                 <span
                                                     class="ml-auto inline-flex items-center gap-1.5 text-[9px] font-black uppercase bg-amber-300 border-2 border-black px-1.5 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:border-zinc-700 dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">
                                                     Menunggu review
-                                                    <button type="button" wire:click="removeFacility({{ $facility->id }})"
-                                                        wire:confirm="Hapus fasilitas '{{ $facility->name }}' dari kost ini?"
+                                                    <button type="button" @click="window.dispatchEvent(new CustomEvent('open-confirm', { detail: { title: 'Hapus Fasilitas', message: "Hapus fasilitas '{{ $facility->name }}' dari kost ini?", confirmLabel: 'Ya, Hapus', danger: true, action: () => $wire.removeFacility({{ $facility->id }}) } }))"
                                                         class="w-4 h-4 rounded bg-rose-500 hover:bg-rose-400 border border-black text-white text-[9px] font-black leading-none flex items-center justify-center cursor-pointer dark:border-zinc-700"
                                                         title="Hapus fasilitas">
                                                         ✕

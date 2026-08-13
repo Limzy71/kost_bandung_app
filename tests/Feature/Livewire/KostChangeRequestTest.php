@@ -148,6 +148,58 @@ it('blocks a change request created after the form was mounted', function () {
     expect($kost->fresh()->name)->toBe('Kost Change Request '.$owner->id);
 });
 
+it('lets an admin delete a non-pending change request history', function () {
+    $owner = User::factory()->create();
+    $admin = User::factory()->create(['role' => 'admin']);
+    $kost = makeChangeRequestOwnerKost($owner);
+
+    $request = KostChangeRequest::create([
+        'kost_id' => $kost->id,
+        'user_id' => $owner->id,
+        'name' => 'Kost Nama Baru',
+        'gender_type' => 'campur',
+        'district' => 'Andir',
+        'address' => 'Jl. Baru No. 77',
+        'latitude' => -6.918,
+        'longitude' => 107.584,
+        'status' => KostChangeRequest::STATUS_REJECTED,
+        'reviewed_at' => now(),
+    ]);
+
+    $this->actingAs($admin);
+
+    Livewire::test(ModerationDashboard::class)
+        ->call('deleteChangeRequest', $request->id)
+        ->assertDispatched('show-toast');
+
+    $this->assertDatabaseMissing('kost_change_requests', ['id' => $request->id]);
+});
+
+it('does not let an admin delete a pending change request', function () {
+    $owner = User::factory()->create();
+    $admin = User::factory()->create(['role' => 'admin']);
+    $kost = makeChangeRequestOwnerKost($owner);
+
+    $request = KostChangeRequest::create([
+        'kost_id' => $kost->id,
+        'user_id' => $owner->id,
+        'name' => 'Kost Nama Baru',
+        'gender_type' => 'campur',
+        'district' => 'Andir',
+        'address' => 'Jl. Baru No. 77',
+        'latitude' => -6.918,
+        'longitude' => 107.584,
+    ]);
+
+    $this->actingAs($admin);
+
+    Livewire::test(ModerationDashboard::class)
+        ->call('deleteChangeRequest', $request->id)
+        ->assertNotDispatched('show-toast');
+
+    $this->assertDatabaseHas('kost_change_requests', ['id' => $request->id]);
+});
+
 it('does not apply a change request when the kost has been deleted', function () {
     $owner = User::factory()->create();
     $admin = User::factory()->create(['role' => 'admin']);

@@ -207,6 +207,21 @@ class ModerationDashboard extends Component
         $this->dispatch('show-toast', message: 'Perubahan data utama "'.$request->kost->name.'" telah DITOLAK.');
     }
 
+    public function deleteChangeRequest(int $requestId): void
+    {
+        $request = KostChangeRequest::find($requestId);
+
+        if (! $request || $request->status === KostChangeRequest::STATUS_PENDING) {
+            return;
+        }
+
+        $request->delete();
+
+        $this->resetPage();
+
+        $this->dispatch('show-toast', message: 'Riwayat proposal perubahan berhasil dihapus.');
+    }
+
     public function approveFacility(int $facilityId): void
     {
         $facility = Facility::find($facilityId);

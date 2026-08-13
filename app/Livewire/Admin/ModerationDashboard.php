@@ -21,7 +21,7 @@ class ModerationDashboard extends Component
     public string $search = '';
 
     public string $activeTab = 'pending'; // 'pending', 'published', 'rejected', 'all', 'facilities', 'verification', 'changes'
-    
+
     public string $changeStatusFilter = 'pending'; // 'pending', 'approved', 'rejected', 'all'
 
     public function updatingSearch(): void
@@ -133,7 +133,11 @@ class ModerationDashboard extends Component
     {
         $request = KostChangeRequest::with(['kost', 'user'])->find($requestId);
 
-        if (! $request || $request->status !== KostChangeRequest::STATUS_PENDING) {
+        if (! $request
+            || $request->status !== KostChangeRequest::STATUS_PENDING
+            || ! $request->kost
+            || $request->kost->trashed()
+        ) {
             return;
         }
 
@@ -177,7 +181,11 @@ class ModerationDashboard extends Component
     {
         $request = KostChangeRequest::with(['kost', 'user'])->find($requestId);
 
-        if (! $request || $request->status !== KostChangeRequest::STATUS_PENDING) {
+        if (! $request
+            || $request->status !== KostChangeRequest::STATUS_PENDING
+            || ! $request->kost
+            || $request->kost->trashed()
+        ) {
             return;
         }
 
@@ -249,12 +257,12 @@ class ModerationDashboard extends Component
             $query = KostChangeRequest::with(['kost', 'user']);
 
             if ($this->search) {
-                $query->where(function($q) {
-                    $q->where('name', 'like', '%' . $this->search . '%')
-                      ->orWhereHas('user', function($uq) {
-                          $uq->where('name', 'like', '%' . $this->search . '%')
-                             ->orWhere('email', 'like', '%' . $this->search . '%');
-                      });
+                $query->where(function ($q) {
+                    $q->where('name', 'like', '%'.$this->search.'%')
+                        ->orWhereHas('user', function ($uq) {
+                            $uq->where('name', 'like', '%'.$this->search.'%')
+                                ->orWhere('email', 'like', '%'.$this->search.'%');
+                        });
                 });
             }
 

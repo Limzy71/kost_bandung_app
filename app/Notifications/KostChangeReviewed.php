@@ -27,10 +27,12 @@ class KostChangeReviewed extends Notification
      */
     public function toArray(object $notifiable): array
     {
+        $kost = $this->changeRequest->kost;
+
         return [
             'kost_id' => $this->changeRequest->kost_id,
-            'kost_slug' => $this->changeRequest->kost->slug,
-            'kost_name' => $this->changeRequest->kost->name,
+            'kost_slug' => $kost?->slug ?? '',
+            'kost_name' => $kost?->name ?? 'Kost',
             'status' => $this->changeRequest->status,
             'review_note' => $this->changeRequest->review_note,
         ];

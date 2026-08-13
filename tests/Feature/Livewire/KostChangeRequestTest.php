@@ -79,6 +79,22 @@ it('does not create a change request when core fields are unchanged', function (
     expect(KostChangeRequest::where('kost_id', $kost->id)->count())->toBe(0);
 });
 
+it('does not create a change request when coordinates are only reformatted, not changed', function () {
+    $owner = User::factory()->create();
+    $kost = makeChangeRequestOwnerKost($owner);
+
+    $this->actingAs($owner);
+
+    Livewire::test(EditKost::class, ['kost' => $kost])
+        ->set('latitude', '-6.9180')
+        ->set('longitude', '107.5840')
+        ->call('save')
+        ->assertRedirect(route('dashboard'))
+        ->assertSessionHas('status');
+
+    expect(KostChangeRequest::where('kost_id', $kost->id)->count())->toBe(0);
+});
+
 it('blocks a second change request while one is still pending', function () {
     $owner = User::factory()->create();
     $kost = makeChangeRequestOwnerKost($owner);
@@ -102,6 +118,63 @@ it('blocks a second change request while one is still pending', function () {
         ->assertHasErrors(['name']);
 
     expect(KostChangeRequest::where('kost_id', $kost->id)->count())->toBe(1);
+});
+
+it('blocks a change request created after the form was mounted', function () {
+    $owner = User::factory()->create();
+    $kost = makeChangeRequestOwnerKost($owner);
+
+    $this->actingAs($owner);
+
+    $component = Livewire::test(EditKost::class, ['kost' => $kost])
+        ->assertSet('hasPendingChangeRequest', false);
+
+    KostChangeRequest::create([
+        'kost_id' => $kost->id,
+        'user_id' => $owner->id,
+        'name' => 'Nama Proposal',
+        'gender_type' => 'campur',
+        'district' => 'Andir',
+        'address' => 'Jl. Proposal',
+        'latitude' => -6.918,
+        'longitude' => 107.584,
+    ]);
+
+    $component->set('name', 'Nama Lain')
+        ->call('save')
+        ->assertHasErrors(['name']);
+
+    expect(KostChangeRequest::where('kost_id', $kost->id)->count())->toBe(1);
+    expect($kost->fresh()->name)->toBe('Kost Change Request '.$owner->id);
+});
+
+it('does not apply a change request when the kost has been deleted', function () {
+    $owner = User::factory()->create();
+    $admin = User::factory()->create(['role' => 'admin']);
+    $kost = makeChangeRequestOwnerKost($owner);
+
+    $request = KostChangeRequest::create([
+        'kost_id' => $kost->id,
+        'user_id' => $owner->id,
+        'name' => 'Kost Nama Baru',
+        'gender_type' => 'campur',
+        'district' => 'Andir',
+        'address' => 'Jl. Baru No. 77',
+        'latitude' => -6.918,
+        'longitude' => 107.584,
+    ]);
+
+    $kost->delete();
+
+    $this->actingAs($admin);
+
+    Livewire::test(ModerationDashboard::class)
+        ->call('approveChange', $request->id)
+        ->assertHasNoErrors();
+
+    $request->refresh();
+
+    expect($request->status)->toBe(KostChangeRequest::STATUS_PENDING);
 });
 
 it('lets an admin approve a change request, applies the data, and notifies the owner', function () {

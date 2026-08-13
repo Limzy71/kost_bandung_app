@@ -13,6 +13,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -51,8 +52,6 @@ class EditKost extends Component
     public string $total_rooms = '1';
 
     public string $available_rooms = '1';
-
-    public string $whatsapp_contact = '';
 
     public string $nearby_landmarks = '';
 
@@ -166,7 +165,6 @@ class EditKost extends Component
         $this->longitude = (string) $kost->longitude;
         $this->total_rooms = (string) $kost->total_rooms;
         $this->available_rooms = (string) $kost->available_rooms;
-        $this->whatsapp_contact = (string) ($kost->whatsapp_contact ?? '');
         $this->nearby_landmarks = (string) ($kost->nearby_landmarks ?? '');
         if ($this->nearby_landmarks !== '') {
             $this->landmarkList = array_values(array_filter(array_map('trim', explode(',', $this->nearby_landmarks))));
@@ -705,15 +703,17 @@ class EditKost extends Component
 
         $proposalCreated = false;
 
-        if ($kost->status === 'published') {
-            if ($this->coreFieldsChanged()) {
-                if ($this->hasPendingChangeRequest) {
-                    if (! app()->runningUnitTests()) {
-                        usleep(1000000);
-                    }
-                    $this->addError('name', 'Masih ada pengajuan perubahan data utama yang menunggu persetujuan admin. Perubahan data utama belum dapat diajukan lagi.');
+        if ($kost->status === 'published' && $this->coreFieldsChanged()) {
+            $blockedByPendingRequest = DB::transaction(function () use ($kost): bool {
+                // Serialize concurrent saves on the same kost row before deciding
+                // whether a change request can still be created.
+                Kost::query()->whereKey($kost->id)->lockForUpdate()->first();
 
-                    return null;
+                if (KostChangeRequest::where('kost_id', $kost->id)
+                    ->where('status', KostChangeRequest::STATUS_PENDING)
+                    ->exists()
+                ) {
+                    return true;
                 }
 
                 KostChangeRequest::create([
@@ -727,8 +727,19 @@ class EditKost extends Component
                     'longitude' => $this->longitude,
                 ]);
 
-                $proposalCreated = true;
+                return false;
+            });
+
+            if ($blockedByPendingRequest) {
+                if (! app()->runningUnitTests()) {
+                    usleep(1000000);
+                }
+                $this->addError('name', 'Masih ada pengajuan perubahan data utama yang menunggu persetujuan admin. Perubahan data utama belum dapat diajukan lagi.');
+
+                return null;
             }
+
+            $proposalCreated = true;
         } else {
             $kost->fill([
                 'name' => strip_tags($this->name),
@@ -965,8 +976,17 @@ class EditKost extends Component
             || $this->gender_type !== (string) $kost->gender_type
             || $this->district !== (string) $kost->district
             || $this->address !== (string) $kost->address
-            || (float) $this->latitude !== (float) $kost->latitude
-            || (float) $this->longitude !== (float) $kost->longitude;
+            || $this->normalizeCoordinate($this->latitude) !== $this->normalizeCoordinate((string) $kost->latitude)
+            || $this->normalizeCoordinate($this->longitude) !== $this->normalizeCoordinate((string) $kost->longitude);
+    }
+
+    private function normalizeCoordinate(string $value): string
+    {
+        $value = trim($value);
+
+        return $value === '' || ! is_numeric($value)
+            ? $value
+            : (string) (float) $value;
     }
 
     private function photoHash(string $path): ?string

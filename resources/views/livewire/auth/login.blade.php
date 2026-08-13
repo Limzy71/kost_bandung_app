@@ -1,4 +1,18 @@
-<div class="w-full">
+<div class="w-full" x-data="{
+    lockedSeconds: @entangle('rateLimitSeconds'),
+    timer: null,
+    startTimer() {
+        if (this.timer) clearInterval(this.timer);
+        this.timer = setInterval(() => {
+            if(this.lockedSeconds > 0) {
+                this.lockedSeconds--;
+            } else {
+                clearInterval(this.timer);
+                this.timer = null;
+            }
+        }, 1000);
+    }
+}" x-init="if(lockedSeconds > 0) startTimer(); $watch('lockedSeconds', val => { if(val > 0) startTimer(); })">
     {{-- ===== Neo-Brutalist Login Card ===== --}}
     <div class="bg-white border-4 border-black p-8 md:p-10 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] rounded-lg w-full dark:bg-zinc-900 dark:border-zinc-700 dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,0.25)]">
 
@@ -19,12 +33,12 @@
         <div class="border-t-4 border-black mb-8 dark:border-zinc-700"></div>
 
         {{-- Rate Limit / General Error Banner --}}
-        @if ($errors->has('email') && str_contains($errors->first('email'), 'TERLALU BANYAK'))
-            <div class="mb-6 flex items-center gap-3 bg-rose-400 border-4 border-black p-4 rounded-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:border-zinc-700 dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]">
-                <x-icon name="lucide-triangle-alert" class="w-5 h-5 text-black shrink-0 stroke-[3]" />
-                <span class="text-xs font-black uppercase text-black">{{ $errors->first('email') }}</span>
-            </div>
-        @endif
+        <div x-cloak x-show="lockedSeconds > 0" class="mb-6 flex items-center gap-3 bg-rose-400 border-4 border-black p-4 rounded-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:border-zinc-700 dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]">
+            <x-icon name="lucide-triangle-alert" class="w-5 h-5 text-black shrink-0 stroke-[3]" />
+            <span class="text-xs font-black uppercase text-black">
+                TERLALU BANYAK PERCOBAAN LOGIN. SILAKAN TUNGGU <span x-text="lockedSeconds"></span> DETIK.
+            </span>
+        </div>
 
         <form wire:submit="login" class="space-y-5">
             {{-- Email --}}
@@ -36,11 +50,9 @@
                     class="w-full px-4 py-3 text-sm bg-zinc-50 border-3 rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:bg-[#FFE500]/10 focus:border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:bg-zinc-900 dark:border-zinc-700 dark:text-white dark:placeholder-zinc-500 dark:focus:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] dark:focus:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] @error('email') border-rose-600 @else border-black @enderror"
                     placeholder="nama@email.com">
                 @error('email')
-                    @if (!str_contains($message, 'TERLALU BANYAK'))
-                        <p class="mt-2 text-xs font-bold text-rose-600 flex items-center gap-1 dark:text-rose-400">
-                            <span class="font-black">✕</span> {{ $message }}
-                        </p>
-                    @endif
+                    <p x-show="lockedSeconds == 0" class="mt-2 text-xs font-bold text-rose-600 flex items-center gap-1 dark:text-rose-400">
+                        <span class="font-black">✕</span> {{ $message }}
+                    </p>
                 @enderror
             </div>
 
@@ -82,6 +94,8 @@
 
             {{-- Submit Button --}}
             <button type="submit"
+                x-bind:disabled="lockedSeconds > 0"
+                x-bind:class="lockedSeconds > 0 ? 'opacity-60 cursor-not-allowed hover:-translate-x-0 hover:-translate-y-0 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]' : ''"
                 class="w-full py-4 px-6 bg-[#FFE500] hover:bg-yellow-400 text-black border-4 border-black font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all duration-75 rounded-lg flex items-center justify-center gap-2 cursor-pointer mt-2 dark:border-zinc-600 dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] dark:hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)]"
                 wire:loading.attr="disabled"
                 wire:target="login"

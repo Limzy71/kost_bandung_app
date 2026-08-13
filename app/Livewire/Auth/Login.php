@@ -11,6 +11,8 @@ use Livewire\Component;
 
 class Login extends Component
 {
+    public int $rateLimitSeconds = 0;
+
     public string $email = '';
 
     public string $password = '';
@@ -51,8 +53,8 @@ class Login extends Component
         $key = 'login_'.request()->ip();
 
         if (RateLimiter::tooManyAttempts($key, 5)) {
-            $seconds = RateLimiter::availableIn($key);
-            $this->addError('email', 'TERLALU BANYAK PERCOBAAN LOGIN. SILAKAN TUNGGU '.$seconds.' DETIK.');
+            $this->rateLimitSeconds = RateLimiter::availableIn($key);
+            $this->addError('rate_limit', 'TERLALU BANYAK PERCOBAAN LOGIN.');
 
             return null;
         }
@@ -69,8 +71,8 @@ class Login extends Component
             return redirect()->intended('/');
         }
 
-        // Increment rate limiter on failed attempt
-        RateLimiter::hit($key, 60);
+        // Increment rate limiter on failed attempt (5 seconds block)
+        RateLimiter::hit($key, 5);
 
         $this->addError('email', 'Email atau kata sandi yang Anda masukkan salah.');
 

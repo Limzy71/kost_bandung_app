@@ -11,13 +11,13 @@ class ProductionKostSeeder extends Seeder
 {
     public function run(): void
     {
-        $owner = User::where('email', 'owner@kostbandung.id')->first();
+        $owner = User::where('email', 'owner@kostbandung.web.id')->first();
         
         if (!$owner) {
             $owner = User::create([
                 'name' => 'Owner Profesional',
-                'email' => 'owner@kostbandung.id',
-                'password' => bcrypt('password'),
+                'email' => 'owner@kostbandung.web.id',
+                'password' => bcrypt('password123'),
                 'role' => 'owner',
                 'email_verified_at' => now(),
             ]);
@@ -31,7 +31,8 @@ class ProductionKostSeeder extends Seeder
                 'gender_type' => 'campur',
                 'price_monthly' => 2500000,
                 'rent_period' => 'monthly',
-                'is_verified' => true,
+                'ownership_verification_status' => 'verified',
+                'ownership_verified_at' => now(),
                 'facilities' => ['AC', 'Kamar Mandi Dalam', 'WiFi', 'Kasur', 'Lemari', 'Parkir Motor', 'Keamanan 24 Jam'],
                 'photos' => [],
                 'latitude' => -6.8797,
@@ -45,7 +46,8 @@ class ProductionKostSeeder extends Seeder
                 'gender_type' => 'putri',
                 'price_monthly' => 1800000,
                 'rent_period' => 'monthly',
-                'is_verified' => true,
+                'ownership_verification_status' => 'verified',
+                'ownership_verified_at' => now(),
                 'facilities' => ['Kamar Mandi Dalam', 'WiFi', 'Water Heater', 'Dapur Bersama', 'CCTV', 'Ruang Santai'],
                 'photos' => [],
                 'latitude' => -6.8601,
@@ -59,7 +61,8 @@ class ProductionKostSeeder extends Seeder
                 'gender_type' => 'putra',
                 'price_monthly' => 850000,
                 'rent_period' => 'monthly',
-                'is_verified' => false,
+                'ownership_verification_status' => 'unverified',
+                'ownership_verified_at' => null,
                 'facilities' => ['WiFi', 'Kamar Mandi Luar', 'Parkir Motor', 'Dapur Bersama', 'Mesin Cuci'],
                 'photos' => [],
                 'latitude' => -6.9312,
@@ -73,7 +76,8 @@ class ProductionKostSeeder extends Seeder
                 'gender_type' => 'campur',
                 'price_monthly' => 2000000,
                 'rent_period' => 'monthly',
-                'is_verified' => true,
+                'ownership_verification_status' => 'verified',
+                'ownership_verified_at' => now(),
                 'facilities' => ['AC', 'Kamar Mandi Dalam', 'WiFi', 'Smart TV', 'Layanan Kebersihan', 'Parkir Mobil'],
                 'photos' => [],
                 'latitude' => -6.8835,
@@ -87,7 +91,8 @@ class ProductionKostSeeder extends Seeder
                 'gender_type' => 'putri',
                 'price_monthly' => 1500000,
                 'rent_period' => 'monthly',
-                'is_verified' => true,
+                'ownership_verification_status' => 'verified',
+                'ownership_verified_at' => now(),
                 'facilities' => ['Kamar Mandi Dalam', 'WiFi', 'Akses Kunci Pintar', 'Balkon', 'Area Kerja'],
                 'photos' => [],
                 'latitude' => -6.9022,

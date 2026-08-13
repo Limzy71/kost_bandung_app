@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Events\ChangeRequestReviewed;
 use App\Mail\ChangeRequest\ReviewedMail;
 use App\Models\Facility;
 use App\Models\Kost;
@@ -169,6 +170,7 @@ class ModerationDashboard extends Component
         ]);
 
         $request->user->notify(new KostChangeReviewed($request->refresh()));
+        broadcast(new ChangeRequestReviewed($request->refresh()));
 
         if ($request->user->email) {
             Mail::to($request->user->email)->queue(new ReviewedMail($kost, KostChangeRequest::STATUS_APPROVED));
@@ -199,6 +201,7 @@ class ModerationDashboard extends Component
         ]);
 
         $request->user->notify(new KostChangeReviewed($request->refresh()));
+        broadcast(new ChangeRequestReviewed($request->refresh()));
 
         if ($request->user->email) {
             Mail::to($request->user->email)->queue(new ReviewedMail($request->kost, KostChangeRequest::STATUS_REJECTED, $note));

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Contact;
 
+use App\Events\AdminMessageSent;
 use App\Models\AdminConversation;
 use App\Models\AdminMessage;
 use Illuminate\Contracts\View\View;
@@ -83,12 +84,14 @@ class AdminChat extends Component
             'awaiting_reply_at' => now(),
         ]);
 
-        AdminMessage::create([
+        $message = AdminMessage::create([
             'conversation_id' => $conversation->id,
             'sender_type' => 'user',
             'sender_id' => Auth::id(),
             'body' => $this->newBody,
         ]);
+
+        broadcast(new AdminMessageSent($message));
 
         RateLimiter::hit($key, 3600);
 
@@ -108,6 +111,26 @@ class AdminChat extends Component
         }
 
         $this->selectedConversationId = $conversation->id;
+    }
+
+    public function handleIncomingMessage(array $payload): void
+    {
+        $payload = (array) $payload;
+        $conversationId = (int) ($payload['conversation_id'] ?? 0);
+
+        if ($this->selectedConversationId === $conversationId) {
+            AdminMessage::where('conversation_id', $conversationId)
+                ->where('sender_type', 'admin')
+                ->whereNull('read_at')
+                ->update(['read_at' => now()]);
+        }
+    }
+
+    protected function getListeners(): array
+    {
+        return [
+            'echo-private:App.Models.User.'.auth()->id().',admin.message.sent' => 'handleIncomingMessage',
+        ];
     }
 
     public function sendFollowUp(): void
@@ -140,12 +163,14 @@ class AdminChat extends Component
             return;
         }
 
-        AdminMessage::create([
+        $message = AdminMessage::create([
             'conversation_id' => $conversation->id,
             'sender_type' => 'user',
             'sender_id' => Auth::id(),
             'body' => $this->followUpBody,
         ]);
+
+        broadcast(new AdminMessageSent($message));
 
         $conversation->update(['awaiting_reply_at' => now()]);
 

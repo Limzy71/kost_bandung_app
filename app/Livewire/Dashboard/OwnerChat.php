@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Dashboard;
 
+use App\Events\KostMessageSent;
 use App\Models\KostConversation;
 use App\Models\KostMessage;
 use Illuminate\Contracts\View\View;
@@ -52,6 +53,25 @@ class OwnerChat extends Component
         }
     }
 
+    public function handleIncomingMessage(array $payload): void
+    {
+        $payload = (array) $payload;
+        $conversationId = (int) ($payload['conversation_id'] ?? 0);
+
+        if ($this->selectedConversationId === $conversationId) {
+            $this->markSelectedRead();
+        } else {
+            $this->dispatchBadgeUpdate();
+        }
+    }
+
+    protected function getListeners(): array
+    {
+        return [
+            'echo-private:App.Models.User.'.auth()->id().',kost.message.sent' => 'handleIncomingMessage',
+        ];
+    }
+
     public function sendMessage(): void
     {
         $conversation = $this->findOwnedConversation($this->selectedConversationId);
@@ -76,11 +96,13 @@ class OwnerChat extends Component
             return;
         }
 
-        KostMessage::create([
+        $message = KostMessage::create([
             'conversation_id' => $conversation->id,
             'sender_id' => Auth::id(),
             'body' => $this->newBody,
         ]);
+
+        broadcast(new KostMessageSent($message, (int) $conversation->seeker_id));
 
         RateLimiter::hit($key, 60);
 

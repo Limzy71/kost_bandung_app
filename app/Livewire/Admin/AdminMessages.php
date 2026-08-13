@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Events\AdminMessageSent;
 use App\Models\AdminConversation;
 use App\Models\AdminMessage;
 use Illuminate\Contracts\View\View;
@@ -34,6 +35,28 @@ class AdminMessages extends Component
         $this->filter = $filter;
         $this->selectedConversationId = null;
         $this->resetPage();
+    }
+
+    public function handleInboxUpdate(array $payload): void
+    {
+        $payload = (array) $payload;
+        $conversationId = (int) ($payload['conversation_id'] ?? 0);
+
+        if ($this->selectedConversationId === $conversationId) {
+            AdminMessage::where('conversation_id', $conversationId)
+                ->where('sender_type', 'user')
+                ->whereNull('read_at')
+                ->update(['read_at' => now()]);
+        }
+
+        $this->resetPage();
+    }
+
+    protected function getListeners(): array
+    {
+        return [
+            'echo-private:admin.inbox,admin.message.sent' => 'handleInboxUpdate',
+        ];
     }
 
     public function openConversation(int $id): void
@@ -74,12 +97,14 @@ class AdminMessages extends Component
             'replyBody' => 'required|string|max:2000',
         ]);
 
-        AdminMessage::create([
+        $message = AdminMessage::create([
             'conversation_id' => $conversation->id,
             'sender_type' => 'admin',
             'sender_id' => Auth::id(),
             'body' => $this->replyBody,
         ]);
+
+        broadcast(new AdminMessageSent($message));
 
         $conversation->update([
             'awaiting_reply_at' => null,

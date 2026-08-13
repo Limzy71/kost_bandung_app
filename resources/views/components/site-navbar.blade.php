@@ -39,20 +39,20 @@
         $navItems = [
             ['href' => route('home'), 'label' => 'Beranda Utama', 'icon' => 'lucide-house', 'match' => 'home'],
             ['href' => route('admin.moderation'), 'label' => 'Moderasi Admin', 'icon' => 'lucide-circle-check', 'match' => 'admin.moderation'],
-            ['href' => route('admin.messages'), 'label' => 'Inbox Bantuan', 'icon' => 'lucide-message-square-text', 'match' => 'admin.messages', 'badge' => $adminUnansweredCount],
+            ['href' => route('admin.messages'), 'label' => 'Inbox Bantuan', 'icon' => 'lucide-message-square-text', 'match' => 'admin.messages', 'badge' => $adminUnansweredCount, 'badgeKey' => 'adminUnanswered'],
         ];
     } elseif ($role === 'owner') {
         $navItems = [
             ['href' => route('home'), 'label' => 'Beranda Utama', 'icon' => 'lucide-house', 'match' => 'home'],
             ['href' => route('dashboard'), 'label' => 'Dashboard Pemilik', 'icon' => 'lucide-layout-grid', 'match' => ['dashboard', 'dashboard.kost.create', 'dashboard.kost.edit']],
-            ['href' => route('dashboard.chats'), 'label' => 'Obrolan Kost', 'icon' => 'lucide-message-circle', 'match' => 'dashboard.chats', 'badge' => $unreadChatCount],
-            ['href' => route('hubungi.admin'), 'label' => 'Hubungi Admin', 'icon' => 'lucide-message-square-text', 'match' => 'hubungi.admin', 'badge' => $unreadAdminRepliesCount],
+            ['href' => route('dashboard.chats'), 'label' => 'Obrolan Kost', 'icon' => 'lucide-message-circle', 'match' => 'dashboard.chats', 'badge' => $unreadChatCount, 'badgeKey' => 'chat'],
+            ['href' => route('hubungi.admin'), 'label' => 'Hubungi Admin', 'icon' => 'lucide-message-square-text', 'match' => 'hubungi.admin', 'badge' => $unreadAdminRepliesCount, 'badgeKey' => 'adminReplies'],
         ];
     } elseif ($role === 'user') {
         $navItems = [
             ['href' => route('home'), 'label' => 'Beranda Utama', 'icon' => 'lucide-house', 'match' => 'home'],
-            ['href' => route('user.chats'), 'label' => 'Obrolan Kost', 'icon' => 'lucide-message-circle', 'match' => 'user.chats', 'badge' => $unreadChatCount],
-            ['href' => route('hubungi.admin'), 'label' => 'Hubungi Admin', 'icon' => 'lucide-message-square-text', 'match' => 'hubungi.admin', 'badge' => $unreadAdminRepliesCount],
+            ['href' => route('user.chats'), 'label' => 'Obrolan Kost', 'icon' => 'lucide-message-circle', 'match' => 'user.chats', 'badge' => $unreadChatCount, 'badgeKey' => 'chat'],
+            ['href' => route('hubungi.admin'), 'label' => 'Hubungi Admin', 'icon' => 'lucide-message-square-text', 'match' => 'hubungi.admin', 'badge' => $unreadAdminRepliesCount, 'badgeKey' => 'adminReplies'],
         ];
     }
 
@@ -70,6 +70,9 @@
 
 <header class="bg-white border-b-3 border-black sticky top-0 z-50 shadow-[0_4px_0_0_rgba(0,0,0,1)] dark:bg-zinc-900 dark:border-zinc-700 dark:shadow-[0_4px_0_0_rgba(255,255,255,0.25)]"
     x-data="{ open: false }">
+    @auth
+        <livewire:navbar-badges />
+    @endauth
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
         {{-- Logo --}}
         <a href="{{ route('home') }}" wire:navigate class="flex items-center gap-2 shrink-0" aria-label="KostBandung.web.id - Beranda">
@@ -88,6 +91,7 @@
                         <span>{{ $item['label'] }}</span>
                         @if (isset($item['badge']))
                             <span x-data="{ count: {{ $item['badge'] }} }"
+                                @badges-updated.window="count = $event.detail.{{ $item['badgeKey'] }}"
                                 @if($item['match'] === 'dashboard.chats' || $item['match'] === 'user.chats')
                                     @kost-chats-updated.window="count = $event.detail.count"
                                 @endif
@@ -157,6 +161,7 @@
                         <span>{{ $item['label'] }}</span>
                         @if (isset($item['badge']))
                             <span x-data="{ count: {{ $item['badge'] }} }"
+                                @badges-updated.window="count = $event.detail.{{ $item['badgeKey'] }}"
                                 @if($item['match'] === 'dashboard.chats' || $item['match'] === 'user.chats')
                                     @kost-chats-updated.window="count = $event.detail.count"
                                 @endif

@@ -79,6 +79,20 @@ class OwnerDashboard extends Component
         $this->dispatch('change-notifications-cleared');
     }
 
+    public function handleChangeReviewed(array $payload): void
+    {
+        $payload = (array) $payload;
+
+        $this->dispatch('show-toast', message: $payload['message'] ?? 'Pengajuan perubahan telah diulas.', type: ($payload['status'] ?? '') === KostChangeRequest::STATUS_APPROVED ? 'success' : 'error');
+    }
+
+    protected function getListeners(): array
+    {
+        return [
+            'echo-private:App.Models.User.'.auth()->id().',change.request.reviewed' => 'handleChangeReviewed',
+        ];
+    }
+
     public function toggleAvailability(int $kostId): void
     {
         /** @var User $user */

@@ -48,6 +48,23 @@ class NavbarBadges extends Component
         $this->dispatch('badges-updated', chat: $chat, adminReplies: $adminReplies, adminUnanswered: $adminUnanswered);
     }
 
+    protected function getListeners(): array
+    {
+        $userId = auth()->id();
+
+        if (! $userId) {
+            return [];
+        }
+
+        return [
+            'echo-private:admin.inbox,.admin.message.sent' => 'refresh',
+            'echo-private:App.Models.User.'.$userId.',.admin.message.sent' => 'refresh',
+            'echo-private:App.Models.User.'.$userId.',.admin.conversation.closed' => 'refresh',
+            'echo-private:App.Models.User.'.$userId.',.kost.message.sent' => 'refresh',
+            'refresh-navbar-badges' => 'refresh',
+        ];
+    }
+
     public function render(): View
     {
         return view('livewire.navbar-badges');

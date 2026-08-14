@@ -126,10 +126,21 @@ class AdminChat extends Component
         }
     }
 
+    public function handleConversationClosed(array $payload): void
+    {
+        $payload = (array) $payload;
+        $conversationId = (int) ($payload['conversation_id'] ?? 0);
+
+        if ($this->selectedConversationId === $conversationId) {
+            $this->selectedConversationId = $conversationId;
+        }
+    }
+
     protected function getListeners(): array
     {
         return [
             'echo-private:App.Models.User.'.auth()->id().',.admin.message.sent' => 'handleIncomingMessage',
+            'echo-private:App.Models.User.'.auth()->id().',.admin.conversation.closed' => 'handleConversationClosed',
         ];
     }
 

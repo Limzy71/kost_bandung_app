@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Events\AdminConversationClosed;
 use App\Events\AdminMessageSent;
 use App\Models\AdminConversation;
 use App\Models\AdminMessage;
@@ -130,6 +131,8 @@ class AdminMessages extends Component
             'closed_at' => now(),
             'awaiting_reply_at' => null,
         ]);
+
+        broadcast(new AdminConversationClosed($conversation));
 
         $this->selectedConversationId = null;
 

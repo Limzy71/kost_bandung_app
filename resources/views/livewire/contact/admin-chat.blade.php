@@ -68,6 +68,8 @@
                                         <span class="px-2 py-0.5 bg-rose-300 border-2 border-black dark:border-zinc-700 text-[9px] font-black text-black dark:text-black uppercase rounded shrink-0">Ditutup</span>
                                     @endif
                                 </div>
+                                <span class="text-[10px] font-black text-zinc-500 dark:text-zinc-400 uppercase shrink-0">{{ $conversation->created_at->diffForHumans() }}</span>
+                            </div>
                             <p class="text-sm font-black text-black dark:text-white mt-2 line-clamp-2">
                                 {{ $conversation->latestMessage?->body ?? 'Belum ada pesan.' }}
                             </p>

@@ -18,7 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $proxies = array_values(array_filter(array_map(
             'trim',
-            explode(',', (string) env('TRUSTED_PROXIES', ''))
+            explode(',', (string) config('app.trusted_proxies'))
         )));
 
         $middleware->trustProxies(at: $proxies);

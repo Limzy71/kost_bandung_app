@@ -104,6 +104,12 @@ class AdminChat extends Component
 
     public function openConversation(int $id): void
     {
+        if ($this->selectedConversationId === $id) {
+            $this->selectedConversationId = null;
+
+            return;
+        }
+
         $conversation = $this->findOwnedConversation($id);
 
         if (! $conversation) {

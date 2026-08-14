@@ -62,6 +62,12 @@ class AdminMessages extends Component
 
     public function openConversation(int $id): void
     {
+        if ($this->selectedConversationId === $id) {
+            $this->selectedConversationId = null;
+
+            return;
+        }
+
         $conversation = AdminConversation::find($id);
 
         if (! $conversation) {

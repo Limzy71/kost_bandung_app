@@ -413,11 +413,28 @@ class EditKost extends Component
         ];
     }
 
+    private function clearPhotoErrors(): void
+    {
+        $keys = collect($this->getErrorBag()->keys())
+            ->filter(fn($key) => str_starts_with($key, 'photos'))
+            ->toArray();
+        if (!empty($keys)) {
+            $this->resetValidation($keys);
+        }
+    }
+
+    public function updatingPhotos(): void
+    {
+        $this->clearPhotoErrors();
+    }
+
     public function removePhoto(int $index): void
     {
         if (isset($this->photos[$index])) {
             unset($this->photos[$index]);
             $this->photos = array_values($this->photos);
+            
+            $this->clearPhotoErrors();
         }
     }
 

@@ -966,7 +966,7 @@ class EditKost extends Component
 
         $districts = array_keys(config('bandung.districts', []));
 
-        return view('livewire.dashboard.edit-kost', [
+        return view()->make('livewire.dashboard.edit-kost', [
             'facilities' => $facilities,
             'rules' => $rules,
             'extraPeriodLabels' => KostPrice::periodLabels(),

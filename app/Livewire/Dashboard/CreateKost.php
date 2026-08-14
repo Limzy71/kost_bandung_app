@@ -718,7 +718,7 @@ class CreateKost extends Component
 
         $districts = array_keys(config('bandung.districts', []));
 
-        return view('livewire.dashboard.create-kost', [
+        return view()->make('livewire.dashboard.create-kost', [
             'facilities' => $facilities,
             'rules' => $rules,
             'extraPeriodLabels' => KostPrice::periodLabels(),

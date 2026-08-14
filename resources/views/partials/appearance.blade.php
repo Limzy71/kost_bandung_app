@@ -21,12 +21,5 @@
     if (window.localStorage.getItem('flux.appearance') === null) {
         window.localStorage.setItem('flux.appearance', 'light');
     }
-    
-    // Apply on initial load
     window.Flux.applyAppearance(window.localStorage.getItem('flux.appearance') || 'light');
-    
-    // Apply when navigating via Livewire wire:navigate
-    document.addEventListener('livewire:navigated', () => {
-        window.Flux.applyAppearance(window.localStorage.getItem('flux.appearance') || 'light');
-    });
 </script>

@@ -44,7 +44,7 @@
                         })(),
                         setTheme(val) {
                             this.theme = val;
-                            window.Flux.applyAppearance(val);
+                            window.Flux.appearance = val;
                         }
                     }" class="inline-flex p-1 bg-zinc-100 dark:bg-zinc-800 border-3 border-black dark:border-zinc-700 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]">
                     <button type="button" @click="setTheme('light')"

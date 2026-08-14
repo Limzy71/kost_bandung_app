@@ -50,19 +50,24 @@ class NavbarBadges extends Component
 
     protected function getListeners(): array
     {
-        $userId = auth()->id();
+        $user = auth()->user();
 
-        if (! $userId) {
+        if (! $user) {
             return [];
         }
 
-        return [
-            'echo-private:admin.inbox,.admin.message.sent' => 'refresh',
-            'echo-private:App.Models.User.'.$userId.',.admin.message.sent' => 'refresh',
-            'echo-private:App.Models.User.'.$userId.',.admin.conversation.closed' => 'refresh',
-            'echo-private:App.Models.User.'.$userId.',.kost.message.sent' => 'refresh',
+        $listeners = [
+            'echo-private:App.Models.User.'.$user->id.',.admin.message.sent' => 'refresh',
+            'echo-private:App.Models.User.'.$user->id.',.admin.conversation.closed' => 'refresh',
+            'echo-private:App.Models.User.'.$user->id.',.kost.message.sent' => 'refresh',
             'refresh-navbar-badges' => 'refresh',
         ];
+
+        if ($user->role === 'admin') {
+            $listeners['echo-private:admin.inbox,.admin.message.sent'] = 'refresh';
+        }
+
+        return $listeners;
     }
 
     public function render(): View

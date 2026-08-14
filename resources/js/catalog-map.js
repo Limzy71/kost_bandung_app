@@ -176,7 +176,7 @@ window.catalogMap = function (config) {
         applyGoogleDarkMode() {
             if (this.mapEngine !== 'google' || !this.map) return;
             this.map.setOptions({
-                styles: this.isDarkMode() ? KOST_DARK_MAP_STYLES : null,
+                styles: null,
             });
         },
 
@@ -185,7 +185,7 @@ window.catalogMap = function (config) {
             if (this.mapEngine !== 'leaflet' || !this.map) return;
             if (this.currentLayer !== 'street') return;
             if (this.currentTileLayer) this.map.removeLayer(this.currentTileLayer);
-            const url = this.isDarkMode() ? CATALOG_DARK_TILE_URL : CATALOG_LIGHT_TILE_URL;
+            const url = CATALOG_LIGHT_TILE_URL;
             this.currentTileLayer = L.tileLayer(url, {
                 maxZoom: 19,
                 subdomains: 'abcd',
@@ -312,7 +312,7 @@ window.catalogMap = function (config) {
                         mapTypeControl: false, // We use custom buttons for this
                         streetViewControl: false,
                         fullscreenControl: true,
-                        styles: this.isDarkMode() ? KOST_DARK_MAP_STYLES : null,
+                        styles: null,
                     });
                     this.infoWindow = new google.maps.InfoWindow();
                     this.mapEngine = 'google';
@@ -427,7 +427,7 @@ window.catalogMap = function (config) {
                 if (this.currentLayer === 'satellite') {
                     this.switchLayer('satellite');
                 } else {
-                    const url = this.isDarkMode() ? CATALOG_DARK_TILE_URL : CATALOG_LIGHT_TILE_URL;
+                    const url = CATALOG_LIGHT_TILE_URL;
                     this.currentTileLayer = L.tileLayer(url, {
                         maxZoom: 19,
                         subdomains: 'abcd',

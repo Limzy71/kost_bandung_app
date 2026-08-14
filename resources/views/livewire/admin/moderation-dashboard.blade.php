@@ -792,9 +792,9 @@
                                         wire:loading.attr="disabled"
                                         class="w-full py-3 bg-lime-400 hover:bg-lime-300 active:bg-lime-500 text-black border-3 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl cursor-pointer flex items-center justify-center gap-1.5"
                                     >
-                                        <span wire:loading.remove wire:target="approve({{ $kost->id }})" class="inline-flex items-center gap-1">
-                                            <x-icon name="lucide-check" class="w-4 h-4 stroke-[3]" />
-                                            <span>TERIMA & TAYANGKAN</span>
+                                        <span wire:loading.remove wire:target="approve({{ $kost->id }})" class="flex items-center justify-center gap-1.5 w-full px-1">
+                                            <x-icon name="lucide-check" class="w-4 h-4 shrink-0 stroke-[3]" />
+                                            <span class="text-center leading-tight">TERIMA & TAYANGKAN</span>
                                         </span>
                                         <span wire:loading wire:target="approve({{ $kost->id }})">Memproses...</span>
                                     </button>
@@ -806,9 +806,9 @@
                                         wire:loading.attr="disabled"
                                         class="w-full py-3 bg-rose-500 hover:bg-rose-400 active:bg-rose-600 text-white border-3 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl cursor-pointer flex items-center justify-center gap-1.5"
                                     >
-                                        <span wire:loading.remove wire:target="reject({{ $kost->id }})" class="inline-flex items-center gap-1">
-                                            <x-icon name="lucide-x" class="w-4 h-4 stroke-[3]" />
-                                            <span>TOLAK IKLAN</span>
+                                        <span wire:loading.remove wire:target="reject({{ $kost->id }})" class="flex items-center justify-center gap-1.5 w-full px-1">
+                                            <x-icon name="lucide-x" class="w-4 h-4 shrink-0 stroke-[3]" />
+                                            <span class="text-center leading-tight">TOLAK IKLAN</span>
                                         </span>
                                         <span wire:loading wire:target="reject({{ $kost->id }})">Memproses...</span>
                                     </button>

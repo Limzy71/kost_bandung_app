@@ -114,7 +114,7 @@
 
         <!-- Keamanan Transaksi Callout -->
         @unless (auth()->check() && auth()->id() === $kost->user_id)
-            <div class="bg-rose-50 border-3 border-black rounded-2xl p-4 sm:p-5 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] flex items-start gap-3 dark:bg-rose-950/40 dark:border-zinc-700 dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]">
+            <div class="bg-rose-50 border-3 border-black rounded-2xl p-4 sm:p-5 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] flex items-start gap-3 dark:bg-rose-950 dark:border-zinc-700 dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)]">
                 <div class="w-10 h-10 shrink-0 rounded-xl bg-rose-500 border-2 border-black flex items-center justify-center text-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
                     <x-icon name="lucide-shield-alert" class="w-5 h-5 stroke-[2.5]" />
                 </div>
@@ -613,7 +613,7 @@
                                 @endif
                             @else
                                 <div
-                                    class="w-full py-4 bg-rose-100 text-rose-700 border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-xl flex items-center justify-center gap-2 cursor-not-allowed dark:bg-rose-950/40 dark:text-rose-400 dark:border-zinc-700 dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]"
+                                    class="w-full py-4 bg-rose-100 text-rose-700 border-3 border-black font-black text-base uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-xl flex items-center justify-center gap-2 cursor-not-allowed dark:bg-rose-950 dark:text-rose-400 dark:border-zinc-700 dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]"
                                     title="Kost ini sedang penuh">
                                     <x-icon name="lucide-ban" class="w-5 h-5 stroke-[2.5]" />
                                     <span>Kost Sedang Penuh</span>
@@ -991,20 +991,9 @@
             init() {
                 this.initDetailMap();
 
-                // Re-skin the map whenever the site theme (dark/light) changes
+                // Keep map consistent (no dark mode overrides)
                 this.themeObserver = new MutationObserver(() => {
-                    if (this.googleMap) {
-                        this.googleMap.setOptions({
-                            styles: this.isDarkMode() ? (window.KOST_DARK_MAP_STYLES || null) : null
-                        });
-                    } else if (this.map && this.activeLeafletLayer && this.currentLayer === 'street') {
-                        const want = this.isDarkMode() ? this.layers.streetDark : this.layers.street;
-                        if (this.activeLeafletLayer !== want) {
-                            this.map.removeLayer(this.activeLeafletLayer);
-                            this.activeLeafletLayer = want;
-                            want.addTo(this.map);
-                        }
-                    }
+                    // Map theme stays normal regardless of site theme
                 });
                 this.themeObserver.observe(document.documentElement, {
                     attributes: true,
@@ -1086,8 +1075,8 @@
                         attribution: '© <a href="https://opentopomap.org">OpenTopoMap</a>'
                     });
 
-                    // Start with street layer (theme-aware)
-                    const startLayer = this.isDarkMode() ? this.layers.streetDark : this.layers.street;
+                    // Start with street layer
+                    const startLayer = this.layers.street;
                     this.activeLeafletLayer = startLayer;
                     startLayer.addTo(this.map);
                     this.currentLayer = 'street';
@@ -1148,7 +1137,7 @@
                                 mapTypeControl: false,
                                 streetViewControl: false,
                                 fullscreenControl: false,
-                                styles: this.isDarkMode() ? (window.KOST_DARK_MAP_STYLES || null) : null,
+                                styles: null,
                             });
                             this.googleMap = gmap;
                             

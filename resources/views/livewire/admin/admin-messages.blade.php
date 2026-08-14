@@ -61,17 +61,17 @@
                                 <span class="text-[10px] font-black text-zinc-500 dark:text-zinc-400 uppercase shrink-0">{{ $conversation->created_at->diffForHumans() }}</span>
                             </div>
                             <div class="flex flex-wrap items-center gap-2 mt-2">
-                                <span class="px-2 py-0.5 bg-lime-300 border-2 border-black dark:border-zinc-700 text-[9px] font-black text-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">
+                                <span class="px-2 py-0.5 bg-lime-300 border-2 border-black dark:border-zinc-700 text-[9px] font-black text-black dark:text-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">
                                     {{ \App\Models\AdminConversation::categoryLabel($conversation->category) }}
                                 </span>
                                 @if ($conversation->isOpen())
                                     @if ($conversation->awaiting_reply_at)
-                                        <span class="px-2 py-0.5 bg-amber-400 border-2 border-black dark:border-zinc-700 text-[9px] font-black text-black uppercase rounded animate-pulse">Menunggu Balasan</span>
+                                        <span class="px-2 py-0.5 bg-amber-400 border-2 border-black dark:border-zinc-700 text-[9px] font-black text-black dark:text-black uppercase rounded animate-pulse">Menunggu Balasan</span>
                                     @else
-                                        <span class="px-2 py-0.5 bg-emerald-300 border-2 border-black dark:border-zinc-700 text-[9px] font-black text-black uppercase rounded">Menunggu User</span>
+                                        <span class="px-2 py-0.5 bg-emerald-300 border-2 border-black dark:border-zinc-700 text-[9px] font-black text-black dark:text-black uppercase rounded">Menunggu User</span>
                                     @endif
                                 @else
-                                    <span class="px-2 py-0.5 bg-rose-300 border-2 border-black dark:border-zinc-700 text-[9px] font-black text-black uppercase rounded">
+                                    <span class="px-2 py-0.5 bg-rose-300 border-2 border-black dark:border-zinc-700 text-[9px] font-black text-black dark:text-black uppercase rounded">
                                         {{ $conversation->closed_reason === 'expired' ? 'Ditutup Otomatis' : 'Ditutup Admin' }}
                                     </span>
                                 @endif

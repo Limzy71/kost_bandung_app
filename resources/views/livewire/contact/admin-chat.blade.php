@@ -59,13 +59,13 @@
                         >
                             <div class="flex items-center justify-between gap-3">
                                 <div class="flex items-center gap-2 min-w-0">
-                                    <span class="px-2 py-0.5 bg-lime-300 border-2 border-black dark:border-zinc-700 text-[9px] font-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)] shrink-0">
+                                    <span class="px-2 py-0.5 bg-lime-300 border-2 border-black dark:border-zinc-700 text-[9px] font-black text-black dark:text-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)] shrink-0">
                                         {{ \App\Models\AdminConversation::categoryLabel($conversation->category) }}
                                     </span>
                                     @if ($conversation->isOpen())
-                                        <span class="px-2 py-0.5 bg-emerald-300 border-2 border-black dark:border-zinc-700 text-[9px] font-black uppercase rounded shrink-0">Aktif</span>
+                                        <span class="px-2 py-0.5 bg-emerald-300 border-2 border-black dark:border-zinc-700 text-[9px] font-black text-black dark:text-black uppercase rounded shrink-0">Aktif</span>
                                     @else
-                                        <span class="px-2 py-0.5 bg-rose-300 border-2 border-black dark:border-zinc-700 text-[9px] font-black uppercase rounded shrink-0">Ditutup</span>
+                                        <span class="px-2 py-0.5 bg-rose-300 border-2 border-black dark:border-zinc-700 text-[9px] font-black text-black dark:text-black uppercase rounded shrink-0">Ditutup</span>
                                     @endif
                                 </div>
                             <p class="text-sm font-black text-black dark:text-white mt-2 line-clamp-2">
@@ -102,13 +102,13 @@
                         <div class="p-5 border-b-4 border-black dark:border-zinc-700 bg-yellow-300 flex items-center justify-between gap-4">
                             <div class="min-w-0">
                                 <div class="flex flex-wrap items-center gap-2">
-                                    <span class="px-2 py-0.5 bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 text-[9px] font-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">
+                                    <span class="px-2 py-0.5 bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 text-[9px] font-black text-black dark:text-white uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">
                                         {{ \App\Models\AdminConversation::categoryLabel($selected->category) }}
                                     </span>
                                     @if ($selected->isOpen())
-                                        <span class="px-2 py-0.5 bg-emerald-400 border-2 border-black dark:border-zinc-700 text-[9px] font-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">Aktif</span>
+                                        <span class="px-2 py-0.5 bg-emerald-400 border-2 border-black dark:border-zinc-700 text-[9px] font-black text-black dark:text-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">Aktif</span>
                                     @else
-                                        <span class="px-2 py-0.5 bg-rose-400 border-2 border-black dark:border-zinc-700 text-[9px] font-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">
+                                        <span class="px-2 py-0.5 bg-rose-400 border-2 border-black dark:border-zinc-700 text-[9px] font-black text-black dark:text-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">
                                             {{ $selected->closed_reason === 'expired' ? 'Ditutup Otomatis (1x24 jam)' : 'Ditutup Admin' }}
                                         </span>
                                     @endif

@@ -120,7 +120,7 @@
                         </div>
 
                         <!-- Messages -->
-                        <div class="p-5 space-y-4 max-h-[520px] overflow-y-auto bg-[#f8f9fa]">
+                        <div class="p-5 space-y-4 max-h-[520px] overflow-y-auto bg-[#f8f9fa] dark:bg-zinc-950">
                             @forelse ($selected->messages as $message)
                                 @if ($message->sender_type === 'admin')
                                     <div class="flex items-start gap-3">
@@ -129,7 +129,7 @@
                                         </div>
                                         <div class="max-w-[80%]">
                                             <div class="bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 p-3 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
-                                                <p class="text-sm font-bold text-black whitespace-pre-wrap">{{ $message->body }}</p>
+                                                <p class="text-sm font-bold text-black dark:text-white whitespace-pre-wrap">{{ $message->body }}</p>
                                             </div>
                                             <p class="text-[10px] font-black text-zinc-500 dark:text-zinc-400 uppercase mt-1.5 ml-1">
                                                 Admin &middot; {{ $message->created_at->format('d M Y, H:i') }}
@@ -160,9 +160,9 @@
                         <div class="p-5 border-t-4 border-black dark:border-zinc-700 bg-white dark:bg-zinc-900">
                             @if ($selected->isOpen())
                                 <form wire:submit.prevent="sendFollowUp" class="space-y-3">
-                                    <label class="block text-[10px] font-black uppercase text-black mb-1">Balas / Lanjutkan Percakapan</label>
+                                    <label class="block text-[10px] font-black uppercase text-black dark:text-white mb-1">Balas / Lanjutkan Percakapan</label>
                                     <textarea wire:model="followUpBody" rows="3"
-                                        class="w-full bg-zinc-100 dark:bg-zinc-800 border-3 border-black dark:border-zinc-700 rounded-xl px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:bg-white dark:bg-zinc-900 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] transition-all resize-none"
+                                        class="w-full bg-zinc-100 dark:bg-zinc-800 border-3 border-black dark:border-zinc-700 rounded-xl px-4 py-3 text-sm font-bold text-black dark:text-white focus:outline-none focus:ring-0 focus:bg-white dark:focus:bg-zinc-900 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] transition-all resize-none"
                                         placeholder="Tulis pesan lanjutan Anda untuk Admin..."></textarea>
                                     @error('followUpBody')
                                         <p class="text-xs font-black text-rose-600 dark:text-rose-400">{{ $message }}</p>
@@ -178,7 +178,7 @@
                                 </form>
                             @else
                                 <div class="text-center space-y-3 py-2">
-                                    <p class="text-sm font-black text-black">
+                                    <p class="text-sm font-black text-black dark:text-white">
                                         Percakapan ini sudah ditutup.
                                     </p>
                                     <button wire:click="openCompose"
@@ -225,9 +225,9 @@
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-black uppercase text-black mb-1">Kategori</label>
+                    <label class="block text-[10px] font-black uppercase text-black dark:text-white mb-1">Kategori</label>
                     <select wire:model="category"
-                        class="w-full bg-zinc-100 dark:bg-zinc-800 border-3 border-black dark:border-zinc-700 rounded-xl px-4 py-3 text-sm font-black uppercase text-black focus:outline-none focus:ring-0 focus:bg-white dark:bg-zinc-900 transition-all cursor-pointer">
+                        class="w-full bg-zinc-100 dark:bg-zinc-800 border-3 border-black dark:border-zinc-700 rounded-xl px-4 py-3 text-sm font-black uppercase text-black dark:text-white focus:outline-none focus:ring-0 focus:bg-white dark:focus:bg-zinc-900 transition-all cursor-pointer">
                         <option value="" class="font-black uppercase">PILIH KATEGORI...</option>
                         @foreach (\App\Models\AdminConversation::CATEGORIES as $cat)
                             <option value="{{ $cat }}" class="font-black uppercase">{{ mb_strtoupper(\App\Models\AdminConversation::categoryLabel($cat)) }}</option>
@@ -239,9 +239,9 @@
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-black uppercase text-black mb-1">Isi Pesan</label>
+                    <label class="block text-[10px] font-black uppercase text-black dark:text-white mb-1">Isi Pesan</label>
                     <textarea wire:model="newBody" rows="5"
-                        class="w-full bg-zinc-100 dark:bg-zinc-800 border-3 border-black dark:border-zinc-700 rounded-xl px-4 py-3 text-sm font-bold text-black focus:outline-none focus:ring-0 focus:bg-white dark:bg-zinc-900 transition-all resize-none"
+                        class="w-full bg-zinc-100 dark:bg-zinc-800 border-3 border-black dark:border-zinc-700 rounded-xl px-4 py-3 text-sm font-bold text-black dark:text-white focus:outline-none focus:ring-0 focus:bg-white dark:focus:bg-zinc-900 transition-all resize-none"
                         placeholder="Tulis komplain, pertanyaan, atau masukan Anda..."></textarea>
                     @error('newBody')
                         <p class="text-xs font-black text-rose-600 dark:text-rose-400 mt-1">{{ $message }}</p>

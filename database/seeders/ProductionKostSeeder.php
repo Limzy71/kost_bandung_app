@@ -13,8 +13,8 @@ class ProductionKostSeeder extends Seeder
     public function run(): void
     {
         $owner = User::where('email', 'owner@kostbandung.web.id')->first();
-        
-        if (!$owner) {
+
+        if (! $owner) {
             $owner = User::create([
                 'name' => 'Owner Profesional',
                 'email' => 'owner@kostbandung.web.id',
@@ -94,16 +94,16 @@ class ProductionKostSeeder extends Seeder
                 'latitude' => -6.9022,
                 'longitude' => 107.6095, // Near UNISBA / UNPAS
                 'description' => 'Kost eksekutif khusus putri di pusat kota Bandung. Akses sangat mudah ke berbagai kampus (UNISBA, UNPAS Tamansari) dan pusat perbelanjaan (BEC, BIP).',
-            ]
+            ],
         ];
 
         foreach ($kosts as $data) {
             $facilities = $data['facilities'];
             unset($data['facilities']); // Remove it from the insert array
-            
+
             $data['user_id'] = $owner->id;
-            $data['slug'] = Str::slug($data['name']) . '-' . rand(1000, 9999);
-            
+            $data['slug'] = Str::slug($data['name']).'-'.rand(1000, 9999);
+
             $kost = Kost::create($data);
 
             // Attach facilities

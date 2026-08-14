@@ -129,7 +129,7 @@ class AdminChat extends Component
     protected function getListeners(): array
     {
         return [
-            'echo-private:App.Models.User.'.auth()->id().',admin.message.sent' => 'handleIncomingMessage',
+            'echo-private:App.Models.User.'.auth()->id().',.admin.message.sent' => 'handleIncomingMessage',
         ];
     }
 

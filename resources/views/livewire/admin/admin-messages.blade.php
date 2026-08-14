@@ -61,17 +61,17 @@
                                 <span class="text-[10px] font-black text-zinc-500 dark:text-zinc-400 uppercase shrink-0">{{ $conversation->created_at->diffForHumans() }}</span>
                             </div>
                             <div class="flex flex-wrap items-center gap-2 mt-2">
-                                <span class="px-2 py-0.5 bg-lime-300 border-2 border-black dark:border-zinc-700 text-[9px] font-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">
+                                <span class="px-2 py-0.5 bg-lime-300 border-2 border-black dark:border-zinc-700 text-[9px] font-black text-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">
                                     {{ \App\Models\AdminConversation::categoryLabel($conversation->category) }}
                                 </span>
                                 @if ($conversation->isOpen())
                                     @if ($conversation->awaiting_reply_at)
-                                        <span class="px-2 py-0.5 bg-amber-400 border-2 border-black dark:border-zinc-700 text-[9px] font-black uppercase rounded animate-pulse">Menunggu Balasan</span>
+                                        <span class="px-2 py-0.5 bg-amber-400 border-2 border-black dark:border-zinc-700 text-[9px] font-black text-black uppercase rounded animate-pulse">Menunggu Balasan</span>
                                     @else
-                                        <span class="px-2 py-0.5 bg-emerald-300 border-2 border-black dark:border-zinc-700 text-[9px] font-black uppercase rounded">Menunggu User</span>
+                                        <span class="px-2 py-0.5 bg-emerald-300 border-2 border-black dark:border-zinc-700 text-[9px] font-black text-black uppercase rounded">Menunggu User</span>
                                     @endif
                                 @else
-                                    <span class="px-2 py-0.5 bg-rose-300 border-2 border-black dark:border-zinc-700 text-[9px] font-black uppercase rounded">
+                                    <span class="px-2 py-0.5 bg-rose-300 border-2 border-black dark:border-zinc-700 text-[9px] font-black text-black uppercase rounded">
                                         {{ $conversation->closed_reason === 'expired' ? 'Ditutup Otomatis' : 'Ditutup Admin' }}
                                     </span>
                                 @endif
@@ -133,20 +133,20 @@
                                     </div>
                                 </div>
                                 <div class="flex flex-wrap items-center gap-2 mt-3">
-                                    <span class="px-2 py-0.5 bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 text-[9px] font-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">
+                                    <span class="px-2 py-0.5 bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 text-[9px] font-black text-black dark:text-white uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">
                                         {{ \App\Models\AdminConversation::categoryLabel($selected->category) }}
                                     </span>
                                     @if ($selected->isOpen())
                                         @if ($selected->awaiting_reply_at)
-                                            <span class="px-2 py-0.5 bg-amber-400 border-2 border-black dark:border-zinc-700 text-[9px] font-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)] inline-flex items-center gap-1 animate-pulse">
+                                            <span class="px-2 py-0.5 bg-amber-400 border-2 border-black dark:border-zinc-700 text-[9px] font-black text-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)] inline-flex items-center gap-1 animate-pulse">
                                                 <x-icon name="lucide-clock" class="w-3 h-3 stroke-[2.5]" />
                                                 Menunggu Balasan Admin
                                             </span>
                                         @else
-                                            <span class="px-2 py-0.5 bg-emerald-400 border-2 border-black dark:border-zinc-700 text-[9px] font-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">Aktif</span>
+                                            <span class="px-2 py-0.5 bg-emerald-400 border-2 border-black dark:border-zinc-700 text-[9px] font-black text-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">Aktif</span>
                                         @endif
                                     @else
-                                        <span class="px-2 py-0.5 bg-rose-400 border-2 border-black dark:border-zinc-700 text-[9px] font-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">
+                                        <span class="px-2 py-0.5 bg-rose-400 border-2 border-black dark:border-zinc-700 text-[9px] font-black text-black uppercase rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">
                                             {{ $selected->closed_reason === 'expired' ? 'Ditutup Otomatis (1x24 jam)' : 'Ditutup Admin' }}
                                         </span>
                                     @endif

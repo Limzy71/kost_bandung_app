@@ -55,7 +55,7 @@ class AdminMessages extends Component
     protected function getListeners(): array
     {
         return [
-            'echo-private:admin.inbox,admin.message.sent' => 'handleInboxUpdate',
+            'echo-private:admin.inbox,.admin.message.sent' => 'handleInboxUpdate',
         ];
     }
 

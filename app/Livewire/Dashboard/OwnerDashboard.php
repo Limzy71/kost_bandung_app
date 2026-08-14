@@ -89,6 +89,7 @@ class OwnerDashboard extends Component
     protected function getListeners(): array
     {
         return [
+            'echo-private:App.Models.User.'.auth()->id().',.kost.message.sent' => '$refresh',
             'echo-private:App.Models.User.'.auth()->id().',change.request.reviewed' => 'handleChangeReviewed',
         ];
     }

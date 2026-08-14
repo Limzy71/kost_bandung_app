@@ -55,7 +55,7 @@ class SeekerChat extends Component
     protected function getListeners(): array
     {
         return [
-            'echo-private:App.Models.User.'.auth()->id().',kost.message.sent' => 'handleIncomingMessage',
+            'echo-private:App.Models.User.'.auth()->id().',.kost.message.sent' => 'handleIncomingMessage',
         ];
     }
 

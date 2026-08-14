@@ -48,6 +48,8 @@ class AdminMessages extends Component
                 ->where('sender_type', 'user')
                 ->whereNull('read_at')
                 ->update(['read_at' => now()]);
+
+            $this->dispatch('refresh-navbar-badges');
         }
 
         $this->resetPage();

@@ -50,6 +50,8 @@ class SeekerChat extends Component
         } else {
             $this->dispatchBadgeUpdate();
         }
+
+        $this->dispatch('$refresh');
     }
 
     protected function getListeners(): array

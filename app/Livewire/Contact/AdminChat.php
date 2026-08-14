@@ -129,7 +129,11 @@ class AdminChat extends Component
                 ->where('sender_type', 'admin')
                 ->whereNull('read_at')
                 ->update(['read_at' => now()]);
+
+            $this->dispatch('refresh-navbar-badges');
         }
+
+        $this->dispatch('$refresh');
     }
 
     public function handleConversationClosed(array $payload): void
@@ -138,8 +142,11 @@ class AdminChat extends Component
         $conversationId = (int) ($payload['conversation_id'] ?? 0);
 
         if ($this->selectedConversationId === $conversationId) {
-            $this->selectedConversationId = $conversationId;
+            $this->selectedConversationId = null;
+            $this->dispatch('show-toast', message: 'Percakapan telah ditutup oleh Admin.');
         }
+
+        $this->dispatch('$refresh');
     }
 
     protected function getListeners(): array

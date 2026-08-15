@@ -460,7 +460,7 @@
                                         self.map = new google.maps.Map(self.$refs.mapElement, { mapId: 'KOST_FORM_MAP', center: { lat: lat0, lng: lng0 }, zoom: 13, mapTypeControl: false, streetViewControl: false, fullscreenControl: true });
                                         self.marker = new google.maps.marker.AdvancedMarkerElement({ position: { lat: lat0, lng: lng0 }, map: self.map, gmpDraggable: !isEdit, title: 'Lokasi Kost Anda' });
                                         if (!isEdit) {
-                                            self.marker.addListener('dragend', function(e) { self.markerManuallyMoved = true; self.setCoords(e.latLng.lat(), e.latLng.lng(), true); });
+                                            self.marker.addListener('gmp-dragend', function(e) { self.markerManuallyMoved = true; self.setCoords(e.latLng.lat(), e.latLng.lng(), true); });
                                             self.map.addListener('click', function(e) { self.markerManuallyMoved = true; self.marker.position = e.latLng; self.setCoords(e.latLng.lat(), e.latLng.lng(), true); });
                                         }
                                         return true;

@@ -396,12 +396,21 @@ window.catalogMap = function (config) {
                 img.src = iconUrl;
                 img.width = svgWidth;
                 img.height = svgHeight;
+                img.style.position = 'absolute';
+                img.style.left = '-38px';
+                img.style.top = '-32px';
+
+                const content = document.createElement('div');
+                content.style.position = 'relative';
+                content.style.width = '0';
+                content.style.height = '0';
+                content.appendChild(img);
 
                 const marker = new Marker({
                     position: pos,
                     map: this.map,
                     title: item.name,
-                    content: img
+                    content
                 });
 
                 marker.addListener('click', () => {

@@ -457,11 +457,11 @@
                                 var setupGoogle = function() {
                                     if (self.map || !window.google || !window.google.maps) return false;
                                     try {
-                                        self.map = new google.maps.Map(self.$refs.mapElement, { center: { lat: lat0, lng: lng0 }, zoom: 13, mapTypeControl: false, streetViewControl: false, fullscreenControl: true });
-                                        self.marker = new google.maps.Marker({ position: { lat: lat0, lng: lng0 }, map: self.map, draggable: !isEdit, title: 'Lokasi Kost Anda' });
+                                        self.map = new google.maps.Map(self.$refs.mapElement, { mapId: 'KOST_FORM_MAP', center: { lat: lat0, lng: lng0 }, zoom: 13, mapTypeControl: false, streetViewControl: false, fullscreenControl: true });
+                                        self.marker = new google.maps.marker.AdvancedMarkerElement({ position: { lat: lat0, lng: lng0 }, map: self.map, gmpDraggable: !isEdit, title: 'Lokasi Kost Anda' });
                                         if (!isEdit) {
                                             self.marker.addListener('dragend', function(e) { self.markerManuallyMoved = true; self.setCoords(e.latLng.lat(), e.latLng.lng(), true); });
-                                            self.map.addListener('click', function(e) { self.markerManuallyMoved = true; self.marker.setPosition(e.latLng); self.setCoords(e.latLng.lat(), e.latLng.lng(), true); });
+                                            self.map.addListener('click', function(e) { self.markerManuallyMoved = true; self.marker.position = e.latLng; self.setCoords(e.latLng.lat(), e.latLng.lng(), true); });
                                         }
                                         return true;
                                     } catch(e) { console.warn('Google Maps init error:', e); return false; }
@@ -496,7 +496,7 @@
                                     } else if (!document.getElementById('google-maps-script')) {
                                         var gs = document.createElement('script');
                                         gs.id = 'google-maps-script';
-                                        gs.src = 'https://maps.googleapis.com/maps/api/js?key=' + self.hasGoogleKey + '&libraries=places';
+                                        gs.src = 'https://maps.googleapis.com/maps/api/js?key=' + self.hasGoogleKey + '&libraries=places,marker&loading=async';
                                         gs.async = true; gs.defer = true;
                                         gs.onload = function() { if (!setupGoogle()) loadLeaflet(); };
                                         gs.onerror = loadLeaflet;
@@ -548,8 +548,10 @@
                                 if (isNaN(lt) || isNaN(ln) || !this.map || !this.marker) return;
                                 if (typeof L !== 'undefined' && this.marker.setLatLng) {
                                     this.marker.setLatLng([lt, ln]); this.map.setView([lt, ln]);
-                                } else if (window.google && this.marker.setPosition) {
-                                    this.marker.setPosition({ lat: lt, lng: ln }); this.map.panTo({ lat: lt, lng: ln });
+                                } else if (window.google) {
+                                    if (this.marker.setPosition) { this.marker.setPosition({ lat: lt, lng: ln }); }
+                                    else { this.marker.position = { lat: lt, lng: ln }; }
+                                    this.map.panTo({ lat: lt, lng: ln });
                                 }
                             }
                         };

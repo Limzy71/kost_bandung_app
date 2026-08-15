@@ -1033,6 +1033,16 @@
                 };
             },
 
+            getGoogleHouseMarkerContent(layerType) {
+                const bg = layerType === 'satellite' ? '#22D3EE' : '#FACC15';
+                const houseSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="2" y="2" width="32" height="32" rx="8" fill="${bg}" stroke="#000000" stroke-width="2.5"/><g transform="translate(6, 6)"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></g></svg>`;
+                const img = document.createElement('img');
+                img.src = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(houseSvg);
+                img.width = 36;
+                img.height = 36;
+                return img;
+            },
+
             initDetailMap() {
                 const lat = config.lat;
                 const lng = config.lng;
@@ -1132,6 +1142,7 @@
                         window.initGoogleDetailMap = () => {
                             const mapEl = this.$refs.detailMap;
                             const gmap = new google.maps.Map(mapEl, {
+                                mapId: 'KOST_DETAIL_MAP',
                                 center: {
                                     lat,
                                     lng
@@ -1144,20 +1155,20 @@
                             });
                             this.googleMap = gmap;
                             
-                            this.googleMarker = new google.maps.Marker({
+                            this.googleMarker = new google.maps.marker.AdvancedMarkerElement({
                                 position: {
                                     lat,
                                     lng
                                 },
                                 map: gmap,
                                 title: kostTitle,
-                                icon: this.getGoogleHouseIcon('street')
+                                content: this.getGoogleHouseMarkerContent('street')
                             });
                         };
                         const s = document.createElement('script');
                         s.id = 'google-detail-map-script';
                         s.src =
-                            `https://maps.googleapis.com/maps/api/js?key=${hasGoogleKey}&callback=initGoogleDetailMap`;
+                            `https://maps.googleapis.com/maps/api/js?key=${hasGoogleKey}&callback=initGoogleDetailMap&loading=async&libraries=marker`;
                         s.async = true;
                         s.defer = true;
                         s.onerror = () => loadLeafletAndInit();
@@ -1185,7 +1196,7 @@
                         styles: this.isDarkMode() ? (window.KOST_DARK_MAP_STYLES || null) : null
                     });
                     if (this.googleMarker) {
-                        this.googleMarker.setIcon(this.getGoogleHouseIcon(type));
+                        this.googleMarker.content = this.getGoogleHouseMarkerContent(type);
                     }
                 } else if (this.map && this.activeLeafletLayer && this.layers[type]) {
                     this.map.removeLayer(this.activeLeafletLayer);

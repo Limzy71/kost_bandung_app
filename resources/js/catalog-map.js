@@ -299,14 +299,15 @@ window.catalogMap = function (config) {
                 window.dispatchEvent(new Event('map-load-error'));
                 return false;
             }
-            if (!window.google.maps.Marker) {
-                console.warn('Google Maps Marker API unavailable; falling back to Leaflet.');
+            if (!window.google.maps.marker || !window.google.maps.marker.AdvancedMarkerElement) {
+                console.warn('Google Maps AdvancedMarkerElement API unavailable; falling back to Leaflet.');
                 this.loadLeafletAndInit();
                 return false;
             }
             try {
                 if (!this.map) {
                     this.map = new google.maps.Map(this.$refs.catalogMapElement, {
+                        mapId: 'KOST_CATALOG_MAP',
                         center: { lat: -6.917464, lng: 107.619123 },
                         zoom: 13,
                         mapTypeControl: false, // We use custom buttons for this
@@ -361,7 +362,7 @@ window.catalogMap = function (config) {
             const bounds = new google.maps.LatLngBounds();
             let validCount = 0;
 
-            const Marker = window.google.maps.Marker;
+            const Marker = window.google.maps.marker.AdvancedMarkerElement;
             if (!Marker) return;
 
             currentItems.forEach(item => {
@@ -390,15 +391,17 @@ window.catalogMap = function (config) {
                 `.trim().replace(/\s+/g, ' ');
 
                 const iconUrl = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+                
+                const img = document.createElement('img');
+                img.src = iconUrl;
+                img.width = svgWidth;
+                img.height = svgHeight;
 
                 const marker = new Marker({
                     position: pos,
                     map: this.map,
                     title: item.name,
-                    icon: {
-                        url: iconUrl,
-                        anchor: new google.maps.Point(38, 32),
-                    },
+                    content: img
                 });
 
                 marker.addListener('click', () => {

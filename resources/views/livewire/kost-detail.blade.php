@@ -159,6 +159,16 @@
                         <img src="{{ $primarySrc }}"
                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             alt="{{ $kost->name }}">
+                        
+                        @if ($kost->boosted_at)
+                            <div class="absolute top-4 left-4 z-10">
+                                <span
+                                    class="px-3.5 py-1.5 bg-yellow-400 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] tracking-wider flex items-center gap-1.5 dark:border-zinc-700 dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
+                                    <x-icon name="lucide-zap" fill="#FBBF24" stroke="black" stroke-width="2" class="w-4 h-4 shrink-0" />
+                                    <span>Properti Rekomendasi</span>
+                                </span>
+                            </div>
+                        @endif
                         <button type="button" @click.stop="showGalleryModal = true; activeIndex = 0"
                             class="absolute bottom-4 right-4 px-4 py-2 bg-yellow-300 hover:bg-yellow-400 text-black border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg flex items-center gap-2 cursor-pointer z-10 dark:border-zinc-700 dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
                             <x-icon name="lucide-images" class="w-4 h-4 stroke-[2.5]" />
@@ -230,13 +240,6 @@
                                 </x-brutal-badge>
                             @endif
 
-                            @if ($kost->boosted_at)
-                                <span
-                                    class="px-3.5 py-1 bg-yellow-400 text-black border-2 border-black text-xs font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] tracking-wider inline-flex items-center gap-1.5 dark:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
-                                    <x-icon name="lucide-zap" fill="#FBBF24" stroke="black" stroke-width="1.8" class="w-4 h-4 shrink-0" />
-                                    <span>Properti Rekomendasi</span>
-                                </span>
-                            @endif
 
                             @if ($kost->isVerified())
                                 <span

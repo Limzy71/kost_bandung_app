@@ -16,12 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $proxies = array_values(array_filter(array_map(
-            'trim',
-            explode(',', (string) config('app.trusted_proxies'))
-        )));
-
-        $middleware->trustProxies(at: $proxies);
+        $middleware->trustProxies(at: '*');
 
         $middleware->alias([
             'owner' => EnsureOwner::class,

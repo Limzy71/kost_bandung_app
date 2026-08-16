@@ -18,9 +18,10 @@ class EmailAddressChanged extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Alamat Email Akun Anda Telah Diubah')
+            ->subject('Alamat Email Akun Anda Telah Diubah — KostBandung')
             ->greeting('Halo,')
-            ->line('Alamat email untuk akun KostBandung.web.id Anda baru saja diubah.')
-            ->line('Jika Anda tidak melakukan perubahan ini, segera hubungi tim dukungan kami dan amankan akun Anda.');
+            ->line('Alamat email untuk akun **KostBandung** Anda baru saja diubah.')
+            ->line('Jika Anda tidak melakukan perubahan ini, segera hubungi tim dukungan kami dan amankan akun Anda.')
+            ->salutation("Salam hangat,\nTim KostBandung");
     }
 }

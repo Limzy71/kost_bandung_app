@@ -15,5 +15,5 @@ Terima kasih telah mencoba layanan Boost Kost kami.
 Kami berharap fitur ini membantu meningkatkan visibilitas kost Anda.
 
 Salam hangat,<br>
-Tim KostBandung.web.id
+Tim KostBandung
 </x-mail::message>

@@ -14,5 +14,5 @@ Perpanjang Sekarang
 Jika Anda memiliki pertanyaan, jangan ragu untuk menghubungi kami melalui halaman Hubungi Admin di aplikasi kami.
 
 Terima kasih,<br>
-Tim KostBandung.web.id
+Tim KostBandung
 </x-mail::message>

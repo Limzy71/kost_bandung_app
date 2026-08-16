@@ -24,12 +24,13 @@ class VerifyNewEmailAddress extends Notification
         $verificationUrl = $this->verificationUrl($notifiable);
 
         return (new MailMessage)
-            ->subject('Konfirmasi Alamat Email Baru Anda')
+            ->subject('Konfirmasi Alamat Email Baru Anda — KostBandung')
             ->greeting('Halo '.$notifiable->name.',')
-            ->line('Alamat email untuk akun KostBandung.web.id Anda baru saja diubah menjadi '.$notifiable->email.'.')
-            ->line('Silakan klik tombol di bawah untuk mengonfirmasi alamat email baru Anda.')
+            ->line('Alamat email untuk akun **KostBandung** Anda baru saja diubah menjadi **'.$notifiable->email.'**.')
+            ->line('Silakan klik tombol di bawah untuk mengonfirmasi alamat email baru Anda:')
             ->action('Konfirmasi Alamat Email', $verificationUrl)
-            ->line('Jika Anda tidak melakukan perubahan ini, harap segera hubungi kami agar akun Anda diamankan.');
+            ->line('Jika Anda tidak melakukan perubahan ini, harap segera hubungi kami agar akun Anda diamankan.')
+            ->salutation("Salam hangat,\nTim KostBandung");
     }
 
     protected function verificationUrl(User $notifiable): string

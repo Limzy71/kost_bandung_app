@@ -10,5 +10,5 @@ Pengajuan perubahan data utama untuk kost **{{ $kostName }}** **tidak disetujui*
 Anda dapat mengajukan perubahan kembali melalui menu **Edit Properti** di dashboard.
 
 Salam hangat,<br>
-Tim KostBandung.web.id
+Tim KostBandung
 </x-mail::message>

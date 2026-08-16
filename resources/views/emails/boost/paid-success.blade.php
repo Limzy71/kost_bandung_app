@@ -10,7 +10,7 @@ Kabar baik! Pembayaran Boost Kost untuk **{{ $kostName }}** telah kami terima da
 - Tanggal: {{ $paymentDate }}
 
 Boost Kost Anda kini aktif hingga **{{ $expiryDate }}**.
-Selama masa aktif ini, kost Anda akan mendapatkan prioritas tampilan di halaman pencarian KostBandung.web.id.
+Selama masa aktif ini, kost Anda akan mendapatkan prioritas tampilan di halaman pencarian KostBandung.
 
 <x-mail::button :url="route('dashboard')">
 Kelola Kost Saya
@@ -20,5 +20,5 @@ Terima kasih telah menggunakan layanan Boost Kost.
 Kami berharap kost Anda semakin mudah ditemukan pencari kost.
 
 Salam hangat,<br>
-Tim KostBandung.web.id
+Tim KostBandung
 </x-mail::message>

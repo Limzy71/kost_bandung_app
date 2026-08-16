@@ -84,7 +84,7 @@
             </span>
         </div>
 
-        <form wire:submit="login" class="space-y-5 pt-2">
+        <form wire:submit="login" class="space-y-5">
             {{-- Email --}}
             <div>
                 <label for="email" class="block text-xs font-black uppercase tracking-wider text-black mb-2 dark:text-white">

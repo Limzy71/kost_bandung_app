@@ -126,10 +126,27 @@
                         <!-- Messages -->
                         <div class="p-5 space-y-4 max-h-[520px] overflow-y-auto bg-[#f8f9fa] dark:bg-zinc-950"
                             data-selected="{{ $selected->id }}"
-                            x-data="{ current: {{ $selected->id }} }"
-                            x-ref="thread"
                             wire:poll.visible="markSelectedRead"
-                            x-on:livewire:update.window="() => { const t = $refs.thread; const nearBottom = t.scrollHeight - t.scrollTop - t.clientHeight < 120; if (nearBottom || t.dataset.selected !== String(current)) { current = Number(t.dataset.selected); $nextTick(() => t.scrollTop = t.scrollHeight); } }">
+                            x-data="{
+                                observer: null,
+                                init() {
+                                    const t = this.$el;
+                                    if (!t) return;
+                                    t._lastSelected = t.dataset.selected;
+                                    this.observer = new MutationObserver(() => {
+                                        requestAnimationFrame(() => {
+                                            const switched = t.dataset.selected !== t._lastSelected;
+                                            const nearBottom = t.scrollHeight - t.scrollTop - t.clientHeight < 120;
+                                            t._lastSelected = t.dataset.selected;
+                                            if (nearBottom || switched) t.scrollTop = t.scrollHeight;
+                                        });
+                                    });
+                                    this.observer.observe(t, { childList: true, subtree: true, characterData: true });
+                                },
+                                destroy() {
+                                    if (this.observer) this.observer.disconnect();
+                                }
+                            }">
                             @forelse ($selected->messages as $message)
                                 @if ($message->sender_id !== Auth::id())
                                     <div class="flex items-start gap-3">

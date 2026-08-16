@@ -84,7 +84,7 @@
             </span>
         </div>
 
-        <form wire:submit="register" class="space-y-6 pt-2">
+        <form wire:submit="register" class="space-y-6">
 
             {{-- ===== Role Selector Tabs ===== --}}
             <div>

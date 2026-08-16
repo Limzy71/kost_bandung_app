@@ -129,9 +129,9 @@
                                         <div class="w-9 h-9 shrink-0 bg-lime-400 border-2 border-black dark:border-zinc-700 rounded-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
                                             <x-icon name="lucide-shield" class="w-4 h-4 text-black stroke-[2.5]" />
                                         </div>
-                                        <div class="max-w-[80%]">
-                                            <div class="bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 p-3 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
-                                                <p class="text-sm font-bold text-black dark:text-white whitespace-pre-wrap">{{ $message->body }}</p>
+                                        <div class="max-w-[80%] flex flex-col items-start">
+                                            <div class="inline-block bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 p-3 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
+                                                <p class="text-sm font-bold text-black dark:text-white whitespace-pre-wrap break-words">{{ $message->body }}</p>
                                             </div>
                                             <p class="text-[10px] font-black text-zinc-500 dark:text-zinc-400 uppercase mt-1.5 ml-1">
                                                 Admin &middot; {{ $message->created_at->format('d M Y, H:i') }}
@@ -140,11 +140,11 @@
                                     </div>
                                 @else
                                     <div class="flex items-start justify-end gap-3">
-                                        <div class="max-w-[80%] text-right">
-                                            <div class="bg-emerald-300 border-2 border-black dark:border-zinc-700 p-3 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
-                                                <p class="text-sm font-bold text-black whitespace-pre-wrap">{{ $message->body }}</p>
+                                        <div class="max-w-[80%] flex flex-col items-end">
+                                            <div class="inline-block text-left bg-emerald-300 border-2 border-black dark:border-zinc-700 p-3 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
+                                                <p class="text-sm font-bold text-black whitespace-pre-wrap break-words">{{ $message->body }}</p>
                                             </div>
-                                            <p class="text-[10px] font-black text-zinc-500 dark:text-zinc-400 uppercase mt-1.5 mr-1">
+                                            <p class="text-[10px] font-black text-zinc-500 dark:text-zinc-400 uppercase mt-1.5 mr-1 text-right">
                                                 Anda &middot; {{ $message->created_at->format('d M Y, H:i') }}
                                             </p>
                                         </div>

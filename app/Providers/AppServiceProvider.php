@@ -9,6 +9,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -29,6 +30,26 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
         $this->configureAuthEmails();
+        $this->configureVitePreloads();
+    }
+
+    /**
+     * Disable CSS preload tags emitted by Laravel 13's Vite integration.
+     *
+     * When navigating via Livewire's SPA mode (wire:navigate), the new page's
+     * <head> is merged into the current document, re-injecting the CSS preload
+     * even though the stylesheet is already loaded. The browser then warns that
+     * the preloaded resource was never used. JS modulepreload stays enabled.
+     */
+    protected function configureVitePreloads(): void
+    {
+        Vite::usePreloadTagAttributes(function ($src, $url, $chunk, $manifest) {
+            if (str_ends_with($url, '.css')) {
+                return false;
+            }
+
+            return [];
+        });
     }
 
     /**

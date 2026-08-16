@@ -457,6 +457,40 @@ it('keeps the account and files when the wrong password is given', function () {
     Storage::disk('local')->assertExists('avatars/owner.jpg');
 });
 
+it('allows an oauth user without password to delete their account by typing HAPUS', function () {
+    $oauthUser = User::factory()->create([
+        'role' => 'user',
+        'email_verified_at' => now(),
+        'password' => null,
+        'google_id' => 'google-test-12345',
+    ]);
+
+    Livewire::actingAs($oauthUser)
+        ->test(Index::class)
+        ->set('deleteConfirmation', 'HAPUS')
+        ->call('deleteAccount')
+        ->assertHasNoErrors();
+
+    expect($oauthUser->fresh())->toBeNull();
+});
+
+it('prevents an oauth user from deleting their account with wrong confirmation word', function () {
+    $oauthUser = User::factory()->create([
+        'role' => 'user',
+        'email_verified_at' => now(),
+        'password' => null,
+        'google_id' => 'google-test-12345',
+    ]);
+
+    Livewire::actingAs($oauthUser)
+        ->test(Index::class)
+        ->set('deleteConfirmation', 'SALAH')
+        ->call('deleteAccount')
+        ->assertHasErrors(['deleteConfirmation']);
+
+    expect($oauthUser->fresh())->not->toBeNull();
+});
+
 it('does not let an admin delete their account from the profile page', function () {
     $admin = User::factory()->create(['role' => 'admin', 'email_verified_at' => now()]);
 

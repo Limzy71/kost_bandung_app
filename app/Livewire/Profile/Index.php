@@ -42,6 +42,8 @@ class Index extends Component
 
     public string $deletePassword = '';
 
+    public string $deleteConfirmation = '';
+
     public bool $deleteAccountModalOpen = false;
 
     /**
@@ -228,12 +230,21 @@ class Index extends Component
             return;
         }
 
-        $this->validate([
-            'deletePassword' => $this->currentPasswordRules(),
-        ], [
-            'deletePassword.required' => 'Password wajib diisi untuk menghapus akun.',
-            'deletePassword.current_password' => 'Password yang Anda masukkan salah.',
-        ]);
+        if ($user->password) {
+            $this->validate([
+                'deletePassword' => $this->currentPasswordRules(),
+            ], [
+                'deletePassword.required' => 'Password wajib diisi untuk menghapus akun.',
+                'deletePassword.current_password' => 'Password yang Anda masukkan salah.',
+            ]);
+        } else {
+            $this->validate([
+                'deleteConfirmation' => ['required', 'string', 'in:HAPUS,hapus'],
+            ], [
+                'deleteConfirmation.required' => 'Ketik kata HAPUS untuk mengonfirmasi.',
+                'deleteConfirmation.in' => 'Ketik kata HAPUS dengan benar untuk mengonfirmasi.',
+            ]);
+        }
 
         $user->purgeAllDataFiles();
 

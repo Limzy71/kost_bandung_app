@@ -279,19 +279,29 @@
                 <div class="mt-4">
                     <h3 class="text-xl font-black text-black dark:text-white uppercase tracking-tight">Hapus Akun Permanen?</h3>
                     <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400 mt-2 leading-relaxed">
-                        Seluruh data akun Anda termasuk {{ $deleteData }} akan dihapus permanen dan tidak dapat dikembalikan. Masukkan password Anda untuk mengonfirmasi.
+                        Seluruh data akun Anda termasuk {{ $deleteData }} akan dihapus permanen dan tidak dapat dikembalikan. {{ $user->password ? 'Masukkan password Anda untuk mengonfirmasi.' : 'Ketik kata HAPUS untuk mengonfirmasi.' }}
                     </p>
                 </div>
 
                 <form wire:submit.prevent="deleteAccount">
                     <input type="email" name="username" value="{{ $user->email }}" autocomplete="username" class="hidden" aria-hidden="true" readonly tabindex="-1">
-                    <div class="mt-4">
-                        <label for="deletePassword" class="block text-xs font-black uppercase text-black dark:text-white mb-1.5">Password</label>
-                        <input type="password" id="deletePassword" wire:model="deletePassword" autocomplete="current-password"
-                            class="w-full px-4 py-3 text-sm bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-lg text-black dark:text-white font-bold placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all"
-                            placeholder="Masukkan password Anda">
-                        @error('deletePassword') <p class="text-xs font-black text-rose-500 mt-1 uppercase">{{ $message }}</p> @enderror
-                    </div>
+                    @if ($user->password)
+                        <div class="mt-4">
+                            <label for="deletePassword" class="block text-xs font-black uppercase text-black dark:text-white mb-1.5">Password</label>
+                            <input type="password" id="deletePassword" wire:model="deletePassword" autocomplete="current-password"
+                                class="w-full px-4 py-3 text-sm bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-lg text-black dark:text-white font-bold placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all"
+                                placeholder="Masukkan password Anda">
+                            @error('deletePassword') <p class="text-xs font-black text-rose-500 mt-1 uppercase">{{ $message }}</p> @enderror
+                        </div>
+                    @else
+                        <div class="mt-4">
+                            <label for="deleteConfirmation" class="block text-xs font-black uppercase text-black dark:text-white mb-1.5">Ketik "HAPUS" untuk Konfirmasi</label>
+                            <input type="text" id="deleteConfirmation" wire:model="deleteConfirmation"
+                                class="w-full px-4 py-3 text-sm bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-lg text-black dark:text-white font-bold placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all uppercase"
+                                placeholder="HAPUS">
+                            @error('deleteConfirmation') <p class="text-xs font-black text-rose-500 mt-1 uppercase">{{ $message }}</p> @enderror
+                        </div>
+                    @endif
 
                     <div class="flex items-center gap-2 mt-6">
                         <button type="button" @click="deleteAccountModalOpen = false"

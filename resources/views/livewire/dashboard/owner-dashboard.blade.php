@@ -758,14 +758,27 @@
         ? 'https://app.midtrans.com/snap/snap.js'
         : 'https://app.sandbox.midtrans.com/snap/snap.js';
 @endphp
-<script src="{{ $snapUrl }}" data-client-key="{{ config('midtrans.client_key') }}"></script>
 <script>
     // Initialize FingerprintJS
     const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4')
         .then(FingerprintJS => FingerprintJS.load());
 
+    function ensureSnapLoaded() {
+        return new Promise((resolve, reject) => {
+            if (window.snap) return resolve(window.snap);
+            const script = document.createElement('script');
+            script.src = '{{ $snapUrl }}';
+            script.setAttribute('data-client-key', '{{ config("midtrans.client_key") }}');
+            script.onload = () => resolve(window.snap);
+            script.onerror = () => reject(new Error('Gagal memuat sistem pembayaran Midtrans.'));
+            document.body.appendChild(script);
+        });
+    }
+
     window.payBoost = async function(slug) {
         try {
+            await ensureSnapLoaded();
+
             const response = await fetch(`/dashboard/kost/${slug}/boost/payment`, {
                 method: 'POST',
                 headers: {
@@ -776,7 +789,7 @@
             const data = await response.json();
             
             if (response.ok && data.snap_token) {
-                snap.pay(data.snap_token, {
+                window.snap.pay(data.snap_token, {
                     onSuccess: function(result) {
                         window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: 'Pembayaran berhasil! Halaman akan dimuat ulang.' } }));
                         setTimeout(() => window.location.reload(), 1200);
@@ -795,7 +808,7 @@
                 window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: data.message || 'Gagal membuat transaksi.', type: 'error' } }));
             }
         } catch (error) {
-            window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: 'Terjadi kesalahan saat memproses pembayaran.', type: 'error' } }));
+            window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: error.message || 'Terjadi kesalahan saat memproses pembayaran.', type: 'error' } }));
         }
     };
 </script>

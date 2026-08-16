@@ -725,7 +725,7 @@ class CreateKost extends Component
             'districts' => $districts,
             'googleMapsApiKey' => config('services.google.maps_api_key'),
         ])->layout('layouts.app', [
-            'title' => 'Tambah Kost Baru — KostBandung.web.id',
+            'title' => 'Tambah Kost Baru — KostBandung',
         ]);
     }
 }

@@ -296,7 +296,7 @@ class ModerationDashboard extends Component
             return view('livewire.admin.moderation-dashboard', $base + [
                 'changeRequests' => $changeRequests,
             ])->layout('layouts.app', [
-                'title' => 'Moderation Dashboard — Admin KostBandung.web.id',
+                'title' => 'Moderation Dashboard — Admin KostBandung',
             ]);
         }
 
@@ -309,7 +309,7 @@ class ModerationDashboard extends Component
             return view('livewire.admin.moderation-dashboard', $base + [
                 'facilities' => $facilities,
             ])->layout('layouts.app', [
-                'title' => 'Moderation Dashboard — Admin KostBandung.web.id',
+                'title' => 'Moderation Dashboard — Admin KostBandung',
             ]);
         }
 
@@ -327,7 +327,7 @@ class ModerationDashboard extends Component
                 'pendingIdentities' => $pendingIdentities,
                 'pendingOwnerships' => $pendingOwnerships,
             ])->layout('layouts.app', [
-                'title' => 'Moderation Dashboard — Admin KostBandung.web.id',
+                'title' => 'Moderation Dashboard — Admin KostBandung',
             ]);
         }
 
@@ -353,7 +353,7 @@ class ModerationDashboard extends Component
         return view('livewire.admin.moderation-dashboard', $base + [
             'kosts' => $query->paginate(9),
         ])->layout('layouts.app', [
-            'title' => 'Moderation Dashboard — Admin KostBandung.web.id',
+            'title' => 'Moderation Dashboard — Admin KostBandung',
         ]);
     }
 }

@@ -31,7 +31,7 @@
                     Profil Saya
                 </h1>
                 <p class="text-zinc-700 dark:text-white text-sm md:text-base font-bold">
-                    Kelola identitas akun Anda di <span class="bg-yellow-200 dark:bg-yellow-400 border-b-2 border-black dark:border-white px-1 text-black font-extrabold">KostBandung.web.id</span>.
+                    Kelola identitas akun Anda di <span class="bg-yellow-200 dark:bg-yellow-400 border-b-2 border-black dark:border-white px-1 text-black font-extrabold">KostBandung</span>.
                 </p>
             </div>
 
@@ -229,7 +229,7 @@
                     </div>
                     <div>
                         <h2 class="text-xl font-black text-black dark:text-white uppercase tracking-tight">Hapus Akun</h2>
-                        <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400">Berhenti menggunakan KostBandung.web.id dan hapus seluruh data Anda.</p>
+                        <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400">Berhenti menggunakan KostBandung dan hapus seluruh data Anda.</p>
                     </div>
                 </div>
 

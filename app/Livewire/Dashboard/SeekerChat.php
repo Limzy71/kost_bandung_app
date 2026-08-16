@@ -196,6 +196,6 @@ class SeekerChat extends Component
             'conversations' => $conversations,
             'unreadCounts' => $unreadCounts,
             'selected' => $selected,
-        ])->layout('layouts.app', ['title' => 'Obrolan Kost — KostBandung.web.id']);
+        ])->layout('layouts.app', ['title' => 'Obrolan Kost — KostBandung']);
     }
 }

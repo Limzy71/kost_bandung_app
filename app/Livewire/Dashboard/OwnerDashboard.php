@@ -214,7 +214,7 @@ class OwnerDashboard extends Component
             'hasTrial' => BoostTrial::where('user_id', $user->id)->exists(),
             'changeNotifications' => $changeNotifications,
         ])->layout('layouts.app', [
-            'title' => 'Dashboard Pemilik Kost — KostBandung.web.id',
+            'title' => 'Dashboard Pemilik Kost — KostBandung',
         ]);
     }
 

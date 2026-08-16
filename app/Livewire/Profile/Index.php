@@ -21,7 +21,7 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-#[Title('Profil Saya — KostBandung.web.id')]
+#[Title('Profil Saya — KostBandung')]
 class Index extends Component
 {
     use PasswordValidationRules, ProfileValidationRules, WithFileUploads;
@@ -256,7 +256,7 @@ class Index extends Component
             'user' => $user,
             'stats' => $this->statsFor($user),
         ])->layout('layouts.app', [
-            'title' => 'Profil Saya — KostBandung.web.id',
+            'title' => 'Profil Saya — KostBandung',
         ]);
     }
 

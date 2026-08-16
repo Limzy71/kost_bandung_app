@@ -976,7 +976,7 @@ class EditKost extends Component
             'isPublished' => $this->kost->status === 'published',
             'hasPendingChangeRequest' => $this->hasPendingChangeRequest,
         ])->layout('layouts.app', [
-            'title' => 'Edit Kost — KostBandung.web.id',
+            'title' => 'Edit Kost — KostBandung',
         ]);
     }
 

@@ -12,7 +12,7 @@
                     Atur Ulang Sandi
                 </h1>
                 <p class="mt-2 text-sm font-bold text-zinc-600 dark:text-zinc-400">
-                    Silakan masukkan alamat email Anda beserta kata sandi baru untuk mengamankan kembali akun KostBandung.web.id Anda.
+                    Silakan masukkan alamat email Anda beserta kata sandi baru untuk mengamankan kembali akun KostBandung Anda.
                 </p>
             </div>
 

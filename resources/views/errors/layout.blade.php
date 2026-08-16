@@ -24,7 +24,7 @@
             {{-- Brand --}}
             <a href="{{ url('/') }}" class="flex items-center gap-2.5 group">
                 <span class="text-xl font-black text-black uppercase tracking-tight flex items-center leading-none dark:text-white">
-                    KostBandung<span class="bg-[#FFE500] border-2 border-black px-1.5 py-0.5 rounded text-xs shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ml-1 font-black text-black dark:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">.web.id</span>
+                    KostBandung
                 </span>
             </a>
 

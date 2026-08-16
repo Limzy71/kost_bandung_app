@@ -208,6 +208,6 @@ class AdminMessages extends Component
             'conversations' => $conversations,
             'selected' => $selected,
             'counts' => $counts,
-        ])->layout('layouts.app', ['title' => 'Inbox Bantuan Admin — KostBandung.web.id']);
+        ])->layout('layouts.app', ['title' => 'Inbox Bantuan Admin — KostBandung']);
     }
 }

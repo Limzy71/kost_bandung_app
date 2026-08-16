@@ -75,9 +75,9 @@
     @endauth
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
         {{-- Logo --}}
-        <a href="{{ route('home') }}" wire:navigate class="flex items-center gap-2 shrink-0" aria-label="KostBandung.web.id - Beranda">
+        <a href="{{ route('home') }}" wire:navigate class="flex items-center gap-2 shrink-0" aria-label="KostBandung - Beranda">
             <span class="text-lg sm:text-xl font-black text-black uppercase tracking-tight flex items-center leading-none dark:text-white">
-                KostBandung<span class="bg-yellow-300 border-2 border-black px-1.5 py-0.5 rounded text-xs sm:text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ml-1 font-black text-black dark:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">.web.id</span>
+                KostBandung
             </span>
         </a>
 

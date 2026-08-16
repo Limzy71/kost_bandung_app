@@ -31,7 +31,7 @@
                 <div class="space-y-3">
                     <a href="{{ route('home') }}" class="inline-flex items-center gap-1.5">
                         <span class="text-2xl font-black text-black dark:text-white uppercase tracking-tight flex items-center">
-                            KostBandung<span class="bg-yellow-300 border-2 border-black dark:border-zinc-700 px-2 py-0.5 rounded text-base shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] ml-1 font-black text-black">.web.id</span>
+                            KostBandung
                         </span>
                     </a>
                     <p class="text-xs font-bold text-zinc-700 dark:text-zinc-300 max-w-md leading-relaxed">
@@ -177,7 +177,7 @@
 
             <!-- Bottom Copyright Line -->
             <div class="pt-6 text-center sm:text-left text-xs font-black text-black dark:text-white uppercase tracking-wider">
-                <p>&copy; {{ date('Y') }} KostBandung.web.id. Hak Cipta Dilindungi.</p>
+                <p>&copy; {{ date('Y') }} KostBandung. Hak Cipta Dilindungi.</p>
             </div>
         </div>
     </footer>

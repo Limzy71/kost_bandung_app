@@ -245,6 +245,6 @@ class AdminChat extends Component
         return view('livewire.contact.admin-chat', [
             'conversations' => $conversations,
             'selected' => $selected,
-        ])->layout('layouts.app', ['title' => 'Hubungi Admin — KostBandung.web.id']);
+        ])->layout('layouts.app', ['title' => 'Hubungi Admin — KostBandung']);
     }
 }

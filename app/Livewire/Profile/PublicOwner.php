@@ -7,7 +7,7 @@ use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('Profil Pemilik Kost — KostBandung.web.id')]
+#[Title('Profil Pemilik Kost — KostBandung')]
 class PublicOwner extends Component
 {
     public User $user;
@@ -49,7 +49,7 @@ class PublicOwner extends Component
                 ->where('is_available', true)
                 ->count(),
         ])->layout('layouts.app', [
-            'title' => 'Profil Pemilik Kost — KostBandung.web.id',
+            'title' => 'Profil Pemilik Kost — KostBandung',
         ]);
     }
 }

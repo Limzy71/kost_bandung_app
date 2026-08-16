@@ -19,6 +19,7 @@
         </div>
 
         <form wire:submit="updatePassword" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <input type="email" name="username" value="{{ auth()->user()->email }}" autocomplete="username" class="hidden" aria-hidden="true" readonly tabindex="-1">
             <div>
                 <label for="current_password" class="block text-xs font-black uppercase text-black dark:text-white mb-1.5">Kata Sandi Saat Ini</label>
                 <input type="password" id="current_password" wire:model="current_password" autocomplete="current-password"

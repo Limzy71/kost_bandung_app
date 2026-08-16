@@ -283,24 +283,27 @@
                     </p>
                 </div>
 
-                <div class="mt-4">
-                    <label for="deletePassword" class="block text-xs font-black uppercase text-black dark:text-white mb-1.5">Password</label>
-                    <input type="password" id="deletePassword" wire:model="deletePassword" autocomplete="current-password"
-                        class="w-full px-4 py-3 text-sm bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-lg text-black dark:text-white font-bold placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all"
-                        placeholder="Masukkan password Anda">
-                    @error('deletePassword') <p class="text-xs font-black text-rose-500 mt-1 uppercase">{{ $message }}</p> @enderror
-                </div>
+                <form wire:submit.prevent="deleteAccount">
+                    <input type="email" name="username" value="{{ $user->email }}" autocomplete="username" class="hidden" aria-hidden="true" readonly tabindex="-1">
+                    <div class="mt-4">
+                        <label for="deletePassword" class="block text-xs font-black uppercase text-black dark:text-white mb-1.5">Password</label>
+                        <input type="password" id="deletePassword" wire:model="deletePassword" autocomplete="current-password"
+                            class="w-full px-4 py-3 text-sm bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-lg text-black dark:text-white font-bold placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all"
+                            placeholder="Masukkan password Anda">
+                        @error('deletePassword') <p class="text-xs font-black text-rose-500 mt-1 uppercase">{{ $message }}</p> @enderror
+                    </div>
 
-                <div class="flex items-center gap-2 mt-6">
-                    <button type="button" @click="deleteAccountModalOpen = false"
-                        class="flex-1 h-10 px-3 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 text-black dark:text-white border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer">
-                        Batal
-                    </button>
-                    <button type="button" wire:click="deleteAccount"
-                        class="flex-1 h-10 px-3 bg-rose-500 hover:bg-rose-400 text-white border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer">
-                        Ya, Hapus Akun
-                    </button>
-                </div>
+                    <div class="flex items-center gap-2 mt-6">
+                        <button type="button" @click="deleteAccountModalOpen = false"
+                            class="flex-1 h-10 px-3 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 text-black dark:text-white border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer">
+                            Batal
+                        </button>
+                        <button type="submit"
+                            class="flex-1 h-10 px-3 bg-rose-500 hover:bg-rose-400 text-white border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer">
+                            Ya, Hapus Akun
+                        </button>
+                    </div>
+                </form>
             </div>
             </template>
         </div>

@@ -27,6 +27,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property Carbon|null $email_verified_at
  * @property string $password
  * @property string|null $two_factor_secret
+ * @property string|null $google_id
  * @property string|null $two_factor_recovery_codes
  * @property Carbon|null $two_factor_confirmed_at
  * @property string|null $remember_token
@@ -38,7 +39,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property Carbon|null $updated_at
  * @property-read string|null $avatar_url
  */
-#[Fillable(['name', 'email', 'avatar', 'phone_number', 'business_name', 'password', 'role', 'identity_doc_path', 'identity_verification_status', 'identity_verified_at', 'identity_rejection_note'])]
+#[Fillable(['name', 'email', 'email_verified_at', 'google_id', 'avatar', 'phone_number', 'business_name', 'password', 'role', 'identity_doc_path', 'identity_verification_status', 'identity_verified_at', 'identity_rejection_note'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
@@ -88,7 +89,17 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     protected function avatarUrl(): Attribute
     {
         return Attribute::make(
-            get: fn (): ?string => $this->avatar ? Storage::disk(config('filesystems.default'))->url($this->avatar) : null,
+            get: function (): ?string {
+                if (! $this->avatar) {
+                    return null;
+                }
+
+                if (str_starts_with($this->avatar, 'http://') || str_starts_with($this->avatar, 'https://')) {
+                    return $this->avatar;
+                }
+
+                return Storage::disk(config('filesystems.default'))->url($this->avatar);
+            },
         );
     }
 
@@ -97,7 +108,7 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
      */
     public function deleteAvatarFile(): void
     {
-        if ($this->avatar) {
+        if ($this->avatar && ! str_starts_with($this->avatar, 'http://') && ! str_starts_with($this->avatar, 'https://')) {
             Storage::disk(config('filesystems.default'))->delete($this->avatar);
         }
     }

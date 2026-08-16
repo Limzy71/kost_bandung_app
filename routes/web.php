@@ -25,9 +25,13 @@ Route::get('/syarat-ketentuan', function () {
 })->name('terms');
 Route::get('/owner/{user}', PublicOwnerProfile::class)->name('profile.owner');
 
+use App\Http\Controllers\Auth\GoogleAuthController;
+
 Route::middleware('guest')->group(function () {
     Route::get('/login', Login::class)->name('login');
     Route::get('/register', Register::class)->name('register');
+    Route::get('/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
+    Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
 });
 
 use App\Http\Controllers\BoostController;

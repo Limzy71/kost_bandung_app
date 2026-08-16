@@ -644,7 +644,7 @@
                 async confirmClaim() {
                     this.loading = true;
                     try {
-                        const fp = await fpPromise;
+                        const fp = await (window.fpPromise || window.initFingerprint());
                         const result = await fp.get();
                         const visitorId = result.visitorId;
 
@@ -758,12 +758,17 @@
         ? 'https://app.midtrans.com/snap/snap.js'
         : 'https://app.sandbox.midtrans.com/snap/snap.js';
 @endphp
-<script>
-    // Initialize FingerprintJS
-    const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4')
-        .then(FingerprintJS => FingerprintJS.load());
+<script data-navigate-once>
+    window.initFingerprint = function() {
+        if (!window.fpPromise) {
+            window.fpPromise = import('https://openfpcdn.io/fingerprintjs/v4')
+                .then(FingerprintJS => FingerprintJS.load());
+        }
+        return window.fpPromise;
+    };
+    window.initFingerprint();
 
-    function ensureSnapLoaded() {
+    window.ensureSnapLoaded = function() {
         return new Promise((resolve, reject) => {
             if (window.snap) return resolve(window.snap);
             const script = document.createElement('script');
@@ -773,11 +778,11 @@
             script.onerror = () => reject(new Error('Gagal memuat sistem pembayaran Midtrans.'));
             document.body.appendChild(script);
         });
-    }
+    };
 
     window.payBoost = async function(slug) {
         try {
-            await ensureSnapLoaded();
+            await window.ensureSnapLoaded();
 
             const response = await fetch(`/dashboard/kost/${slug}/boost/payment`, {
                 method: 'POST',

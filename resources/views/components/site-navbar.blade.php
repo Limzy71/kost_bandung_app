@@ -107,7 +107,7 @@
                     class="inline-flex items-center gap-1.5 text-xs font-black uppercase border-2 border-black px-3.5 py-2 rounded transition-all cursor-pointer dark:border-zinc-700 {{ request()->routeIs('profile.show') ? 'bg-yellow-300 text-black border-3 shadow-none translate-x-0.5 translate-y-0.5' : 'bg-white hover:bg-zinc-100 text-black dark:text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]' }}"
                     title="Profil Saya" aria-label="Profil Saya">
                     @if ($user->avatar_url)
-                        <img src="{{ $user->avatar_url }}" alt="" class="w-5 h-5 rounded-md object-cover border border-black shrink-0 dark:border-zinc-700" />
+                        <img src="{{ $user->avatar_url }}" alt="" class="w-5 h-5 rounded-md object-cover border border-black shrink-0 dark:border-zinc-700" referrerpolicy="no-referrer" onerror="this.remove()" />
                     @else
                         <x-icon name="lucide-user" class="w-4 h-4 stroke-[2.5]" />
                     @endif
@@ -176,7 +176,7 @@
                 <a href="{{ route('profile.show') }}" wire:navigate @click="open = false"
                     class="flex items-center gap-3 px-3.5 py-3 text-sm font-black uppercase border-2 border-black rounded transition-colors cursor-pointer dark:border-zinc-700 {{ request()->routeIs('profile.show') ? 'bg-yellow-300 text-black' : 'bg-white hover:bg-zinc-100 text-black dark:text-white dark:bg-zinc-900 dark:hover:bg-zinc-800' }}">
                     @if ($user->avatar_url)
-                        <img src="{{ $user->avatar_url }}" alt="" class="w-5 h-5 rounded-md object-cover border border-black shrink-0 dark:border-zinc-700" />
+                        <img src="{{ $user->avatar_url }}" alt="" class="w-5 h-5 rounded-md object-cover border border-black shrink-0 dark:border-zinc-700" referrerpolicy="no-referrer" onerror="this.remove()" />
                     @else
                         <x-icon name="lucide-user" class="w-5 h-5 shrink-0 stroke-[2.5]" />
                     @endif

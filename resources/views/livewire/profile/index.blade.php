@@ -73,12 +73,11 @@
         <div class="bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 p-6 md:p-8 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] overflow-hidden">
             <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                 <div class="flex flex-col items-center shrink-0">
-                    <div class="w-24 h-24 md:w-28 md:h-28 rounded-2xl bg-yellow-300 border-4 border-black dark:border-zinc-700 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] flex items-center justify-center overflow-hidden">
+                    <div class="w-24 h-24 md:w-28 md:h-28 rounded-2xl bg-yellow-300 border-4 border-black dark:border-zinc-700 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] flex items-center justify-center overflow-hidden relative">
                         @if ($user->avatar_url)
-                            <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="w-full h-full object-cover" />
-                        @else
-                            <span class="text-3xl md:text-4xl font-black text-black uppercase">{{ $user->initials() }}</span>
+                            <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="w-full h-full object-cover" referrerpolicy="no-referrer" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');" />
                         @endif
+                        <span class="text-3xl md:text-4xl font-black text-black uppercase select-none {{ $user->avatar_url ? 'hidden' : '' }}">{{ $user->initials() }}</span>
                     </div>
 
                     <div class="flex items-center justify-center gap-1.5 mt-2.5">

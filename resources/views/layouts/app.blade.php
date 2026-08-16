@@ -138,7 +138,7 @@
                                 <li>
                                     <a href="{{ route('profile.show') }}" class="text-black dark:text-white hover:text-yellow-600 dark:hover:text-yellow-400 hover:underline decoration-3 underline-offset-4 transition-all inline-flex items-center gap-2 group">
                                         @if(auth()->user()->avatar_url)
-                                            <img src="{{ auth()->user()->avatar_url }}" alt="" class="w-5 h-5 rounded-md object-cover border border-black dark:border-zinc-700 shrink-0" />
+                                            <img src="{{ auth()->user()->avatar_url }}" alt="" class="w-5 h-5 rounded-md object-cover border border-black dark:border-zinc-700 shrink-0" referrerpolicy="no-referrer" onerror="this.remove()" />
                                         @else
                                             <x-icon name="lucide-user" class="w-4 h-4 text-black dark:text-white group-hover:rotate-12 transition-transform stroke-[2.5]" />
                                         @endif

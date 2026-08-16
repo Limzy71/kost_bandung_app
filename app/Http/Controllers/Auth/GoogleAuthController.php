@@ -27,9 +27,13 @@ class GoogleAuthController extends Controller
     {
         try {
             /** @var \Laravel\Socialite\Two\User $googleUser */
-            $googleUser = Socialite::driver('google')->user();
+            try {
+                $googleUser = Socialite::driver('google')->user();
+            } catch (\Laravel\Socialite\Two\InvalidStateException) {
+                $googleUser = Socialite::driver('google')->stateless()->user();
+            }
         } catch (\Throwable $e) {
-            Log::warning('Google OAuth login failed or cancelled: '.$e->getMessage());
+            Log::warning('Google OAuth login failed: '.get_class($e).' - '.$e->getMessage());
 
             return redirect()->route('login')->with('error', 'Gagal masuk dengan akun Google. Silakan coba kembali atau gunakan email dan kata sandi.');
         }

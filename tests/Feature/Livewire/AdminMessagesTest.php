@@ -78,11 +78,12 @@ it('marks user messages as read when the admin opens the conversation', function
         ->test(AdminMessages::class)
         ->call('openConversation', $conversation->id);
 
-    $this->assertDatabaseHas('admin_messages', [
-        'conversation_id' => $conversation->id,
-        'sender_type' => 'user',
-        'read_at' => now(),
-    ]);
+    $message = AdminMessage::where('conversation_id', $conversation->id)
+        ->where('sender_type', 'user')
+        ->first();
+
+    expect($message)->not->toBeNull()
+        ->and($message->read_at)->not->toBeNull();
 });
 
 it('lets the admin reply to an open conversation', function () {

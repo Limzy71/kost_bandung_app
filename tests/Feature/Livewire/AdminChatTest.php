@@ -239,11 +239,12 @@ it('marks admin replies as read when the user opens the page', function () {
 
     Livewire::actingAs($user)->test(AdminChat::class);
 
-    $this->assertDatabaseHas('admin_messages', [
-        'conversation_id' => $conversation->id,
-        'sender_type' => 'admin',
-        'read_at' => now(),
-    ]);
+    $message = AdminMessage::where('conversation_id', $conversation->id)
+        ->where('sender_type', 'admin')
+        ->first();
+
+    expect($message)->not->toBeNull()
+        ->and($message->read_at)->not->toBeNull();
 });
 
 it('paginates the conversation list', function () {

@@ -127,6 +127,15 @@ select:focus[data-flux-control] {
     scrollbar-color: #ffd000 #0a0a0a;
 }
 
+/* Utility to hide scrollbar while maintaining scrollability */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
 /* Staggered rise-in for home catalog kost cards.
    The animation re-triggers whenever the list container becomes visible
    again (switch from map view, filter changes, pagination, etc.).

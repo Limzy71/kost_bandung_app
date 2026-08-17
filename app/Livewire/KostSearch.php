@@ -217,7 +217,22 @@ class KostSearch extends Component
 
         // Facility filter (AND condition: must have ALL selected facilities)
         foreach ($this->facilities as $facilityName) {
-            $query->whereHas('facilities', fn ($q) => $q->where('name', $facilityName)->where('status', 'approved'));
+            if ($facilityName === 'Listrik' || $facilityName === 'Listrik & Air' || $facilityName === 'include_utilities') {
+                $query->where(function ($q) {
+                    $q->where('include_utilities', true)
+                        ->orWhereHas('facilities', fn ($sub) => $sub->where('name', 'like', '%Listrik%')->where('status', 'approved'));
+                });
+            } elseif ($facilityName === 'Meja & Kursi') {
+                $query->whereHas('facilities', fn ($q) => $q->whereIn('name', ['Meja', 'Kursi', 'Meja & Kursi'])->where('status', 'approved'));
+            } elseif ($facilityName === 'Kamar Mandi Dalam') {
+                $query->whereHas('facilities', fn ($q) => $q->whereIn('name', ['Kamar Mandi Dalam', 'Kamar Mandi'])->where('status', 'approved'));
+            } elseif ($facilityName === 'Water Heater (Air Hangat)') {
+                $query->whereHas('facilities', fn ($q) => $q->whereIn('name', ['Water Heater (Air Hangat)', 'Water Heater'])->where('status', 'approved'));
+            } elseif ($facilityName === 'Dapur Bersama') {
+                $query->whereHas('facilities', fn ($q) => $q->whereIn('name', ['Dapur Bersama', 'Dapur'])->where('status', 'approved'));
+            } else {
+                $query->whereHas('facilities', fn ($q) => $q->where('name', $facilityName)->where('status', 'approved'));
+            }
         }
 
         // Compute district counts before applying the district filter

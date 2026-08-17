@@ -315,8 +315,8 @@
                 </span>
             </div>
 
-            <!-- Compact Chip Tags Group -->
-            <div class="flex flex-wrap items-center gap-2">
+            <!-- Compact Chip Tags Group (Strictly horizontal, no wrap) -->
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1.5 pt-0.5 flex-nowrap">
                 @php
                     $facilityList = [
                         'AC' => 'AC',
@@ -325,6 +325,8 @@
                         'Water Heater (Air Hangat)' => 'Water Heater',
                         'Kasur' => 'Kasur',
                         'Lemari' => 'Lemari',
+                        'Meja & Kursi' => 'Meja & Kursi',
+                        'Listrik' => 'Listrik',
                         'Dapur Bersama' => 'Dapur',
                         'CCTV' => 'CCTV',
                         'Parkir Motor' => 'Parkir Motor',
@@ -336,7 +338,7 @@
                         :class="draftFacilities.includes('{{ $name }}')
                             ? 'bg-yellow-400 text-black border-2 border-black dark:border-zinc-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] -translate-x-0.5 -translate-y-0.5 font-black'
                             : 'bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border-2 border-black/30 dark:border-zinc-700 hover:border-black dark:hover:border-zinc-500 shadow-[1px_1px_0px_0px_rgba(0,0,0,0.15)] font-bold'"
-                        class="h-9 px-3.5 rounded-lg text-xs font-black uppercase tracking-wide transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none inline-flex items-center justify-center whitespace-nowrap">
+                        class="h-9 px-3.5 rounded-lg text-xs font-black uppercase tracking-wide transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none inline-flex items-center justify-center whitespace-nowrap shrink-0">
                         <span>{{ $label }}</span>
                     </button>
                 @endforeach

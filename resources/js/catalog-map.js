@@ -443,7 +443,6 @@ window.catalogMap = function (config) {
                         this.infoWindow.open(this.map, marker);
                     };
 
-                    marker.addListener('click', openPopup);
                     marker.addEventListener('gmp-click', openPopup);
 
                     this.markers.push(marker);

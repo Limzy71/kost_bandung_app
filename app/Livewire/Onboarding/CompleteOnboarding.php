@@ -104,6 +104,12 @@ class CompleteOnboarding extends Component
             'terms'         => $terms,
         ];
 
+        // Retain submitted values on component so Livewire re-renders with inputs intact if validation fails.
+        $this->role          = $role;
+        $this->business_name = $business_name;
+        $this->phone_number  = $phone_number;
+        $this->terms         = $terms;
+
         $validator = Validator::make($data, $rules, $messages);
 
         if ($validator->fails()) {

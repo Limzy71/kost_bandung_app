@@ -150,21 +150,18 @@ it('validates owner onboarding requires business_name and valid unique phone_num
 
     Livewire::actingAs($user)
         ->test(CompleteOnboarding::class)
-        ->set('role', 'owner')
-        ->set('business_name', '')
-        ->set('phone_number', 'invalid-phone')
-        ->set('terms', true)
-        ->call('complete')
-        ->assertHasErrors(['business_name', 'phone_number']);
+        ->call('complete', 'owner', 'Kost Melati', 'invalid-phone', true)
+        ->assertHasErrors(['phone_number'])
+        ->assertSet('role', 'owner')
+        ->assertSet('business_name', 'Kost Melati')
+        ->assertSet('phone_number', 'invalid-phone')
+        ->assertSet('terms', true);
 
     Livewire::actingAs($user)
         ->test(CompleteOnboarding::class)
-        ->set('role', 'owner')
-        ->set('business_name', 'Kost Baru')
-        ->set('phone_number', '081234567890') // duplicate phone
-        ->set('terms', true)
-        ->call('complete')
-        ->assertHasErrors(['phone_number']);
+        ->call('complete', 'owner', 'Kost Baru', '081234567890', true) // duplicate phone
+        ->assertHasErrors(['phone_number'])
+        ->assertSet('business_name', 'Kost Baru');
 });
 
 it('validates terms must be accepted on onboarding', function () {

@@ -27,14 +27,16 @@
             </div>
         @endif
 
-        {{-- All form state lives purely in Alpine. No wire:model or @entangle.
-             Data is sent to server in ONE shot on submit to prevent re-render flicker. --}}
-        <div
+        {{-- All form state lives in Alpine, initialized from server properties ($role, $business_name, etc.).
+             On submit, data is sent in ONE shot. If validation fails, server values are preserved without loss. --}}
+        <form
+            wire:key="onboarding-form"
+            @submit.prevent="submit()"
             x-data="{
-                role: 'user',
-                business_name: '',
-                phone_number: '',
-                terms: false,
+                role: @js($role),
+                business_name: @js($business_name),
+                phone_number: @js($phone_number),
+                terms: @js($terms),
                 submitting: false,
 
                 async submit() {
@@ -47,6 +49,8 @@
                             this.role === 'owner' ? this.phone_number : '',
                             this.terms
                         );
+                    } catch (e) {
+                        // Livewire throws error on validation exception
                     } finally {
                         this.submitting = false;
                     }
@@ -178,8 +182,7 @@
             {{-- ===== Submit Button ===== --}}
             <div class="pt-2">
                 <button
-                    type="button"
-                    @click="submit()"
+                    type="submit"
                     :disabled="submitting"
                     class="w-full py-4 px-6 bg-[#FFE500] hover:bg-yellow-400 text-black border-3 border-black font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all duration-75 rounded-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed dark:border-zinc-700 dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]"
                 >
@@ -201,7 +204,7 @@
                 </button>
             </div>
 
-        </div>
+        </form>
 
         {{-- Logout Option --}}
         <div class="mt-8 pt-6 border-t-2 border-dashed border-zinc-300 dark:border-zinc-700 text-center">

@@ -242,7 +242,8 @@
             {{-- ===== Submit Button ===== --}}
             <div class="pt-2">
                 <button
-                    type="submit"
+                    type="button"
+                    @click="submit()"
                     :disabled="submitting"
                     class="w-full py-4 px-6 bg-[#FFE500] hover:bg-yellow-400 text-black border-3 border-black font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all duration-75 rounded-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed dark:border-zinc-700 dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]"
                 >

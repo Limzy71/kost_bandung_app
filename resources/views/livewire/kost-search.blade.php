@@ -152,12 +152,12 @@
             <div x-show="hasFilter" x-cloak class="flex items-center gap-2.5 shrink-0 self-end sm:self-auto transition-all">
                 <button type="button" @click="reset()"
                     class="bg-rose-400 hover:bg-rose-300 text-black border-2 border-black dark:border-zinc-700 font-black text-xs uppercase px-3.5 py-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
-                    <x-icon name="lucide-rotate-ccw" class="w-3.5 h-3.5 stroke-[3]" />
+                    <x-icon name="lucide-rotate-ccw" class="w-3.5 h-3.5 stroke-3" />
                     <span>Reset Filter</span>
                 </button>
                 <button type="button" @click="apply()"
                     class="bg-lime-400 hover:bg-lime-300 text-black border-2 border-black dark:border-zinc-700 font-black text-xs uppercase px-4 py-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
-                    <x-icon name="lucide-search" class="w-3.5 h-3.5 stroke-[3]" />
+                    <x-icon name="lucide-search" class="w-3.5 h-3.5 stroke-3" />
                     <span>Terapkan Filter</span>
                 </button>
             </div>
@@ -197,7 +197,7 @@
                         Kecamatan (Kota Bandung)
                     </label>
                     <select x-model="draftDistrict"
-                        class="w-full h-12 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-3 text-sm font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer transition-all duration-150 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_12px_center] pr-9">
+                        class="w-full h-12 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-3 text-sm font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer transition-all duration-150 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-size-[14px_14px] bg-no-repeat bg-position-[right_12px_center] pr-9">
                         <option value="" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Semua Kecamatan</option>
                         @foreach ($districts as $val => $label)
                             <option value="{{ $val }}" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">{{ $label }}</option>
@@ -211,7 +211,7 @@
                         Tipe Penghuni
                     </label>
                     <select x-model="draftGender"
-                        class="w-full h-12 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-3 text-sm font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer transition-all duration-150 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_12px_center] pr-9">
+                        class="w-full h-12 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-3 text-sm font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer transition-all duration-150 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-size-[14px_14px] bg-no-repeat bg-position-[right_12px_center] pr-9">
                         <option value="" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Semua Tipe</option>
                         <option value="putra" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Putra</option>
                         <option value="putri" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Putri</option>
@@ -262,7 +262,7 @@
                 <!-- Min / Max Dropdowns -->
                 <div class="grid grid-cols-2 gap-3 sm:gap-4">
                     <select x-model="draftPriceMin"
-                        class="w-full h-12 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-3 text-sm font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer transition-all duration-150 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_10px_center] pr-8">
+                        class="w-full h-12 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-3 text-sm font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer transition-all duration-150 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-size-[14px_14px] bg-no-repeat bg-position-[right_10px_center] pr-8">
                         <option value="" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Min Harga</option>
                         <option value="500000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 500rb</option>
                         <option value="1000000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 1 Jt</option>
@@ -271,7 +271,7 @@
                         <option value="3000000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 3 Jt</option>
                     </select>
                     <select x-model="draftPriceMax"
-                        class="w-full h-12 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-3 text-sm font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer transition-all duration-150 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_10px_center] pr-8">
+                        class="w-full h-12 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-3 text-sm font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer transition-all duration-150 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-size-[14px_14px] bg-no-repeat bg-position-[right_10px_center] pr-8">
                         <option value="" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Max Harga</option>
                         <option value="1000000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 1 Jt</option>
                         <option value="1500000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 1.5 Jt</option>
@@ -292,7 +292,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <!-- Period -->
                     <select x-model="draftRentPeriod"
-                        class="w-full h-12 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-3 text-sm font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer transition-all duration-150 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_12px_center] pr-9">
+                        class="w-full h-12 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-3 text-sm font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer transition-all duration-150 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-size-[14px_14px] bg-no-repeat bg-position-[right_12px_center] pr-9">
                         <option value="" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Semua Periode</option>
                         @foreach (\App\Models\Kost::rentPeriodLabels() as $val => $label)
                             <option value="{{ $val }}" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">{{ $label }}</option>
@@ -305,7 +305,7 @@
                             : 'bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border-3 border-black dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]'"
                         class="w-full h-12 flex justify-center items-center font-black text-xs uppercase rounded-xl transition-all cursor-pointer gap-2 px-3">
                         <input type="checkbox" x-model="draftVerifiedOnly" class="hidden">
-                        <x-icon name="lucide-badge-check" class="w-4 h-4 stroke-[3] shrink-0" />
+                        <x-icon name="lucide-badge-check" class="w-4 h-4 stroke-3 shrink-0" />
                         <span class="truncate">Kost Verified</span>
                     </label>
                 </div>
@@ -322,7 +322,7 @@
                     <!-- Mobile Scroll Indicator Hint -->
                     <span class="sm:hidden inline-flex items-center gap-1 text-[10px] font-black text-black bg-yellow-300 border border-black px-2 py-0.5 rounded-md shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
                         <span>Geser</span>
-                        <x-icon name="lucide-arrow-right" class="w-3 h-3 stroke-[3]" />
+                        <x-icon name="lucide-arrow-right" class="w-3 h-3 stroke-3" />
                     </span>
                 </div>
                 <span x-show="facilityCount > 0" x-cloak
@@ -424,7 +424,7 @@
                         class="w-full text-left px-3 py-2 text-xs uppercase tracking-wide rounded-lg border-2 border-transparent hover:border-black dark:hover:border-zinc-700 transition-all flex items-center justify-between cursor-pointer">
                         <span>Rekomendasi</span>
                         <template x-if="sort === 'recommended'">
-                            <x-icon name="lucide-check" class="w-3.5 h-3.5 stroke-[3]" />
+                            <x-icon name="lucide-check" class="w-3.5 h-3.5 stroke-3" />
                         </template>
                     </button>
 
@@ -433,7 +433,7 @@
                         class="w-full text-left px-3 py-2 text-xs uppercase tracking-wide rounded-lg border-2 border-transparent hover:border-black dark:hover:border-zinc-700 transition-all flex items-center justify-between cursor-pointer">
                         <span>Harga Termurah</span>
                         <template x-if="sort === 'price_asc'">
-                            <x-icon name="lucide-check" class="w-3.5 h-3.5 stroke-[3]" />
+                            <x-icon name="lucide-check" class="w-3.5 h-3.5 stroke-3" />
                         </template>
                     </button>
 
@@ -442,7 +442,7 @@
                         class="w-full text-left px-3 py-2 text-xs uppercase tracking-wide rounded-lg border-2 border-transparent hover:border-black dark:hover:border-zinc-700 transition-all flex items-center justify-between cursor-pointer">
                         <span>Harga Termahal</span>
                         <template x-if="sort === 'price_desc'">
-                            <x-icon name="lucide-check" class="w-3.5 h-3.5 stroke-[3]" />
+                            <x-icon name="lucide-check" class="w-3.5 h-3.5 stroke-3" />
                         </template>
                     </button>
 
@@ -451,7 +451,7 @@
                         class="w-full text-left px-3 py-2 text-xs uppercase tracking-wide rounded-lg border-2 border-transparent hover:border-black dark:hover:border-zinc-700 transition-all flex items-center justify-between cursor-pointer">
                         <span>Terbaru</span>
                         <template x-if="sort === 'newest'">
-                            <x-icon name="lucide-check" class="w-3.5 h-3.5 stroke-[3]" />
+                            <x-icon name="lucide-check" class="w-3.5 h-3.5 stroke-3" />
                         </template>
                     </button>
                 </div>
@@ -464,14 +464,14 @@
                     @click="viewMode = 'list'"
                     :class="viewMode === 'list' ? 'bg-yellow-400 text-black border border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white'"
                     class="px-3 py-1.5 rounded-lg font-black text-xs uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5">
-                    <x-icon name="lucide-list" class="w-3.5 h-3.5 stroke-[3]" />
+                    <x-icon name="lucide-list" class="w-3.5 h-3.5 stroke-3" />
                     <span>Lihat Daftar</span>
                 </button>
                 <button type="button"
                     @click="viewMode = 'map'"
                     :class="viewMode === 'map' ? 'bg-yellow-400 text-black border border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white'"
                     class="px-3 py-1.5 rounded-lg font-black text-xs uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5">
-                    <x-icon name="lucide-map" class="w-3.5 h-3.5 stroke-[3]" />
+                    <x-icon name="lucide-map" class="w-3.5 h-3.5 stroke-3" />
                     <span>Lihat Peta</span>
                 </button>
             </div>
@@ -530,7 +530,7 @@
                                             @else
                                                 <x-icon name="lucide-user" class="w-3 h-3 shrink-0 stroke-[2.5]" />
                                             @endif
-                                            <span>{{ $kost->gender_type }}</span>
+                                             <span>{{ $kost->gender_type }}</span>
                                         </span>
                                         @if ($kost->isBoostActive() || $kost->boosted_at)
                                             <span class="px-2.5 py-1 bg-yellow-400 text-black border-2 border-black dark:border-zinc-700 text-[10px] font-black uppercase rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] tracking-wider inline-flex items-center gap-1">
@@ -598,7 +598,7 @@
                                 <a href="{{ route('kost.show', $kost->slug) }}"
                                     class="px-4 py-2 bg-orange-400 hover:bg-orange-300 text-black border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1">
                                     <span>Lihat Detail</span>
-                                    <x-icon name="lucide-arrow-right" class="w-3.5 h-3.5 stroke-[3]" />
+                                    <x-icon name="lucide-arrow-right" class="w-3.5 h-3.5 stroke-3" />
                                 </a>
                             </div>
                         </div>
@@ -648,7 +648,7 @@
                 <button type="button" wire:click="resetFilters"
                     @click="window.dispatchEvent(new CustomEvent('filters-reset')); if(viewMode==='map') { $nextTick(() => window.dispatchEvent(new Event('resize'))); }"
                     class="w-full sm:w-auto px-5 py-3 bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black dark:border-zinc-700 font-black text-xs sm:text-sm uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl inline-flex items-center justify-center gap-2 cursor-pointer">
-                    <x-icon name="lucide-rotate-ccw" class="w-4 h-4 stroke-[3]" />
+                    <x-icon name="lucide-rotate-ccw" class="w-4 h-4 stroke-3" />
                     @if($hasActiveFilter)
                         <span>Reset Semua Filter</span>
                     @else
@@ -672,7 +672,7 @@
                 <div class="p-4 bg-yellow-300 border-b-3 border-black dark:border-zinc-700 flex items-center justify-between z-10 relative">
                     <span class="font-black text-sm uppercase text-black flex items-center gap-2 tracking-tight">
                         <span class="bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg p-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
-                            <x-icon name="lucide-map-pin" class="w-4 h-4 text-black dark:text-white stroke-[3]" />
+                            <x-icon name="lucide-map-pin" class="w-4 h-4 text-black dark:text-white stroke-3" />
                         </span>
                         Peta Interaktif Kost Bandung
                     </span>
@@ -702,7 +702,7 @@
             <!-- Fallback Neo-Brutalist Error Card -->
             <div x-show="mapFailed" x-cloak class="bg-rose-400 border-4 border-black dark:border-zinc-700 rounded-2xl p-10 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.25)] flex flex-col items-center justify-center space-y-4">
                 <div class="w-16 h-16 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-full flex items-center justify-center text-black dark:text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]">
-                    <x-icon name="lucide-triangle-alert" class="w-8 h-8 stroke-[3]" />
+                    <x-icon name="lucide-triangle-alert" class="w-8 h-8 stroke-3" />
                 </div>
                 <h3 class="text-2xl font-black text-black uppercase">⚠️ Gagal Memuat Peta Interaktif</h3>
                 <p class="text-sm font-bold text-black max-w-md mx-auto">Koneksi ke layanan peta gagal atau terputus. Silakan gunakan mode daftar untuk melihat properti kost.</p>

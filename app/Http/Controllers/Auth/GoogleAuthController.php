@@ -79,8 +79,6 @@ class GoogleAuthController extends Controller
         $request->session()->regenerate();
 
         if (! $user->hasCompletedOnboarding()) {
-            session()->put('pending_onboarding', true);
-
             return redirect()->route('onboarding');
         }
 

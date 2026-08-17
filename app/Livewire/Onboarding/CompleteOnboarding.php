@@ -103,8 +103,6 @@ class CompleteOnboarding extends Component
 
         $user->save();
 
-        session()->forget('pending_onboarding');
-
         if ($user->role === 'owner') {
             session()->flash('success', 'Selamat datang di KostBandung! Akun pemilik kost Anda telah aktif.');
             $this->redirectRoute('dashboard', navigate: true);

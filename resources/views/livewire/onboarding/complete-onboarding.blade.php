@@ -27,7 +27,7 @@
             </div>
         @endif
 
-        <form wire:submit="complete" x-data="{ role: @entangle('role').live }" class="space-y-6">
+        <form wire:submit="complete" x-data="{ role: @entangle('role') }" class="space-y-6">
 
             {{-- ===== Role Selector Cards ===== --}}
             <div>
@@ -36,8 +36,8 @@
                 </label>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {{-- Pencari Kost --}}
-                    <button type="button" @click="role = 'user'; $wire.selectRole('user')"
-                        class="p-5 text-left border-3 border-black rounded-xl transition-all cursor-pointer focus:outline-none focus:ring-0 dark:border-zinc-700"
+                    <button type="button" @click="role = 'user'"
+                        class="p-5 text-left border-3 border-black rounded-xl transition-all cursor-pointer focus:outline-none focus:ring-0 dark:border-zinc-700 select-none"
                         :class="role === 'user'
                             ? 'bg-[#FFE500] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -translate-x-0.5 -translate-y-0.5 dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]'
                             : 'bg-white hover:bg-zinc-50 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]'">
@@ -53,8 +53,8 @@
                     </button>
 
                     {{-- Pemilik Kost --}}
-                    <button type="button" @click="role = 'owner'; $wire.selectRole('owner')"
-                        class="p-5 text-left border-3 border-black rounded-xl transition-all cursor-pointer focus:outline-none focus:ring-0 dark:border-zinc-700"
+                    <button type="button" @click="role = 'owner'"
+                        class="p-5 text-left border-3 border-black rounded-xl transition-all cursor-pointer focus:outline-none focus:ring-0 dark:border-zinc-700 select-none"
                         :class="role === 'owner'
                             ? 'bg-[#FFE500] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -translate-x-0.5 -translate-y-0.5 dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]'
                             : 'bg-white hover:bg-zinc-50 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]'">
@@ -75,7 +75,15 @@
             </div>
 
             {{-- ===== Owner Extra Fields (Only if role === 'owner') ===== --}}
-            <div x-show="role === 'owner'" x-cloak class="space-y-5 p-5 bg-yellow-50 dark:bg-zinc-800/60 border-3 border-black dark:border-zinc-700 rounded-xl">
+            <div x-show="role === 'owner'"
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 -translate-y-2"
+                x-transition:enter-end="opacity-100 translate-y-0"
+                x-transition:leave="transition ease-in duration-100"
+                x-transition:leave-start="opacity-100 translate-y-0"
+                x-transition:leave-end="opacity-0 -translate-y-2"
+                x-cloak
+                class="space-y-5 p-5 bg-yellow-50 dark:bg-zinc-800/60 border-3 border-black dark:border-zinc-700 rounded-xl">
                 <div>
                     <div class="flex items-center gap-2 mb-1">
                         <x-icon name="lucide-store" class="w-4 h-4 text-black dark:text-white stroke-[2.5]" />

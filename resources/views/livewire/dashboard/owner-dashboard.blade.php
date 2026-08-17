@@ -185,6 +185,7 @@
                             id="delete-confirm-text"
                             type="text"
                             wire:model.live="deleteConfirmText"
+                            maxlength="10"
                             @input="showConfirmError = false"
                             placeholder="HAPUS"
                             class="mt-1 w-full bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 rounded-lg px-3 py-2.5 text-xs font-black uppercase text-black dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]"

@@ -159,7 +159,7 @@
         <p class="text-center text-xs font-bold text-black dark:text-white">
             Belum punya akun?
             <a href="{{ route('register') }}" wire:navigate
-                class="font-black text-black underline decoration-2 underline-offset-2 hover:bg-[#FFE500] hover:no-underline px-1 rounded transition-all dark:text-white">
+                class="font-black text-black underline decoration-2 underline-offset-2 hover:bg-[#FFE500] hover:no-underline px-1 rounded transition-all dark:text-white dark:hover:text-black">
                 Daftar Sekarang
             </a>
         </p>

@@ -91,18 +91,18 @@
                 <p class="block text-xs font-black uppercase tracking-wider text-black mb-3 dark:text-white">Tipe Akun Saya</p>
                 <div class="grid grid-cols-2 gap-3">
                     <button type="button" wire:click="$set('role', 'user')"
-                        class="py-3.5 px-4 text-xs font-black text-black uppercase border-2 border-black rounded-lg transition-all cursor-pointer focus:outline-none focus:ring-0 dark:text-white dark:border-zinc-700 {{ $role === 'user'
-                            ? 'bg-[#FFE500] shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] -translate-x-0.5 -translate-y-0.5'
-                            : 'bg-white hover:bg-zinc-100 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]' }}">
+                        class="py-3.5 px-4 text-xs font-black uppercase border-2 rounded-lg transition-all cursor-pointer focus:outline-none focus:ring-0 {{ $role === 'user'
+                            ? 'bg-[#FFE500] text-black border-black dark:border-zinc-700 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] -translate-x-0.5 -translate-y-0.5'
+                            : 'bg-white text-black border-black hover:bg-zinc-100 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none dark:bg-zinc-900 dark:text-white dark:border-zinc-700 dark:hover:bg-zinc-800 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]' }}">
                         <div class="flex items-center justify-center gap-2">
                             <x-icon name="lucide-search" class="w-4 h-4" />
                             <span>Pencari Kost</span>
                         </div>
                     </button>
                     <button type="button" wire:click="$set('role', 'owner')"
-                        class="py-3.5 px-4 text-xs font-black text-black uppercase border-2 border-black rounded-lg transition-all cursor-pointer focus:outline-none focus:ring-0 dark:text-white dark:border-zinc-700 {{ $role === 'owner'
-                            ? 'bg-[#FFE500] shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] -translate-x-0.5 -translate-y-0.5'
-                            : 'bg-white hover:bg-zinc-100 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]' }}">
+                        class="py-3.5 px-4 text-xs font-black uppercase border-2 rounded-lg transition-all cursor-pointer focus:outline-none focus:ring-0 {{ $role === 'owner'
+                            ? 'bg-[#FFE500] text-black border-black dark:border-zinc-700 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] -translate-x-0.5 -translate-y-0.5'
+                            : 'bg-white text-black border-black hover:bg-zinc-100 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none dark:bg-zinc-900 dark:text-white dark:border-zinc-700 dark:hover:bg-zinc-800 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]' }}">
                         <div class="flex items-center justify-center gap-2">
                             <x-icon name="lucide-house" class="w-4 h-4" />
                             <span>Pemilik Kost</span>
@@ -115,7 +115,7 @@
             </div>
 
             {{-- Divider --}}
-            <div class="border-t-2 border-dashed border-zinc-300"></div>
+            <div class="border-t-2 border-dashed border-zinc-300 dark:border-zinc-700"></div>
 
             {{-- Nama Lengkap --}}
             <div>
@@ -228,7 +228,7 @@
                     class="w-4 h-4 mt-1 border-2 border-black rounded-sm bg-zinc-50 checked:bg-[#FFE500] checked:border-black focus:ring-0 focus:ring-offset-0 cursor-pointer dark:border-zinc-700 dark:bg-zinc-900 dark:checked:border-zinc-700">
                 <label for="terms" class="text-xs font-bold text-black cursor-pointer dark:text-white">
                     Saya menyetujui
-                    <a href="{{ route('terms') }}" target="_blank" class="font-black underline underline-offset-2 hover:text-yellow-600">Syarat & Ketentuan</a>
+                    <a href="{{ route('terms') }}" target="_blank" class="font-black text-black dark:text-white underline underline-offset-2 hover:text-yellow-600 dark:hover:text-yellow-400">Syarat & Ketentuan</a>
                     penggunaan layanan KostBandung.
                 </label>
             </div>
@@ -259,7 +259,7 @@
         <p class="text-center text-xs font-bold text-black dark:text-white">
             Sudah punya akun?
             <a href="{{ route('login') }}" wire:navigate
-                class="font-black text-black underline decoration-2 underline-offset-2 hover:bg-[#FFE500] hover:no-underline px-1 rounded transition-all dark:text-white">
+                class="font-black text-black underline decoration-2 underline-offset-2 hover:bg-[#FFE500] hover:no-underline px-1 rounded transition-all dark:text-white dark:hover:text-black">
                 Masuk Di Sini
             </a>
         </p>

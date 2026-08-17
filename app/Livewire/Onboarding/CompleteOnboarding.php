@@ -128,13 +128,13 @@ class CompleteOnboarding extends Component
 
         if ($role === 'owner') {
             session()->flash('success', 'Selamat datang di KostBandung! Akun pemilik kost Anda telah aktif.');
-            $this->redirectRoute('dashboard', navigate: true);
+            $this->redirectRoute('dashboard');
 
             return;
         }
 
         session()->flash('success', 'Selamat datang di KostBandung! Akun Anda telah siap digunakan.');
-        $this->redirectRoute('home', navigate: true);
+        $this->redirectRoute('home');
     }
 
     public function render(): View

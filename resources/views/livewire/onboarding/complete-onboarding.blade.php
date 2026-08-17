@@ -29,7 +29,7 @@
 
         {{-- All form state lives in Alpine, with instant client validation and zero-flicker one-shot submit. --}}
         <form
-            wire:key="onboarding-form"
+            wire:ignore
             @submit.prevent="submit()"
             x-data="{
                 role: @js($role),
@@ -66,6 +66,7 @@
                     }
                     if (this.submitting) return;
                     this.submitting = true;
+                    this.errors = {};
                     try {
                         await $wire.complete(
                             this.role,
@@ -74,7 +75,13 @@
                             this.terms
                         );
                     } catch (e) {
-                        // Keep submission state clean if server validation fails
+                        if ($wire.errors) {
+                            for (const key of ['role', 'business_name', 'phone_number', 'terms']) {
+                                if ($wire.errors.has(key)) {
+                                    this.errors[key] = $wire.errors.first(key);
+                                }
+                            }
+                        }
                     } finally {
                         this.submitting = false;
                     }

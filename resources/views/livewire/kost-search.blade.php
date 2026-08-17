@@ -361,7 +361,7 @@
                     @endforeach
                 </div>
                 <!-- Right-edge subtle gradient fade for mobile -->
-                <div class="pointer-events-none absolute right-0 top-0 bottom-1.5 w-8 bg-gradient-to-l from-white dark:from-zinc-900 to-transparent sm:hidden"></div>
+                <div class="pointer-events-none absolute right-0 top-0 bottom-1.5 w-8 bg-linear-to-l from-white dark:from-zinc-900 to-transparent sm:hidden"></div>
             </div>
         </div>
     </div>
@@ -505,7 +505,7 @@
                         <div class="kost-card bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl overflow-hidden shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-y-1 hover:shadow-[7px_7px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[7px_7px_0px_0px_rgba(255,255,255,0.25)] transition-all duration-300 ease-out will-change-transform flex flex-col justify-between group" style="animation-delay: {{ min($loop->index, 9) * 45 }}ms">
                             <div>
                                 <!-- Image -->
-                                <div class="aspect-[4/3] bg-zinc-200 dark:bg-zinc-800 relative overflow-hidden border-b-3 border-black dark:border-zinc-700 cursor-pointer"
+                                <div class="aspect-4/3 bg-zinc-200 dark:bg-zinc-800 relative overflow-hidden border-b-3 border-black dark:border-zinc-700 cursor-pointer"
                                     role="link" tabindex="0" aria-label="Lihat detail {{ $kost->name }}"
                                     onclick="window.location.href='{{ route('kost.show', $kost->slug) }}'"
                                     @keydown.enter.prevent="window.location.href='{{ route('kost.show', $kost->slug) }}'"
@@ -580,7 +580,7 @@
                                         <div class="flex flex-wrap justify-end gap-1 overflow-hidden shrink min-w-0">
                                             @if ($kost->facilities && $kost->facilities->count() > 0)
                                                 @foreach ($kost->facilities->take(2) as $facility)
-                                                    <span class="bg-zinc-100 dark:bg-zinc-800 border-2 border-black dark:border-zinc-700 text-[10px] font-bold text-black dark:text-white px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)] inline-flex items-center gap-1 truncate max-w-[110px] min-w-0">
+                                                    <span class="bg-zinc-100 dark:bg-zinc-800 border-2 border-black dark:border-zinc-700 text-[10px] font-bold text-black dark:text-white px-2 py-0.5 rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)] inline-flex items-center gap-1 truncate max-w-27.5 min-w-0">
                                                         <span class="truncate">{{ $facility->name }}</span>
                                                     </span>
                                                 @endforeach
@@ -696,7 +696,7 @@
                         class="px-3.5 py-1.5 text-xs font-black uppercase border-2 rounded-lg text-black dark:text-white transition-all cursor-pointer"
                         title="Tampilan Satelit">Satelit</button>
                 </div>
-                <div x-ref="catalogMapElement" class="w-full h-[450px] lg:h-[500px] bg-zinc-100 dark:bg-zinc-800 z-0"></div>
+                <div x-ref="catalogMapElement" class="w-full h-112.5 lg:h-125 bg-zinc-100 dark:bg-zinc-800 z-0"></div>
             </div>
 
             <!-- Fallback Neo-Brutalist Error Card -->

@@ -20,7 +20,7 @@
 
         @if (session('error'))
             <div class="mb-6 flex items-center gap-3 bg-rose-400 border-4 border-black p-4 rounded-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:border-zinc-700 dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]">
-                <x-icon name="lucide-triangle-alert" class="w-5 h-5 text-black shrink-0 stroke-[3]" />
+                <x-icon name="lucide-triangle-alert" class="w-5 h-5 text-black shrink-0 stroke-3" />
                 <span class="text-xs font-black uppercase text-black">
                     {{ session('error') }}
                 </span>
@@ -186,7 +186,7 @@
                     <template x-if="!submitting">
                         <span class="flex items-center gap-2">
                             Selesaikan &amp; Lanjutkan
-                            <x-icon name="lucide-arrow-right" class="w-4 h-4 stroke-[3]" />
+                            <x-icon name="lucide-arrow-right" class="w-4 h-4 stroke-3" />
                         </span>
                     </template>
                     <template x-if="submitting">

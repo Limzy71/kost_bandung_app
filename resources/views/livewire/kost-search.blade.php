@@ -27,9 +27,11 @@
                 this.$watch('$wire.price_min', (val) => { this.draftPriceMin = val || ''; });
                 this.$watch('$wire.price_max', (val) => { this.draftPriceMax = val || ''; });
                 this.$watch('$wire.verified_only', (val) => { this.draftVerifiedOnly = Boolean(val); });
-                this.$wire.$on('filters-reset', () => {
-                    this.resetLocal();
-                });
+                if (this.$wire) {
+                    this.$wire.$on('filters-reset', () => {
+                        this.resetLocal();
+                    });
+                }
             },
 
             resetLocal() {
@@ -60,6 +62,7 @@
             },
 
             get hasFilter() {
+                const wireFacs = this.$wire && Array.isArray(this.$wire.facilities) ? this.$wire.facilities.length : 0;
                 return Boolean(
                     this.draftSearch ||
                     this.draftDistrict ||
@@ -69,14 +72,16 @@
                     this.draftPriceMax ||
                     this.draftVerifiedOnly ||
                     this.facilityCount > 0 ||
-                    $wire.search ||
-                    $wire.district ||
-                    $wire.gender ||
-                    $wire.rent_period ||
-                    $wire.price_min ||
-                    $wire.price_max ||
-                    $wire.verified_only ||
-                    ($wire.facilities && $wire.facilities.length > 0)
+                    (this.$wire && (
+                        this.$wire.search ||
+                        this.$wire.district ||
+                        this.$wire.gender ||
+                        this.$wire.rent_period ||
+                        this.$wire.price_min ||
+                        this.$wire.price_max ||
+                        this.$wire.verified_only ||
+                        wireFacs > 0
+                    ))
                 );
             },
 
@@ -103,21 +108,25 @@
             },
 
             apply() {
-                $wire.applyAllFilters(
-                    this.draftSearch,
-                    this.draftDistrict,
-                    this.draftGender,
-                    this.draftRentPeriod,
-                    this.draftPriceMin,
-                    this.draftPriceMax,
-                    this.draftVerifiedOnly,
-                    this.draftFacilities
-                );
+                if (this.$wire) {
+                    this.$wire.applyAllFilters(
+                        this.draftSearch,
+                        this.draftDistrict,
+                        this.draftGender,
+                        this.draftRentPeriod,
+                        this.draftPriceMin,
+                        this.draftPriceMax,
+                        this.draftVerifiedOnly,
+                        this.draftFacilities
+                    );
+                }
             },
 
             reset() {
                 this.resetLocal();
-                $wire.resetFilters();
+                if (this.$wire) {
+                    this.$wire.resetFilters();
+                }
             }
         }"
         @filters-reset.window="resetLocal()"
@@ -316,7 +325,7 @@
             </div>
 
             <!-- Compact Chip Tags Group (Strictly horizontal, no wrap) -->
-            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1.5 pt-0.5 flex-nowrap">
+            <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar pb-1.5 pt-0.5 flex-nowrap">
                 @php
                     $facilityList = [
                         'AC' => 'AC',
@@ -330,6 +339,7 @@
                         'Dapur Bersama' => 'Dapur',
                         'CCTV' => 'CCTV',
                         'Parkir Motor' => 'Parkir Motor',
+                        'Parkir Mobil' => 'Parkir Mobil',
                     ];
                 @endphp
                 @foreach ($facilityList as $name => $label)
@@ -337,7 +347,7 @@
                         :class="draftFacilities.includes('{{ $name }}')
                             ? 'bg-yellow-400 text-black border-2 border-black dark:border-zinc-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] -translate-x-0.5 -translate-y-0.5 font-black'
                             : 'bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border-2 border-black/30 dark:border-zinc-700 hover:border-black dark:hover:border-zinc-500 shadow-[1px_1px_0px_0px_rgba(0,0,0,0.15)] font-bold'"
-                        class="h-9 px-3.5 rounded-lg text-xs font-black uppercase tracking-wide transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none inline-flex items-center justify-center whitespace-nowrap shrink-0">
+                        class="h-8.5 sm:h-9 px-2.5 sm:px-3.5 rounded-lg text-[11px] sm:text-xs font-black uppercase tracking-wide transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none inline-flex items-center justify-center whitespace-nowrap shrink-0">
                         <span>{{ $label }}</span>
                     </button>
                 @endforeach

@@ -282,12 +282,9 @@
         <!-- Row 3: Fasilitas Populer (Compact Chip Tags) -->
         <div class="border-t-2 border-dashed border-black/20 dark:border-zinc-700 pt-4 mt-2">
             <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center gap-2">
-                    <x-icon name="lucide-armchair" class="w-4 h-4 text-black dark:text-white stroke-[2.5]" />
-                    <label class="text-xs font-black uppercase text-black dark:text-white tracking-wide">
-                        Fasilitas Kost Populer
-                    </label>
-                </div>
+                <label class="text-xs font-black uppercase text-black dark:text-white tracking-wide">
+                    Fasilitas Kost Populer
+                </label>
                 <template x-if="draftFacilities.length > 0">
                     <span class="px-2.5 py-0.5 bg-yellow-300 border border-black dark:border-zinc-700 font-black text-[10px] uppercase rounded-full shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] text-black">
                         <span x-text="draftFacilities.length"></span> Dipilih
@@ -295,30 +292,29 @@
                 </template>
             </div>
 
-            <!-- Compact Chip Tags Group -->
+            <!-- Compact Chip Tags Group (Pure Text, Bold Typography) -->
             <div class="flex flex-wrap items-center gap-2">
                 @php
-                    $facilityFilters = [
-                        'AC' => ['icon' => 'lucide-snowflake', 'label' => 'AC'],
-                        'Wi-Fi' => ['icon' => 'lucide-wifi', 'label' => 'Wi-Fi'],
-                        'Kamar Mandi Dalam' => ['icon' => 'lucide-shower-head', 'label' => 'KM Dalam'],
-                        'Water Heater (Air Hangat)' => ['icon' => 'lucide-flame', 'label' => 'Water Heater'],
-                        'Kasur' => ['icon' => 'lucide-bed-double', 'label' => 'Kasur'],
-                        'Lemari' => ['icon' => 'lucide-door-closed', 'label' => 'Lemari'],
-                        'Dapur Bersama' => ['icon' => 'lucide-utensils', 'label' => 'Dapur'],
-                        'CCTV' => ['icon' => 'lucide-cctv', 'label' => 'CCTV'],
-                        'Parkir Motor' => ['icon' => 'lucide-motorbike', 'label' => 'Parkir Motor'],
-                        'Parkir Mobil' => ['icon' => 'lucide-car', 'label' => 'Parkir Mobil'],
+                    $facilityList = [
+                        'AC' => 'AC',
+                        'Wi-Fi' => 'Wi-Fi',
+                        'Kamar Mandi Dalam' => 'KM Dalam',
+                        'Water Heater (Air Hangat)' => 'Water Heater',
+                        'Kasur' => 'Kasur',
+                        'Lemari' => 'Lemari',
+                        'Dapur Bersama' => 'Dapur',
+                        'CCTV' => 'CCTV',
+                        'Parkir Motor' => 'Parkir Motor',
+                        'Parkir Mobil' => 'Parkir Mobil',
                     ];
                 @endphp
-                @foreach ($facilityFilters as $name => $meta)
+                @foreach ($facilityList as $name => $label)
                     <button type="button" @click="toggleFacility('{{ $name }}')"
                         :class="draftFacilities.includes('{{ $name }}')
                             ? 'bg-yellow-400 text-black border-2 border-black dark:border-zinc-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] -translate-x-0.5 -translate-y-0.5 font-black'
                             : 'bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border-2 border-black/30 dark:border-zinc-700 hover:border-black dark:hover:border-zinc-500 shadow-[1px_1px_0px_0px_rgba(0,0,0,0.15)] font-bold'"
-                        class="h-9 px-3 rounded-lg text-xs uppercase transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none inline-flex items-center gap-1.5 whitespace-nowrap">
-                        <x-icon name="{{ $meta['icon'] }}" class="w-3.5 h-3.5 shrink-0 stroke-[2.5]" />
-                        <span>{{ $meta['label'] }}</span>
+                        class="h-9 px-3.5 rounded-lg text-xs font-black uppercase tracking-wide transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none inline-flex items-center justify-center whitespace-nowrap">
+                        <span>{{ $label }}</span>
                     </button>
                 @endforeach
             </div>
@@ -339,8 +335,9 @@
 
         <!-- Controls: Sort By & View Switcher -->
         <div class="flex items-center justify-between sm:justify-end gap-3 flex-wrap sm:flex-nowrap">
-            <!-- Sort By Dropdown (Full click target with generous spacing and instant live update) -->
+            <!-- Sort By Custom Neo-Brutalist Dropdown -->
             <div x-data="{
+                open: false,
                 sort: @entangle('sort').live,
                 get sortLabel() {
                     const labels = {
@@ -350,20 +347,69 @@
                         'newest': 'Terbaru'
                     };
                     return labels[this.sort] || 'Rekomendasi';
+                },
+                selectSort(val) {
+                    this.sort = val;
+                    this.open = false;
                 }
-            }" class="relative flex items-center justify-between gap-3 bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 px-4 py-2.5 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer select-none">
-                <div class="flex items-center gap-2 pointer-events-none">
+            }" @click.outside="open = false" @keydown.escape.window="open = false" class="relative">
+                <!-- Trigger Button -->
+                <button type="button"
+                    @click="open = !open"
+                    :aria-expanded="open"
+                    class="flex items-center gap-2.5 bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 px-4 py-2.5 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer select-none">
                     <x-icon name="lucide-arrow-up-down" class="w-4 h-4 text-black dark:text-white stroke-[2.5] shrink-0" />
                     <span class="text-xs font-bold uppercase text-zinc-500 dark:text-zinc-400">Urutkan:</span>
-                    <span class="text-xs font-black uppercase text-black dark:text-white tracking-wide ml-0.5" x-text="sortLabel"></span>
+                    <span class="text-xs font-black uppercase text-black dark:text-white tracking-wide" x-text="sortLabel"></span>
+                    <x-icon name="lucide-chevron-down" class="w-4 h-4 text-black dark:text-white stroke-[2.5] shrink-0 transition-transform duration-200" ::class="open ? 'rotate-180' : ''" />
+                </button>
+
+                <!-- Custom Neo-Brutalist Dropdown Popup Menu -->
+                <div x-show="open" x-cloak
+                    x-transition:enter="transition ease-out duration-150"
+                    x-transition:enter-start="opacity-0 translate-y-1 scale-95"
+                    x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                    x-transition:leave="transition ease-in duration-100"
+                    x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                    x-transition:leave-end="opacity-0 translate-y-1 scale-95"
+                    class="absolute right-0 top-full mt-2 w-52 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] p-1.5 space-y-1 z-40">
+                    
+                    <button type="button" @click="selectSort('recommended')"
+                        :class="sort === 'recommended' ? 'bg-yellow-400 text-black font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]' : 'text-black dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 font-bold'"
+                        class="w-full text-left px-3 py-2 text-xs uppercase tracking-wide rounded-lg border-2 border-transparent hover:border-black dark:hover:border-zinc-700 transition-all flex items-center justify-between cursor-pointer">
+                        <span>Rekomendasi</span>
+                        <template x-if="sort === 'recommended'">
+                            <x-icon name="lucide-check" class="w-3.5 h-3.5 stroke-[3]" />
+                        </template>
+                    </button>
+
+                    <button type="button" @click="selectSort('price_asc')"
+                        :class="sort === 'price_asc' ? 'bg-yellow-400 text-black font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]' : 'text-black dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 font-bold'"
+                        class="w-full text-left px-3 py-2 text-xs uppercase tracking-wide rounded-lg border-2 border-transparent hover:border-black dark:hover:border-zinc-700 transition-all flex items-center justify-between cursor-pointer">
+                        <span>Harga Termurah</span>
+                        <template x-if="sort === 'price_asc'">
+                            <x-icon name="lucide-check" class="w-3.5 h-3.5 stroke-[3]" />
+                        </template>
+                    </button>
+
+                    <button type="button" @click="selectSort('price_desc')"
+                        :class="sort === 'price_desc' ? 'bg-yellow-400 text-black font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]' : 'text-black dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 font-bold'"
+                        class="w-full text-left px-3 py-2 text-xs uppercase tracking-wide rounded-lg border-2 border-transparent hover:border-black dark:hover:border-zinc-700 transition-all flex items-center justify-between cursor-pointer">
+                        <span>Harga Termahal</span>
+                        <template x-if="sort === 'price_desc'">
+                            <x-icon name="lucide-check" class="w-3.5 h-3.5 stroke-[3]" />
+                        </template>
+                    </button>
+
+                    <button type="button" @click="selectSort('newest')"
+                        :class="sort === 'newest' ? 'bg-yellow-400 text-black font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]' : 'text-black dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 font-bold'"
+                        class="w-full text-left px-3 py-2 text-xs uppercase tracking-wide rounded-lg border-2 border-transparent hover:border-black dark:hover:border-zinc-700 transition-all flex items-center justify-between cursor-pointer">
+                        <span>Terbaru</span>
+                        <template x-if="sort === 'newest'">
+                            <x-icon name="lucide-check" class="w-3.5 h-3.5 stroke-[3]" />
+                        </template>
+                    </button>
                 </div>
-                <x-icon name="lucide-chevron-down" class="w-4 h-4 text-black dark:text-white stroke-[2.5] shrink-0 pointer-events-none" />
-                <select x-model="sort" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer text-base">
-                    <option value="recommended">Rekomendasi</option>
-                    <option value="price_asc">Harga Termurah</option>
-                    <option value="price_desc">Harga Termahal</option>
-                    <option value="newest">Terbaru</option>
-                </select>
             </div>
 
             @if($kosts->count() > 0 || $district)

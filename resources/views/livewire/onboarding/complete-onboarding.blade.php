@@ -75,10 +75,13 @@
                             this.terms
                         );
                     } catch (e) {
-                        if ($wire.errors) {
+                        const serverErrors = $wire.errors;
+                        if (serverErrors && typeof serverErrors === 'object') {
                             for (const key of ['role', 'business_name', 'phone_number', 'terms']) {
-                                if ($wire.errors.has(key)) {
-                                    this.errors[key] = $wire.errors.first(key);
+                                if (serverErrors[key]) {
+                                    this.errors[key] = Array.isArray(serverErrors[key])
+                                        ? serverErrors[key][0]
+                                        : serverErrors[key];
                                 }
                             }
                         }

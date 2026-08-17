@@ -37,9 +37,9 @@ class CompleteOnboarding extends Component
 
         if ($user->hasCompletedOnboarding()) {
             if ($user->role === 'owner') {
-                $this->redirectRoute('dashboard', navigate: true);
+                $this->redirectRoute('dashboard');
             } else {
-                $this->redirectRoute('home', navigate: true);
+                $this->redirectRoute('home');
             }
 
             return;

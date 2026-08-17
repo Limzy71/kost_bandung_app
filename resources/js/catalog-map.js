@@ -312,6 +312,34 @@ window.catalogMap = function (config) {
             });
         },
 
+        createPriceBadgeElement(priceText, isBoosted) {
+            const bg = isBoosted ? '#FACC15' : '#FFFFFF';
+            const textStr = String(priceText || 'Kost');
+            const width = Math.max(68, textStr.length * 8.5 + 24);
+            const halfWidth = Math.round(width / 2);
+            const height = 36;
+            const boxHeight = 24;
+
+            const svg = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+                    <rect x="2" y="2" width="${width - 4}" height="${boxHeight}" rx="6" fill="#000000" />
+                    <rect x="0" y="0" width="${width - 4}" height="${boxHeight}" rx="6" fill="${bg}" stroke="#000000" stroke-width="2" />
+                    <text x="${(width - 4) / 2}" y="16" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="11" fill="#000000" text-anchor="middle" letter-spacing="-0.2px">${this.escapeHtml(textStr)}</text>
+                    <polygon points="${halfWidth - 6},${boxHeight} ${halfWidth + 4},${boxHeight} ${halfWidth - 1},${height - 3}" fill="#000000" />
+                    <polygon points="${halfWidth - 7},${boxHeight - 1} ${halfWidth + 3},${boxHeight - 1} ${halfWidth - 2},${height - 4}" fill="${bg}" stroke="#000000" stroke-width="2" stroke-linejoin="round" />
+                    <line x1="${halfWidth - 5}" y1="${boxHeight}" x2="${halfWidth + 1}" y2="${boxHeight}" stroke="${bg}" stroke-width="2.5" />
+                </svg>
+            `.trim().replace(/\s+/g, ' ');
+
+            const img = document.createElement('img');
+            img.src = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+            img.width = width;
+            img.height = height;
+            img.style.cursor = 'pointer';
+
+            return { img, svg, width, height, anchorX: halfWidth - 2, anchorY: height - 4 };
+        },
+
         setupGoogleMap() {
             if (this.mapEngine === 'leaflet') return true; // don't clobber a working Leaflet map
             if (!this.$refs.catalogMapElement) {
@@ -343,6 +371,11 @@ window.catalogMap = function (config) {
                     if (this.$refs.mapTypeSwitcher) {
                         this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(this.$refs.mapTypeSwitcher);
                     }
+
+                    // Render again once tiles & viewport are initialized
+                    google.maps.event.addListenerOnce(this.map, 'idle', () => {
+                        this.renderGoogleMarkers();
+                    });
                 }
                 this.renderGoogleMarkers();
 
@@ -395,83 +428,36 @@ window.catalogMap = function (config) {
                 bounds.extend(pos);
                 validCount++;
 
-                const bg = item.is_boosted ? '#FACC15' : '#FFFFFF';
-                const priceText = item.price_short || 'Kost';
+                const badge = this.createPriceBadgeElement(item.price_short, item.is_boosted);
 
                 if (hasAdvancedMarker) {
-                    // Build Neo-Brutalist HTML DOM Badge for AdvancedMarkerElement
-                    const priceTag = document.createElement('div');
-                    priceTag.className = 'neo-map-pin-container';
-                    priceTag.style.cursor = 'pointer';
-                    priceTag.style.userSelect = 'none';
-                    priceTag.innerHTML = `
-                        <div style="
-                            background: ${bg};
-                            color: #000000;
-                            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                            font-weight: 900;
-                            font-size: 11px;
-                            line-height: 1.2;
-                            padding: 5px 9px;
-                            border: 2px solid #000000;
-                            border-radius: 7px;
-                            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
-                            white-space: nowrap;
-                            display: inline-flex;
-                            align-items: center;
-                            justify-content: center;
-                            position: relative;
-                            transform: translateY(-8px);
-                        ">
-                            ${this.escapeHtml(priceText)}
-                            <div style="
-                                position: absolute;
-                                bottom: -6px;
-                                left: 50%;
-                                transform: translateX(-50%);
-                                width: 0;
-                                height: 0;
-                                border-left: 5px solid transparent;
-                                border-right: 5px solid transparent;
-                                border-top: 6px solid #000000;
-                            "></div>
-                        </div>
-                    `;
-
                     const marker = new google.maps.marker.AdvancedMarkerElement({
                         position: pos,
                         map: this.map,
                         title: item.name,
-                        content: priceTag
+                        content: badge.img
                     });
 
-                    marker.addListener('click', () => {
+                    const openPopup = () => {
                         this.infoWindow.setContent(this.buildPopupHtml(item));
                         this.infoWindow.open(this.map, marker);
-                    });
+                    };
+
+                    marker.addListener('click', openPopup);
+                    marker.addEventListener('gmp-click', openPopup);
 
                     this.markers.push(marker);
                 } else {
                     // Classic google.maps.Marker with custom SVG badge fallback
-                    const svg = `
-                        <svg xmlns="http://www.w3.org/2000/svg" width="76" height="34" viewBox="0 0 76 34">
-                            <rect x="2" y="2" width="72" height="24" rx="6" fill="#000" />
-                            <rect x="0" y="0" width="72" height="24" rx="6" fill="${bg}" stroke="#000" stroke-width="2" />
-                            <text x="36" y="16" font-family="system-ui, sans-serif" font-weight="900" font-size="11" fill="#000" text-anchor="middle">${this.escapeHtml(priceText)}</text>
-                            <polygon points="30,24 42,24 36,32" fill="${bg}" stroke="#000" stroke-width="2" />
-                            <line x1="31" y1="24" x2="41" y2="24" stroke="${bg}" stroke-width="2.5" />
-                        </svg>
-                    `.trim().replace(/\s+/g, ' ');
-
                     const marker = new google.maps.Marker({
                         position: pos,
                         map: this.map,
                         title: item.name,
                         icon: {
-                            url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg),
-                            size: new google.maps.Size(76, 34),
-                            scaledSize: new google.maps.Size(76, 34),
-                            anchor: new google.maps.Point(36, 34)
+                            url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(badge.svg),
+                            size: new google.maps.Size(badge.width, badge.height),
+                            scaledSize: new google.maps.Size(badge.width, badge.height),
+                            anchor: new google.maps.Point(badge.anchorX, badge.anchorY)
                         }
                     });
 

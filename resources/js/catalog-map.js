@@ -315,29 +315,41 @@ window.catalogMap = function (config) {
         createPriceBadgeElement(priceText, isBoosted) {
             const bg = isBoosted ? '#FACC15' : '#FFFFFF';
             const textStr = String(priceText || 'Kost');
-            const width = Math.max(68, textStr.length * 8.5 + 24);
-            const halfWidth = Math.round(width / 2);
-            const height = 36;
-            const boxHeight = 24;
+            // Dynamic width based on text length, min 56px
+            const paddingH = 20;
+            const charWidth = 8;
+            const boxW = Math.max(56, textStr.length * charWidth + paddingH);
+            const boxH = 26;
+            const tailW = 10;
+            const tailH = 8;
+            const shadowOffset = 3;
+            const totalW = boxW + shadowOffset;
+            const totalH = boxH + tailH + shadowOffset;
+            const cx = boxW / 2; // center x of badge
 
-            const svg = `
-                <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
-                    <rect x="2" y="2" width="${width - 4}" height="${boxHeight}" rx="6" fill="#000000" />
-                    <rect x="0" y="0" width="${width - 4}" height="${boxHeight}" rx="6" fill="${bg}" stroke="#000000" stroke-width="2" />
-                    <text x="${(width - 4) / 2}" y="16" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="11" fill="#000000" text-anchor="middle" letter-spacing="-0.2px">${this.escapeHtml(textStr)}</text>
-                    <polygon points="${halfWidth - 6},${boxHeight} ${halfWidth + 4},${boxHeight} ${halfWidth - 1},${height - 3}" fill="#000000" />
-                    <polygon points="${halfWidth - 7},${boxHeight - 1} ${halfWidth + 3},${boxHeight - 1} ${halfWidth - 2},${height - 4}" fill="${bg}" stroke="#000000" stroke-width="2" stroke-linejoin="round" />
-                    <line x1="${halfWidth - 5}" y1="${boxHeight}" x2="${halfWidth + 1}" y2="${boxHeight}" stroke="${bg}" stroke-width="2.5" />
-                </svg>
-            `.trim().replace(/\s+/g, ' ');
+            // Shadow rect (offset bottom-right)
+            const shadowRect = `<rect x="${shadowOffset}" y="${shadowOffset}" width="${boxW}" height="${boxH}" rx="6" fill="#000000" />`;
+            // Main rect
+            const mainRect = `<rect x="0" y="0" width="${boxW}" height="${boxH}" rx="6" fill="${bg}" stroke="#000000" stroke-width="2" />`;
+            // Text centered in main rect
+            const text = `<text x="${boxW / 2}" y="${boxH / 2 + 4}" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="11" fill="#000000" text-anchor="middle">${this.escapeHtml(textStr)}</text>`;
+            // Shadow tail triangle (offset)
+            const tailShadow = `<polygon points="${cx - tailW / 2 + shadowOffset},${boxH + shadowOffset} ${cx + tailW / 2 + shadowOffset},${boxH + shadowOffset} ${cx + shadowOffset},${boxH + tailH + shadowOffset}" fill="#000000" />`;
+            // Main tail triangle
+            const tailMain = `<polygon points="${cx - tailW / 2},${boxH} ${cx + tailW / 2},${boxH} ${cx},${boxH + tailH}" fill="${bg}" stroke="#000000" stroke-width="2" stroke-linejoin="round" />`;
+            // Cover the top edge of the tail so it blends with the box border
+            const tailCover = `<rect x="${cx - tailW / 2 + 2}" y="${boxH - 1}" width="${tailW - 4}" height="3" fill="${bg}" />`;
+
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${totalW}" height="${totalH}" viewBox="0 0 ${totalW} ${totalH}">${tailShadow}${shadowRect}${tailMain}${mainRect}${tailCover}${text}</svg>`;
 
             const img = document.createElement('img');
             img.src = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
-            img.width = width;
-            img.height = height;
+            img.width = totalW;
+            img.height = totalH;
             img.style.cursor = 'pointer';
 
-            return { img, svg, width, height, anchorX: halfWidth - 2, anchorY: height - 4 };
+            // Anchor at tip of tail
+            return { img, svg, width: totalW, height: totalH, anchorX: Math.round(cx), anchorY: totalH - shadowOffset };
         },
 
         setupGoogleMap() {
@@ -546,127 +558,106 @@ window.catalogMap = function (config) {
         /** Build the popup/infoWindow HTML string for a single kost item */
         buildPopupHtml(item) {
             const escape = (v) => this.escapeHtml(v);
+            const genderColor = {
+                putra: '#BFDBFE',
+                putri: '#FBCFE8',
+                campur: '#BBF7D0'
+            }[String(item.gender || '').toLowerCase()] || '#E5E7EB';
             return `
                 <style>
-                    /* Reset Google Maps InfoWindow wrappers to remove default padding */
                     .gm-style-iw-c {
                         padding: 0 !important;
-                        border-radius: 12px !important;
-                        border: 3px solid #000 !important;
-                        box-shadow: 6px 6px 0px #000 !important;
+                        border-radius: 14px !important;
+                        border: 2.5px solid #000 !important;
+                        box-shadow: 5px 5px 0px #000 !important;
                         background: #fff !important;
+                        overflow: hidden !important;
+                        max-width: 260px !important;
                     }
                     .gm-style-iw-d {
                         overflow: hidden !important;
                         padding: 0 !important;
                     }
-                    /* Hide default tail shadow from Google Maps */
-                    .gm-style-iw-tc::after {
-                        background: #000 !important;
-                    }
-                    
-                    /* Hide yellow pan arrows (accessibility focus indicators) */
+                    .gm-style-iw-tc::after { background: #000 !important; }
                     .gm-style-iw-c button[title^="Pan"],
                     .gm-style-iw-c button[aria-label^="Pan"],
-                    .gm-style-iw-a button:not(.gm-ui-hover-effect) {
-                        display: none !important;
-                    }
+                    .gm-style-iw-a button:not(.gm-ui-hover-effect) { display: none !important; }
 
-                    /* Override Google Maps InfoWindow default close button */
                     .gm-ui-hover-effect {
-                        top: 10px !important;
-                        right: 10px !important;
-                        background: #FEE2E2 !important;
+                        top: 8px !important; right: 8px !important;
+                        background: #fff !important;
                         border: 2px solid #000 !important;
                         border-radius: 50% !important;
                         box-shadow: 2px 2px 0px #000 !important;
                         opacity: 1 !important;
-                        width: 28px !important;
-                        height: 28px !important;
-                        transition: all 0.15s ease !important;
+                        width: 26px !important; height: 26px !important;
+                        transition: all 0.12s ease !important;
                         z-index: 100 !important;
                         display: flex !important;
-                        align-items: center !important;
-                        justify-content: center !important;
+                        align-items: center !important; justify-content: center !important;
                     }
                     .gm-ui-hover-effect:hover {
-                        top: 11px !important;
-                        right: 9px !important;
-                        box-shadow: 1px 1px 0px #000 !important;
-                        background: #FECACA !important;
+                        transform: translate(2px, 2px) !important;
+                        box-shadow: 0px 0px 0px #000 !important;
                     }
-                    /* Hide Google's native sprite icon to prevent hover glitching */
-                    .gm-ui-hover-effect > span,
-                    .gm-ui-hover-effect > img {
-                        display: none !important;
+                    .gm-ui-hover-effect > span, .gm-ui-hover-effect > img { display: none !important; }
+                    .gm-ui-hover-effect::before, .gm-ui-hover-effect::after {
+                        content: '' !important; position: absolute !important;
+                        top: 50% !important; left: 50% !important;
+                        width: 11px !important; height: 2px !important;
+                        background-color: #000 !important; border-radius: 1px !important;
                     }
-                    /* Draw our own perfect Neo-Brutalist 'X' */
-                    .gm-ui-hover-effect::before,
-                    .gm-ui-hover-effect::after {
-                        content: '' !important;
-                        position: absolute !important;
-                        top: 50% !important;
-                        left: 50% !important;
-                        width: 12px !important;
-                        height: 2.5px !important;
-                        background-color: #000 !important;
-                        border-radius: 2px !important;
-                    }
-                    .gm-ui-hover-effect::before {
-                        transform: translate(-50%, -50%) rotate(45deg) !important;
-                    }
-                    .gm-ui-hover-effect::after {
-                        transform: translate(-50%, -50%) rotate(-45deg) !important;
-                    }
+                    .gm-ui-hover-effect::before { transform: translate(-50%, -50%) rotate(45deg) !important; }
+                    .gm-ui-hover-effect::after  { transform: translate(-50%, -50%) rotate(-45deg) !important; }
 
-                    /* Custom Button */
-                    .neo-popup-btn {
-                        position: relative;
-                        display: flex; align-items: center; justify-content: center; gap: 6px;
-                        background: #FB923C; color: #000; border: 2.5px solid #000;
-                        padding: 10px 12px; border-radius: 8px; font-weight: 900;
-                        font-size: 13px; text-decoration: none; text-transform: uppercase;
-                        box-shadow: 3px 3px 0px #000; transition: all 0.15s ease;
-                        margin-top: 4px; box-sizing: border-box; width: 100%;
-                        top: 0;
-                        left: 0;
+                    .kp-btn {
+                        position: relative; display: flex; align-items: center;
+                        justify-content: center; gap: 5px;
+                        background: #FACC15; color: #000; border: 2px solid #000;
+                        padding: 9px 12px; border-radius: 8px; font-weight: 900;
+                        font-size: 12px; text-decoration: none; text-transform: uppercase;
+                        box-shadow: 3px 3px 0px #000; transition: all 0.12s ease;
+                        box-sizing: border-box; width: 100%; letter-spacing: 0.3px;
                     }
-                    .neo-popup-btn:hover {
-                        top: 2px;
-                        left: 2px;
-                        box-shadow: 1px 1px 0px #000;
-                    }
+                    .kp-btn:hover { transform: translate(2px,2px); box-shadow: 1px 1px 0px #000; }
                 </style>
-                <div style="font-family: 'Inter', system-ui, sans-serif; width: 250px; color: #000; box-sizing: border-box; display: flex; flex-direction: column;">
-                    <div style="position: relative; width: 100%; height: 140px; border-bottom: 3px solid #000;">
-                        <img src="${escape(item.image)}" 
-                             style="width: 100%; height: 100%; object-fit: cover; border-top-left-radius: 8px; border-top-right-radius: 8px;" />
-                        <div style="position: absolute; bottom: 8px; left: 8px; display: flex; gap: 6px;">
-                            <span style="background: #F472B6; color: #000; font-size: 10px; font-weight: 900; text-transform: uppercase; padding: 4px 8px; border: 2px solid #000; border-radius: 6px; box-shadow: 2px 2px 0px #000;">
+                <div style="font-family: 'Inter', system-ui, sans-serif; width: 248px; color: #000; box-sizing: border-box;">
+                    <!-- Image -->
+                    <div style="position: relative; width: 100%; height: 136px; overflow: hidden; border-bottom: 2.5px solid #000;">
+                        <img src="${escape(item.image)}"
+                             style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+                        <!-- Gender + District badges -->
+                        <div style="position: absolute; bottom: 8px; left: 8px; display: flex; gap: 5px;">
+                            <span style="background: ${genderColor}; color: #000; font-size: 9px; font-weight: 900; text-transform: uppercase; padding: 3px 8px; border: 2px solid #000; border-radius: 4px; box-shadow: 2px 2px 0 #000; letter-spacing: 0.3px;">
                                 ${escape(item.gender)}
                             </span>
-                            <span style="background: #67E8F9; color: #000; font-size: 10px; font-weight: 900; text-transform: uppercase; padding: 4px 8px; border: 2px solid #000; border-radius: 6px; box-shadow: 2px 2px 0px #000;">
+                            <span style="background: #FEF3C7; color: #000; font-size: 9px; font-weight: 900; text-transform: uppercase; padding: 3px 8px; border: 2px solid #000; border-radius: 4px; box-shadow: 2px 2px 0 #000; letter-spacing: 0.3px;">
                                 ${escape(item.district)}
                             </span>
                         </div>
                     </div>
-                    
-                    <div style="padding: 14px;">
-                        <h4 style="font-size: 16px; font-weight: 900; margin: 0 0 2px 0; line-height: 1.2; text-transform: uppercase;">
+
+                    <!-- Info body -->
+                    <div style="padding: 12px 12px 10px;">
+                        <h4 style="font-size: 14px; font-weight: 900; margin: 0 0 3px 0; line-height: 1.25; text-transform: uppercase; letter-spacing: 0.2px; padding-right: 24px;">
                             ${escape(item.name)}
                         </h4>
-                        <p style="font-size: 12px; font-weight: 700; color: #555; margin: 0 0 12px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        <p style="font-size: 11px; color: #6B7280; margin: 0 0 10px 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500;">
                             ${escape(item.address)}
                         </p>
-                        
-                        <div style="display: flex; align-items: baseline; gap: 4px; margin-bottom: 14px;">
-                            <span style="font-weight: 900; font-size: 17px; color: #000;">${escape(item.price_full)}</span>
-                            <span style="font-weight: 800; font-size: 11px; color: #666;">${escape(item.price_unit)}</span>
+
+                        <!-- Price section -->
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; background: #F9FAFB; border: 2px solid #000; border-radius: 8px; padding: 7px 10px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                            <div>
+                                <div style="font-weight: 900; font-size: 16px; line-height: 1;">${escape(item.price_full)}</div>
+                                <div style="font-size: 10px; color: #6B7280; font-weight: 600;">${escape(item.price_unit)}</div>
+                            </div>
                         </div>
 
-                        <a href="${escape(item.url)}" class="neo-popup-btn">
+                        <a href="${escape(item.url)}" class="kp-btn">
                             <span>Lihat Detail</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                         </a>
                     </div>
                 </div>

@@ -27,7 +27,33 @@
             </div>
         @endif
 
-        <form wire:submit="complete" x-data="{ role: @entangle('role') }" class="space-y-6">
+        {{-- All form state lives purely in Alpine. No wire:model or @entangle.
+             Data is sent to server in ONE shot on submit to prevent re-render flicker. --}}
+        <div
+            x-data="{
+                role: 'user',
+                business_name: '',
+                phone_number: '',
+                terms: false,
+                submitting: false,
+
+                async submit() {
+                    if (this.submitting) return;
+                    this.submitting = true;
+                    try {
+                        await $wire.complete(
+                            this.role,
+                            this.role === 'owner' ? this.business_name : '',
+                            this.role === 'owner' ? this.phone_number : '',
+                            this.terms
+                        );
+                    } finally {
+                        this.submitting = false;
+                    }
+                }
+            }"
+            class="space-y-6"
+        >
 
             {{-- ===== Role Selector Cards ===== --}}
             <div>
@@ -102,7 +128,7 @@
                     <input
                         type="text"
                         id="business_name"
-                        wire:model="business_name"
+                        x-model="business_name"
                         placeholder="Contoh: Kost Putri Melati Dipatiukur"
                         class="w-full px-4 py-3.5 bg-white border-3 border-black rounded-lg text-sm font-bold text-black placeholder:text-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all dark:bg-zinc-900 dark:border-zinc-700 dark:text-white dark:placeholder:text-zinc-500 dark:focus:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]"
                     />
@@ -119,7 +145,7 @@
                     <input
                         type="tel"
                         id="phone_number"
-                        wire:model="phone_number"
+                        x-model="phone_number"
                         placeholder="081234567890"
                         class="w-full px-4 py-3.5 bg-white border-3 border-black rounded-lg text-sm font-bold text-black placeholder:text-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all dark:bg-zinc-900 dark:border-zinc-700 dark:text-white dark:placeholder:text-zinc-500 dark:focus:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]"
                     />
@@ -137,7 +163,7 @@
                 <label class="flex items-start gap-3 cursor-pointer group">
                     <input
                         type="checkbox"
-                        wire:model="terms"
+                        x-model="terms"
                         class="mt-0.5 w-5 h-5 bg-white border-3 border-black rounded text-black focus:ring-0 cursor-pointer dark:bg-zinc-800 dark:border-zinc-700 shrink-0"
                     />
                     <span class="text-xs font-bold text-zinc-700 dark:text-zinc-300 leading-snug">
@@ -152,24 +178,30 @@
             {{-- ===== Submit Button ===== --}}
             <div class="pt-2">
                 <button
-                    type="submit"
-                    wire:loading.attr="disabled"
-                    wire:target="complete"
+                    type="button"
+                    @click="submit()"
+                    :disabled="submitting"
                     class="w-full py-4 px-6 bg-[#FFE500] hover:bg-yellow-400 text-black border-3 border-black font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all duration-75 rounded-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed dark:border-zinc-700 dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]"
                 >
-                    <span wire:loading.remove wire:target="complete">Selesaikan & Lanjutkan</span>
-                    <span wire:loading wire:target="complete" class="inline-flex items-center gap-2">
-                        <svg class="animate-spin h-4 w-4 text-black" viewBox="0 0 24 24" fill="none">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        <span>Menyimpan...</span>
-                    </span>
-                    <x-icon wire:loading.remove wire:target="complete" name="lucide-arrow-right" class="w-4 h-4 stroke-[3]" />
+                    <template x-if="!submitting">
+                        <span class="flex items-center gap-2">
+                            Selesaikan &amp; Lanjutkan
+                            <x-icon name="lucide-arrow-right" class="w-4 h-4 stroke-[3]" />
+                        </span>
+                    </template>
+                    <template x-if="submitting">
+                        <span class="inline-flex items-center gap-2">
+                            <svg class="animate-spin h-4 w-4 text-black" viewBox="0 0 24 24" fill="none">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Menyimpan...
+                        </span>
+                    </template>
                 </button>
             </div>
 
-        </form>
+        </div>
 
         {{-- Logout Option --}}
         <div class="mt-8 pt-6 border-t-2 border-dashed border-zinc-300 dark:border-zinc-700 text-center">

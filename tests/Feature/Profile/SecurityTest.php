@@ -268,3 +268,35 @@ test('regenerating recovery codes requires password confirmation and stores inte
     $component->assertRedirect(route('password.confirm'));
     expect(session('url.intended'))->toBe(route('profile.show'));
 });
+
+test('oauth user without password can set a password directly', function () {
+    $oauthUser = User::factory()->create([
+        'email_verified_at' => now(),
+        'password' => null,
+        'google_id' => 'google-test-999',
+    ]);
+
+    Livewire::actingAs($oauthUser)
+        ->test(Security::class)
+        ->set('password', 'new-password-123')
+        ->set('password_confirmation', 'new-password-123')
+        ->call('updatePassword')
+        ->assertHasNoErrors()
+        ->assertDispatched('show-toast', message: 'Kata sandi berhasil dibuat. Anda sekarang bisa login dengan email dan kata sandi.');
+
+    expect(Hash::check('new-password-123', $oauthUser->fresh()->password))->toBeTrue();
+});
+
+test('profile page shows create password heading for oauth user without password', function () {
+    $oauthUser = User::factory()->create([
+        'email_verified_at' => now(),
+        'password' => null,
+        'google_id' => 'google-test-999',
+    ]);
+
+    $this->actingAs($oauthUser)
+        ->get('/profil')
+        ->assertOk()
+        ->assertSee('Buat Kata Sandi')
+        ->assertSee('Anda masuk dengan akun Google');
+});

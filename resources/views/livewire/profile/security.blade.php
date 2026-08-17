@@ -15,21 +15,34 @@
     <div class="space-y-4">
         <div class="flex items-center gap-2 border-b-2 border-black/10 dark:border-zinc-800 pb-2">
             <x-icon name="lucide-key-round" class="w-4 h-4 text-black dark:text-white stroke-[2.5]" />
-            <h3 class="text-base font-black text-black dark:text-white uppercase tracking-tight">Ubah Kata Sandi</h3>
+            <h3 class="text-base font-black text-black dark:text-white uppercase tracking-tight">
+                {{ $this->hasPassword ? 'Ubah Kata Sandi' : 'Buat Kata Sandi' }}
+            </h3>
         </div>
+
+        @if (! $this->hasPassword)
+            <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                Anda masuk dengan akun Google. Buat kata sandi agar bisa login dengan email dan kata sandi juga.
+            </p>
+        @endif
 
         <form wire:submit="updatePassword" class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <input type="email" name="username" value="{{ auth()->user()->email }}" autocomplete="username" class="hidden" aria-hidden="true" readonly tabindex="-1">
-            <div>
-                <label for="current_password" class="block text-xs font-black uppercase text-black dark:text-white mb-1.5">Kata Sandi Saat Ini</label>
-                <input type="password" id="current_password" wire:model="current_password" autocomplete="current-password"
-                    class="w-full px-4 py-3 text-sm bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-lg text-black dark:text-white font-bold placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all"
-                    placeholder="••••••••">
-                @error('current_password') <p class="text-xs font-black text-rose-500 mt-1 uppercase">{{ $message }}</p> @enderror
-            </div>
+
+            @if ($this->hasPassword)
+                <div>
+                    <label for="current_password" class="block text-xs font-black uppercase text-black dark:text-white mb-1.5">Kata Sandi Saat Ini</label>
+                    <input type="password" id="current_password" wire:model="current_password" autocomplete="current-password"
+                        class="w-full px-4 py-3 text-sm bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-lg text-black dark:text-white font-bold placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all"
+                        placeholder="••••••••">
+                    @error('current_password') <p class="text-xs font-black text-rose-500 mt-1 uppercase">{{ $message }}</p> @enderror
+                </div>
+            @endif
 
             <div>
-                <label for="password" class="block text-xs font-black uppercase text-black dark:text-white mb-1.5">Kata Sandi Baru</label>
+                <label for="password" class="block text-xs font-black uppercase text-black dark:text-white mb-1.5">
+                    {{ $this->hasPassword ? 'Kata Sandi Baru' : 'Kata Sandi' }}
+                </label>
                 <input type="password" id="password" wire:model="password" autocomplete="new-password"
                     class="w-full px-4 py-3 text-sm bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-lg text-black dark:text-white font-bold placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all"
                     placeholder="Minimal 8 karakter">
@@ -48,7 +61,7 @@
                 <button type="submit"
                     class="bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black dark:border-zinc-700 font-black text-sm uppercase px-6 py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all inline-flex items-center gap-2 rounded-lg cursor-pointer">
                     <x-icon name="lucide-save" class="w-5 h-5 text-black stroke-[2.5]" />
-                    <span>Simpan Kata Sandi</span>
+                    <span>{{ $this->hasPassword ? 'Simpan Kata Sandi' : 'Buat Kata Sandi' }}</span>
                 </button>
             </div>
         </form>

@@ -99,32 +99,54 @@ class Security extends Component
     }
 
     /**
+     * Whether the current user has a password set (not OAuth-only).
+     */
+    #[Computed]
+    public function hasPassword(): bool
+    {
+        return auth()->user()->password !== null;
+    }
+
+    /**
      * Update the password for the currently authenticated user.
+     *
+     * OAuth-only users (no password) can set a new password directly
+     * without confirming the current one.
      */
     public function updatePassword(): void
     {
-        if (! $this->requirePasswordConfirmation()) {
+        $user = Auth::user();
+        $wasOAuthOnly = $user->password === null;
+
+        if (! $wasOAuthOnly && ! $this->requirePasswordConfirmation()) {
             return;
         }
 
+        $rules = ['password' => $this->passwordRules()];
+
+        if (! $wasOAuthOnly) {
+            $rules['current_password'] = $this->currentPasswordRules();
+        }
+
         try {
-            $validated = $this->validate([
-                'current_password' => $this->currentPasswordRules(),
-                'password' => $this->passwordRules(),
-            ]);
+            $validated = $this->validate($rules);
         } catch (ValidationException $e) {
             $this->reset('current_password', 'password', 'password_confirmation');
 
             throw $e;
         }
 
-        Auth::user()->update([
+        $user->update([
             'password' => $validated['password'],
         ]);
 
         $this->reset('current_password', 'password', 'password_confirmation');
 
-        $this->dispatch('show-toast', message: 'Kata sandi berhasil diperbarui.');
+        $message = $wasOAuthOnly
+            ? 'Kata sandi berhasil dibuat. Anda sekarang bisa login dengan email dan kata sandi.'
+            : 'Kata sandi berhasil diperbarui.';
+
+        $this->dispatch('show-toast', message: $message);
     }
 
     /**

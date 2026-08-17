@@ -78,11 +78,17 @@ window.catalogMap = function (config) {
                             this.initCatalogMap();
                         } else {
                             this.resizeMap();
+                            if (this.mapEngine === 'google') this.renderGoogleMarkers();
+                            else if (this.mapEngine === 'leaflet') this.renderLeafletMarkers();
                         }
                     });
-                    // Fallback to guarantee resize fires after the 500ms slide-up transition completes
+                    // Fallback to guarantee resize and marker positioning after the 500ms slide-up transition completes
                     setTimeout(() => {
-                        if (this.viewMode === 'map') this.resizeMap();
+                        if (this.viewMode === 'map') {
+                            this.resizeMap();
+                            if (this.mapEngine === 'google') this.renderGoogleMarkers();
+                            else if (this.mapEngine === 'leaflet') this.renderLeafletMarkers();
+                        }
                     }, 600);
                 }
             });
@@ -294,27 +300,27 @@ window.catalogMap = function (config) {
 
         setupGoogleMap() {
             if (this.mapEngine === 'leaflet') return true; // don't clobber a working Leaflet map
-            if (!this.$refs.catalogMapElement) return false;
-            if (!window.google || !window.google.maps) {
-                window.dispatchEvent(new Event('map-load-error'));
-                return false;
-            }
-            if (!window.google.maps.marker || !window.google.maps.marker.AdvancedMarkerElement) {
-                console.warn('Google Maps AdvancedMarkerElement API unavailable; falling back to Leaflet.');
-                this.loadLeafletAndInit();
+            if (!this.$refs.catalogMapElement) {
                 return false;
             }
             try {
                 if (!this.map) {
-                    this.map = new google.maps.Map(this.$refs.catalogMapElement, {
-                        mapId: 'KOST_CATALOG_MAP',
+                    const hasAdvancedMarker = Boolean(
+                        window.google.maps.marker && window.google.maps.marker.AdvancedMarkerElement
+                    );
+                    const mapOptions = {
                         center: { lat: -6.917464, lng: 107.619123 },
                         zoom: 13,
                         mapTypeControl: false, // We use custom buttons for this
                         streetViewControl: false,
                         fullscreenControl: true,
                         styles: null,
-                    });
+                    };
+                    if (hasAdvancedMarker) {
+                        mapOptions.mapId = 'KOST_CATALOG_MAP';
+                    }
+
+                    this.map = new google.maps.Map(this.$refs.catalogMapElement, mapOptions);
                     this.infoWindow = new google.maps.InfoWindow();
                     this.mapEngine = 'google';
                     this.googleRetries = 0;
@@ -362,63 +368,106 @@ window.catalogMap = function (config) {
             const bounds = new google.maps.LatLngBounds();
             let validCount = 0;
 
-            const Marker = window.google.maps.marker.AdvancedMarkerElement;
-            if (!Marker) return;
+            const hasAdvancedMarker = Boolean(
+                window.google.maps.marker && window.google.maps.marker.AdvancedMarkerElement
+            );
 
             currentItems.forEach(item => {
-                if (!item.lat || !item.lng) return;
-                const pos = { lat: item.lat, lng: item.lng };
+                const lat = parseFloat(item.lat);
+                const lng = parseFloat(item.lng);
+                if (isNaN(lat) || isNaN(lng) || lat === 0 || lng === 0) return;
+
+                const pos = { lat, lng };
                 bounds.extend(pos);
                 validCount++;
 
                 const bg = item.is_boosted ? '#FACC15' : '#FFFFFF';
-                // Create SVG for Neo-Brutalist Price Tag
-                const svgWidth = 80;
-                const svgHeight = 36;
-                const svg = `
-                    <svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" viewBox="0 0 ${svgWidth} ${svgHeight}">
-                        <!-- Shadow -->
-                        <rect x="2" y="2" width="76" height="24" rx="4" fill="#000" />
-                        <!-- Box -->
-                        <rect x="0" y="0" width="76" height="24" rx="4" fill="${bg}" stroke="#000" stroke-width="2" />
-                        <!-- Text -->
-                        <text x="38" y="16" font-family="system-ui, sans-serif" font-weight="900" font-size="11" fill="#000" text-anchor="middle">${item.price_short}</text>
-                        <!-- Tail -->
-                        <polygon points="32,24 44,24 38,32" fill="${bg}" stroke="#000" stroke-width="2" />
-                        <!-- Hide top border of tail -->
-                        <line x1="33.5" y1="24" x2="42.5" y2="24" stroke="${bg}" stroke-width="2.5" />
-                    </svg>
-                `.trim().replace(/\s+/g, ' ');
+                const priceText = item.price_short || 'Kost';
 
-                const iconUrl = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
-                
-                const img = document.createElement('img');
-                img.src = iconUrl;
-                img.width = svgWidth;
-                img.height = svgHeight;
-                img.style.position = 'absolute';
-                img.style.left = '-38px';
-                img.style.top = '-32px';
+                if (hasAdvancedMarker) {
+                    // Build Neo-Brutalist HTML DOM Badge for AdvancedMarkerElement
+                    const priceTag = document.createElement('div');
+                    priceTag.className = 'neo-map-pin-container';
+                    priceTag.style.cursor = 'pointer';
+                    priceTag.style.userSelect = 'none';
+                    priceTag.innerHTML = `
+                        <div style="
+                            background: ${bg};
+                            color: #000000;
+                            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                            font-weight: 900;
+                            font-size: 11px;
+                            line-height: 1.2;
+                            padding: 5px 9px;
+                            border: 2px solid #000000;
+                            border-radius: 7px;
+                            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
+                            white-space: nowrap;
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
+                            position: relative;
+                            transform: translateY(-8px);
+                        ">
+                            ${this.escapeHtml(priceText)}
+                            <div style="
+                                position: absolute;
+                                bottom: -6px;
+                                left: 50%;
+                                transform: translateX(-50%);
+                                width: 0;
+                                height: 0;
+                                border-left: 5px solid transparent;
+                                border-right: 5px solid transparent;
+                                border-top: 6px solid #000000;
+                            "></div>
+                        </div>
+                    `;
 
-                const content = document.createElement('div');
-                content.style.position = 'relative';
-                content.style.width = '0';
-                content.style.height = '0';
-                content.appendChild(img);
+                    const marker = new google.maps.marker.AdvancedMarkerElement({
+                        position: pos,
+                        map: this.map,
+                        title: item.name,
+                        content: priceTag
+                    });
 
-                const marker = new Marker({
-                    position: pos,
-                    map: this.map,
-                    title: item.name,
-                    content
-                });
+                    marker.addListener('click', () => {
+                        this.infoWindow.setContent(this.buildPopupHtml(item));
+                        this.infoWindow.open(this.map, marker);
+                    });
 
-                marker.addListener('click', () => {
-                    this.infoWindow.setContent(this.buildPopupHtml(item));
-                    this.infoWindow.open(this.map, marker);
-                });
+                    this.markers.push(marker);
+                } else {
+                    // Classic google.maps.Marker with custom SVG badge fallback
+                    const svg = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="76" height="34" viewBox="0 0 76 34">
+                            <rect x="2" y="2" width="72" height="24" rx="6" fill="#000" />
+                            <rect x="0" y="0" width="72" height="24" rx="6" fill="${bg}" stroke="#000" stroke-width="2" />
+                            <text x="36" y="16" font-family="system-ui, sans-serif" font-weight="900" font-size="11" fill="#000" text-anchor="middle">${this.escapeHtml(priceText)}</text>
+                            <polygon points="30,24 42,24 36,32" fill="${bg}" stroke="#000" stroke-width="2" />
+                            <line x1="31" y1="24" x2="41" y2="24" stroke="${bg}" stroke-width="2.5" />
+                        </svg>
+                    `.trim().replace(/\s+/g, ' ');
 
-                this.markers.push(marker);
+                    const marker = new google.maps.Marker({
+                        position: pos,
+                        map: this.map,
+                        title: item.name,
+                        icon: {
+                            url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg),
+                            size: new google.maps.Size(76, 34),
+                            scaledSize: new google.maps.Size(76, 34),
+                            anchor: new google.maps.Point(36, 34)
+                        }
+                    });
+
+                    marker.addListener('click', () => {
+                        this.infoWindow.setContent(this.buildPopupHtml(item));
+                        this.infoWindow.open(this.map, marker);
+                    });
+
+                    this.markers.push(marker);
+                }
             });
 
             if (validCount > 0) {

@@ -27,7 +27,13 @@
                     this.$watch('$wire.price_max', () => this.syncFromWire());
                     this.$watch('$wire.verified_only', () => this.syncFromWire());
                     this.$watch('$wire.facilities', () => this.syncFromWire());
+                    this.$wire.$on('filters-reset', () => {
+                        this.resetLocal();
+                    });
                 }
+                window.addEventListener('filters-reset', () => {
+                    this.resetLocal();
+                });
             },
 
             syncFromWire() {
@@ -62,23 +68,55 @@
 
             get activeFilterCount() {
                 let count = 0;
-                if (this.draftSearch) count++;
-                if (this.draftGender) count++;
-                if (this.draftDistrict) count++;
-                if (this.draftRentPeriod) count++;
-                if (this.draftPriceMin || this.draftPriceMax) count++;
+                if (this.draftSearch && this.draftSearch.trim() !== '') count++;
+                if (this.draftGender && this.draftGender !== '') count++;
+                if (this.draftDistrict && this.draftDistrict !== '') count++;
+                if (this.draftRentPeriod && this.draftRentPeriod !== '') count++;
+                if ((this.draftPriceMin && this.draftPriceMin !== '') || (this.draftPriceMax && this.draftPriceMax !== '')) count++;
                 if (this.draftVerifiedOnly) count++;
                 count += this.facilityCount;
                 return count;
             },
 
+            get hasAnyFilter() {
+                const draftHas = Boolean(
+                    (this.draftSearch && this.draftSearch.trim() !== '') ||
+                    (this.draftDistrict && this.draftDistrict !== '') ||
+                    (this.draftGender && this.draftGender !== '') ||
+                    (this.draftRentPeriod && this.draftRentPeriod !== '') ||
+                    (this.draftPriceMin && this.draftPriceMin !== '') ||
+                    (this.draftPriceMax && this.draftPriceMax !== '') ||
+                    this.draftVerifiedOnly ||
+                    (Array.isArray(this.draftFacilities) && this.draftFacilities.length > 0)
+                );
+                const wireFacs = this.$wire && Array.isArray(this.$wire.facilities) ? this.$wire.facilities.length : 0;
+                const wireHas = Boolean(
+                    this.$wire && (
+                        (this.$wire.search && this.$wire.search.trim() !== '') ||
+                        (this.$wire.district && this.$wire.district !== '') ||
+                        (this.$wire.gender && this.$wire.gender !== '') ||
+                        (this.$wire.rent_period && this.$wire.rent_period !== '') ||
+                        (this.$wire.price_min && this.$wire.price_min !== '') ||
+                        (this.$wire.price_max && this.$wire.price_max !== '') ||
+                        this.$wire.verified_only ||
+                        wireFacs > 0
+                    )
+                );
+                return draftHas || wireHas;
+            },
+
             toggleFacility(name) {
-                let list = Array.isArray(this.draftFacilities) ? [...this.draftFacilities] : [];
-                if (list.includes(name)) {
-                    this.draftFacilities = list.filter(f => f !== name);
+                if (!Array.isArray(this.draftFacilities)) this.draftFacilities = [];
+                const idx = this.draftFacilities.indexOf(name);
+                if (idx > -1) {
+                    this.draftFacilities.splice(idx, 1);
                 } else {
-                    this.draftFacilities = [...list, name];
+                    this.draftFacilities.push(name);
                 }
+            },
+
+            isFacilityActive(name) {
+                return Array.isArray(this.draftFacilities) && this.draftFacilities.includes(name);
             },
 
             setPricePreset(preset) {
@@ -92,6 +130,25 @@
                 const p = presets[preset] || presets['all'];
                 this.draftPriceMin = p.min;
                 this.draftPriceMax = p.max;
+            },
+
+            isPresetActive(preset) {
+                if (preset === 'all') {
+                    return !this.draftPriceMin && !this.draftPriceMax;
+                }
+                if (preset === 'under_1m') {
+                    return this.draftPriceMax === '1000000' && !this.draftPriceMin;
+                }
+                if (preset === '1m_2m') {
+                    return this.draftPriceMin === '1000000' && this.draftPriceMax === '2000000';
+                }
+                if (preset === '2m_3m') {
+                    return this.draftPriceMin === '2000000' && this.draftPriceMax === '3000000';
+                }
+                if (preset === 'above_3m') {
+                    return this.draftPriceMin === '3000000' && !this.draftPriceMax;
+                }
+                return false;
             },
 
             apply() {
@@ -130,14 +187,21 @@
                 <h2 class="text-base sm:text-lg font-black text-black dark:text-white uppercase tracking-tight">
                     Filter Pencarian Kost
                 </h2>
-                <span x-show="activeFilterCount > 0" x-cloak
+                <span x-show="hasAnyFilter && activeFilterCount > 0" x-cloak
                     class="px-2.5 py-0.5 bg-yellow-300 border-2 border-black dark:border-zinc-700 text-black font-black text-[10px] uppercase rounded-full shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
                     <span x-text="activeFilterCount"></span> Dipilih
                 </span>
             </div>
 
-            <!-- Action Buttons: Reset Filter & Terapkan Filter -->
-            <div class="flex items-center gap-2.5 shrink-0 self-end sm:self-auto transition-all">
+            <!-- Action Buttons: Reset Filter & Terapkan Filter (Only visible when any filter is selected) -->
+            <div x-show="hasAnyFilter" x-cloak
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 translate-y-1 scale-95"
+                x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                x-transition:leave="transition ease-in duration-150"
+                x-transition:leave-start="opacity-100 scale-100"
+                x-transition:leave-end="opacity-0 translate-y-1 scale-95"
+                class="flex items-center gap-2.5 shrink-0 self-end sm:self-auto transition-all">
                 <button type="button" @click="reset()"
                     class="bg-rose-400 hover:bg-rose-300 text-black border-2 border-black dark:border-zinc-700 font-black text-xs uppercase px-3.5 py-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
                     <x-icon name="lucide-rotate-ccw" class="w-3.5 h-3.5 stroke-3" />
@@ -220,27 +284,27 @@
                     <!-- Quick Preset Chips -->
                     <div class="hidden sm:flex items-center gap-1.5">
                         <button type="button" @click="setPricePreset('all')"
-                            :class="!draftPriceMin && !draftPriceMax ? 'bg-yellow-400 text-black border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300'"
+                            :class="isPresetActive('all') ? 'bg-yellow-400 text-black border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300'"
                             class="px-2 py-0.5 text-[10px] font-black uppercase border rounded transition-all cursor-pointer">
                             Semua
                         </button>
                         <button type="button" @click="setPricePreset('under_1m')"
-                            :class="draftPriceMax === '1000000' && !draftPriceMin ? 'bg-yellow-400 text-black border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300'"
+                            :class="isPresetActive('under_1m') ? 'bg-yellow-400 text-black border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300'"
                             class="px-2 py-0.5 text-[10px] font-black uppercase border rounded transition-all cursor-pointer">
                             &lt; 1 Jt
                         </button>
                         <button type="button" @click="setPricePreset('1m_2m')"
-                            :class="draftPriceMin === '1000000' && draftPriceMax === '2000000' ? 'bg-yellow-400 text-black border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300'"
+                            :class="isPresetActive('1m_2m') ? 'bg-yellow-400 text-black border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300'"
                             class="px-2 py-0.5 text-[10px] font-black uppercase border rounded transition-all cursor-pointer">
                             1–2 Jt
                         </button>
                         <button type="button" @click="setPricePreset('2m_3m')"
-                            :class="draftPriceMin === '2000000' && draftPriceMax === '3000000' ? 'bg-yellow-400 text-black border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300'"
+                            :class="isPresetActive('2m_3m') ? 'bg-yellow-400 text-black border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300'"
                             class="px-2 py-0.5 text-[10px] font-black uppercase border rounded transition-all cursor-pointer">
                             2–3 Jt
                         </button>
                         <button type="button" @click="setPricePreset('above_3m')"
-                            :class="draftPriceMin === '3000000' && !draftPriceMax ? 'bg-yellow-400 text-black border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300'"
+                            :class="isPresetActive('above_3m') ? 'bg-yellow-400 text-black border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300'"
                             class="px-2 py-0.5 text-[10px] font-black uppercase border rounded transition-all cursor-pointer">
                             &gt; 3 Jt
                         </button>
@@ -337,8 +401,8 @@
                         ];
                     @endphp
                     @foreach ($facilityList as $name => $label)
-                        <button type="button" @click="toggleFacility('{{ $name }}')"
-                            :class="draftFacilities.includes('{{ $name }}')
+                        <button type="button" @click="toggleFacility(@js($name))"
+                            :class="isFacilityActive(@js($name))
                                 ? 'bg-yellow-400 text-black border-2 border-black dark:border-zinc-700 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] -translate-x-0.5 -translate-y-0.5 font-black'
                                 : 'bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border-2 border-black/40 dark:border-zinc-700 hover:border-black dark:hover:border-zinc-500 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)] font-black'"
                             class="h-10 px-3.5 sm:px-4 rounded-xl text-xs font-black uppercase tracking-wide transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none inline-flex items-center justify-center whitespace-nowrap shrink-0">

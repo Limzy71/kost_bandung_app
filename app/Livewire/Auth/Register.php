@@ -125,6 +125,7 @@ class Register extends Component
             'password' => Hash::make($this->password),
             'role' => $this->role,
             'phone_number' => $this->phone_number,
+            'terms_accepted_at' => now(),
         ];
 
         if ($this->role === 'owner') {

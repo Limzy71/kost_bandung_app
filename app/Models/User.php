@@ -39,7 +39,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property Carbon|null $updated_at
  * @property-read string|null $avatar_url
  */
-#[Fillable(['name', 'email', 'email_verified_at', 'google_id', 'avatar', 'phone_number', 'business_name', 'password', 'role', 'identity_doc_path', 'identity_verification_status', 'identity_verified_at', 'identity_rejection_note'])]
+#[Fillable(['name', 'email', 'email_verified_at', 'google_id', 'avatar', 'phone_number', 'business_name', 'password', 'role', 'identity_doc_path', 'identity_verification_status', 'identity_verified_at', 'identity_rejection_note', 'terms_accepted_at'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
@@ -56,8 +56,17 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
         return [
             'email_verified_at' => 'datetime',
             'identity_verified_at' => 'immutable_datetime',
+            'terms_accepted_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Determine if the user has finished role selection & onboarding.
+     */
+    public function hasCompletedOnboarding(): bool
+    {
+        return $this->role !== null && $this->terms_accepted_at !== null;
     }
 
     /**

@@ -26,6 +26,7 @@ Route::get('/syarat-ketentuan', function () {
 Route::get('/owner/{user}', PublicOwnerProfile::class)->name('profile.owner');
 
 use App\Http\Controllers\Auth\GoogleAuthController;
+use App\Livewire\Onboarding\CompleteOnboarding;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', Login::class)->name('login');
@@ -33,6 +34,10 @@ Route::middleware('guest')->group(function () {
     Route::get('/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
     Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
 });
+
+Route::get('/onboarding', CompleteOnboarding::class)
+    ->middleware(['auth'])
+    ->name('onboarding');
 
 use App\Http\Controllers\BoostController;
 use App\Http\Controllers\PaymentController;

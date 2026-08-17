@@ -68,7 +68,8 @@ class GoogleAuthController extends Controller
                 'email' => $googleUser->getEmail(),
                 'google_id' => $googleUser->getId(),
                 'avatar' => $googleUser->getAvatar(),
-                'role' => 'user',
+                'role' => null,
+                'terms_accepted_at' => null,
                 'email_verified_at' => now(),
                 'password' => null,
             ]);
@@ -76,6 +77,12 @@ class GoogleAuthController extends Controller
 
         Auth::login($user, remember: true);
         $request->session()->regenerate();
+
+        if (! $user->hasCompletedOnboarding()) {
+            session()->put('pending_onboarding', true);
+
+            return redirect()->route('onboarding');
+        }
 
         if ($user->role === 'owner') {
             return redirect()->intended(route('dashboard'));

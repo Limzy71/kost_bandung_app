@@ -25,7 +25,7 @@ test('google oauth callback registers a new user and logs them in', function () 
 
     $response = $this->get(route('auth.google.callback'));
 
-    $response->assertRedirect(route('home'));
+    $response->assertRedirect(route('onboarding'));
     $this->assertAuthenticated();
 
     $user = User::where('email', 'budi@example.com')->first();
@@ -34,7 +34,8 @@ test('google oauth callback registers a new user and logs them in', function () 
         ->and($user->google_id)->toBe('google-123456')
         ->and($user->avatar)->toBe('https://lh3.googleusercontent.com/a/avatar123')
         ->and($user->avatar_url)->toBe('https://lh3.googleusercontent.com/a/avatar123')
-        ->and($user->role)->toBe('user')
+        ->and($user->role)->toBeNull()
+        ->and($user->terms_accepted_at)->toBeNull()
         ->and($user->email_verified_at)->not->toBeNull()
         ->and($user->password)->toBeNull();
 });

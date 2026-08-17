@@ -647,12 +647,12 @@ window.catalogMap = function (config) {
                         </p>
 
                         <!-- Price section -->
-                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; background: #F9FAFB; border: 2px solid #000; border-radius: 8px; padding: 7px 10px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                            <div>
-                                <div style="font-weight: 900; font-size: 16px; line-height: 1;">${escape(item.price_full)}</div>
-                                <div style="font-size: 10px; color: #6B7280; font-weight: 600;">${escape(item.price_unit)}</div>
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; background: #F9FAFB; border: 2px solid #000; border-radius: 8px; padding: 8px 10px;">
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/></svg>
+                                <span style="font-weight: 900; font-size: 15px; color: #000; letter-spacing: -0.2px;">${escape(item.price_full)}</span>
                             </div>
+                            <span style="font-size: 11px; color: #4B5563; font-weight: 700;">${escape(item.price_unit)}</span>
                         </div>
 
                         <a href="${escape(item.url)}" class="kp-btn">

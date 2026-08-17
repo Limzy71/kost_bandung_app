@@ -22,262 +22,297 @@
                     $wire.facilities.length > 0 ||
                     $wire.sort !== 'recommended'
                 );
+            },
+            get activeFilterCount() {
+                let count = 0;
+                if (this.query) count++;
+                if ($wire.gender) count++;
+                if ($wire.district) count++;
+                if ($wire.rent_period) count++;
+                if ($wire.price_min || $wire.price_max) count++;
+                if ($wire.verified_only) count++;
+                if ($wire.facilities.length > 0) count += $wire.facilities.length;
+                if ($wire.sort !== 'recommended') count++;
+                return count;
             }
         }"
         @reset-filters.window="query = ''; wasApplied = false"
-        class="bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 p-4 sm:p-6 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] space-y-4"
+        class="bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 p-5 sm:p-7 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] space-y-6"
     >
-        <!-- Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b-3 border-black dark:border-zinc-700 pb-3.5 gap-3">
-            <h2 class="text-base sm:text-lg font-black text-black dark:text-white uppercase tracking-tight flex items-center gap-2">
-                <x-icon name="lucide-filter" class="w-5 h-5 text-black dark:text-white stroke-[2.5]" />
-                <span>Filter Pencarian Kost</span>
-            </h2>
+        <!-- Filter Card Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b-3 border-black dark:border-zinc-700 pb-4 gap-3">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 bg-yellow-400 border-2 border-black dark:border-zinc-700 rounded-lg flex items-center justify-center text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
+                    <x-icon name="lucide-sliders-horizontal" class="w-4 h-4 stroke-[2.5]" />
+                </div>
+                <h2 class="text-base sm:text-lg font-black text-black dark:text-white uppercase tracking-tight">
+                    Filter Pencarian Kost
+                </h2>
+                <template x-if="hasFilter">
+                    <span class="px-2.5 py-0.5 bg-yellow-300 border-2 border-black dark:border-zinc-700 text-black font-black text-[10px] uppercase rounded-full shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                        <span x-text="activeFilterCount"></span> Aktif
+                    </span>
+                </template>
+            </div>
+
             <div class="flex items-center gap-2.5 shrink-0 self-end sm:self-auto">
                 <button x-show="hasFilter" x-cloak type="button" wire:click="resetFilters" @click="query = ''; wasApplied = false"
-                    class="bg-rose-400 hover:bg-rose-300 text-black border-2 border-black dark:border-zinc-700 font-black text-xs uppercase px-3.5 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
-                    <x-icon name="lucide-refresh-cw" class="w-3.5 h-3.5 stroke-[3]" />
+                    class="bg-rose-400 hover:bg-rose-300 text-black border-2 border-black dark:border-zinc-700 font-black text-xs uppercase px-3.5 py-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
+                    <x-icon name="lucide-rotate-ccw" class="w-3.5 h-3.5 stroke-[3]" />
                     <span>Reset Filter</span>
                 </button>
                 <button type="button" wire:click="applyFilters" @click="wasApplied = true"
-                    class="bg-lime-400 hover:bg-lime-300 text-black border-2 border-black dark:border-zinc-700 font-black text-xs uppercase px-4 py-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
+                    class="bg-lime-400 hover:bg-lime-300 text-black border-2 border-black dark:border-zinc-700 font-black text-xs uppercase px-4 py-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-lg inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
                     <x-icon name="lucide-search" class="w-3.5 h-3.5 stroke-[3]" />
                     <span>Terapkan Filter</span>
                 </button>
             </div>
         </div>
 
-        <!-- Sort & Active Filter Summary -->
-        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-            <div class="flex items-center gap-2">
-                <label class="text-xs font-black uppercase text-black dark:text-white tracking-wide whitespace-nowrap">Urutkan:</label>
-                <select wire:model="sort"
-                    class="bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-3 py-2 text-xs font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer transition-all duration-150 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M4%206l4%204%204-4%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M4%206l4%204%204-4%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-no-repeat bg-[right_8px_center] pr-7">
-                    <option value="recommended" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rekomendasi Terbaik</option>
-                    <option value="price_asc" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Harga Termurah</option>
-                    <option value="price_desc" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Harga Termahal</option>
-                    <option value="newest" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Terbaru</option>
-                </select>
+        <!-- Row 1: Search, District, Gender -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
+            <!-- Search Query -->
+            <div>
+                <label class="block text-xs font-black uppercase text-black dark:text-white mb-2 tracking-wide">
+                    Cari Nama / Jalan / Area
+                </label>
+                <div class="relative flex items-center">
+                    <input
+                        x-ref="searchInput"
+                        x-model="query"
+                        wire:keydown.enter="applyFilters"
+                        @keydown.enter="wasApplied = true"
+                        type="text"
+                        placeholder="Contoh: Dago, Dipatiukur, Sekeloa..."
+                        class="w-full h-12 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl pl-11 pr-10 text-sm font-black uppercase text-black dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]"
+                    >
+                    <x-icon name="lucide-search" class="w-5 h-5 text-black dark:text-white absolute left-3.5 pointer-events-none stroke-[2.5]" />
+                    <template x-if="query">
+                        <button type="button"
+                            @click="query=''; $wire.search=''; if(wasApplied){$wire.applyFilters();}"
+                            class="absolute right-3 w-7 h-7 bg-rose-400 hover:bg-rose-300 border-2 border-black dark:border-zinc-700 rounded-lg text-black font-black text-xs shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center cursor-pointer">
+                            &#x2715;
+                        </button>
+                    </template>
+                </div>
             </div>
-            <div x-show="hasFilter" x-cloak class="flex items-center gap-1.5 text-xs font-black uppercase text-zinc-500 dark:text-zinc-400">
-                <x-icon name="lucide-tag" class="w-3.5 h-3.5 stroke-[2.5]" />
-                <span>Filter Aktif</span>
+
+            <!-- District & Gender -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- District -->
+                <div>
+                    <label class="block text-xs font-black uppercase text-black dark:text-white mb-2 tracking-wide">
+                        Kecamatan (Kota Bandung)
+                    </label>
+                    <select x-ref="districtSelect" wire:model="district"
+                        class="w-full h-12 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-3 text-sm font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer transition-all duration-150 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_12px_center] pr-9">
+                        <option value="" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Semua Kecamatan</option>
+                        @foreach ($districts as $val => $label)
+                            <option value="{{ $val }}" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">{{ $label }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Gender -->
+                <div>
+                    <label class="block text-xs font-black uppercase text-black dark:text-white mb-2 tracking-wide">
+                        Tipe Penghuni
+                    </label>
+                    <select x-ref="genderSelect" wire:model="gender"
+                        class="w-full h-12 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-3 text-sm font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer transition-all duration-150 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_12px_center] pr-9">
+                        <option value="" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Semua Tipe</option>
+                        <option value="putra" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Putra</option>
+                        <option value="putri" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Putri</option>
+                        <option value="campur" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Campur</option>
+                    </select>
+                </div>
             </div>
         </div>
 
-        <!-- Filter Inputs Grid: 2 Columns Neo-Brutalist Layout -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 pt-2">
-            <!-- Left Column: Location & Basic -->
-            <div class="space-y-5">
-                <div class="relative">
-                    <label class="block text-xs font-black uppercase text-black dark:text-white mb-2 tracking-wide">Cari Nama / Jalan</label>
-                    <div class="relative flex items-center">
-                        <input
-                            x-ref="searchInput"
-                            x-model="query"
-                            wire:keydown.enter="applyFilters"
-                            @keydown.enter="wasApplied = true"
-                            type="text"
-                            placeholder="Contoh: Dago, Setiabudi..."
-                            class="w-full bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl pl-11 pr-10 py-3 text-sm font-black uppercase text-black dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]"
-                        >
-                        <x-icon name="lucide-search" class="w-5 h-5 text-black dark:text-white absolute left-3.5 pointer-events-none stroke-[2.5]" />
-                        <template x-if="query">
-                            <button type="button"
-                                @click="query=''; $wire.search=''; if(wasApplied){$wire.applyFilters();}"
-                                class="absolute right-3 w-7 h-7 bg-rose-400 hover:bg-rose-300 border-2 border-black dark:border-zinc-700 rounded-lg text-black font-black text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center cursor-pointer">
-                                &#x2715;
-                            </button>
-                        </template>
-                    </div>
-                </div>
-
-                <!-- District & Gender (2 Cols inside Left Col) -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <!-- District -->
-                    <div>
-                        <label class="block text-xs font-black uppercase text-black dark:text-white mb-2 tracking-wide">Kecamatan</label>
-                        <select x-ref="districtSelect" wire:model="district"
-                            class="w-full bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-3 py-3 text-sm font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer transition-all duration-150 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_12px_center] pr-9">
-                            <option value="" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Semua Kecamatan</option>
-                            @foreach ($districts as $val => $label)
-                                <option value="{{ $val }}" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">{{ $label }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Gender -->
-                    <div>
-                        <label class="block text-xs font-black uppercase text-black dark:text-white mb-2 tracking-wide">Tipe Penghuni</label>
-                        <select x-ref="genderSelect" wire:model="gender"
-                            class="w-full bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-3 py-3 text-sm font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer transition-all duration-150 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_12px_center] pr-9">
-                            <option value="" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Semua Tipe</option>
-                            <option value="putra" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Putra</option>
-                            <option value="putri" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Putri</option>
-                            <option value="campur" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Campur</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Column: Price & Period -->
-            <div class="space-y-5">
-                <!-- Price Range -->
-                <div>
-                    <label class="block text-xs font-black uppercase text-black dark:text-white mb-2 tracking-wide flex items-center justify-between">
-                        <span>Batas Harga Sewa <span class="text-zinc-500 dark:text-zinc-400 font-bold normal-case text-[10px] ml-1">(per tipe)</span></span>
+        <!-- Row 2: Price Range & Period/Verified -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6 pt-1">
+            <!-- Price Range -->
+            <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                    <label class="block text-xs font-black uppercase text-black dark:text-white tracking-wide">
+                        Rentang Harga Sewa
                     </label>
-
-                    <!-- Quick Price Chips -->
-                    <div class="flex flex-wrap gap-2 mb-3">
+                    <!-- Quick Preset Chips -->
+                    <div class="hidden sm:flex items-center gap-1.5">
                         <button type="button" wire:click="setPricePreset('all')"
-                            :class="!$wire.price_min && !$wire.price_max ? 'bg-yellow-400 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]' : 'bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]'"
-                            class="px-3 py-1.5 text-[10px] font-black uppercase text-black dark:text-white border-2 border-black dark:border-zinc-700 rounded-lg transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none whitespace-nowrap">
+                            :class="!$wire.price_min && !$wire.price_max ? 'bg-yellow-400 border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400'"
+                            class="px-2 py-0.5 text-[10px] font-black uppercase border rounded transition-all cursor-pointer">
                             Semua
                         </button>
                         <button type="button" wire:click="setPricePreset('under_1m')"
-                            :class="$wire.price_max === '1000000' && !$wire.price_min ? 'bg-yellow-400 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]' : 'bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]'"
-                            class="px-3 py-1.5 text-[10px] font-black uppercase text-black dark:text-white border-2 border-black dark:border-zinc-700 rounded-lg transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none whitespace-nowrap">
+                            :class="$wire.price_max === '1000000' && !$wire.price_min ? 'bg-yellow-400 border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400'"
+                            class="px-2 py-0.5 text-[10px] font-black uppercase border rounded transition-all cursor-pointer">
                             &lt; 1 Jt
                         </button>
                         <button type="button" wire:click="setPricePreset('1m_2m')"
-                            :class="$wire.price_min === '1000000' && $wire.price_max === '2000000' ? 'bg-yellow-400 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]' : 'bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]'"
-                            class="px-3 py-1.5 text-[10px] font-black uppercase text-black dark:text-white border-2 border-black dark:border-zinc-700 rounded-lg transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none whitespace-nowrap">
-                            1 – 2 Jt
+                            :class="$wire.price_min === '1000000' && $wire.price_max === '2000000' ? 'bg-yellow-400 border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400'"
+                            class="px-2 py-0.5 text-[10px] font-black uppercase border rounded transition-all cursor-pointer">
+                            1–2 Jt
                         </button>
                         <button type="button" wire:click="setPricePreset('2m_3m')"
-                            :class="$wire.price_min === '2000000' && $wire.price_max === '3000000' ? 'bg-yellow-400 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]' : 'bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]'"
-                            class="px-3 py-1.5 text-[10px] font-black uppercase text-black dark:text-white border-2 border-black dark:border-zinc-700 rounded-lg transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none whitespace-nowrap">
-                            2 – 3 Jt
+                            :class="$wire.price_min === '2000000' && $wire.price_max === '3000000' ? 'bg-yellow-400 border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400'"
+                            class="px-2 py-0.5 text-[10px] font-black uppercase border rounded transition-all cursor-pointer">
+                            2–3 Jt
                         </button>
                         <button type="button" wire:click="setPricePreset('above_3m')"
-                            :class="$wire.price_min === '3000000' && !$wire.price_max ? 'bg-yellow-400 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]' : 'bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]'"
-                            class="px-3 py-1.5 text-[10px] font-black uppercase text-black dark:text-white border-2 border-black dark:border-zinc-700 rounded-lg transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none whitespace-nowrap">
+                            :class="$wire.price_min === '3000000' && !$wire.price_max ? 'bg-yellow-400 border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400'"
+                            class="px-2 py-0.5 text-[10px] font-black uppercase border rounded transition-all cursor-pointer">
                             &gt; 3 Jt
                         </button>
                     </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                        <select x-ref="minSelect" wire:model="price_min"
-                            class="w-full bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-3 py-3 text-sm font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer transition-all duration-150 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_10px_center] pr-8">
-                            <option value="" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Min Harga</option>
-                            <option value="500000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 500rb</option>
-                            <option value="1000000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 1 Jt</option>
-                            <option value="1500000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 1.5 Jt</option>
-                            <option value="2000000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 2 Jt</option>
-                            <option value="3000000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 3 Jt</option>
-                        </select>
-                        <select x-ref="maxSelect" wire:model="price_max"
-                            class="w-full bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-3 py-3 text-sm font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer transition-all duration-150 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_10px_center] pr-8">
-                            <option value="" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Max Harga</option>
-                            <option value="1000000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 1 Jt</option>
-                            <option value="1500000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 1.5 Jt</option>
-                            <option value="2000000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 2 Jt</option>
-                            <option value="3000000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 3 Jt</option>
-                            <option value="5000000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 5 Jt</option>
-                            <option value="7500000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 7.5 Jt</option>
-                            <option value="10000000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 10 Jt</option>
-                        </select>
-                    </div>
                 </div>
 
-                <!-- Period & Verified (2 Cols inside Right Col) -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 items-end">
-                    <!-- Rent Period -->
-                    <div>
-                        <label class="block text-xs font-black uppercase text-black dark:text-white mb-2 tracking-wide">Periode Sewa</label>
-                        <select x-ref="periodSelect" wire:model="rent_period"
-                            class="w-full bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-3 py-3 text-sm font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer transition-all duration-150 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_12px_center] pr-9">
-                            <option value="" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Semua Periode</option>
-                            @foreach (\App\Models\Kost::rentPeriodLabels() as $val => $label)
-                                <option value="{{ $val }}" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">{{ $label }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Verified Only Toggle -->
-                    <div>
-                        <label class="block text-xs font-black uppercase text-black dark:text-white mb-2 tracking-wide">Status Verifikasi</label>
-                        <label :class="$wire.verified_only
-                                ? 'bg-emerald-400 text-black border-3 border-black dark:border-zinc-700 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]'
-                                : 'bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border-3 border-black dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]'"
-                            class="w-full h-[52px] flex justify-center items-center font-black text-xs sm:text-sm uppercase rounded-xl transition-all cursor-pointer gap-2 px-3">
-                            <input type="checkbox" x-ref="verifiedToggle" wire:model="verified_only" class="hidden">
-                            <x-icon name="lucide-badge-check" class="w-4 h-4 stroke-[3] shrink-0" />
-                            <span class="truncate">Kost Verified</span>
-                        </label>
-                    </div>
+                <!-- Min / Max Dropdowns -->
+                <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                    <select x-ref="minSelect" wire:model="price_min"
+                        class="w-full h-12 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-3 text-sm font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer transition-all duration-150 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_10px_center] pr-8">
+                        <option value="" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Min Harga</option>
+                        <option value="500000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 500rb</option>
+                        <option value="1000000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 1 Jt</option>
+                        <option value="1500000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 1.5 Jt</option>
+                        <option value="2000000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 2 Jt</option>
+                        <option value="3000000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 3 Jt</option>
+                    </select>
+                    <select x-ref="maxSelect" wire:model="price_max"
+                        class="w-full h-12 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-3 text-sm font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer transition-all duration-150 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_10px_center] pr-8">
+                        <option value="" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Max Harga</option>
+                        <option value="1000000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 1 Jt</option>
+                        <option value="1500000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 1.5 Jt</option>
+                        <option value="2000000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 2 Jt</option>
+                        <option value="3000000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 3 Jt</option>
+                        <option value="5000000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 5 Jt</option>
+                        <option value="7500000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 7.5 Jt</option>
+                        <option value="10000000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 10 Jt</option>
+                    </select>
                 </div>
             </div>
 
-            <!-- Facility Multi-Select Section -->
-            <div class="border-t-2 border-black/10 dark:border-zinc-800 pt-5">
-                <div class="flex items-center gap-2 mb-3">
-                    <x-icon name="lucide-settings-2" class="w-4 h-4 text-black dark:text-white stroke-[2.5]" />
-                    <label class="text-xs font-black uppercase text-black dark:text-white tracking-wide">Fasilitas Kost Populer</label>
-                    <span x-show="$wire.facilities.length > 0" x-cloak
-                        class="px-2 py-0.5 bg-yellow-300 text-black border border-black dark:border-zinc-700 font-black text-[10px] rounded-full shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">
-                        <span x-text="$wire.facilities.length"></span> Dipilih
+            <!-- Rent Period & Verified Toggle -->
+            <div>
+                <label class="block text-xs font-black uppercase text-black dark:text-white mb-2 tracking-wide">
+                    Periode & Verifikasi
+                </label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Period -->
+                    <select x-ref="periodSelect" wire:model="rent_period"
+                        class="w-full h-12 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-3 text-sm font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer transition-all duration-150 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_12px_center] pr-9">
+                        <option value="" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Semua Periode</option>
+                        @foreach (\App\Models\Kost::rentPeriodLabels() as $val => $label)
+                            <option value="{{ $val }}" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">{{ $label }}</option>
+                        @endforeach
+                    </select>
+
+                    <!-- Verified Only -->
+                    <label :class="$wire.verified_only
+                            ? 'bg-emerald-400 text-black border-3 border-black dark:border-zinc-700 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] -translate-x-0.5 -translate-y-0.5'
+                            : 'bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border-3 border-black dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]'"
+                        class="w-full h-12 flex justify-center items-center font-black text-xs uppercase rounded-xl transition-all cursor-pointer gap-2 px-3">
+                        <input type="checkbox" x-ref="verifiedToggle" wire:model="verified_only" class="hidden">
+                        <x-icon name="lucide-badge-check" class="w-4 h-4 stroke-[3] shrink-0" />
+                        <span class="truncate">Kost Verified</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 3: Fasilitas Populer (Structured 5-Column Grid) -->
+        <div class="border-t-2 border-dashed border-black/20 dark:border-zinc-700 pt-4 mt-2">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                    <x-icon name="lucide-sparkles" class="w-4 h-4 text-black dark:text-white stroke-[2.5]" />
+                    <label class="text-xs font-black uppercase text-black dark:text-white tracking-wide">
+                        Fasilitas Kost Populer
+                    </label>
+                </div>
+                <template x-if="$wire.facilities.length > 0">
+                    <span class="px-2.5 py-0.5 bg-yellow-300 border border-black dark:border-zinc-700 font-black text-[10px] uppercase rounded-full shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] text-black">
+                        <span x-text="$wire.facilities.length"></span> Fasilitas Dipilih
                     </span>
-                </div>
-                <div class="flex flex-wrap gap-2">
-                    @php
-                        $facilityFilters = [
-                            'AC' => 'lucide-air-vent',
-                            'Wi-Fi' => 'lucide-wifi',
-                            'Kamar Mandi Dalam' => 'lucide-shower-head',
-                            'Water Heater (Air Hangat)' => 'lucide-thermometer-sun',
-                            'Kasur' => 'lucide-bed',
-                            'Lemari' => 'lucide-door-open',
-                            'Dapur Bersama' => 'lucide-cooking-pot',
-                            'CCTV' => 'lucide-cctv',
-                            'Parkir Motor' => 'lucide-bike',
-                            'Parkir Mobil' => 'lucide-car',
-                        ];
-                    @endphp
-                    @foreach ($facilityFilters as $name => $icon)
-                        <button type="button" wire:click="toggleFacility('{{ $name }}')"
-                            :class="in_array('{{ $name }}', $wire.facilities)
-                                ? 'bg-yellow-400 text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]'
-                                : 'bg-white dark:bg-zinc-900 text-black dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]'"
-                            class="px-3 py-2 text-[10px] font-black uppercase border-2 border-black dark:border-zinc-700 rounded-lg transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none inline-flex items-center gap-1.5">
-                            <x-icon name="{{ $icon }}" class="w-3.5 h-3.5 shrink-0 stroke-[2.5]" />
-                            <span>{{ $name }}</span>
-                        </button>
-                    @endforeach
-                </div>
+                </template>
+            </div>
+
+            <!-- 5 Columns Balanced Tiles -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5">
+                @php
+                    $facilityFilters = [
+                        'AC' => ['icon' => 'lucide-air-vent', 'label' => 'AC'],
+                        'Wi-Fi' => ['icon' => 'lucide-wifi', 'label' => 'Wi-Fi'],
+                        'Kamar Mandi Dalam' => ['icon' => 'lucide-shower-head', 'label' => 'KM Dalam'],
+                        'Water Heater (Air Hangat)' => ['icon' => 'lucide-thermometer-sun', 'label' => 'Water Heater'],
+                        'Kasur' => ['icon' => 'lucide-bed', 'label' => 'Kasur'],
+                        'Lemari' => ['icon' => 'lucide-door-open', 'label' => 'Lemari'],
+                        'Dapur Bersama' => ['icon' => 'lucide-cooking-pot', 'label' => 'Dapur'],
+                        'CCTV' => ['icon' => 'lucide-cctv', 'label' => 'CCTV'],
+                        'Parkir Motor' => ['icon' => 'lucide-bike', 'label' => 'Parkir Motor'],
+                        'Parkir Mobil' => ['icon' => 'lucide-car', 'label' => 'Parkir Mobil'],
+                    ];
+                @endphp
+                @foreach ($facilityFilters as $name => $meta)
+                    <button type="button" wire:click="toggleFacility('{{ $name }}')"
+                        :class="in_array('{{ $name }}', $wire.facilities)
+                            ? 'bg-yellow-400 text-black border-2 border-black dark:border-zinc-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] -translate-x-0.5 -translate-y-0.5 font-black'
+                            : 'bg-zinc-50 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border-2 border-zinc-300 dark:border-zinc-700 hover:border-black dark:hover:border-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 shadow-[1px_1px_0px_0px_rgba(0,0,0,0.1)] font-bold'"
+                        class="h-10 px-2.5 rounded-lg text-xs uppercase transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none flex items-center justify-center gap-1.5 whitespace-nowrap overflow-hidden">
+                        <x-icon name="{{ $meta['icon'] }}" class="w-3.5 h-3.5 shrink-0 stroke-[2.5]" />
+                        <span class="truncate">{{ $meta['label'] }}</span>
+                    </button>
+                @endforeach
             </div>
         </div>
     </div>
 
-    <!-- Section Title & Layout Switcher -->
-    <div id="home-list-section" class="scroll-mt-20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div class="flex items-center justify-between sm:justify-start gap-2 sm:gap-3 w-full sm:w-auto flex-wrap sm:flex-nowrap">
-            <h3 class="text-base sm:text-xl font-black text-black dark:text-white uppercase tracking-tight">Daftar Properti Kost</h3>
-            <span class="px-2.5 py-1 sm:px-3 sm:py-1 bg-yellow-300 text-black border-2 border-black dark:border-zinc-700 font-black text-xs rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] uppercase whitespace-nowrap shrink-0">
+    <!-- Section Title & Controls Bar (Sorting & Layout Switcher) -->
+    <div id="home-list-section" class="scroll-mt-20 flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4">
+        <!-- Title & Count -->
+        <div class="flex items-center gap-3">
+            <h3 class="text-base sm:text-xl font-black text-black dark:text-white uppercase tracking-tight">
+                Daftar Properti Kost
+            </h3>
+            <span class="px-2.5 py-1 bg-yellow-300 text-black border-2 border-black dark:border-zinc-700 font-black text-xs rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] uppercase whitespace-nowrap">
                 {{ $kosts->total() }} Ditemukan
             </span>
         </div>
 
-        @if($kosts->count() > 0 || $district)
-        <!-- 2-Mode View Switcher — only shown when there are results -->
-        <div wire:key="view-switcher" class="flex items-center gap-1.5 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 p-1 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] w-full sm:w-auto">
-            <button type="button"
-                @click="viewMode = 'list'"
-                :class="viewMode === 'list' ? 'bg-yellow-400 text-black border-2 border-black dark:border-zinc-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]' : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white'"
-                class="flex-1 sm:flex-initial px-4 py-2 rounded-lg font-black text-xs uppercase transition-all cursor-pointer flex items-center justify-center gap-2">
-                <x-icon name="lucide-list" class="w-4 h-4 stroke-[3]" />
-                <span>Lihat Daftar</span>
-            </button>
-            <button type="button"
-                @click="viewMode = 'map'"
-                :class="viewMode === 'map' ? 'bg-yellow-400 text-black border-2 border-black dark:border-zinc-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]' : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white'"
-                class="flex-1 sm:flex-initial px-4 py-2 rounded-lg font-black text-xs uppercase transition-all cursor-pointer flex items-center justify-center gap-2">
-                <x-icon name="lucide-map" class="w-4 h-4 stroke-[3]" />
-                <span>Lihat Peta</span>
-            </button>
+        <!-- Controls: Sort By & View Switcher -->
+        <div class="flex items-center justify-between sm:justify-end gap-3 flex-wrap sm:flex-nowrap">
+            <!-- Sort By Dropdown -->
+            <div class="flex items-center gap-2 bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 px-3 py-1.5 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
+                <x-icon name="lucide-arrow-up-down" class="w-3.5 h-3.5 text-black dark:text-white stroke-[2.5]" />
+                <span class="text-xs font-black uppercase text-black dark:text-white whitespace-nowrap">Urutkan:</span>
+                <select wire:model="sort"
+                    class="bg-transparent border-0 text-xs font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer pr-4 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2212%22%20height%3D%2212%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M3%205l3%203%203-3%22%20stroke%3D%22%23000%22%20stroke-width%3D%222%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2212%22%20height%3D%2212%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M3%205l3%203%203-3%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:10px_10px] bg-no-repeat bg-[right_center]">
+                    <option value="recommended" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-1.5">Rekomendasi</option>
+                    <option value="price_asc" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-1.5">Harga Termurah</option>
+                    <option value="price_desc" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-1.5">Harga Termahal</option>
+                    <option value="newest" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-1.5">Terbaru</option>
+                </select>
+            </div>
+
+            @if($kosts->count() > 0 || $district)
+            <!-- View Switcher -->
+            <div wire:key="view-switcher" class="flex items-center gap-1 bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 p-1 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]">
+                <button type="button"
+                    @click="viewMode = 'list'"
+                    :class="viewMode === 'list' ? 'bg-yellow-400 text-black border border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white'"
+                    class="px-3 py-1.5 rounded-lg font-black text-xs uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                    <x-icon name="lucide-list" class="w-3.5 h-3.5 stroke-[3]" />
+                    <span>Lihat Daftar</span>
+                </button>
+                <button type="button"
+                    @click="viewMode = 'map'"
+                    :class="viewMode === 'map' ? 'bg-yellow-400 text-black border border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white'"
+                    class="px-3 py-1.5 rounded-lg font-black text-xs uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                    <x-icon name="lucide-map" class="w-3.5 h-3.5 stroke-[3]" />
+                    <span>Lihat Peta</span>
+                </button>
+            </div>
+            @endif
         </div>
-        @endif
     </div>
 
     <!-- Main Content Area -->

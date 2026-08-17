@@ -49,6 +49,8 @@ window.catalogMap = function (config) {
         districtBounds: config.districtBounds || {},
         currentLayer: 'street', // 'street' or 'satellite'
         themeObserver: null,
+        /** Local reactive copy of $wire.mapItems — kept in sync via $watch */
+        mapItems: config.mapItems || [],
 
         isDarkMode() {
             return document.documentElement.classList.contains('dark');
@@ -104,6 +106,18 @@ window.catalogMap = function (config) {
                 }
             });
 
+            // Sync $wire.mapItems into local reactive mapItems and re-render markers
+            this.$watch('$wire.mapItems', (val) => {
+                this.mapItems = val || [];
+                if (this.viewMode === 'map' && this.map) {
+                    if (this.mapEngine === 'google' && window.google && window.google.maps) {
+                        this.renderGoogleMarkers();
+                    } else if (this.mapEngine === 'leaflet' && typeof L !== 'undefined') {
+                        this.renderLeafletMarkers();
+                    }
+                }
+            });
+
             // Resilience: if the network drops/reconnects, retry loading scripts
             window.addEventListener('online', () => {
                 if (!this.map && this.hasGoogleKey && !window.google) {
@@ -142,7 +156,7 @@ window.catalogMap = function (config) {
         },
 
         get items() {
-            return (this.$wire && this.$wire.mapItems) ? this.$wire.mapItems : [];
+            return this.mapItems || [];
         },
 
         switchLayer(layer) {

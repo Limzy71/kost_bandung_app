@@ -1,6 +1,5 @@
 <div
-    x-data="catalogMap({ districtBounds: @js($districtBounds) })"
-    x-init="init()"
+    x-data="catalogMap({ districtBounds: @js($districtBounds), mapItems: @js($mapItems) })"
     data-maps-key="{{ $googleMapsApiKey }}"
     @scroll-to-home-list.window="document.getElementById('home-list-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })"
     class="space-y-8"

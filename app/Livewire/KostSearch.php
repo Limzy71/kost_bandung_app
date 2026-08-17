@@ -301,6 +301,7 @@ class KostSearch extends Component
             'districts' => $districts,
             'districtBounds' => config('bandung.districts', []),
             'googleMapsApiKey' => config('services.google.maps_api_key'),
+            'mapItems' => $this->mapItems,
             'hasActiveFilter' => $hasSearch || $hasOtherFilters,
             'hasSearchOnly' => $hasSearch && ! $hasOtherFilters,
             'hasBothSearchAndFilters' => $hasSearch && $hasOtherFilters,

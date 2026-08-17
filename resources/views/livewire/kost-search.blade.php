@@ -43,6 +43,9 @@
                 this.draftPriceMax = '';
                 this.draftVerifiedOnly = false;
                 this.draftFacilities = [];
+                if (window.history && window.history.replaceState) {
+                    window.history.replaceState(null, '', window.location.pathname);
+                }
             },
 
             get facilityCount() {
@@ -127,6 +130,7 @@
                 if (this.$wire) {
                     this.$wire.resetFilters();
                 }
+                window.dispatchEvent(new CustomEvent('filters-reset'));
             }
         }"
         @filters-reset.window="resetLocal()"
@@ -646,7 +650,7 @@
                     </p>
                 </div>
                 <button type="button" wire:click="resetFilters"
-                    @click="window.dispatchEvent(new CustomEvent('filters-reset')); if(viewMode==='map') { $nextTick(() => window.dispatchEvent(new Event('resize'))); }"
+                    @click="window.dispatchEvent(new CustomEvent('filters-reset')); if(window.history && window.history.replaceState) { window.history.replaceState(null, '', window.location.pathname); } if(viewMode==='map') { $nextTick(() => window.dispatchEvent(new Event('resize'))); }"
                     class="w-full sm:w-auto px-5 py-3 bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black dark:border-zinc-700 font-black text-xs sm:text-sm uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl inline-flex items-center justify-center gap-2 cursor-pointer">
                     <x-icon name="lucide-rotate-ccw" class="w-4 h-4 stroke-3" />
                     @if($hasActiveFilter)

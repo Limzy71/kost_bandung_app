@@ -330,7 +330,6 @@
                         'Dapur Bersama' => 'Dapur',
                         'CCTV' => 'CCTV',
                         'Parkir Motor' => 'Parkir Motor',
-                        'Parkir Mobil' => 'Parkir Mobil',
                     ];
                 @endphp
                 @foreach ($facilityList as $name => $label)

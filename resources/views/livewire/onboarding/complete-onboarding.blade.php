@@ -62,26 +62,25 @@
 
                 async submit() {
                     if (!this.validate()) {
-                        console.log('[onboard] client validation failed', this.errors);
                         return;
                     }
                     if (this.submitting) return;
                     this.submitting = true;
                     this.errors = {};
-                    console.log('[onboard] calling $wire.complete', { role: this.role, business_name: this.business_name, phone_number: this.phone_number, terms: this.terms });
                     try {
-                        const result = await $wire.complete(
+                        await $wire.complete(
                             this.role,
                             this.role === 'owner' ? this.business_name.trim() : '',
                             this.role === 'owner' ? this.phone_number.trim() : '',
                             this.terms
                         );
-                        console.log('[onboard] $wire.complete resolved', result);
+                        // Livewire's redirect effect may not navigate reliably.
+                        // Redirect manually from JS after successful save.
+                        window.location.href = this.role === 'owner'
+                            ? @js(route('dashboard'))
+                            : @js(route('home'));
                     } catch (e) {
-                        console.error('[onboard] $wire.complete threw', e);
-                        console.error('[onboard] error name:', e?.name, 'message:', e?.message);
                         const serverErrors = $wire.errors;
-                        console.log('[onboard] $wire.errors:', serverErrors);
                         if (serverErrors && typeof serverErrors === 'object') {
                             for (const key of ['role', 'business_name', 'phone_number', 'terms']) {
                                 if (serverErrors[key]) {
@@ -91,9 +90,7 @@
                                 }
                             }
                         }
-                        console.log('[onboard] resolved Alpine errors:', this.errors);
                     } finally {
-                        console.log('[onboard] finally — setting submitting=false');
                         this.submitting = false;
                     }
                 }

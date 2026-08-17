@@ -315,42 +315,53 @@
         <!-- Row 3: Fasilitas Populer (Compact Chip Tags) -->
         <div class="border-t-2 border-dashed border-black/20 dark:border-zinc-700 pt-4 mt-2">
             <div class="flex items-center justify-between mb-3">
-                <label class="text-xs font-black uppercase text-black dark:text-white tracking-wide">
-                    Fasilitas Kost Populer
-                </label>
+                <div class="flex items-center gap-2">
+                    <label class="text-xs font-black uppercase text-black dark:text-white tracking-wide">
+                        Fasilitas Kost Populer
+                    </label>
+                    <!-- Mobile Scroll Indicator Hint -->
+                    <span class="sm:hidden inline-flex items-center gap-1 text-[10px] font-black text-black bg-yellow-300 border border-black px-2 py-0.5 rounded-md shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                        <span>Geser</span>
+                        <x-icon name="lucide-arrow-right" class="w-3 h-3 stroke-[3]" />
+                    </span>
+                </div>
                 <span x-show="facilityCount > 0" x-cloak
                     class="px-2.5 py-0.5 bg-yellow-300 border border-black dark:border-zinc-700 font-black text-[10px] uppercase rounded-full shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] text-black">
                     <span x-text="facilityCount"></span> Dipilih
                 </span>
             </div>
 
-            <!-- Compact Chip Tags Group (Strictly horizontal, no wrap) -->
-            <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar pb-1.5 pt-0.5 flex-nowrap">
-                @php
-                    $facilityList = [
-                        'AC' => 'AC',
-                        'Wi-Fi' => 'Wi-Fi',
-                        'Kamar Mandi Dalam' => 'KM Dalam',
-                        'Water Heater (Air Hangat)' => 'Water Heater',
-                        'Kasur' => 'Kasur',
-                        'Lemari' => 'Lemari',
-                        'Meja & Kursi' => 'Meja & Kursi',
-                        'Listrik' => 'Listrik',
-                        'Dapur Bersama' => 'Dapur',
-                        'CCTV' => 'CCTV',
-                        'Parkir Motor' => 'Parkir Motor',
-                        'Parkir Mobil' => 'Parkir Mobil',
-                    ];
-                @endphp
-                @foreach ($facilityList as $name => $label)
-                    <button type="button" @click="toggleFacility('{{ $name }}')"
-                        :class="draftFacilities.includes('{{ $name }}')
-                            ? 'bg-yellow-400 text-black border-2 border-black dark:border-zinc-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] -translate-x-0.5 -translate-y-0.5 font-black'
-                            : 'bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border-2 border-black/30 dark:border-zinc-700 hover:border-black dark:hover:border-zinc-500 shadow-[1px_1px_0px_0px_rgba(0,0,0,0.15)] font-bold'"
-                        class="h-8.5 sm:h-9 px-2.5 sm:px-3.5 rounded-lg text-[11px] sm:text-xs font-black uppercase tracking-wide transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none inline-flex items-center justify-center whitespace-nowrap shrink-0">
-                        <span>{{ $label }}</span>
-                    </button>
-                @endforeach
+            <!-- Compact Chip Tags Group (Strictly horizontal, no wrap) with Mobile Hint -->
+            <div class="relative">
+                <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1.5 pt-0.5 flex-nowrap scroll-smooth">
+                    @php
+                        $facilityList = [
+                            'AC' => 'AC',
+                            'Wi-Fi' => 'Wi-Fi',
+                            'Kamar Mandi Dalam' => 'KM Dalam',
+                            'Water Heater (Air Hangat)' => 'Water Heater',
+                            'Kasur' => 'Kasur',
+                            'Lemari' => 'Lemari',
+                            'Meja & Kursi' => 'Meja & Kursi',
+                            'Listrik' => 'Listrik',
+                            'Dapur Bersama' => 'Dapur',
+                            'CCTV' => 'CCTV',
+                            'Parkir Motor' => 'Parkir Motor',
+                            'Parkir Mobil' => 'Parkir Mobil',
+                        ];
+                    @endphp
+                    @foreach ($facilityList as $name => $label)
+                        <button type="button" @click="toggleFacility('{{ $name }}')"
+                            :class="draftFacilities.includes('{{ $name }}')
+                                ? 'bg-yellow-400 text-black border-2 border-black dark:border-zinc-700 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] -translate-x-0.5 -translate-y-0.5 font-black'
+                                : 'bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border-2 border-black/40 dark:border-zinc-700 hover:border-black dark:hover:border-zinc-500 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)] font-black'"
+                            class="h-10 px-3.5 sm:px-4 rounded-xl text-xs font-black uppercase tracking-wide transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none inline-flex items-center justify-center whitespace-nowrap shrink-0">
+                            <span>{{ $label }}</span>
+                        </button>
+                    @endforeach
+                </div>
+                <!-- Right-edge subtle gradient fade for mobile -->
+                <div class="pointer-events-none absolute right-0 top-0 bottom-1.5 w-8 bg-gradient-to-l from-white dark:from-zinc-900 to-transparent sm:hidden"></div>
             </div>
         </div>
     </div>

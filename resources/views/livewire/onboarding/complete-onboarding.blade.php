@@ -98,34 +98,48 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {{-- Pencari Kost --}}
                     <button type="button" @click="role = 'user'; if(errors.role) delete errors.role"
-                        class="p-5 text-left border-3 border-black rounded-xl transition-all cursor-pointer focus:outline-none focus:ring-0 dark:border-zinc-700 select-none"
+                        class="p-5 text-left border-3 rounded-xl transition-all cursor-pointer focus:outline-none focus:ring-0 select-none"
                         :class="role === 'user'
-                            ? 'bg-[#FFE500] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -translate-x-0.5 -translate-y-0.5 dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]'
-                            : 'bg-white hover:bg-zinc-50 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]'">
+                            ? 'bg-[#FFE500] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -translate-x-0.5 -translate-y-0.5 dark:border-zinc-600 dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]'
+                            : 'bg-white border-black hover:bg-zinc-50 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none dark:bg-zinc-900 dark:border-zinc-700 dark:hover:bg-zinc-800 dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]'">
                         <div class="flex items-center gap-3 mb-2">
-                            <div class="w-9 h-9 bg-white border-2 border-black rounded-lg flex items-center justify-center text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] shrink-0 dark:border-zinc-700">
+                            <div class="w-9 h-9 border-2 rounded-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] shrink-0"
+                                :class="role === 'user'
+                                    ? 'bg-white border-black text-black'
+                                    : 'bg-zinc-100 border-black text-black dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)]'">
                                 <x-icon name="lucide-search" class="w-5 h-5 stroke-[2.5]" />
                             </div>
-                            <span class="text-base font-black text-black uppercase tracking-tight">Pencari Kost</span>
+                            <span class="text-base font-black uppercase tracking-tight"
+                                :class="role === 'user' ? 'text-black' : 'text-black dark:text-white'">
+                                Pencari Kost
+                            </span>
                         </div>
-                        <p class="text-xs font-bold text-zinc-700 leading-relaxed dark:text-zinc-300">
+                        <p class="text-xs font-bold leading-relaxed"
+                            :class="role === 'user' ? 'text-black/85' : 'text-zinc-600 dark:text-zinc-400'">
                             Saya ingin mencari, membandingkan, dan menyewa kost idaman di Kota Bandung.
                         </p>
                     </button>
 
                     {{-- Pemilik Kost --}}
                     <button type="button" @click="role = 'owner'; if(errors.role) delete errors.role"
-                        class="p-5 text-left border-3 border-black rounded-xl transition-all cursor-pointer focus:outline-none focus:ring-0 dark:border-zinc-700 select-none"
+                        class="p-5 text-left border-3 rounded-xl transition-all cursor-pointer focus:outline-none focus:ring-0 select-none"
                         :class="role === 'owner'
-                            ? 'bg-[#FFE500] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -translate-x-0.5 -translate-y-0.5 dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]'
-                            : 'bg-white hover:bg-zinc-50 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]'">
+                            ? 'bg-[#FFE500] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -translate-x-0.5 -translate-y-0.5 dark:border-zinc-600 dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]'
+                            : 'bg-white border-black hover:bg-zinc-50 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none dark:bg-zinc-900 dark:border-zinc-700 dark:hover:bg-zinc-800 dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]'">
                         <div class="flex items-center gap-3 mb-2">
-                            <div class="w-9 h-9 bg-white border-2 border-black rounded-lg flex items-center justify-center text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] shrink-0 dark:border-zinc-700">
+                            <div class="w-9 h-9 border-2 rounded-lg flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] shrink-0"
+                                :class="role === 'owner'
+                                    ? 'bg-white border-black text-black'
+                                    : 'bg-zinc-100 border-black text-black dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)]'">
                                 <x-icon name="lucide-house" class="w-5 h-5 stroke-[2.5]" />
                             </div>
-                            <span class="text-base font-black text-black uppercase tracking-tight">Pemilik Kost</span>
+                            <span class="text-base font-black uppercase tracking-tight"
+                                :class="role === 'owner' ? 'text-black' : 'text-black dark:text-white'">
+                                Pemilik Kost
+                            </span>
                         </div>
-                        <p class="text-xs font-bold text-zinc-700 leading-relaxed dark:text-zinc-300">
+                        <p class="text-xs font-bold leading-relaxed"
+                            :class="role === 'owner' ? 'text-black/85' : 'text-zinc-600 dark:text-zinc-400'">
                             Saya memiliki properti kost dan ingin memasang iklan serta mengelola kamar.
                         </p>
                     </button>
@@ -250,7 +264,7 @@
                 Bukan akun Anda?
                 <form method="POST" action="{{ route('logout') }}" class="inline">
                     @csrf
-                    <button type="submit" class="font-black text-rose-600 hover:text-rose-500 hover:underline uppercase text-xs cursor-pointer ml-1">
+                    <button type="submit" class="font-black text-rose-600 hover:text-rose-500 hover:underline uppercase text-xs cursor-pointer ml-1 dark:text-rose-400 dark:hover:text-rose-300">
                         Keluar & Ganti Akun
                     </button>
                 </form>

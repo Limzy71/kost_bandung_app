@@ -15,27 +15,10 @@
             draftPriceMin: @js($price_min ?? ''),
             draftPriceMax: @js($price_max ?? ''),
             draftVerifiedOnly: @js($verified_only),
-            draftFacilities: @js($facilities),
+            draftFacilities: @js(array_values($facilities)),
 
-            get hasFilter() {
-                return Boolean(
-                    this.draftSearch ||
-                    this.draftDistrict ||
-                    this.draftGender ||
-                    this.draftRentPeriod ||
-                    this.draftPriceMin ||
-                    this.draftPriceMax ||
-                    this.draftVerifiedOnly ||
-                    this.draftFacilities.length > 0 ||
-                    $wire.search ||
-                    $wire.district ||
-                    $wire.gender ||
-                    $wire.rent_period ||
-                    $wire.price_min ||
-                    $wire.price_max ||
-                    $wire.verified_only ||
-                    $wire.facilities.length > 0
-                );
+            get facilityCount() {
+                return Array.isArray(this.draftFacilities) ? this.draftFacilities.length : 0;
             },
 
             get activeFilterCount() {
@@ -46,15 +29,37 @@
                 if (this.draftRentPeriod) count++;
                 if (this.draftPriceMin || this.draftPriceMax) count++;
                 if (this.draftVerifiedOnly) count++;
-                if (this.draftFacilities.length > 0) count += this.draftFacilities.length;
+                count += this.facilityCount;
                 return count;
             },
 
+            get hasFilter() {
+                return Boolean(
+                    this.draftSearch ||
+                    this.draftDistrict ||
+                    this.draftGender ||
+                    this.draftRentPeriod ||
+                    this.draftPriceMin ||
+                    this.draftPriceMax ||
+                    this.draftVerifiedOnly ||
+                    this.facilityCount > 0 ||
+                    $wire.search ||
+                    $wire.district ||
+                    $wire.gender ||
+                    $wire.rent_period ||
+                    $wire.price_min ||
+                    $wire.price_max ||
+                    $wire.verified_only ||
+                    ($wire.facilities && $wire.facilities.length > 0)
+                );
+            },
+
             toggleFacility(name) {
-                if (this.draftFacilities.includes(name)) {
-                    this.draftFacilities = this.draftFacilities.filter(f => f !== name);
+                let list = Array.isArray(this.draftFacilities) ? [...this.draftFacilities] : [];
+                if (list.includes(name)) {
+                    this.draftFacilities = list.filter(f => f !== name);
                 } else {
-                    this.draftFacilities.push(name);
+                    this.draftFacilities = [...list, name];
                 }
             },
 
@@ -108,11 +113,10 @@
                 <h2 class="text-base sm:text-lg font-black text-black dark:text-white uppercase tracking-tight">
                     Filter Pencarian Kost
                 </h2>
-                <template x-if="hasFilter && activeFilterCount > 0">
-                    <span class="px-2.5 py-0.5 bg-yellow-300 border-2 border-black dark:border-zinc-700 text-black font-black text-[10px] uppercase rounded-full shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
-                        <span x-text="activeFilterCount"></span> Dipilih
-                    </span>
-                </template>
+                <span x-show="activeFilterCount > 0" x-cloak
+                    class="px-2.5 py-0.5 bg-yellow-300 border-2 border-black dark:border-zinc-700 text-black font-black text-[10px] uppercase rounded-full shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                    <span x-text="activeFilterCount"></span> Dipilih
+                </span>
             </div>
 
             <!-- Action buttons only visible when user has chosen any filter -->
@@ -285,14 +289,13 @@
                 <label class="text-xs font-black uppercase text-black dark:text-white tracking-wide">
                     Fasilitas Kost Populer
                 </label>
-                <template x-if="draftFacilities.length > 0">
-                    <span class="px-2.5 py-0.5 bg-yellow-300 border border-black dark:border-zinc-700 font-black text-[10px] uppercase rounded-full shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] text-black">
-                        <span x-text="draftFacilities.length"></span> Dipilih
-                    </span>
-                </template>
+                <span x-show="facilityCount > 0" x-cloak
+                    class="px-2.5 py-0.5 bg-yellow-300 border border-black dark:border-zinc-700 font-black text-[10px] uppercase rounded-full shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] text-black">
+                    <span x-text="facilityCount"></span> Dipilih
+                </span>
             </div>
 
-            <!-- Compact Chip Tags Group (Pure Text, Bold Typography) -->
+            <!-- Compact Chip Tags Group -->
             <div class="flex flex-wrap items-center gap-2">
                 @php
                     $facilityList = [

@@ -280,10 +280,10 @@
         </div>
 
         <!-- Row 3: Fasilitas Populer (Compact Chip Tags) -->
-        <div class="border-t-2 border-dashed border-black/20 dark:border-zinc-700 pt-4 mt-1">
-            <div class="flex items-center justify-between mb-2.5">
+        <div class="border-t-2 border-dashed border-black/20 dark:border-zinc-700 pt-4 mt-2">
+            <div class="flex items-center justify-between mb-3">
                 <div class="flex items-center gap-2">
-                    <x-icon name="lucide-sparkles" class="w-4 h-4 text-black dark:text-white stroke-[2.5]" />
+                    <x-icon name="lucide-armchair" class="w-4 h-4 text-black dark:text-white stroke-[2.5]" />
                     <label class="text-xs font-black uppercase text-black dark:text-white tracking-wide">
                         Fasilitas Kost Populer
                     </label>
@@ -299,15 +299,15 @@
             <div class="flex flex-wrap items-center gap-2">
                 @php
                     $facilityFilters = [
-                        'AC' => ['icon' => 'lucide-wind', 'label' => 'AC'],
+                        'AC' => ['icon' => 'lucide-snowflake', 'label' => 'AC'],
                         'Wi-Fi' => ['icon' => 'lucide-wifi', 'label' => 'Wi-Fi'],
-                        'Kamar Mandi Dalam' => ['icon' => 'lucide-bath', 'label' => 'KM Dalam'],
+                        'Kamar Mandi Dalam' => ['icon' => 'lucide-shower-head', 'label' => 'KM Dalam'],
                         'Water Heater (Air Hangat)' => ['icon' => 'lucide-flame', 'label' => 'Water Heater'],
                         'Kasur' => ['icon' => 'lucide-bed-double', 'label' => 'Kasur'],
-                        'Lemari' => ['icon' => 'lucide-archive', 'label' => 'Lemari'],
+                        'Lemari' => ['icon' => 'lucide-door-closed', 'label' => 'Lemari'],
                         'Dapur Bersama' => ['icon' => 'lucide-utensils', 'label' => 'Dapur'],
-                        'CCTV' => ['icon' => 'lucide-video', 'label' => 'CCTV'],
-                        'Parkir Motor' => ['icon' => 'lucide-bike', 'label' => 'Parkir Motor'],
+                        'CCTV' => ['icon' => 'lucide-cctv', 'label' => 'CCTV'],
+                        'Parkir Motor' => ['icon' => 'lucide-motorbike', 'label' => 'Parkir Motor'],
                         'Parkir Mobil' => ['icon' => 'lucide-car', 'label' => 'Parkir Mobil'],
                     ];
                 @endphp
@@ -339,7 +339,7 @@
 
         <!-- Controls: Sort By & View Switcher -->
         <div class="flex items-center justify-between sm:justify-end gap-3 flex-wrap sm:flex-nowrap">
-            <!-- Sort By Dropdown (Full click target with instant live update) -->
+            <!-- Sort By Dropdown (Full click target with generous spacing and instant live update) -->
             <div x-data="{
                 sort: @entangle('sort').live,
                 get sortLabel() {
@@ -351,11 +351,13 @@
                     };
                     return labels[this.sort] || 'Rekomendasi';
                 }
-            }" class="relative flex items-center bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 px-3.5 py-2 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer">
-                <x-icon name="lucide-arrow-up-down" class="w-4 h-4 text-black dark:text-white stroke-[2.5] mr-2 shrink-0 pointer-events-none" />
-                <span class="text-xs font-black uppercase text-zinc-500 dark:text-zinc-400 mr-1.5 pointer-events-none">Urutkan:</span>
-                <span class="text-xs font-black uppercase text-black dark:text-white pointer-events-none" x-text="sortLabel"></span>
-                <x-icon name="lucide-chevron-down" class="w-3.5 h-3.5 text-black dark:text-white stroke-[3] ml-2 shrink-0 pointer-events-none" />
+            }" class="relative flex items-center justify-between gap-3 bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 px-4 py-2.5 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer select-none">
+                <div class="flex items-center gap-2 pointer-events-none">
+                    <x-icon name="lucide-arrow-up-down" class="w-4 h-4 text-black dark:text-white stroke-[2.5] shrink-0" />
+                    <span class="text-xs font-bold uppercase text-zinc-500 dark:text-zinc-400">Urutkan:</span>
+                    <span class="text-xs font-black uppercase text-black dark:text-white tracking-wide ml-0.5" x-text="sortLabel"></span>
+                </div>
+                <x-icon name="lucide-chevron-down" class="w-4 h-4 text-black dark:text-white stroke-[2.5] shrink-0 pointer-events-none" />
                 <select x-model="sort" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer text-base">
                     <option value="recommended">Rekomendasi</option>
                     <option value="price_asc">Harga Termurah</option>

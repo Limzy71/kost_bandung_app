@@ -27,8 +27,7 @@
             </div>
         @endif
 
-        {{-- All form state lives in Alpine, initialized from server properties ($role, $business_name, etc.).
-             On submit, data is sent in ONE shot. If validation fails, server values are preserved without loss. --}}
+        {{-- All form state lives in Alpine, with instant client validation and zero-flicker one-shot submit. --}}
         <form
             wire:key="onboarding-form"
             @submit.prevent="submit()"
@@ -38,19 +37,44 @@
                 phone_number: @js($phone_number),
                 terms: @js($terms),
                 submitting: false,
+                errors: {},
+
+                validate() {
+                    this.errors = {};
+                    if (!this.role) {
+                        this.errors.role = 'Silakan pilih peran akun Anda.';
+                    }
+                    if (this.role === 'owner') {
+                        if (!this.business_name || !this.business_name.trim()) {
+                            this.errors.business_name = 'Nama properti/usaha kost wajib diisi.';
+                        }
+                        if (!this.phone_number || !this.phone_number.trim()) {
+                            this.errors.phone_number = 'Nomor WhatsApp wajib diisi.';
+                        } else if (!/^0[0-9]{9,14}$/.test(this.phone_number.trim())) {
+                            this.errors.phone_number = 'Nomor WhatsApp harus berawalan 0 dan terdiri dari 10-15 digit angka.';
+                        }
+                    }
+                    if (!this.terms) {
+                        this.errors.terms = 'Anda wajib menyetujui Syarat & Ketentuan.';
+                    }
+                    return Object.keys(this.errors).length === 0;
+                },
 
                 async submit() {
+                    if (!this.validate()) {
+                        return;
+                    }
                     if (this.submitting) return;
                     this.submitting = true;
                     try {
                         await $wire.complete(
                             this.role,
-                            this.role === 'owner' ? this.business_name : '',
-                            this.role === 'owner' ? this.phone_number : '',
+                            this.role === 'owner' ? this.business_name.trim() : '',
+                            this.role === 'owner' ? this.phone_number.trim() : '',
                             this.terms
                         );
                     } catch (e) {
-                        // Livewire throws error on validation exception
+                        // Keep submission state clean if server validation fails
                     } finally {
                         this.submitting = false;
                     }
@@ -66,7 +90,7 @@
                 </label>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {{-- Pencari Kost --}}
-                    <button type="button" @click="role = 'user'"
+                    <button type="button" @click="role = 'user'; if(errors.role) delete errors.role"
                         class="p-5 text-left border-3 border-black rounded-xl transition-all cursor-pointer focus:outline-none focus:ring-0 dark:border-zinc-700 select-none"
                         :class="role === 'user'
                             ? 'bg-[#FFE500] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -translate-x-0.5 -translate-y-0.5 dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]'
@@ -83,7 +107,7 @@
                     </button>
 
                     {{-- Pemilik Kost --}}
-                    <button type="button" @click="role = 'owner'"
+                    <button type="button" @click="role = 'owner'; if(errors.role) delete errors.role"
                         class="p-5 text-left border-3 border-black rounded-xl transition-all cursor-pointer focus:outline-none focus:ring-0 dark:border-zinc-700 select-none"
                         :class="role === 'owner'
                             ? 'bg-[#FFE500] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -translate-x-0.5 -translate-y-0.5 dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]'
@@ -99,8 +123,9 @@
                         </p>
                     </button>
                 </div>
+                <p x-show="errors.role" x-text="'✕ ' + errors.role" class="mt-2 text-xs font-bold text-rose-600 dark:text-rose-400" x-cloak></p>
                 @error('role')
-                    <p class="mt-2 text-xs font-bold text-rose-600 dark:text-rose-400">✕ {{ $message }}</p>
+                    <p x-show="!errors.role" class="mt-2 text-xs font-bold text-rose-600 dark:text-rose-400">✕ {{ $message }}</p>
                 @enderror
             </div>
 
@@ -133,11 +158,13 @@
                         type="text"
                         id="business_name"
                         x-model="business_name"
+                        @input="if(errors.business_name) delete errors.business_name"
                         placeholder="Contoh: Kost Putri Melati Dipatiukur"
                         class="w-full px-4 py-3.5 bg-white border-3 border-black rounded-lg text-sm font-bold text-black placeholder:text-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all dark:bg-zinc-900 dark:border-zinc-700 dark:text-white dark:placeholder:text-zinc-500 dark:focus:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]"
                     />
+                    <p x-show="errors.business_name" x-text="'✕ ' + errors.business_name" class="mt-2 text-xs font-bold text-rose-600 dark:text-rose-400" x-cloak></p>
                     @error('business_name')
-                        <p class="mt-2 text-xs font-bold text-rose-600 dark:text-rose-400">✕ {{ $message }}</p>
+                        <p x-show="!errors.business_name" class="mt-2 text-xs font-bold text-rose-600 dark:text-rose-400">✕ {{ $message }}</p>
                     @enderror
                 </div>
 
@@ -150,14 +177,16 @@
                         type="tel"
                         id="phone_number"
                         x-model="phone_number"
+                        @input="if(errors.phone_number) delete errors.phone_number"
                         placeholder="081234567890"
                         class="w-full px-4 py-3.5 bg-white border-3 border-black rounded-lg text-sm font-bold text-black placeholder:text-zinc-400 focus:outline-none focus:ring-0 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all dark:bg-zinc-900 dark:border-zinc-700 dark:text-white dark:placeholder:text-zinc-500 dark:focus:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]"
                     />
                     <p class="mt-1.5 text-[11px] font-bold text-zinc-500 dark:text-zinc-400">
                         Gunakan format awalan 0 (10–15 digit angka).
                     </p>
+                    <p x-show="errors.phone_number" x-text="'✕ ' + errors.phone_number" class="mt-2 text-xs font-bold text-rose-600 dark:text-rose-400" x-cloak></p>
                     @error('phone_number')
-                        <p class="mt-2 text-xs font-bold text-rose-600 dark:text-rose-400">✕ {{ $message }}</p>
+                        <p x-show="!errors.phone_number" class="mt-2 text-xs font-bold text-rose-600 dark:text-rose-400">✕ {{ $message }}</p>
                     @enderror
                 </div>
             </div>
@@ -168,14 +197,16 @@
                     <input
                         type="checkbox"
                         x-model="terms"
+                        @change="if(terms && errors.terms) delete errors.terms"
                         class="mt-0.5 w-5 h-5 bg-white border-3 border-black rounded text-black focus:ring-0 cursor-pointer dark:bg-zinc-800 dark:border-zinc-700 shrink-0"
                     />
                     <span class="text-xs font-bold text-zinc-700 dark:text-zinc-300 leading-snug">
                         Saya menyetujui <a href="{{ route('terms') }}" target="_blank" class="font-black text-black dark:text-white underline underline-offset-2 decoration-2 hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors">Syarat & Ketentuan</a> serta Kebijakan Privasi KostBandung. <span class="text-rose-500">*</span>
                     </span>
                 </label>
+                <p x-show="errors.terms" x-text="'✕ ' + errors.terms" class="mt-2 text-xs font-bold text-rose-600 dark:text-rose-400" x-cloak></p>
                 @error('terms')
-                    <p class="mt-2 text-xs font-bold text-rose-600 dark:text-rose-400">✕ {{ $message }}</p>
+                    <p x-show="!errors.terms" class="mt-2 text-xs font-bold text-rose-600 dark:text-rose-400">✕ {{ $message }}</p>
                 @enderror
             </div>
 

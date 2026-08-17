@@ -311,6 +311,15 @@ class KostSearch extends Component
         $hasSearch = ! empty(trim($this->search));
         $hasOtherFilters = (bool) ($this->gender || $this->district || $this->rent_period || $this->price_min || $this->price_max || $this->verified_only || $this->facilities || $this->sort !== 'recommended');
 
+        $activeFilterCount = 0;
+        if (! empty(trim($this->search))) $activeFilterCount++;
+        if (! empty($this->district)) $activeFilterCount++;
+        if (! empty($this->gender)) $activeFilterCount++;
+        if (! empty($this->rent_period)) $activeFilterCount++;
+        if (! empty($this->price_min) || ! empty($this->price_max)) $activeFilterCount++;
+        if ($this->verified_only) $activeFilterCount++;
+        $activeFilterCount += count($this->facilities);
+
         return view('livewire.kost-search', [
             'kosts' => $kosts,
             'districts' => $districts,
@@ -318,6 +327,7 @@ class KostSearch extends Component
             'googleMapsApiKey' => config('services.google.maps_api_key'),
             'mapItems' => $this->mapItems,
             'hasActiveFilter' => $hasSearch || $hasOtherFilters,
+            'activeFilterCount' => $activeFilterCount,
             'hasSearchOnly' => $hasSearch && ! $hasOtherFilters,
             'hasBothSearchAndFilters' => $hasSearch && $hasOtherFilters,
             'totalKostInDb' => $totalKostInDb,

@@ -20,7 +20,11 @@ class EnsureOnboardingComplete
             $user = Auth::user();
 
             if (! $user->hasCompletedOnboarding()) {
-                if (! $request->routeIs('onboarding', 'logout', 'terms') && ! $request->is('livewire/*')) {
+                if (
+                    ! $request->routeIs('onboarding', 'logout', 'terms', 'livewire.*')
+                    && ! $request->is('livewire*')
+                    && ! $request->hasHeader('X-Livewire')
+                ) {
                     return redirect()->route('onboarding');
                 }
             } else {

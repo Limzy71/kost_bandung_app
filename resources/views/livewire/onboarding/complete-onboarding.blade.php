@@ -171,7 +171,7 @@
                         class="mt-0.5 w-5 h-5 bg-white border-3 border-black rounded text-black focus:ring-0 cursor-pointer dark:bg-zinc-800 dark:border-zinc-700 shrink-0"
                     />
                     <span class="text-xs font-bold text-zinc-700 dark:text-zinc-300 leading-snug">
-                        Saya menyetujui <a href="{{ route('terms') }}" target="_blank" class="font-black text-black dark:text-white underline decoration-2 hover:text-[#FFE500]">Syarat & Ketentuan</a> serta Kebijakan Privasi KostBandung. <span class="text-rose-500">*</span>
+                        Saya menyetujui <a href="{{ route('terms') }}" target="_blank" class="font-black text-black dark:text-white underline underline-offset-2 decoration-2 hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors">Syarat & Ketentuan</a> serta Kebijakan Privasi KostBandung. <span class="text-rose-500">*</span>
                     </span>
                 </label>
                 @error('terms')

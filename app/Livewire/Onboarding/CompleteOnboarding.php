@@ -30,7 +30,7 @@ class CompleteOnboarding extends Component
         $user = Auth::user();
 
         if (! $user) {
-            $this->redirectRoute('login', navigate: true);
+            $this->redirectRoute('login');
 
             return;
         }

@@ -344,3 +344,18 @@ it('has no active filter with defaults', function () {
     Livewire::test(KostSearch::class)
         ->assertViewHas('hasActiveFilter', false);
 });
+
+it('applies all draft filters atomically via applyAllFilters', function () {
+    Livewire::test(KostSearch::class)
+        ->call('applyAllFilters', 'Dago', 'Coblong', 'putra', 'monthly', '1000000', '3000000', true, ['AC', 'Wi-Fi'])
+        ->assertSet('search', 'Dago')
+        ->assertSet('district', 'Coblong')
+        ->assertSet('gender', 'putra')
+        ->assertSet('rent_period', 'monthly')
+        ->assertSet('price_min', '1000000')
+        ->assertSet('price_max', '3000000')
+        ->assertSet('verified_only', true)
+        ->assertSet('facilities', ['AC', 'Wi-Fi'])
+        ->assertViewHas('hasActiveFilter', true);
+});
+

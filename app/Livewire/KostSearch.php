@@ -126,6 +126,32 @@ class KostSearch extends Component
         $this->resetPage();
     }
 
+    /**
+     * Apply all draft filters at once from client side.
+     *
+     * @param list<string> $facilities
+     */
+    public function applyAllFilters(
+        string $search = '',
+        string $district = '',
+        string $gender = '',
+        string $rent_period = '',
+        ?string $price_min = '',
+        ?string $price_max = '',
+        bool $verified_only = false,
+        array $facilities = []
+    ): void {
+        $this->search = $search;
+        $this->district = $district;
+        $this->gender = $gender;
+        $this->rent_period = $rent_period;
+        $this->price_min = $price_min ?: '';
+        $this->price_max = $price_max ?: '';
+        $this->verified_only = $verified_only;
+        $this->facilities = $facilities;
+        $this->resetPage();
+    }
+
     public function resetFilters(): void
     {
         $this->search = '';

@@ -164,6 +164,7 @@ class KostSearch extends Component
         $this->facilities = [];
         $this->sort = 'recommended';
         $this->resetPage();
+        $this->dispatch('filters-reset');
     }
 
     public function updatedPage(): void

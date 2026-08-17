@@ -17,6 +17,33 @@
             draftVerifiedOnly: @js($verified_only),
             draftFacilities: @js(array_values($facilities)),
 
+            init() {
+                this.$watch('$wire.facilities', (val) => {
+                    this.draftFacilities = Array.isArray(val) ? [...val] : [];
+                });
+                this.$watch('$wire.search', (val) => { this.draftSearch = val || ''; });
+                this.$watch('$wire.district', (val) => { this.draftDistrict = val || ''; });
+                this.$watch('$wire.gender', (val) => { this.draftGender = val || ''; });
+                this.$watch('$wire.rent_period', (val) => { this.draftRentPeriod = val || ''; });
+                this.$watch('$wire.price_min', (val) => { this.draftPriceMin = val || ''; });
+                this.$watch('$wire.price_max', (val) => { this.draftPriceMax = val || ''; });
+                this.$watch('$wire.verified_only', (val) => { this.draftVerifiedOnly = Boolean(val); });
+                this.$wire.$on('filters-reset', () => {
+                    this.resetLocal();
+                });
+            },
+
+            resetLocal() {
+                this.draftSearch = '';
+                this.draftDistrict = '';
+                this.draftGender = '';
+                this.draftRentPeriod = '';
+                this.draftPriceMin = '';
+                this.draftPriceMax = '';
+                this.draftVerifiedOnly = false;
+                this.draftFacilities = [];
+            },
+
             get facilityCount() {
                 return Array.isArray(this.draftFacilities) ? this.draftFacilities.length : 0;
             },
@@ -90,18 +117,12 @@
             },
 
             reset() {
-                this.draftSearch = '';
-                this.draftDistrict = '';
-                this.draftGender = '';
-                this.draftRentPeriod = '';
-                this.draftPriceMin = '';
-                this.draftPriceMax = '';
-                this.draftVerifiedOnly = false;
-                this.draftFacilities = [];
+                this.resetLocal();
                 $wire.resetFilters();
             }
         }"
-        @reset-filters.window="reset()"
+        @filters-reset.window="resetLocal()"
+        @reset-filters.window="resetLocal()"
         class="bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 p-5 sm:p-7 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] space-y-6"
     >
         <!-- Filter Card Header -->
@@ -325,7 +346,7 @@
     </div>
 
     <!-- Section Title & Controls Bar (Sorting & Layout Switcher) -->
-    <div id="home-list-section" class="scroll-mt-20 flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4">
+    <div id="home-list-section" class="relative z-30 scroll-mt-20 flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4">
         <!-- Title & Count -->
         <div class="flex items-center gap-3">
             <h3 class="text-base sm:text-xl font-black text-black dark:text-white uppercase tracking-tight">
@@ -355,7 +376,7 @@
                     this.sort = val;
                     this.open = false;
                 }
-            }" @click.outside="open = false" @keydown.escape.window="open = false" class="relative">
+            }" @click.outside="open = false" @keydown.escape.window="open = false" class="relative z-50">
                 <!-- Trigger Button -->
                 <button type="button"
                     @click="open = !open"
@@ -375,7 +396,7 @@
                     x-transition:leave="transition ease-in duration-100"
                     x-transition:leave-start="opacity-100 translate-y-0 scale-100"
                     x-transition:leave-end="opacity-0 translate-y-1 scale-95"
-                    class="absolute right-0 top-full mt-2 w-52 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] p-1.5 space-y-1 z-40">
+                    class="absolute right-0 top-full mt-2 w-52 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] p-1.5 space-y-1 z-50">
                     
                     <button type="button" @click="selectSort('recommended')"
                         :class="sort === 'recommended' ? 'bg-yellow-400 text-black font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]' : 'text-black dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 font-bold'"
@@ -604,9 +625,9 @@
                     </p>
                 </div>
                 <button type="button" wire:click="resetFilters"
-                    @click="$dispatch('reset-filters'); if(viewMode==='map') { $nextTick(() => window.dispatchEvent(new Event('resize'))); }"
+                    @click="window.dispatchEvent(new CustomEvent('filters-reset')); if(viewMode==='map') { $nextTick(() => window.dispatchEvent(new Event('resize'))); }"
                     class="w-full sm:w-auto px-5 py-3 bg-yellow-400 hover:bg-yellow-300 text-black border-3 border-black dark:border-zinc-700 font-black text-xs sm:text-sm uppercase shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl inline-flex items-center justify-center gap-2 cursor-pointer">
-                    <x-icon name="lucide-refresh-cw" class="w-4 h-4 stroke-[3]" />
+                    <x-icon name="lucide-rotate-ccw" class="w-4 h-4 stroke-[3]" />
                     @if($hasActiveFilter)
                         <span>Reset Semua Filter</span>
                     @else

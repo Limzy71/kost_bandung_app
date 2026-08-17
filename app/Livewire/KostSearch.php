@@ -35,6 +35,14 @@ class KostSearch extends Component
     #[Url]
     public bool $verified_only = false;
 
+    /** @var list<string> Selected facility names for filtering (AND condition). */
+    #[Url]
+    public array $facilities = [];
+
+    /** Sort mode: recommended, price_asc, price_desc, newest. */
+    #[Url]
+    public string $sort = 'recommended';
+
     // Stored as a Livewire public property so Alpine can read it via $wire.mapItems
     // without needing x-effect or inline JSON in HTML attributes.
     /**
@@ -77,6 +85,42 @@ class KostSearch extends Component
         $this->resetPage();
     }
 
+    public function updatedSort(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedFacilities(): void
+    {
+        $this->resetPage();
+    }
+
+    public function toggleFacility(string $facilityName): void
+    {
+        if (in_array($facilityName, $this->facilities, true)) {
+            $this->facilities = array_values(array_diff($this->facilities, [$facilityName]));
+        } else {
+            $this->facilities[] = $facilityName;
+        }
+
+        $this->resetPage();
+    }
+
+    public function setPricePreset(string $preset): void
+    {
+        $values = match ($preset) {
+            'under_1m' => ['min' => '', 'max' => '1000000'],
+            '1m_2m' => ['min' => '1000000', 'max' => '2000000'],
+            '2m_3m' => ['min' => '2000000', 'max' => '3000000'],
+            'above_3m' => ['min' => '3000000', 'max' => ''],
+            default => ['min' => '', 'max' => ''],
+        };
+
+        $this->price_min = $values['min'];
+        $this->price_max = $values['max'];
+        $this->resetPage();
+    }
+
     public function applyFilters(): void
     {
         $this->resetPage();
@@ -91,6 +135,8 @@ class KostSearch extends Component
         $this->price_min = '';
         $this->price_max = '';
         $this->verified_only = false;
+        $this->facilities = [];
+        $this->sort = 'recommended';
         $this->resetPage();
     }
 
@@ -142,6 +188,11 @@ class KostSearch extends Component
                 ->whereHas('user', fn ($q) => $q->where('identity_verification_status', 'verified'));
         }
 
+        // Facility filter (AND condition: must have ALL selected facilities)
+        foreach ($this->facilities as $facilityName) {
+            $query->whereHas('facilities', fn ($q) => $q->where('name', $facilityName)->where('status', 'approved'));
+        }
+
         // Compute district counts before applying the district filter
         $districtCounts = (clone $query)
             ->selectRaw('district, count(*) as total')
@@ -154,10 +205,19 @@ class KostSearch extends Component
         }
 
         $now = now();
-        $query->orderByRaw(
-            'CASE WHEN boost_expires_at IS NOT NULL AND boost_expires_at > ? THEN 1 ELSE 0 END DESC',
-            [$now]
-        )->orderByDesc('created_at');
+
+        // Apply sorting
+        match ($this->sort) {
+            'price_asc' => $query->orderBy('price_monthly'),
+            'price_desc' => $query->orderByDesc('price_monthly'),
+            'newest' => $query->orderByDesc('created_at'),
+            default => $query
+                ->orderByRaw(
+                    'CASE WHEN boost_expires_at IS NOT NULL AND boost_expires_at > ? THEN 1 ELSE 0 END DESC',
+                    [$now]
+                )
+                ->orderByDesc('created_at'),
+        };
 
         $districts = [];
         foreach (config('bandung.districts', []) as $key => $data) {
@@ -207,7 +267,7 @@ class KostSearch extends Component
 
         $totalKostInDb = Kost::where('status', 'published')->where('is_available', true)->count();
         $hasSearch = ! empty(trim($this->search));
-        $hasOtherFilters = (bool) ($this->gender || $this->district || $this->rent_period || $this->price_min || $this->price_max || $this->verified_only);
+        $hasOtherFilters = (bool) ($this->gender || $this->district || $this->rent_period || $this->price_min || $this->price_max || $this->verified_only || $this->facilities || $this->sort !== 'recommended');
 
         return view('livewire.kost-search', [
             'kosts' => $kosts,

@@ -18,7 +18,9 @@
                     $wire.rent_period ||
                     $wire.price_min ||
                     $wire.price_max ||
-                    $wire.verified_only
+                    $wire.verified_only ||
+                    $wire.facilities.length > 0 ||
+                    $wire.sort !== 'recommended'
                 );
             }
         }"
@@ -42,6 +44,24 @@
                     <x-icon name="lucide-search" class="w-3.5 h-3.5 stroke-[3]" />
                     <span>Terapkan Filter</span>
                 </button>
+            </div>
+        </div>
+
+        <!-- Sort & Active Filter Summary -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <div class="flex items-center gap-2">
+                <label class="text-xs font-black uppercase text-black dark:text-white tracking-wide whitespace-nowrap">Urutkan:</label>
+                <select wire:model="sort"
+                    class="bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-3 py-2 text-xs font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer transition-all duration-150 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M4%206l4%204%204-4%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M4%206l4%204%204-4%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-no-repeat bg-[right_8px_center] pr-7">
+                    <option value="recommended" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rekomendasi Terbaik</option>
+                    <option value="price_asc" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Harga Termurah</option>
+                    <option value="price_desc" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Harga Termahal</option>
+                    <option value="newest" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Terbaru</option>
+                </select>
+            </div>
+            <div x-show="hasFilter" x-cloak class="flex items-center gap-1.5 text-xs font-black uppercase text-zinc-500 dark:text-zinc-400">
+                <x-icon name="lucide-tag" class="w-3.5 h-3.5 stroke-[2.5]" />
+                <span>Filter Aktif</span>
             </div>
         </div>
 
@@ -107,6 +127,36 @@
                     <label class="block text-xs font-black uppercase text-black dark:text-white mb-2 tracking-wide flex items-center justify-between">
                         <span>Batas Harga Sewa <span class="text-zinc-500 dark:text-zinc-400 font-bold normal-case text-[10px] ml-1">(per tipe)</span></span>
                     </label>
+
+                    <!-- Quick Price Chips -->
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <button type="button" wire:click="setPricePreset('all')"
+                            :class="!$wire.price_min && !$wire.price_max ? 'bg-yellow-400 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]' : 'bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]'"
+                            class="px-3 py-1.5 text-[10px] font-black uppercase text-black dark:text-white border-2 border-black dark:border-zinc-700 rounded-lg transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none whitespace-nowrap">
+                            Semua
+                        </button>
+                        <button type="button" wire:click="setPricePreset('under_1m')"
+                            :class="$wire.price_max === '1000000' && !$wire.price_min ? 'bg-yellow-400 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]' : 'bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]'"
+                            class="px-3 py-1.5 text-[10px] font-black uppercase text-black dark:text-white border-2 border-black dark:border-zinc-700 rounded-lg transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none whitespace-nowrap">
+                            &lt; 1 Jt
+                        </button>
+                        <button type="button" wire:click="setPricePreset('1m_2m')"
+                            :class="$wire.price_min === '1000000' && $wire.price_max === '2000000' ? 'bg-yellow-400 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]' : 'bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]'"
+                            class="px-3 py-1.5 text-[10px] font-black uppercase text-black dark:text-white border-2 border-black dark:border-zinc-700 rounded-lg transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none whitespace-nowrap">
+                            1 – 2 Jt
+                        </button>
+                        <button type="button" wire:click="setPricePreset('2m_3m')"
+                            :class="$wire.price_min === '2000000' && $wire.price_max === '3000000' ? 'bg-yellow-400 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]' : 'bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]'"
+                            class="px-3 py-1.5 text-[10px] font-black uppercase text-black dark:text-white border-2 border-black dark:border-zinc-700 rounded-lg transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none whitespace-nowrap">
+                            2 – 3 Jt
+                        </button>
+                        <button type="button" wire:click="setPricePreset('above_3m')"
+                            :class="$wire.price_min === '3000000' && !$wire.price_max ? 'bg-yellow-400 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]' : 'bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]'"
+                            class="px-3 py-1.5 text-[10px] font-black uppercase text-black dark:text-white border-2 border-black dark:border-zinc-700 rounded-lg transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none whitespace-nowrap">
+                            &gt; 3 Jt
+                        </button>
+                    </div>
+
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <select x-ref="minSelect" wire:model="price_min"
                             class="w-full bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl px-3 py-3 text-sm font-black uppercase tracking-wide text-black dark:text-white focus:outline-none focus:ring-0 cursor-pointer transition-all duration-150 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23000%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px_14px] bg-no-repeat bg-[right_10px_center] pr-8">
@@ -125,6 +175,8 @@
                             <option value="2000000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 2 Jt</option>
                             <option value="3000000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 3 Jt</option>
                             <option value="5000000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 5 Jt</option>
+                            <option value="7500000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 7.5 Jt</option>
+                            <option value="10000000" class="font-bold text-sm normal-case text-zinc-900 dark:text-zinc-300 bg-white dark:bg-zinc-900 py-2">Rp 10 Jt</option>
                         </select>
                     </div>
                 </div>
@@ -155,6 +207,44 @@
                             <span class="truncate">Kost Verified</span>
                         </label>
                     </div>
+                </div>
+            </div>
+
+            <!-- Facility Multi-Select Section -->
+            <div class="border-t-2 border-black/10 dark:border-zinc-800 pt-5">
+                <div class="flex items-center gap-2 mb-3">
+                    <x-icon name="lucide-settings-2" class="w-4 h-4 text-black dark:text-white stroke-[2.5]" />
+                    <label class="text-xs font-black uppercase text-black dark:text-white tracking-wide">Fasilitas Kost Populer</label>
+                    <span x-show="$wire.facilities.length > 0" x-cloak
+                        class="px-2 py-0.5 bg-yellow-300 text-black border border-black dark:border-zinc-700 font-black text-[10px] rounded-full shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]">
+                        <span x-text="$wire.facilities.length"></span> Dipilih
+                    </span>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    @php
+                        $facilityFilters = [
+                            'AC' => 'lucide-air-vent',
+                            'Wi-Fi' => 'lucide-wifi',
+                            'Kamar Mandi Dalam' => 'lucide-shower-head',
+                            'Water Heater (Air Hangat)' => 'lucide-thermometer-sun',
+                            'Kasur' => 'lucide-bed',
+                            'Lemari' => 'lucide-door-open',
+                            'Dapur Bersama' => 'lucide-cooking-pot',
+                            'CCTV' => 'lucide-cctv',
+                            'Parkir Motor' => 'lucide-bike',
+                            'Parkir Mobil' => 'lucide-car',
+                        ];
+                    @endphp
+                    @foreach ($facilityFilters as $name => $icon)
+                        <button type="button" wire:click="toggleFacility('{{ $name }}')"
+                            :class="in_array('{{ $name }}', $wire.facilities)
+                                ? 'bg-yellow-400 text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]'
+                                : 'bg-white dark:bg-zinc-900 text-black dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1px_1px_0px_0px_rgba(255,255,255,0.25)]'"
+                            class="px-3 py-2 text-[10px] font-black uppercase border-2 border-black dark:border-zinc-700 rounded-lg transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none inline-flex items-center gap-1.5">
+                            <x-icon name="{{ $icon }}" class="w-3.5 h-3.5 shrink-0 stroke-[2.5]" />
+                            <span>{{ $name }}</span>
+                        </button>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -193,7 +283,7 @@
     <!-- Main Content Area -->
     <div class="relative">
         <!-- Loading Overlay -->
-        <div wire:loading.delay wire:target="applyFilters, resetFilters, gender, district, rent_period, price_min, price_max"
+        <div wire:loading.delay wire:target="applyFilters, resetFilters, gender, district, rent_period, price_min, price_max, sort, facilities, setPricePreset, toggleFacility"
             class="absolute inset-0 bg-white/70 dark:bg-zinc-900/70 backdrop-blur-xs z-30 flex items-center justify-center rounded-2xl border-4 border-black dark:border-zinc-700">
             <div class="bg-yellow-300 border-3 border-black dark:border-zinc-700 px-6 py-4 rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] flex items-center gap-3">
                 <x-icon name="lucide-loader-circle" class="animate-spin h-6 w-6 text-black" />

@@ -232,27 +232,27 @@
                     <!-- Quick Preset Chips -->
                     <div class="hidden sm:flex items-center gap-1.5">
                         <button type="button" @click="setPricePreset('all')"
-                            :class="!draftPriceMin && !draftPriceMax ? 'bg-yellow-400 border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400'"
+                            :class="!draftPriceMin && !draftPriceMax ? 'bg-yellow-400 text-black border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300'"
                             class="px-2 py-0.5 text-[10px] font-black uppercase border rounded transition-all cursor-pointer">
                             Semua
                         </button>
                         <button type="button" @click="setPricePreset('under_1m')"
-                            :class="draftPriceMax === '1000000' && !draftPriceMin ? 'bg-yellow-400 border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400'"
+                            :class="draftPriceMax === '1000000' && !draftPriceMin ? 'bg-yellow-400 text-black border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300'"
                             class="px-2 py-0.5 text-[10px] font-black uppercase border rounded transition-all cursor-pointer">
                             &lt; 1 Jt
                         </button>
                         <button type="button" @click="setPricePreset('1m_2m')"
-                            :class="draftPriceMin === '1000000' && draftPriceMax === '2000000' ? 'bg-yellow-400 border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400'"
+                            :class="draftPriceMin === '1000000' && draftPriceMax === '2000000' ? 'bg-yellow-400 text-black border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300'"
                             class="px-2 py-0.5 text-[10px] font-black uppercase border rounded transition-all cursor-pointer">
                             1–2 Jt
                         </button>
                         <button type="button" @click="setPricePreset('2m_3m')"
-                            :class="draftPriceMin === '2000000' && draftPriceMax === '3000000' ? 'bg-yellow-400 border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400'"
+                            :class="draftPriceMin === '2000000' && draftPriceMax === '3000000' ? 'bg-yellow-400 text-black border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300'"
                             class="px-2 py-0.5 text-[10px] font-black uppercase border rounded transition-all cursor-pointer">
                             2–3 Jt
                         </button>
                         <button type="button" @click="setPricePreset('above_3m')"
-                            :class="draftPriceMin === '3000000' && !draftPriceMax ? 'bg-yellow-400 border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400'"
+                            :class="draftPriceMin === '3000000' && !draftPriceMax ? 'bg-yellow-400 text-black border-black dark:border-zinc-700 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300'"
                             class="px-2 py-0.5 text-[10px] font-black uppercase border rounded transition-all cursor-pointer">
                             &gt; 3 Jt
                         </button>

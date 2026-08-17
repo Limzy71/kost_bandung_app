@@ -347,22 +347,13 @@ window.catalogMap = function (config) {
             }
             try {
                 if (!this.map) {
-                    const hasAdvancedMarker = Boolean(
-                        window.google.maps.marker && window.google.maps.marker.AdvancedMarkerElement
-                    );
-                    const mapOptions = {
+                    this.map = new google.maps.Map(this.$refs.catalogMapElement, {
                         center: { lat: -6.917464, lng: 107.619123 },
                         zoom: 13,
-                        mapTypeControl: false, // We use custom buttons for this
+                        mapTypeControl: false,
                         streetViewControl: false,
                         fullscreenControl: true,
-                        styles: null,
-                    };
-                    if (hasAdvancedMarker) {
-                        mapOptions.mapId = 'KOST_CATALOG_MAP';
-                    }
-
-                    this.map = new google.maps.Map(this.$refs.catalogMapElement, mapOptions);
+                    });
                     this.infoWindow = new google.maps.InfoWindow();
                     this.mapEngine = 'google';
                     this.googleRetries = 0;
@@ -372,7 +363,7 @@ window.catalogMap = function (config) {
                         this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(this.$refs.mapTypeSwitcher);
                     }
 
-                    // Render again once tiles & viewport are initialized
+                    // Render markers once tiles & viewport are initialized
                     google.maps.event.addListenerOnce(this.map, 'idle', () => {
                         this.renderGoogleMarkers();
                     });
@@ -382,7 +373,7 @@ window.catalogMap = function (config) {
                 return true;
             } catch (e) {
                 console.warn('Google Map Catalog init error:', e);
-                window.dispatchEvent(new Event('map-load-error'));
+                this.loadLeafletAndInit();
                 return false;
             }
         },
@@ -391,7 +382,6 @@ window.catalogMap = function (config) {
             if (this.mapEngine !== 'google' || !this.map || !window.google) return;
             this.markers.forEach(m => {
                 if (typeof m.setMap === 'function') m.setMap(null);
-                else m.map = null;
             });
             this.markers = [];
 
@@ -415,58 +405,35 @@ window.catalogMap = function (config) {
             const bounds = new google.maps.LatLngBounds();
             let validCount = 0;
 
-            const hasAdvancedMarker = Boolean(
-                window.google.maps.marker && window.google.maps.marker.AdvancedMarkerElement
-            );
-
             currentItems.forEach(item => {
                 const lat = parseFloat(item.lat);
                 const lng = parseFloat(item.lng);
                 if (isNaN(lat) || isNaN(lng) || lat === 0 || lng === 0) return;
 
-                const pos = { lat, lng };
-                bounds.extend(pos);
                 validCount++;
+                bounds.extend({ lat, lng });
 
                 const badge = this.createPriceBadgeElement(item.price_short, item.is_boosted);
 
-                if (hasAdvancedMarker) {
-                    const marker = new google.maps.marker.AdvancedMarkerElement({
-                        position: pos,
-                        map: this.map,
-                        title: item.name,
-                        content: badge.img
-                    });
+                // Use classic google.maps.Marker (no Map ID required)
+                const marker = new google.maps.Marker({
+                    position: { lat, lng },
+                    map: this.map,
+                    title: item.name,
+                    icon: {
+                        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(badge.svg),
+                        size: new google.maps.Size(badge.width, badge.height),
+                        scaledSize: new google.maps.Size(badge.width, badge.height),
+                        anchor: new google.maps.Point(badge.anchorX, badge.anchorY)
+                    }
+                });
 
-                    const openPopup = () => {
-                        this.infoWindow.setContent(this.buildPopupHtml(item));
-                        this.infoWindow.open(this.map, marker);
-                    };
+                marker.addListener('click', () => {
+                    this.infoWindow.setContent(this.buildPopupHtml(item));
+                    this.infoWindow.open(this.map, marker);
+                });
 
-                    marker.addEventListener('gmp-click', openPopup);
-
-                    this.markers.push(marker);
-                } else {
-                    // Classic google.maps.Marker with custom SVG badge fallback
-                    const marker = new google.maps.Marker({
-                        position: pos,
-                        map: this.map,
-                        title: item.name,
-                        icon: {
-                            url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(badge.svg),
-                            size: new google.maps.Size(badge.width, badge.height),
-                            scaledSize: new google.maps.Size(badge.width, badge.height),
-                            anchor: new google.maps.Point(badge.anchorX, badge.anchorY)
-                        }
-                    });
-
-                    marker.addListener('click', () => {
-                        this.infoWindow.setContent(this.buildPopupHtml(item));
-                        this.infoWindow.open(this.map, marker);
-                    });
-
-                    this.markers.push(marker);
-                }
+                this.markers.push(marker);
             });
 
             if (validCount > 0) {

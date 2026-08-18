@@ -138,11 +138,12 @@ class Register extends Component
 
         Auth::login($user);
 
-        if ($user->role === 'owner') {
-            return redirect()->route('dashboard');
+        // Auto-send WhatsApp OTP immediately so user can verify quickly on verification hub
+        if (! empty($user->phone_number)) {
+            app(\App\Services\WhatsAppService::class)->sendOtp($user);
         }
 
-        return redirect()->route('home');
+        return redirect()->route('verification.notice');
     }
 
     public function render(): View

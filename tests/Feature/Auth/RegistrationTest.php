@@ -11,7 +11,7 @@ test('registration screen can be rendered', function () {
         ->assertSeeLivewire(Register::class);
 });
 
-test('new seeker (user) can register manually and redirects to home', function () {
+test('new seeker (user) can register manually and redirects to verification hub', function () {
     Livewire::test(Register::class)
         ->set('name', 'Budi Santoso')
         ->set('email', 'budi@example.com')
@@ -22,7 +22,7 @@ test('new seeker (user) can register manually and redirects to home', function (
         ->set('terms', true)
         ->call('register')
         ->assertHasNoErrors()
-        ->assertRedirect(route('home'));
+        ->assertRedirect(route('verification.notice'));
 
     $user = User::where('email', 'budi@example.com')->first();
     expect($user)->not->toBeNull()
@@ -34,7 +34,7 @@ test('new seeker (user) can register manually and redirects to home', function (
     $this->assertAuthenticatedAs($user);
 });
 
-test('new owner can register manually with business name and redirects to dashboard', function () {
+test('new owner can register manually with business name and redirects to verification hub', function () {
     Livewire::test(Register::class)
         ->set('name', 'Haji Sulaeman')
         ->set('email', 'sulaeman@example.com')
@@ -46,7 +46,7 @@ test('new owner can register manually with business name and redirects to dashbo
         ->set('terms', true)
         ->call('register')
         ->assertHasNoErrors()
-        ->assertRedirect(route('dashboard'));
+        ->assertRedirect(route('verification.notice'));
 
     $user = User::where('email', 'sulaeman@example.com')->first();
     expect($user)->not->toBeNull()

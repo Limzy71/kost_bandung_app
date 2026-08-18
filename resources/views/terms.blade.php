@@ -28,7 +28,7 @@
                     <x-icon name="lucide-info" class="w-4 h-4 stroke-[2.5]" />
                 </div>
                 <p class="text-xs sm:text-sm font-bold text-zinc-800 dark:text-zinc-200 leading-relaxed">
-                    Selamat datang di <strong>KostBandung</strong>. Dengan mendaftar, mengakses, atau menggunakan platform direktori kost hyper-local ini, Anda secara sadar telah membaca, memahami, dan menyetujui seluruh ketentuan di bawah ini.
+                    Selamat datang di <strong>KostBandung</strong>. Dengan mendaftar, mengakses, atau menggunakan platform direktori kost Kota Bandung ini, Anda secara sadar telah membaca, memahami, dan menyetujui seluruh ketentuan di bawah ini.
                 </p>
             </div>
 

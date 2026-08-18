@@ -24,7 +24,7 @@ test('user role registration succeeds with phone number and no business name', f
         ->set('terms', true)
         ->call('register')
         ->assertHasNoErrors()
-        ->assertRedirect(route('home'));
+        ->assertRedirect(route('verification.notice'));
 
     $user = User::where('email', 'budi@example.com')->first();
 
@@ -78,7 +78,7 @@ test('owner role registration succeeds with all required fields and saves to dat
         ->set('terms', true)
         ->call('register')
         ->assertHasNoErrors()
-        ->assertRedirect(route('dashboard'));
+        ->assertRedirect(route('verification.notice'));
 
     $user = User::where('email', 'agus@example.com')->first();
 

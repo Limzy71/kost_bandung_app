@@ -171,6 +171,13 @@
                 }
             },
 
+            clearSearch() {
+                this.draftSearch = '';
+                if (this.$wire && this.$wire.search && this.$wire.search.trim() !== '') {
+                    this.apply();
+                }
+            },
+
             reset() {
                 this.resetLocal();
                 if (this.$wire) {
@@ -226,23 +233,38 @@
                 <label class="block text-xs font-black uppercase text-black dark:text-white mb-2 tracking-wide">
                     Cari Nama / Jalan / Area
                 </label>
-                <div class="relative flex items-center">
+                <form @submit.prevent="apply()" action="javascript:void(0);" class="relative flex items-center">
                     <input
                         x-model="draftSearch"
-                        @keydown.enter="apply()"
-                        type="text"
+                        @keydown.enter.prevent="apply()"
+                        type="search"
+                        enterkeyhint="search"
+                        inputmode="search"
+                        autocomplete="off"
+                        autocapitalize="none"
                         placeholder="Contoh: Dago, Dipatiukur, Sekeloa..."
-                        class="w-full h-12 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl pl-11 pr-10 text-sm font-black uppercase text-black dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)]"
+                        class="w-full h-12 bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-xl pl-11 pr-24 sm:pr-28 text-sm font-black uppercase text-black dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] transition-all shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] [appearance:none] [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden"
                     >
                     <x-icon name="lucide-search" class="w-5 h-5 text-black dark:text-white absolute left-3.5 pointer-events-none stroke-[2.5]" />
-                    <template x-if="draftSearch">
-                        <button type="button"
-                            @click="draftSearch = ''"
-                            class="absolute right-3 w-7 h-7 bg-rose-400 hover:bg-rose-300 border-2 border-black dark:border-zinc-700 rounded-lg text-black font-black text-xs shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center cursor-pointer">
-                            &#x2715;
+                    
+                    <!-- Inline Actions: Clear Button & Search Submit Button -->
+                    <div class="absolute right-2.5 flex items-center gap-1.5 z-10">
+                        <template x-if="draftSearch">
+                            <button type="button"
+                                @click="clearSearch()"
+                                title="Hapus teks pencarian"
+                                class="w-7 h-7 bg-rose-400 hover:bg-rose-300 border-2 border-black dark:border-zinc-700 rounded-lg text-black font-black text-xs shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center cursor-pointer">
+                                <x-icon name="lucide-x" class="w-3.5 h-3.5 stroke-3" />
+                            </button>
+                        </template>
+                        <button type="submit"
+                            title="Terapkan pencarian"
+                            class="h-8 px-2.5 sm:px-3 bg-lime-400 hover:bg-lime-300 text-black border-2 border-black dark:border-zinc-700 rounded-lg font-black text-xs uppercase shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all inline-flex items-center gap-1 cursor-pointer">
+                            <x-icon name="lucide-search" class="w-3.5 h-3.5 stroke-3 shrink-0" />
+                            <span class="text-[11px] font-black hidden sm:inline">Cari</span>
                         </button>
-                    </template>
-                </div>
+                    </div>
+                </form>
             </div>
 
             <!-- District & Gender -->

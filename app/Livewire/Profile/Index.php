@@ -46,6 +46,16 @@ class Index extends Component
 
     public bool $deleteAccountModalOpen = false;
 
+    public string $phoneOtp = '';
+
+    public bool $showOtpModal = false;
+
+    public bool $otpSent = false;
+
+    public int $otpCooldown = 0;
+
+    public string $otpErrorMessage = '';
+
     /**
      * @var array<string, string>
      */
@@ -61,6 +71,8 @@ class Index extends Component
         'phone_number.min' => 'Nomor WhatsApp minimal 10 digit.',
         'phone_number.max' => 'Nomor WhatsApp maksimal 15 digit.',
         'business_name.required' => 'Nama properti/usaha kost wajib diisi.',
+        'phoneOtp.required' => 'Kode OTP wajib diisi.',
+        'phoneOtp.digits' => 'Kode OTP harus berupa 6 digit angka.',
     ];
 
     public function mount(): void
@@ -112,6 +124,10 @@ class Index extends Component
             $user->email_verified_at = null;
         }
 
+        if ($user->isDirty('phone_number')) {
+            $user->phone_verified_at = null;
+        }
+
         $user->save();
 
         if ($user->wasChanged('email')) {
@@ -123,6 +139,64 @@ class Index extends Component
         $this->editing = false;
 
         $this->dispatch('show-toast', message: 'Profil Anda berhasil diperbarui.');
+    }
+
+    public function sendPhoneOtp(\App\Services\WhatsAppService $whatsapp): void
+    {
+        $user = $this->currentUser();
+
+        if (empty($user->phone_number)) {
+            $this->dispatch('show-toast', message: 'Silakan isi dan simpan nomor WhatsApp terlebih dahulu.');
+
+            return;
+        }
+
+        $result = $whatsapp->sendOtp($user);
+
+        if ($result['success']) {
+            $this->showOtpModal = true;
+            $this->otpSent = true;
+            $this->otpCooldown = $result['cooldown'] ?? 60;
+            $this->otpErrorMessage = '';
+            $this->dispatch('show-toast', message: $result['message']);
+        } else {
+            $this->otpErrorMessage = $result['message'];
+            if (isset($result['cooldown']) && $result['cooldown'] > 0) {
+                $this->otpCooldown = $result['cooldown'];
+                $this->showOtpModal = true;
+            }
+            $this->dispatch('show-toast', message: $result['message']);
+        }
+    }
+
+    public function verifyPhoneOtp(\App\Services\WhatsAppService $whatsapp): void
+    {
+        $user = $this->currentUser();
+
+        $this->validate([
+            'phoneOtp' => 'required|digits:6',
+        ], [
+            'phoneOtp.required' => 'Kode OTP wajib diisi.',
+            'phoneOtp.digits' => 'Kode OTP harus berupa 6 digit angka.',
+        ]);
+
+        $result = $whatsapp->verifyOtp($user, $this->phoneOtp);
+
+        if ($result['success']) {
+            $this->showOtpModal = false;
+            $this->phoneOtp = '';
+            $this->otpErrorMessage = '';
+            $this->dispatch('show-toast', message: $result['message']);
+        } else {
+            $this->otpErrorMessage = $result['message'];
+        }
+    }
+
+    public function closeOtpModal(): void
+    {
+        $this->showOtpModal = false;
+        $this->phoneOtp = '';
+        $this->otpErrorMessage = '';
     }
 
     public function updatedAvatarUpload(): void

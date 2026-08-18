@@ -27,6 +27,8 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property Carbon|null $email_verified_at
  * @property string $password
  * @property string|null $two_factor_secret
+ * @property string|null $phone_number
+ * @property Carbon|null $phone_verified_at
  * @property string|null $google_id
  * @property string|null $two_factor_recovery_codes
  * @property Carbon|null $two_factor_confirmed_at
@@ -39,7 +41,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property Carbon|null $updated_at
  * @property-read string|null $avatar_url
  */
-#[Fillable(['name', 'email', 'email_verified_at', 'google_id', 'avatar', 'phone_number', 'business_name', 'password', 'role', 'identity_doc_path', 'identity_verification_status', 'identity_verified_at', 'identity_rejection_note', 'terms_accepted_at'])]
+#[Fillable(['name', 'email', 'email_verified_at', 'google_id', 'avatar', 'phone_number', 'phone_verified_at', 'business_name', 'password', 'role', 'identity_doc_path', 'identity_verification_status', 'identity_verified_at', 'identity_rejection_note', 'terms_accepted_at'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
@@ -55,6 +57,7 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     {
         return [
             'email_verified_at' => 'datetime',
+            'phone_verified_at' => 'datetime',
             'identity_verified_at' => 'immutable_datetime',
             'terms_accepted_at' => 'datetime',
             'password' => 'hashed',
@@ -67,6 +70,14 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     public function hasCompletedOnboarding(): bool
     {
         return $this->role !== null && $this->terms_accepted_at !== null;
+    }
+
+    /**
+     * Check whether the user's WhatsApp/phone number has been verified.
+     */
+    public function isPhoneVerified(): bool
+    {
+        return $this->phone_verified_at !== null;
     }
 
     /**

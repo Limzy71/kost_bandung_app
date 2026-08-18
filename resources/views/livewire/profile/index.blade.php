@@ -116,9 +116,23 @@
                             <x-icon name="lucide-mail" class="w-4 h-4 text-black dark:text-white shrink-0 stroke-[2.5]" />
                             <span class="truncate">{{ $user->email }}</span>
                         </div>
-                        <div class="flex items-center gap-2 text-zinc-700 dark:text-zinc-300 font-bold">
+                        <div class="flex flex-wrap items-center gap-2 text-zinc-700 dark:text-zinc-300 font-bold">
                             <x-icon name="lucide-phone" class="w-4 h-4 text-black dark:text-white shrink-0 stroke-[2.5]" />
                             <span>{{ $user->phone_number ?: 'Belum diisi' }}</span>
+                            @if ($user->phone_number)
+                                @if ($user->isPhoneVerified())
+                                    <span class="px-2 py-0.5 bg-emerald-300 text-black border-2 border-black dark:border-zinc-700 font-extrabold text-[10px] uppercase shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1.5px_1.5px_0px_0px_rgba(255,255,255,0.25)] rounded-md inline-flex items-center gap-1">
+                                        <x-icon name="lucide-check-circle" class="w-3 h-3 stroke-3 text-emerald-800" />
+                                        <span>WhatsApp Terverifikasi</span>
+                                    </span>
+                                @else
+                                    <button type="button" wire:click="sendPhoneOtp"
+                                        class="px-2 py-0.5 bg-yellow-300 hover:bg-yellow-200 text-black border-2 border-black dark:border-zinc-700 font-extrabold text-[10px] uppercase shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)] dark:shadow-[1.5px_1.5px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none rounded-md inline-flex items-center gap-1 cursor-pointer transition-all">
+                                        <x-icon name="lucide-shield-alert" class="w-3 h-3 stroke-3 text-yellow-800" />
+                                        <span>Verifikasi WhatsApp</span>
+                                    </button>
+                                @endif
+                            @endif
                         </div>
                         @if ($user->role === 'owner')
                             <div class="flex items-center gap-2 text-zinc-700 dark:text-zinc-300 font-bold sm:col-span-2">
@@ -319,7 +333,6 @@
         @endif
 
         <!-- Delete Avatar Modal -->
-        <!-- Delete Avatar Modal -->
         <div 
             x-data="{ open: false }"
             @open-delete-avatar-modal.window="open = true"
@@ -370,5 +383,99 @@
                 </div>
             </template>
         </div>
+
+        <!-- WhatsApp OTP Verification Modal -->
+        @if ($showOtpModal)
+            <div
+                x-data="{
+                    timer: @js($otpCooldown),
+                    init() {
+                        if (this.timer > 0) {
+                            const interval = setInterval(() => {
+                                if (this.timer > 0) {
+                                    this.timer--;
+                                } else {
+                                    clearInterval(interval);
+                                }
+                            }, 1000);
+                        }
+                    }
+                }"
+                class="fixed inset-0 z-[100] flex items-center justify-center p-4"
+            >
+                <div class="absolute inset-0 bg-black/70 backdrop-blur-xs" wire:click="closeOtpModal"></div>
+                <div class="relative w-full max-w-md bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.25)] rounded-2xl p-6 md:p-8 z-10">
+                    <div class="flex items-start justify-between gap-4">
+                        <div class="w-12 h-12 bg-yellow-300 border-2 border-black dark:border-zinc-700 rounded-xl flex items-center justify-center text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] shrink-0">
+                            <x-icon name="lucide-message-square" class="w-6 h-6 stroke-[2.5]" />
+                        </div>
+                        <button type="button" wire:click="closeOtpModal" class="text-black dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 p-2 rounded-lg font-black cursor-pointer transition-colors">
+                            <x-icon name="lucide-x" class="w-5 h-5 stroke-[2.5]" />
+                        </button>
+                    </div>
+
+                    <div class="mt-4">
+                        <span class="px-2.5 py-0.5 bg-cyan-300 text-black border-2 border-black dark:border-zinc-700 font-black text-[10px] uppercase shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)] rounded-md inline-block">
+                            Verifikasi Keamanan
+                        </span>
+                        <h3 class="text-2xl font-black text-black dark:text-white uppercase tracking-tight mt-1.5">
+                            Verifikasi WhatsApp
+                        </h3>
+                        <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400 mt-2 leading-relaxed">
+                            Masukkan 6 digit kode OTP yang telah dikirimkan ke nomor WhatsApp <span class="text-black dark:text-white font-extrabold bg-yellow-200 dark:bg-yellow-400 px-1 border border-black dark:border-white">{{ $user->phone_number }}</span>.
+                        </p>
+                    </div>
+
+                    <form wire:submit="verifyPhoneOtp" class="mt-6 space-y-4">
+                        <div>
+                            <label for="phoneOtp" class="block text-xs font-black uppercase text-black dark:text-white mb-1.5 tracking-wide">
+                                Kode OTP (6 Digit)
+                            </label>
+                            <input
+                                type="text"
+                                id="phoneOtp"
+                                wire:model="phoneOtp"
+                                inputmode="numeric"
+                                maxlength="6"
+                                autofocus
+                                placeholder="• • • • • •"
+                                class="w-full h-14 text-center text-2xl tracking-[0.5em] bg-zinc-50 dark:bg-zinc-800 border-3 border-black dark:border-zinc-700 rounded-xl text-black dark:text-white font-black focus:outline-none focus:ring-0 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:focus:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] transition-all uppercase"
+                            >
+                            @error('phoneOtp')
+                                <p class="text-xs font-black text-rose-500 mt-1.5 uppercase">{{ $message }}</p>
+                            @enderror
+                            @if ($otpErrorMessage)
+                                <p class="text-xs font-black text-rose-500 mt-1.5 uppercase">{{ $otpErrorMessage }}</p>
+                            @endif
+                        </div>
+
+                        <button type="submit" wire:loading.attr="disabled"
+                            class="w-full h-12 bg-lime-400 hover:bg-lime-300 disabled:opacity-50 text-black border-3 border-black dark:border-zinc-700 font-black text-sm uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all rounded-xl cursor-pointer inline-flex items-center justify-center gap-2">
+                            <x-icon name="lucide-check-circle" class="w-5 h-5 stroke-[2.5]" />
+                            <span wire:loading.remove wire:target="verifyPhoneOtp">Verifikasi Sekarang</span>
+                            <span wire:loading wire:target="verifyPhoneOtp">Memverifikasi...</span>
+                        </button>
+                    </form>
+
+                    <!-- Resend OTP Action -->
+                    <div class="mt-6 pt-4 border-t-2 border-dashed border-zinc-300 dark:border-zinc-700 flex items-center justify-between text-xs font-bold">
+                        <span class="text-zinc-500 dark:text-zinc-400">Tidak menerima kode?</span>
+                        <div>
+                            <button
+                                type="button"
+                                x-show="timer === 0"
+                                wire:click="sendPhoneOtp"
+                                class="text-black dark:text-white font-black underline uppercase hover:text-yellow-600 dark:hover:text-yellow-400 cursor-pointer"
+                            >
+                                Kirim Ulang OTP
+                            </button>
+                            <span x-show="timer > 0" class="text-zinc-500 font-mono font-bold">
+                                Kirim ulang dalam <span x-text="timer" class="text-black dark:text-white font-black font-mono"></span>s
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 </div>

@@ -42,4 +42,12 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
 
+    'whatsapp' => [
+        'driver' => env('WHATSAPP_DRIVER', 'log'), // 'baileys' | 'meta_cloud' | 'log'
+        'gateway_url' => env('WHATSAPP_GATEWAY_URL', 'http://127.0.0.1:3001'),
+        'secret' => env('WHATSAPP_GATEWAY_SECRET'),
+        'meta_token' => env('WHATSAPP_META_TOKEN'),
+        'meta_phone_number_id' => env('WHATSAPP_META_PHONE_NUMBER_ID'),
+    ],
+
 ];

@@ -36,9 +36,13 @@ Route::middleware('guest')->group(function () {
     Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
 });
 
-Route::get('/verify-account', VerifyAccount::class)
+Route::get('/email/verify', VerifyAccount::class)
     ->middleware(['auth'])
     ->name('verification.notice');
+
+Route::get('/verify-account', VerifyAccount::class)
+    ->middleware(['auth'])
+    ->name('verify.account');
 
 Route::get('/onboarding', CompleteOnboarding::class)
     ->middleware(['auth'])

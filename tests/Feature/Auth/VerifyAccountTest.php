@@ -86,5 +86,5 @@ test('already verified user visiting verification hub is redirected', function (
 
     $response = $this->actingAs($user)->get(route('verification.notice'));
 
-    $response->assertRedirect(route('dashboard'));
+    $response->assertRedirect(route('home'));
 });

@@ -31,9 +31,14 @@
                         this.resetLocal();
                     });
                 }
-                window.addEventListener('filters-reset', () => {
-                    this.resetLocal();
-                });
+                this._resetHandler = () => this.resetLocal();
+                window.addEventListener('filters-reset', this._resetHandler);
+            },
+
+            destroy() {
+                if (this._resetHandler) {
+                    window.removeEventListener('filters-reset', this._resetHandler);
+                }
             },
 
             syncFromWire() {
@@ -175,7 +180,6 @@
             }
         }"
         @filters-reset.window="resetLocal()"
-        @reset-filters.window="resetLocal()"
         class="bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 p-5 sm:p-7 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.25)] space-y-6"
     >
         <!-- Filter Card Header -->

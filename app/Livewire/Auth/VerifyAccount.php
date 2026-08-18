@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Services\WhatsAppService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -20,8 +21,17 @@ class VerifyAccount extends Component
 
     public string $emailStatusMessage = '';
 
+    public string $phoneSuccessMessage = '';
+
+    public bool $isEditingPhone = false;
+
+    public string $newPhoneNumber = '';
+
+    public string $phoneErrorMessage = '';
+
     public function mount(WhatsAppService $whatsapp): void
     {
+        /** @var User|null $user */
         $user = Auth::user();
 
         if (! $user) {
@@ -30,20 +40,25 @@ class VerifyAccount extends Component
             return;
         }
 
-        // If email is already verified, proceed directly
-        if ($user->hasVerifiedEmail()) {
+        // If both email and phone number are already verified, proceed directly
+        if ($user->isFullyVerified()) {
             $this->redirectAfterVerification($user);
 
             return;
         }
 
-        // Auto-send email verification notification on first visit so user doesn't need to click "Kirim Ulang" manually
-        $user->sendEmailVerificationNotification();
+        // Pre-fill edit phone number field
+        $this->newPhoneNumber = $user->phone_number ?? '';
 
-        // Check if OTP was recently sent and get remaining cooldown if any
+        // Auto-send email notification if not yet verified
+        if (! $user->hasVerifiedEmail()) {
+            $user->sendEmailVerificationNotification();
+        }
+
+        // Check if OTP was recently sent and calculate remaining cooldown
         $rateLimitKey = "phone_otp_limit:{$user->id}";
-        if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($rateLimitKey, 3)) {
-            $this->otpCooldown = \Illuminate\Support\Facades\RateLimiter::availableIn($rateLimitKey);
+        if (RateLimiter::tooManyAttempts($rateLimitKey, 3)) {
+            $this->otpCooldown = RateLimiter::availableIn($rateLimitKey);
         }
     }
 
@@ -62,14 +77,17 @@ class VerifyAccount extends Component
         $result = $whatsapp->verifyOtp($user, $this->phoneOtp);
 
         if ($result['success']) {
-            // Also verify email since user successfully proved ownership via verified phone OTP
-            if (! $user->hasVerifiedEmail()) {
-                $user->markEmailAsVerified();
+            $user->refresh();
+            $this->phoneOtp = '';
+            $this->otpErrorMessage = '';
+            $this->phoneSuccessMessage = 'Nomor WhatsApp berhasil diverifikasi!';
+
+            if ($user->isFullyVerified()) {
+                $this->dispatch('show-toast', message: 'Selamat! Akun Anda telah aktif dan terverifikasi.');
+                $this->redirectAfterVerification($user);
+            } else {
+                $this->dispatch('show-toast', message: 'Nomor WhatsApp terverifikasi. Silakan konfirmasi tautan email Anda.');
             }
-
-            $this->dispatch('show-toast', message: 'Akun Anda berhasil diverifikasi!');
-
-            $this->redirectAfterVerification($user);
         } else {
             $this->otpErrorMessage = $result['message'];
         }
@@ -100,21 +118,70 @@ class VerifyAccount extends Component
         }
     }
 
+    public function toggleEditPhone(): void
+    {
+        $this->isEditingPhone = ! $this->isEditingPhone;
+        $this->phoneErrorMessage = '';
+        if ($this->isEditingPhone) {
+            $this->newPhoneNumber = Auth::user()->phone_number ?? '';
+        }
+    }
+
+    public function updatePhoneNumber(WhatsAppService $whatsapp): void
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        $this->validate([
+            'newPhoneNumber' => ['required', 'regex:/^08[0-9]{8,13}$/', 'unique:users,phone_number,'.$user->id],
+        ], [
+            'newPhoneNumber.required' => 'Nomor WhatsApp wajib diisi.',
+            'newPhoneNumber.regex' => 'Format nomor tidak valid. Gunakan awalan 08 (10-15 digit).',
+            'newPhoneNumber.unique' => 'Nomor WhatsApp ini sudah digunakan oleh akun lain.',
+        ]);
+
+        $user->phone_number = $this->newPhoneNumber;
+        $user->phone_verified_at = null;
+        $user->save();
+
+        // Clear previous limit so new number gets fresh OTP immediately
+        RateLimiter::clear("phone_otp_limit:{$user->id}");
+
+        $result = $whatsapp->sendOtp($user);
+
+        $this->isEditingPhone = false;
+        $this->phoneSuccessMessage = 'Nomor WhatsApp berhasil diubah. Kode OTP baru telah dikirimkan ke nomor baru Anda.';
+        $this->otpCooldown = $result['cooldown'] ?? 60;
+        $this->dispatch('show-toast', message: 'Nomor diperbarui & OTP baru dikirim.');
+    }
+
     public function resendEmailVerification(): void
     {
         /** @var User $user */
         $user = Auth::user();
 
         if ($user->hasVerifiedEmail()) {
-            $this->redirectAfterVerification($user);
+            if ($user->isFullyVerified()) {
+                $this->redirectAfterVerification($user);
 
-            return;
+                return;
+            }
+        } else {
+            $user->sendEmailVerificationNotification();
         }
-
-        $user->sendEmailVerificationNotification();
 
         $this->emailStatusMessage = 'Tautan verifikasi baru telah berhasil dikirimkan ke email Anda.';
         $this->dispatch('show-toast', message: 'Email verifikasi berhasil dikirim ulang.');
+    }
+
+    public function checkVerificationStatus(): void
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        if ($user && $user->isFullyVerified()) {
+            $this->redirectAfterVerification($user);
+        }
     }
 
     public function logout(): void

@@ -15,9 +15,9 @@
                     </span>
                 </a>
 
-                {{-- Back button (hidden on onboarding page) --}}
-                @if (request()->routeIs('onboarding'))
-                    {{-- No back button on onboarding since user must finish setup or logout --}}
+                {{-- Back button (hidden on onboarding & verification pages) --}}
+                @if (request()->routeIs('onboarding', 'verification.notice', 'verify.account'))
+                    {{-- No back button on onboarding and verification since user must finish setup or logout --}}
                 @elseif (Auth::check())
                     <a href="{{ route('profile.show') }}" wire:navigate
                         class="inline-flex items-center gap-1.5 bg-white hover:bg-[#FFE500] text-black border-2 border-black font-black text-xs uppercase px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer whitespace-nowrap shrink-0 dark:bg-zinc-900 dark:text-white dark:hover:text-black dark:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)]">
@@ -35,8 +35,8 @@
         </header>
         {{-- ===== End Top Bar ===== --}}
 
-        <main class="flex flex-1 flex-col items-center justify-center gap-6 p-6 md:p-10">
-            <div class="flex w-full max-w-lg flex-col gap-6">
+        <main class="flex flex-1 flex-col items-center justify-center gap-6 p-4 sm:p-6 md:p-10">
+            <div class="flex w-full max-w-xl md:max-w-2xl flex-col gap-6">
                 {{ $slot }}
             </div>
         </main>

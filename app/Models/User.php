@@ -81,6 +81,14 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     }
 
     /**
+     * Check whether both email and phone number are verified.
+     */
+    public function isFullyVerified(): bool
+    {
+        return $this->hasVerifiedEmail() && $this->isPhoneVerified();
+    }
+
+    /**
      * Check whether the owner's identity (KTP) has been verified by admin.
      */
     public function isIdentityVerified(): bool

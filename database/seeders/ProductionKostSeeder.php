@@ -12,17 +12,18 @@ class ProductionKostSeeder extends Seeder
 {
     public function run(): void
     {
-        $owner = User::where('email', 'owner@kostbandung.web.id')->first();
-
-        if (! $owner) {
-            $owner = User::create([
+        $owner = User::updateOrCreate(
+            ['email' => 'owner@kostbandung.web.id'],
+            [
                 'name' => 'Owner Profesional',
-                'email' => 'owner@kostbandung.web.id',
                 'password' => bcrypt('password123'),
                 'role' => 'owner',
                 'email_verified_at' => now(),
-            ]);
-        }
+                'terms_accepted_at' => now(),
+                'identity_verification_status' => 'verified',
+                'identity_verified_at' => now(),
+            ]
+        );
 
         $kosts = [
             [

@@ -16,14 +16,30 @@ class DemoKostSeeder extends Seeder
     public function run(): void
     {
         // Ensure Admin and Owner exist
-        $admin = User::firstOrCreate(
+        $admin = User::updateOrCreate(
             ['email' => 'admin@kostbandung.id'],
-            ['name' => 'Administrator', 'password' => Hash::make('password'), 'role' => 'admin', 'email_verified_at' => now()]
+            [
+                'name' => 'Administrator',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+                'email_verified_at' => now(),
+                'terms_accepted_at' => now(),
+                'identity_verification_status' => 'verified',
+                'identity_verified_at' => now(),
+            ]
         );
 
-        $owner = User::firstOrCreate(
+        $owner = User::updateOrCreate(
             ['email' => 'owner@kostbandung.id'],
-            ['name' => 'Owner Kost', 'password' => Hash::make('password'), 'role' => 'owner', 'email_verified_at' => now()]
+            [
+                'name' => 'Owner Kost',
+                'password' => Hash::make('password'),
+                'role' => 'owner',
+                'email_verified_at' => now(),
+                'terms_accepted_at' => now(),
+                'identity_verification_status' => 'verified',
+                'identity_verified_at' => now(),
+            ]
         );
 
         // Ensure standard facilities exist (grouped by room/building)

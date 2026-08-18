@@ -29,6 +29,12 @@ class VerifyAccount extends Component
 
     public string $phoneErrorMessage = '';
 
+    public bool $isEditingEmail = false;
+
+    public string $newEmail = '';
+
+    public string $emailErrorMessage = '';
+
     public function mount(WhatsAppService $whatsapp): void
     {
         /** @var User|null $user */
@@ -47,8 +53,9 @@ class VerifyAccount extends Component
             return;
         }
 
-        // Pre-fill edit phone number field
+        // Pre-fill edit fields
         $this->newPhoneNumber = $user->phone_number ?? '';
+        $this->newEmail = $user->email ?? '';
 
         // Auto-send email notification if not yet verified
         if (! $user->hasVerifiedEmail()) {
@@ -153,6 +160,39 @@ class VerifyAccount extends Component
         $this->phoneSuccessMessage = 'Nomor WhatsApp berhasil diubah. Kode OTP baru telah dikirimkan ke nomor baru Anda.';
         $this->otpCooldown = $result['cooldown'] ?? 60;
         $this->dispatch('show-toast', message: 'Nomor diperbarui & OTP baru dikirim.');
+    }
+
+    public function toggleEditEmail(): void
+    {
+        $this->isEditingEmail = ! $this->isEditingEmail;
+        $this->emailErrorMessage = '';
+        if ($this->isEditingEmail) {
+            $this->newEmail = Auth::user()->email ?? '';
+        }
+    }
+
+    public function updateEmail(): void
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        $this->validate([
+            'newEmail' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
+        ], [
+            'newEmail.required' => 'Alamat email wajib diisi.',
+            'newEmail.email' => 'Format alamat email tidak valid.',
+            'newEmail.unique' => 'Alamat email ini sudah digunakan oleh akun lain.',
+        ]);
+
+        $user->email = $this->newEmail;
+        $user->email_verified_at = null;
+        $user->save();
+
+        $user->sendEmailVerificationNotification();
+
+        $this->isEditingEmail = false;
+        $this->emailStatusMessage = 'Alamat email berhasil diubah. Tautan verifikasi baru telah dikirimkan ke alamat email baru Anda.';
+        $this->dispatch('show-toast', message: 'Email diperbarui & tautan verifikasi baru dikirim.');
     }
 
     public function resendEmailVerification(): void

@@ -103,6 +103,28 @@ test('user can change wrong phone number during verification', function () {
         ->and($user->isPhoneVerified())->toBeFalse();
 });
 
+test('user can change wrong email address during verification', function () {
+    Notification::fake();
+
+    $user = User::factory()->unverified()->create([
+        'email' => 'wrongtypo@example.com',
+        'terms_accepted_at' => now(),
+    ]);
+
+    Livewire::actingAs($user)
+        ->test(VerifyAccount::class)
+        ->call('toggleEditEmail')
+        ->assertSet('isEditingEmail', true)
+        ->set('newEmail', 'correct@example.com')
+        ->call('updateEmail')
+        ->assertDispatched('show-toast')
+        ->assertSet('isEditingEmail', false);
+
+    $user->refresh();
+    expect($user->email)->toBe('correct@example.com')
+        ->and($user->hasVerifiedEmail())->toBeFalse();
+});
+
 test('user can resend email verification from verification hub', function () {
     Notification::fake();
 

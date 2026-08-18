@@ -37,6 +37,9 @@ class VerifyAccount extends Component
             return;
         }
 
+        // Auto-send email verification notification on first visit so user doesn't need to click "Kirim Ulang" manually
+        $user->sendEmailVerificationNotification();
+
         // Check if OTP was recently sent and get remaining cooldown if any
         $rateLimitKey = "phone_otp_limit:{$user->id}";
         if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($rateLimitKey, 3)) {

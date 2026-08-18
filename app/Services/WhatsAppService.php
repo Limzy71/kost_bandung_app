@@ -127,6 +127,19 @@ class WhatsAppService
             ];
         }
 
+        // Brute-force protection: max 5 failed attempts per OTP cycle (300s window)
+        $attemptsKey = "phone_otp_attempts:{$user->id}";
+        if (RateLimiter::tooManyAttempts($attemptsKey, 5)) {
+            Cache::forget("phone_otp:{$user->id}");
+            Cache::forget("phone_otp_number:{$user->id}");
+            RateLimiter::clear($attemptsKey);
+
+            return [
+                'success' => false,
+                'message' => 'Terlalu banyak percobaan salah. Kode OTP telah dibatalkan. Silakan minta kode baru.',
+            ];
+        }
+
         // Ensure user hasn't modified phone number in the background
         if ($cachedPhone !== $user->phone_number) {
             return [
@@ -137,6 +150,8 @@ class WhatsAppService
 
         $otpInput = trim($otp);
         if (! Hash::check($otpInput, $cachedHash)) {
+            RateLimiter::hit($attemptsKey, 300);
+
             return [
                 'success' => false,
                 'message' => 'Kode OTP yang Anda masukkan salah. Silakan periksa kembali.',
@@ -146,6 +161,7 @@ class WhatsAppService
         // OTP is valid: clean cache and mark user as verified
         Cache::forget("phone_otp:{$user->id}");
         Cache::forget("phone_otp_number:{$user->id}");
+        RateLimiter::clear($attemptsKey);
 
         $user->update([
             'phone_verified_at' => now(),

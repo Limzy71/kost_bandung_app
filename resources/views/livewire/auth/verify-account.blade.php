@@ -1,6 +1,6 @@
 <div class="w-full">
     {{-- Silent background polling every 15s to auto-detect email verification without causing UI flicker --}}
-    <div wire:poll.15s="checkVerificationStatus" wire:key="verification-poller" class="hidden"></div>
+    <div wire:poll.visible.15s="checkVerificationStatus" wire:key="verification-poller" class="hidden"></div>
 
     {{-- ===== Neo-Brutalist Unified Dual-Verification Hub ===== --}}
     <div class="bg-white border-4 border-black p-6 sm:p-10 shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] rounded-2xl w-full dark:bg-zinc-900 dark:border-zinc-700 dark:shadow-[10px_10px_0px_0px_rgba(255,255,255,0.25)] space-y-6 sm:space-y-8">

@@ -3,6 +3,7 @@
 use App\Http\Middleware\EnsureAdmin;
 use App\Http\Middleware\EnsureOnboardingComplete;
 use App\Http\Middleware\EnsureOwner;
+use App\Http\Middleware\EnsureUserIsFullyVerified;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -23,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'owner' => EnsureOwner::class,
             'admin' => EnsureAdmin::class,
             'onboarding' => EnsureOnboardingComplete::class,
+            'verified' => EnsureUserIsFullyVerified::class,
         ]);
 
         $middleware->web(append: [

@@ -91,7 +91,7 @@
             const unconnSection = document.getElementById('unconnected-section');
             const connSection = document.getElementById('connected-section');
 
-            async function fetchQrData() {
+            async function fetchStatus() {
                 try {
                     const res = await fetch('{{ route("admin.whatsapp.qr.data") }}');
                     const data = await res.json();
@@ -114,32 +114,27 @@
             }
 
             // Initial fetch
-            fetchQrData();
+            fetchStatus();
 
-            // 1s countdown timer
+            // 1s countdown timer — refresh QR every 20s and poll status every 3s
             setInterval(async () => {
                 countdown--;
                 if (countdownEl) {
                     countdownEl.textContent = countdown + 's';
                 }
 
+                // Every 3s: poll for connection status + refresh QR if available
+                if (countdown % 3 === 0) {
+                    const connected = await fetchStatus();
+                    if (connected) return;
+                }
+
+                // Every 20s: full QR refresh (QR codes expire ~20s)
                 if (countdown <= 0) {
                     countdown = 20;
-                    await fetchQrData();
+                    await fetchStatus();
                 }
             }, 1000);
-
-            // 3s status poll to detect pairing immediately
-            setInterval(async () => {
-                try {
-                    const res = await fetch('{{ route("admin.whatsapp.qr.data") }}');
-                    const data = await res.json();
-                    if (data.connected || data.status === 'connected') {
-                        unconnSection.classList.add('hidden');
-                        connSection.classList.remove('hidden');
-                    }
-                } catch (e) {}
-            }, 3000);
         });
     </script>
 </x-layouts::auth.simple>

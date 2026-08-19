@@ -273,7 +273,7 @@ app.get('/qr', (req, res) => {
 
                     async function fetchStatus() {
                         try {
-                            const res = await fetch('/admin/whatsapp-qr', { headers: { 'Accept': 'application/json' } });
+                            const res = await fetch('/qr', { headers: { 'Accept': 'application/json' } });
                             const data = await res.json();
                             if (data.connected || data.status === 'connected') {
                                 clearInterval(timer);
@@ -337,7 +337,7 @@ app.post('/send-message', authenticate, async (req, res) => {
         console.error('[KostBandung WA Gateway] Send error:', err);
         return res.status(500).json({
             success: false,
-            message: 'Failed to send message: ' + (err.message || 'Unknown error'),
+            message: 'Gagal mengirim pesan WhatsApp melalui gateway.',
         });
     }
 });

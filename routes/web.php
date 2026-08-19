@@ -67,13 +67,17 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/admin/messages', AdminMessages::class)->name('admin.messages');
     Route::get('/admin/verification-document/{kind}/{id}', VerificationDocumentController::class)->name('admin.verification.document');
     Route::get('/admin/whatsapp-qr', function () {
-        try {
-            $response = \Illuminate\Support\Facades\Http::timeout(5)->get('http://127.0.0.1:3001/qr');
-            return response($response->body(), 200, ['Content-Type' => 'text/html']);
-        } catch (\Throwable $e) {
-            return response("<h2>WhatsApp Gateway belum berjalan di port 3001</h2><p>{$e->getMessage()}</p>", 500);
-        }
+        return view('livewire.admin.whatsapp-qr');
     })->name('admin.whatsapp.qr');
+
+    Route::get('/admin/whatsapp-qr-data', function () {
+        try {
+            $response = \Illuminate\Support\Facades\Http::timeout(5)->withHeaders(['Accept' => 'application/json'])->get('http://127.0.0.1:3001/qr');
+            return $response->json();
+        } catch (\Throwable $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()]);
+        }
+    })->name('admin.whatsapp.qr.data');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

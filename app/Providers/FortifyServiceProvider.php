@@ -18,7 +18,19 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(
+            \Laravel\Fortify\Contracts\VerifyEmailResponse::class,
+            function () {
+                return new class implements \Laravel\Fortify\Contracts\VerifyEmailResponse {
+                    public function toResponse($request)
+                    {
+                        return $request->wantsJson()
+                            ? new \Illuminate\Http\JsonResponse('', 204)
+                            : redirect()->route('verify.account');
+                    }
+                };
+            }
+        );
     }
 
     /**

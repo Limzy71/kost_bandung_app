@@ -55,8 +55,9 @@
                 <div class="w-14 h-14 mx-auto bg-lime-400 border-2 border-black rounded-2xl flex items-center justify-center text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                     <x-icon name="lucide-check-circle" class="w-8 h-8 stroke-[3]" />
                 </div>
-                <h2 class="text-xl font-black text-black dark:text-white uppercase">
-                    WhatsApp Gateway Terhubung! ✅
+                <h2 class="text-xl font-black text-black dark:text-white uppercase flex items-center justify-center gap-2">
+                    <span>WhatsApp Gateway Terhubung!</span>
+                    <x-icon name="lucide-check-circle-2" class="w-6 h-6 text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
                 </h2>
                 <p class="text-xs sm:text-sm font-bold text-zinc-800 dark:text-zinc-200 max-w-md mx-auto">
                     Nomor WhatsApp pengirim telah berhasil ditautkan dan siap mengirimkan pesan OTP otomatis ke seluruh pengguna.

@@ -1,6 +1,6 @@
 <div class="w-full">
-    {{-- Silent background polling every 15s to auto-detect email verification without causing UI flicker --}}
-    <div wire:poll.visible.15s="checkVerificationStatus" wire:key="verification-poller" class="hidden"></div>
+    {{-- Silent background polling every 10s to auto-detect email verification without causing UI flicker --}}
+    <div wire:poll.visible.10s="checkVerificationStatus" wire:key="verification-poller" class="hidden"></div>
 
     {{-- ===== Neo-Brutalist Unified Dual-Verification Hub ===== --}}
     <div class="bg-white border-4 border-black p-6 sm:p-10 shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] rounded-2xl w-full dark:bg-zinc-900 dark:border-zinc-700 dark:shadow-[10px_10px_0px_0px_rgba(255,255,255,0.25)] space-y-6 sm:space-y-8">
@@ -29,7 +29,7 @@
                 </div>
                 @if ($user?->isPhoneVerified())
                     <span class="px-2.5 py-0.5 bg-lime-400 border border-black font-black text-[10px] uppercase text-black rounded-md flex items-center gap-1 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
-                        <x-icon name="lucide-check" class="w-3 h-3 stroke-[3]" /> Selesai
+                        <x-icon name="lucide-check-circle-2" class="w-3.5 h-3.5 text-black stroke-[3]" /> Selesai
                     </span>
                 @else
                     <span class="px-2.5 py-0.5 bg-[#FFE500] border border-black font-black text-[10px] uppercase text-black rounded-md shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
@@ -46,7 +46,7 @@
                 </div>
                 @if ($user?->hasVerifiedEmail())
                     <span class="px-2.5 py-0.5 bg-lime-400 border border-black font-black text-[10px] uppercase text-black rounded-md flex items-center gap-1 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
-                        <x-icon name="lucide-check" class="w-3 h-3 stroke-[3]" /> Selesai
+                        <x-icon name="lucide-check-circle-2" class="w-3.5 h-3.5 text-black stroke-[3]" /> Selesai
                     </span>
                 @else
                     <span class="px-2.5 py-0.5 bg-[#FFE500] border border-black font-black text-[10px] uppercase text-black rounded-md shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
@@ -60,6 +60,46 @@
         <div class="border-t-4 border-black dark:border-zinc-700"></div>
 
         {{-- ============================================================ --}}
+        {{-- CELEBRATORY FULLY-VERIFIED SUCCESS STATE (When Both Complete) --}}
+        {{-- ============================================================ --}}
+        @if ($user?->isFullyVerified())
+            <div class="p-6 sm:p-8 bg-lime-200 dark:bg-lime-950/70 border-4 border-black dark:border-lime-600 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.2)] text-center space-y-4 animate-in fade-in zoom-in duration-300" wire:key="all-verified-celebration">
+                <div class="w-16 h-16 mx-auto bg-lime-400 border-3 border-black rounded-2xl flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                    <x-icon name="lucide-badge-check" class="w-10 h-10 text-black stroke-[2.5]" />
+                </div>
+                <div>
+                    <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-black text-white dark:bg-white dark:text-black rounded-lg text-xs font-black uppercase tracking-wider mb-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                        <x-icon name="lucide-shield-check" class="w-4 h-4 stroke-[3]" />
+                        <span>Akun 100% Aktif &amp; Terverifikasi</span>
+                    </div>
+                    <h2 class="text-xl sm:text-3xl font-black text-black dark:text-white uppercase tracking-tight">
+                        Semua Verifikasi Selesai!
+                    </h2>
+                    <p class="text-xs sm:text-sm font-bold text-zinc-700 dark:text-zinc-300 mt-1 max-w-md mx-auto leading-relaxed">
+                        Nomor WhatsApp dan alamat email Anda telah terverifikasi secara aman. Akun Anda kini siap digunakan sepenuhnya.
+                    </p>
+                </div>
+
+                <div class="pt-2 max-w-md mx-auto">
+                    <button type="button" wire:click="completeAndProceed"
+                        class="w-full py-4 px-6 bg-[#FFE500] hover:bg-yellow-300 text-black font-black text-sm sm:text-base uppercase tracking-wider rounded-xl border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer">
+                        @if ($user?->role === 'owner')
+                            <x-icon name="lucide-layout-dashboard" class="w-5 h-5 stroke-[2.5]" />
+                            <span>Masuk ke Dashboard Pemilik</span>
+                        @elseif ($user?->role === 'admin')
+                            <x-icon name="lucide-shield" class="w-5 h-5 stroke-[2.5]" />
+                            <span>Masuk ke Panel Moderasi</span>
+                        @else
+                            <x-icon name="lucide-compass" class="w-5 h-5 stroke-[2.5]" />
+                            <span>Mulai Jelajahi Kost Bandung</span>
+                        @endif
+                        <x-icon name="lucide-arrow-right" class="w-5 h-5 stroke-[2.5]" />
+                    </button>
+                </div>
+            </div>
+        @endif
+
+        {{-- ============================================================ --}}
         {{-- STEP 1: WhatsApp Verification (OTP) --}}
         {{-- ============================================================ --}}
         <div class="space-y-4" wire:key="step-whatsapp-section">
@@ -67,12 +107,17 @@
                 {{-- Phone Verified State --}}
                 <div class="p-5 sm:p-6 bg-lime-100 dark:bg-lime-950/50 border-3 border-black dark:border-lime-700 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.15)] flex items-start gap-4">
                     <div class="w-10 h-10 bg-lime-400 border-2 border-black rounded-xl flex items-center justify-center text-black shrink-0 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                        <x-icon name="lucide-check-circle" class="w-6 h-6 stroke-[3]" />
+                        <x-icon name="lucide-check-circle-2" class="w-6 h-6 stroke-[2.5]" />
                     </div>
-                    <div>
-                        <h2 class="text-base sm:text-lg font-black text-black dark:text-white uppercase">
-                            Nomor WhatsApp Terverifikasi ✅
-                        </h2>
+                    <div class="flex-1">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <h2 class="text-sm sm:text-base font-black text-black dark:text-white uppercase tracking-tight">
+                                Nomor WhatsApp Terverifikasi
+                            </h2>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-lime-400 border border-black rounded-md text-[10px] font-black text-black uppercase shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                                <x-icon name="lucide-check" class="w-3 h-3 stroke-[3]" /> Terverifikasi
+                            </span>
+                        </div>
                         <p class="text-xs sm:text-sm font-bold text-zinc-700 dark:text-zinc-300 mt-1">
                             Nomor <span class="font-extrabold text-black dark:text-white font-mono bg-lime-200 dark:bg-lime-900/80 px-1 py-0.5 rounded border border-lime-600 dark:border-lime-700">{{ $user->phone_number }}</span> telah berhasil diverifikasi.
                         </p>
@@ -156,7 +201,7 @@
 
                         @if ($phoneSuccessMessage)
                             <div class="p-3 bg-lime-300 dark:bg-lime-400 border-2 border-black rounded-lg text-xs font-black uppercase text-black flex items-center gap-2">
-                                <x-icon name="lucide-check-circle" class="w-4 h-4 text-black stroke-[3]" />
+                                <x-icon name="lucide-check-circle-2" class="w-4 h-4 text-black stroke-[3]" />
                                 <span>{{ $phoneSuccessMessage }}</span>
                             </div>
                         @endif
@@ -182,7 +227,7 @@
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                                 <button type="submit" wire:loading.attr="disabled" wire:key="whatsapp-verify-submit-btn"
                                     class="sm:col-span-2 h-11 sm:h-12 bg-lime-400 hover:bg-lime-300 disabled:opacity-50 text-black border-2 border-black dark:border-zinc-700 font-black text-xs sm:text-sm uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-transform rounded-xl cursor-pointer inline-flex items-center justify-center gap-1.5">
-                                    <x-icon name="lucide-check-circle" class="w-4 h-4 stroke-[2.5]" />
+                                    <x-icon name="lucide-check-circle-2" class="w-4 h-4 stroke-[2.5]" />
                                     <span wire:loading.remove wire:target="verifyPhoneOtp">Verifikasi WhatsApp</span>
                                     <span wire:loading wire:target="verifyPhoneOtp">Memverifikasi...</span>
                                 </button>
@@ -212,12 +257,17 @@
                 {{-- Email Verified State --}}
                 <div class="p-5 sm:p-6 bg-lime-100 dark:bg-lime-950/50 border-3 border-black dark:border-lime-700 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.15)] flex items-start gap-4">
                     <div class="w-10 h-10 bg-lime-400 border-2 border-black rounded-xl flex items-center justify-center text-black shrink-0 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                        <x-icon name="lucide-check-circle" class="w-6 h-6 stroke-[3]" />
+                        <x-icon name="lucide-check-circle-2" class="w-6 h-6 stroke-[2.5]" />
                     </div>
-                    <div>
-                        <h2 class="text-base sm:text-lg font-black text-black dark:text-white uppercase">
-                            Alamat Email Terverifikasi ✅
-                        </h2>
+                    <div class="flex-1">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <h2 class="text-sm sm:text-base font-black text-black dark:text-white uppercase tracking-tight">
+                                Alamat Email Terverifikasi
+                            </h2>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-lime-400 border border-black rounded-md text-[10px] font-black text-black uppercase shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                                <x-icon name="lucide-check" class="w-3 h-3 stroke-[3]" /> Terverifikasi
+                            </span>
+                        </div>
                         <p class="text-xs sm:text-sm font-bold text-zinc-700 dark:text-zinc-300 mt-1">
                             Alamat email <span class="font-extrabold text-black dark:text-white bg-lime-200 dark:bg-lime-900/80 px-1 py-0.5 rounded border border-lime-600 dark:border-lime-700">{{ $user->email }}</span> telah aktif dan terverifikasi.
                         </p>
@@ -285,7 +335,7 @@
 
                         @if ($emailStatusMessage)
                             <div class="flex items-center gap-2.5 bg-lime-300 dark:bg-lime-400 border-2 border-black rounded-xl p-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-black">
-                                <x-icon name="lucide-check-circle" class="w-4 h-4 text-black shrink-0 stroke-[3]" />
+                                <x-icon name="lucide-check-circle-2" class="w-4 h-4 text-black shrink-0 stroke-[3]" />
                                 <span class="text-xs font-black text-black uppercase">{{ $emailStatusMessage }}</span>
                             </div>
                         @endif

@@ -41,7 +41,7 @@ test('user verifying whatsapp otp marks phone as verified', function () {
     expect($user->isPhoneVerified())->toBeTrue();
 });
 
-test('user with both email and phone verified gets redirected to destination', function () {
+test('user with both email and phone verified can proceed to destination via button', function () {
     $user = User::factory()->create([
         'email_verified_at' => now(),
         'phone_number' => '081234567890',
@@ -58,6 +58,8 @@ test('user with both email and phone verified gets redirected to destination', f
         ->test(VerifyAccount::class)
         ->set('phoneOtp', $validOtp)
         ->call('verifyPhoneOtp')
+        ->assertDispatched('show-toast')
+        ->call('completeAndProceed')
         ->assertRedirect(route('dashboard'));
 
     $user->refresh();
@@ -139,7 +141,7 @@ test('user can resend email verification from verification hub', function () {
         ->assertSet('emailStatusMessage', 'Tautan verifikasi baru telah berhasil dikirimkan ke email Anda.');
 });
 
-test('already verified user visiting verification hub is redirected', function () {
+test('already verified user visiting verification hub can render and proceed', function () {
     $user = User::factory()->create([
         'email_verified_at' => now(),
         'phone_verified_at' => now(),
@@ -149,5 +151,11 @@ test('already verified user visiting verification hub is redirected', function (
 
     $response = $this->actingAs($user)->get(route('verification.notice'));
 
-    $response->assertRedirect(route('home'));
+    $response->assertOk()
+        ->assertSeeLivewire(VerifyAccount::class);
+
+    Livewire::actingAs($user)
+        ->test(VerifyAccount::class)
+        ->call('completeAndProceed')
+        ->assertRedirect(route('home'));
 });

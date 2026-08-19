@@ -46,13 +46,6 @@ class VerifyAccount extends Component
             return;
         }
 
-        // If both email and phone number are already verified, proceed directly
-        if ($user->isFullyVerified()) {
-            $this->redirectAfterVerification($user);
-
-            return;
-        }
-
         // Pre-fill edit fields
         $this->newPhoneNumber = $user->phone_number ?? '';
         $this->newEmail = $user->email ?? '';
@@ -91,7 +84,6 @@ class VerifyAccount extends Component
 
             if ($user->isFullyVerified()) {
                 $this->dispatch('show-toast', message: 'Selamat! Akun Anda telah aktif dan terverifikasi.');
-                $this->redirectAfterVerification($user);
             } else {
                 $this->dispatch('show-toast', message: 'Nomor WhatsApp terverifikasi. Silakan konfirmasi tautan email Anda.');
             }
@@ -245,10 +237,21 @@ class VerifyAccount extends Component
 
     public function checkVerificationStatus(): void
     {
+        // Polling hook: Livewire re-renders automatically when Auth::user()->hasVerifiedEmail() changes.
+    }
+
+    public function completeAndProceed(): void
+    {
         /** @var User|null $user */
         $user = Auth::user();
 
-        if ($user && $user->isFullyVerified()) {
+        if (! $user) {
+            $this->redirectRoute('login');
+
+            return;
+        }
+
+        if ($user->isFullyVerified()) {
             $this->redirectAfterVerification($user);
         }
     }

@@ -102,7 +102,8 @@
                         return true;
                     }
 
-                    if (data.qrBase64) {
+                    // Only update QR image when explicitly requested
+                    if (data.qrBase64 && updateQrImage) {
                         qrImage.src = data.qrBase64;
                         qrImage.classList.remove('hidden');
                         qrSpinner.classList.add('hidden');
@@ -113,26 +114,33 @@
                 return false;
             }
 
-            // Initial fetch
-            fetchStatus();
+            // Track whether to update the QR image in this call
+            let updateQrImage = true;
 
-            // 1s countdown timer — refresh QR every 20s and poll status every 3s
+            // Initial fetch — always update QR image on first load
+            fetchStatus();
+            updateQrImage = false;
+
+            // 1s countdown timer
             setInterval(async () => {
                 countdown--;
                 if (countdownEl) {
                     countdownEl.textContent = countdown + 's';
                 }
 
-                // Every 3s: poll for connection status + refresh QR if available
-                if (countdown % 3 === 0) {
+                // Every 3s: ONLY check connection status (do NOT refresh QR image)
+                if (countdown % 3 === 0 && countdown > 0) {
+                    updateQrImage = false;
                     const connected = await fetchStatus();
                     if (connected) return;
                 }
 
-                // Every 20s: full QR refresh (QR codes expire ~20s)
+                // Every 20s: refresh QR image + check status
                 if (countdown <= 0) {
                     countdown = 20;
+                    updateQrImage = true;
                     await fetchStatus();
+                    updateQrImage = false;
                 }
             }, 1000);
         });

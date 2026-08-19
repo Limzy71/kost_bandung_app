@@ -128,8 +128,19 @@ class Security extends Component
             $rules['current_password'] = $this->currentPasswordRules();
         }
 
+        $messages = [
+            'password.required' => 'Kata sandi baru wajib diisi.',
+            'password.min' => 'Kata sandi minimal 8 karakter.',
+            'password.max' => 'Kata sandi maksimal 32 karakter.',
+            'password.letters' => 'Kata sandi harus mengandung huruf.',
+            'password.numbers' => 'Kata sandi harus mengandung angka.',
+            'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
+            'current_password.required' => 'Kata sandi saat ini wajib diisi.',
+            'current_password.current_password' => 'Kata sandi saat ini tidak sesuai.',
+        ];
+
         try {
-            $validated = $this->validate($rules);
+            $validated = $this->validate($rules, $messages);
         } catch (ValidationException $e) {
             $this->reset('current_password', 'password', 'password_confirmation');
 

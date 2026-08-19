@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -18,7 +19,7 @@ use Livewire\Component;
 
 class Register extends Component
 {
-    use ProfileValidationRules;
+    use PasswordValidationRules, ProfileValidationRules;
 
     public int $rateLimitSeconds = 0;
 
@@ -54,7 +55,7 @@ class Register extends Component
         $rules = [
             'name' => $this->nameRules(),
             'email' => 'required|email|max:255|unique:users,email',
-            'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()],
+            'password' => $this->passwordRules(),
             'role' => ['required', Rule::in(['user', 'owner'])],
             'phone_number' => ['required', 'string', 'regex:/^0[0-9]{9,14}$/', Rule::unique('users', 'phone_number')],
             'terms' => 'required|accepted',
@@ -80,6 +81,7 @@ class Register extends Component
         'email.unique' => 'Email sudah terdaftar.',
         'password.required' => 'Kata sandi wajib diisi.',
         'password.min' => 'Kata sandi minimal 8 karakter.',
+        'password.max' => 'Kata sandi maksimal 32 karakter.',
         'password.letters' => 'Kata sandi harus mengandung huruf.',
         'password.numbers' => 'Kata sandi harus mengandung angka.',
         'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',

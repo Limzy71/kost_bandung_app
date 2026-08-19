@@ -14,7 +14,15 @@ trait PasswordValidationRules
      */
     protected function passwordRules(): array
     {
-        return ['required', 'string', Password::default(), 'confirmed'];
+        return [
+            'required',
+            'string',
+            Password::min(8)
+                ->letters()
+                ->numbers()
+                ->max(32),
+            'confirmed',
+        ];
     }
 
     /**

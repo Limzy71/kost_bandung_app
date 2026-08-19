@@ -155,18 +155,151 @@ app.get('/qr', (req, res) => {
     }
 
     res.send(`
-        <html>
+        <!DOCTYPE html>
+        <html lang="id">
             <head>
-                <meta http-equiv="refresh" content="20">
-                <title>Scan WhatsApp KostBandung</title>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Scan WhatsApp Pairing — KostBandung</title>
+                <style>
+                    body {
+                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                        background: #f4f4f5;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        min-height: 100vh;
+                        margin: 0;
+                        padding: 20px;
+                        box-sizing: border-box;
+                    }
+                    .card {
+                        max-width: 440px;
+                        width: 100%;
+                        background: white;
+                        padding: 36px 28px;
+                        border-radius: 20px;
+                        border: 4px solid black;
+                        box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
+                        text-align: center;
+                    }
+                    h2 {
+                        margin-top: 0;
+                        font-size: 22px;
+                        font-weight: 900;
+                        text-transform: uppercase;
+                        letter-spacing: -0.5px;
+                    }
+                    p.sub {
+                        font-size: 14px;
+                        color: #4b5563;
+                        font-weight: 600;
+                        margin-bottom: 20px;
+                        line-height: 1.4;
+                    }
+                    .qr-container {
+                        background: #fafafa;
+                        border: 2px dashed #000;
+                        border-radius: 14px;
+                        padding: 16px;
+                        display: inline-block;
+                        margin-bottom: 16px;
+                    }
+                    img#qr-img {
+                        width: 240px;
+                        height: 240px;
+                        display: block;
+                    }
+                    .timer-badge {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 6px;
+                        background: #fef08a;
+                        border: 2px solid black;
+                        border-radius: 8px;
+                        padding: 6px 14px;
+                        font-size: 13px;
+                        font-weight: 800;
+                    }
+                    .connected-box {
+                        display: none;
+                        background: #dcfce7;
+                        border: 3px solid #16a34a;
+                        padding: 24px;
+                        border-radius: 16px;
+                        color: #15803d;
+                    }
+                </style>
             </head>
-            <body style="font-family:sans-serif; text-align:center; padding:40px; background:#f4f4f5;">
-                <div style="max-width:400px; margin:0 auto; background:white; padding:30px; border-radius:16px; border:3px solid black; box-shadow:6px 6px 0px 0px rgba(0,0,0,1);">
-                    <h2 style="margin-top:0; text-transform:uppercase;">Scan WhatsApp Pairing</h2>
-                    <p style="font-size:14px; color:#555;">Buka WhatsApp di HP > Perangkat Tertaut > Tautkan Perangkat</p>
-                    <img src="${state.qrBase64}" alt="QR Code" style="width:250px; height:250px; margin:15px 0; border:2px solid #ddd; border-radius:8px;" />
-                    <p style="font-size:12px; color:#888;">Halaman akan refresh otomatis setiap 20 detik.</p>
+            <body>
+                <div class="card" id="pairing-card">
+                    <div id="unconnected-view">
+                        <h2>Scan WhatsApp Pairing</h2>
+                        <p class="sub">Buka WhatsApp di HP &rarr; <b>Perangkat Tertaut</b> &rarr; <b>Tautkan Perangkat</b></p>
+                        
+                        <div class="qr-container">
+                            <img id="qr-img" src="${state.qrBase64}" alt="QR Code" />
+                        </div>
+                        
+                        <div>
+                            <div class="timer-badge">
+                                ⏳ Refresh QR dalam: <span id="countdown" style="font-family: monospace; font-size: 15px;">20</span> detik
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="connected-view" class="connected-box">
+                        <h2 style="color: #16a34a; margin-bottom: 8px;">✅ WhatsApp Terhubung!</h2>
+                        <p style="font-weight: 700; color: #166534; font-size: 14px; margin: 0;">Nomor WhatsApp resmi bot KostBandung siap mengirimkan OTP.</p>
+                    </div>
                 </div>
+
+                <script>
+                    let timeLeft = 20;
+                    const countdownEl = document.getElementById('countdown');
+                    const qrImg = document.getElementById('qr-img');
+                    const unconnView = document.getElementById('unconnected-view');
+                    const connView = document.getElementById('connected-view');
+
+                    const timer = setInterval(() => {
+                        timeLeft--;
+                        if (countdownEl) countdownEl.innerText = timeLeft;
+
+                        if (timeLeft <= 0) {
+                            fetchStatus();
+                            timeLeft = 20;
+                        }
+                    }, 1000);
+
+                    async function fetchStatus() {
+                        try {
+                            const res = await fetch('/admin/whatsapp-qr', { headers: { 'Accept': 'application/json' } });
+                            const data = await res.json();
+                            if (data.connected || data.status === 'connected') {
+                                clearInterval(timer);
+                                unconnView.style.display = 'none';
+                                connView.style.display = 'block';
+                            } else if (data.qrBase64) {
+                                qrImg.src = data.qrBase64;
+                            }
+                        } catch (e) {
+                            console.error('Status poll error:', e);
+                        }
+                    }
+
+                    // Poll every 3 seconds for instant connection detection
+                    setInterval(async () => {
+                        try {
+                            const res = await fetch('/status');
+                            const data = await res.json();
+                            if (data.connected) {
+                                clearInterval(timer);
+                                unconnView.style.display = 'none';
+                                connView.style.display = 'block';
+                            }
+                        } catch (e) {}
+                    }, 3000);
+                </script>
             </body>
         </html>
     `);

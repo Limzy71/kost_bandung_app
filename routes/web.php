@@ -66,6 +66,14 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/admin/moderation', ModerationDashboard::class)->name('admin.moderation');
     Route::get('/admin/messages', AdminMessages::class)->name('admin.messages');
     Route::get('/admin/verification-document/{kind}/{id}', VerificationDocumentController::class)->name('admin.verification.document');
+    Route::get('/admin/whatsapp-qr', function () {
+        try {
+            $response = \Illuminate\Support\Facades\Http::timeout(5)->get('http://127.0.0.1:3001/qr');
+            return response($response->body(), 200, ['Content-Type' => 'text/html']);
+        } catch (\Throwable $e) {
+            return response("<h2>WhatsApp Gateway belum berjalan di port 3001</h2><p>{$e->getMessage()}</p>", 500);
+        }
+    })->name('admin.whatsapp.qr');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

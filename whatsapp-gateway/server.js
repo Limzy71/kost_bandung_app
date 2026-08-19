@@ -124,7 +124,17 @@ app.get('/status', authenticate, (req, res) => {
 
 // 2. View QR Code (JSON or HTML) (authenticated)
 app.get('/qr', authenticate, (req, res) => {
+    const wantsJson = (req.headers.accept && req.headers.accept.includes('application/json')) || req.query.format === 'json';
+
     if (state.connected) {
+        if (wantsJson) {
+            return res.json({
+                success: true,
+                connected: true,
+                status: 'connected',
+                lastSeen: state.lastSeen,
+            });
+        }
         return res.send(`
             <html>
                 <body style="font-family:sans-serif; text-align:center; padding:40px; background:#f4f4f5;">
@@ -136,6 +146,14 @@ app.get('/qr', authenticate, (req, res) => {
     }
 
     if (!state.qrBase64) {
+        if (wantsJson) {
+            return res.json({
+                success: false,
+                connected: false,
+                status: state.status || 'initializing',
+                qrBase64: null,
+            });
+        }
         return res.send(`
             <html>
                 <body style="font-family:sans-serif; text-align:center; padding:40px; background:#f4f4f5;">
@@ -146,9 +164,10 @@ app.get('/qr', authenticate, (req, res) => {
         `);
     }
 
-    if (req.headers.accept && req.headers.accept.includes('application/json')) {
+    if (wantsJson) {
         return res.json({
             success: true,
+            connected: false,
             status: state.status,
             qrBase64: state.qrBase64,
         });

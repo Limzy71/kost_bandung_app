@@ -250,7 +250,7 @@
                     Akun akan dihapus secara permanen beserta {{ $deleteData }}. Tindakan ini tidak dapat dibatalkan.
                 </p>
 
-                <button type="button" @click="$dispatch('open-delete-account-modal')"
+                <button type="button" wire:click="openDeleteAccountModal" @click="deleteAccountModalOpen = true; showPassword = false;"
                     class="mt-5 bg-rose-500 hover:bg-rose-400 text-white border-3 border-black dark:border-zinc-700 font-black text-sm uppercase px-6 py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all rounded-lg cursor-pointer inline-flex items-center gap-2">
                     <x-icon name="lucide-trash-2" class="w-5 h-5 stroke-[2.5]" />
                     <span>Hapus Akun</span>
@@ -259,8 +259,8 @@
 
         <!-- Delete Account Modal -->
         <div
-            x-data="{ deleteAccountModalOpen: @entangle('deleteAccountModalOpen') }"
-            @open-delete-account-modal.window="deleteAccountModalOpen = true"
+            x-data="{ deleteAccountModalOpen: @entangle('deleteAccountModalOpen'), showPassword: false }"
+            @open-delete-account-modal.window="deleteAccountModalOpen = true; showPassword = false;"
         >
             <template x-teleport="body">
                 <div
@@ -269,7 +269,7 @@
                     x-transition.opacity.duration.200ms
                     class="fixed inset-0 z-[100] flex items-center justify-center p-4"
                 >
-                    <div class="absolute inset-0 bg-black/70" @click="deleteAccountModalOpen = false"></div>
+                    <div class="absolute inset-0 bg-black/70" wire:click="closeDeleteAccountModal" @click="deleteAccountModalOpen = false; showPassword = false;"></div>
             <div
                 x-show="deleteAccountModalOpen"
                 x-transition:enter="transition ease-out duration-200"
@@ -284,7 +284,7 @@
                     <div class="w-12 h-12 bg-rose-500 border-2 border-black dark:border-zinc-700 rounded-lg flex items-center justify-center text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] shrink-0">
                         <x-icon name="lucide-trash-2" class="w-6 h-6 stroke-[2.5]" />
                     </div>
-                    <button type="button" @click="deleteAccountModalOpen = false" class="text-black dark:text-white hover:bg-black/10 p-1.5 rounded font-black cursor-pointer transition-colors">
+                    <button type="button" wire:click="closeDeleteAccountModal" @click="deleteAccountModalOpen = false; showPassword = false;" class="text-black dark:text-white hover:bg-black/10 p-1.5 rounded font-black cursor-pointer transition-colors">
                         <x-icon name="lucide-x" class="w-4 h-4 stroke-[2.5]" />
                     </button>
                 </div>
@@ -301,9 +301,18 @@
                     @if ($user->password)
                         <div class="mt-4">
                             <label for="deletePassword" class="block text-xs font-black uppercase text-black dark:text-white mb-1.5">Password</label>
-                            <input type="password" id="deletePassword" wire:model="deletePassword" autocomplete="current-password"
-                                class="w-full px-4 py-3 text-sm bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-lg text-black dark:text-white font-bold placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all"
-                                placeholder="Masukkan password Anda">
+                            <div class="relative">
+                                <input :type="showPassword ? 'text' : 'password'" id="deletePassword" wire:model="deletePassword" autocomplete="current-password"
+                                    class="w-full px-4 py-3 pr-12 text-sm bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-lg text-black dark:text-white font-bold placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all"
+                                    placeholder="Masukkan password Anda">
+                                <button type="button" @click="showPassword = !showPassword"
+                                    class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white cursor-pointer focus:outline-none"
+                                    tabindex="-1"
+                                    aria-label="Lihat kata sandi">
+                                    <x-icon x-show="!showPassword" name="lucide-eye" class="w-5 h-5 stroke-[2.5]" />
+                                    <x-icon x-cloak x-show="showPassword" name="lucide-eye-off" class="w-5 h-5 stroke-[2.5]" />
+                                </button>
+                            </div>
                             @error('deletePassword') <p class="text-xs font-black text-rose-500 mt-1 uppercase">{{ $message }}</p> @enderror
                         </div>
                     @else
@@ -317,7 +326,7 @@
                     @endif
 
                     <div class="flex items-center gap-2 mt-6">
-                        <button type="button" @click="deleteAccountModalOpen = false"
+                        <button type="button" wire:click="closeDeleteAccountModal" @click="deleteAccountModalOpen = false; showPassword = false;"
                             class="flex-1 h-10 px-3 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 text-black dark:text-white border-2 border-black dark:border-zinc-700 font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 rounded-lg cursor-pointer">
                             Batal
                         </button>

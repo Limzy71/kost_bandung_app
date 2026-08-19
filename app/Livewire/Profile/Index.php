@@ -291,6 +291,24 @@ class Index extends Component
         $this->dispatch('show-toast', message: 'Dokumen KTP berhasil dihapus. Anda dapat mengunggah ulang kapan saja.');
     }
 
+    public function openDeleteAccountModal(): void
+    {
+        $this->deletePassword = '';
+        $this->deleteConfirmation = '';
+        $this->resetErrorBag();
+        $this->resetValidation();
+        $this->deleteAccountModalOpen = true;
+    }
+
+    public function closeDeleteAccountModal(): void
+    {
+        $this->deletePassword = '';
+        $this->deleteConfirmation = '';
+        $this->resetErrorBag();
+        $this->resetValidation();
+        $this->deleteAccountModalOpen = false;
+    }
+
     /**
      * Permanently delete the current account along with every uploaded file.
      */

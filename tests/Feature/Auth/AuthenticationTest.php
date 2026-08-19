@@ -13,14 +13,14 @@ test('login screen can be rendered', function () {
 test('user can authenticate via Livewire login and redirects to home', function () {
     $user = User::factory()->create([
         'email' => 'userlogin@example.com',
-        'password' => \Illuminate\Support\Facades\Hash::make('password123'),
+        'password' => \Illuminate\Support\Facades\Hash::make('Password123'),
         'role' => 'user',
         'terms_accepted_at' => now(),
     ]);
 
     \Livewire\Livewire::test(\App\Livewire\Auth\Login::class)
         ->set('email', 'userlogin@example.com')
-        ->set('password', 'password123')
+        ->set('password', 'Password123')
         ->call('login')
         ->assertHasNoErrors()
         ->assertRedirect(route('home'));
@@ -31,14 +31,14 @@ test('user can authenticate via Livewire login and redirects to home', function 
 test('owner can authenticate via Livewire login and redirects to dashboard', function () {
     $owner = User::factory()->create([
         'email' => 'ownerlogin@example.com',
-        'password' => \Illuminate\Support\Facades\Hash::make('password123'),
+        'password' => \Illuminate\Support\Facades\Hash::make('Password123'),
         'role' => 'owner',
         'terms_accepted_at' => now(),
     ]);
 
     \Livewire\Livewire::test(\App\Livewire\Auth\Login::class)
         ->set('email', 'ownerlogin@example.com')
-        ->set('password', 'password123')
+        ->set('password', 'Password123')
         ->call('login')
         ->assertHasNoErrors()
         ->assertRedirect(route('dashboard'));
@@ -49,7 +49,7 @@ test('owner can authenticate via Livewire login and redirects to dashboard', fun
 test('users can not authenticate with invalid password in Livewire login', function () {
     $user = User::factory()->create([
         'email' => 'invalidpass@example.com',
-        'password' => \Illuminate\Support\Facades\Hash::make('password123'),
+        'password' => \Illuminate\Support\Facades\Hash::make('Password123'),
     ]);
 
     \Livewire\Livewire::test(\App\Livewire\Auth\Login::class)

@@ -147,12 +147,12 @@
             <div>
                 <label for="password" class="block text-xs font-black uppercase tracking-wider text-black mb-2 dark:text-white">
                     Kata Sandi
-                    <span class="normal-case font-bold text-zinc-500 ml-1 dark:text-zinc-400">(8 - 32 karakter, huruf + angka)</span>
+                    <span class="normal-case font-bold text-zinc-500 ml-1 dark:text-zinc-400">(8 - 32 karakter, huruf besar & kecil + angka)</span>
                 </label>
                 <div class="relative flex items-center" x-data="{ show: false }">
                     <input wire:model="password" :type="show ? 'text' : 'password'" id="password" autocomplete="new-password" maxlength="32"
                         class="block w-full px-4 pr-12 py-3 text-sm bg-zinc-50 border-3 border-black rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:ring-0 focus:bg-[#FFE500]/10 focus:border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:bg-zinc-900 dark:border-zinc-700 dark:text-white dark:placeholder-zinc-500 dark:focus:border-zinc-700 dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.25)] dark:focus:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)]"
-                        placeholder="8 - 32 karakter, huruf dan angka">
+                        placeholder="8 - 32 karakter, huruf besar, huruf kecil & angka">
                     <button type="button" @click="show = !show" :aria-label="show ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'"
                         class="absolute inset-y-0 right-1 flex items-center px-3 text-zinc-500 hover:text-black transition-colors cursor-pointer focus:outline-none dark:text-zinc-400 dark:hover:text-white">
                         <x-icon x-show="!show" name="lucide-eye" class="w-5 h-5" />

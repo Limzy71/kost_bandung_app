@@ -134,6 +134,7 @@ class Security extends Component
             'password.max' => 'Kata sandi maksimal 32 karakter.',
             'password.letters' => 'Kata sandi harus mengandung huruf.',
             'password.numbers' => 'Kata sandi harus mengandung angka.',
+            'password.mixed' => 'Kata sandi harus mengandung huruf besar dan huruf kecil.',
             'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
             'current_password.required' => 'Kata sandi saat ini wajib diisi.',
             'current_password.current_password' => 'Kata sandi saat ini tidak sesuai.',
@@ -150,6 +151,9 @@ class Security extends Component
         $user->update([
             'password' => $validated['password'],
         ]);
+
+        // Regenerate session ID after password change for security
+        session()->regenerate();
 
         $this->reset('current_password', 'password', 'password_confirmation');
 

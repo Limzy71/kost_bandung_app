@@ -115,12 +115,12 @@ test('lockout duration escalates across repeated failed attempts', function () {
 
 test('user can login with remember me checked', function () {
     $user = User::factory()->create([
-        'password' => bcrypt('password123'),
+        'password' => bcrypt('Password123'),
     ]);
 
     Livewire::test(Login::class)
         ->set('email', $user->email)
-        ->set('password', 'password123')
+        ->set('password', 'Password123')
         ->set('remember', true)
         ->call('login')
         ->assertHasNoErrors();
@@ -132,13 +132,13 @@ test('user can login with remember me checked', function () {
 test('login redirects back to the requested page after a redirect param', function () {
     $user = User::factory()->create([
         'role' => 'user',
-        'password' => bcrypt('password123'),
+        'password' => bcrypt('Password123'),
     ]);
 
     Livewire::withQueryParams(['redirect' => '/kost/contoh-kost'])
         ->test(Login::class)
         ->set('email', $user->email)
-        ->set('password', 'password123')
+        ->set('password', 'Password123')
         ->call('login')
         ->assertRedirect('/kost/contoh-kost');
 });
@@ -146,13 +146,13 @@ test('login redirects back to the requested page after a redirect param', functi
 test('login ignores external redirect parameters', function () {
     $user = User::factory()->create([
         'role' => 'user',
-        'password' => bcrypt('password123'),
+        'password' => bcrypt('Password123'),
     ]);
 
     Livewire::withQueryParams(['redirect' => 'https://evil.example.com'])
         ->test(Login::class)
         ->set('email', $user->email)
-        ->set('password', 'password123')
+        ->set('password', 'Password123')
         ->call('login')
         ->assertRedirect(route('home'));
 });

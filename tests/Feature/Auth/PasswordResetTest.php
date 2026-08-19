@@ -52,8 +52,8 @@ test('password can be reset with valid token', function () {
         $response = $this->post(route('password.update'), [
             'token' => $notification->token,
             'email' => $user->email,
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
+            'password' => 'Password123',
+            'password_confirmation' => 'Password123',
         ]);
 
         $response

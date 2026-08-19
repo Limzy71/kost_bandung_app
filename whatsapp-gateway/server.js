@@ -112,8 +112,8 @@ async function connectToWhatsApp() {
     }
 }
 
-// 1. Health & Connection Status
-app.get('/status', (req, res) => {
+// 1. Health & Connection Status (authenticated)
+app.get('/status', authenticate, (req, res) => {
     res.json({
         success: true,
         connected: state.connected,
@@ -122,8 +122,8 @@ app.get('/status', (req, res) => {
     });
 });
 
-// 2. View QR Code (JSON or HTML)
-app.get('/qr', (req, res) => {
+// 2. View QR Code (JSON or HTML) (authenticated)
+app.get('/qr', authenticate, (req, res) => {
     if (state.connected) {
         return res.send(`
             <html>
@@ -255,6 +255,9 @@ app.get('/qr', (req, res) => {
                 </div>
 
                 <script>
+                    const GW_SECRET = ${JSON.stringify(GATEWAY_SECRET)};
+                    const authHeaders = GW_SECRET ? { 'Authorization': 'Bearer ' + GW_SECRET, 'Accept': 'application/json' } : { 'Accept': 'application/json' };
+
                     let timeLeft = 20;
                     const countdownEl = document.getElementById('countdown');
                     const qrImg = document.getElementById('qr-img');
@@ -266,14 +269,14 @@ app.get('/qr', (req, res) => {
                         if (countdownEl) countdownEl.innerText = timeLeft;
 
                         if (timeLeft <= 0) {
-                            fetchStatus();
+                            fetchQr();
                             timeLeft = 20;
                         }
                     }, 1000);
 
-                    async function fetchStatus() {
+                    async function fetchQr() {
                         try {
-                            const res = await fetch('/qr', { headers: { 'Accept': 'application/json' } });
+                            const res = await fetch('/qr', { headers: authHeaders });
                             const data = await res.json();
                             if (data.connected || data.status === 'connected') {
                                 clearInterval(timer);
@@ -283,14 +286,14 @@ app.get('/qr', (req, res) => {
                                 qrImg.src = data.qrBase64;
                             }
                         } catch (e) {
-                            console.error('Status poll error:', e);
+                            console.error('QR fetch error:', e);
                         }
                     }
 
                     // Poll every 3 seconds for instant connection detection
                     setInterval(async () => {
                         try {
-                            const res = await fetch('/status');
+                            const res = await fetch('/status', { headers: { 'Authorization': 'Bearer ' + GW_SECRET } });
                             const data = await res.json();
                             if (data.connected) {
                                 clearInterval(timer);

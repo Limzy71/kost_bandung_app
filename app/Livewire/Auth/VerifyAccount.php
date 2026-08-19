@@ -139,6 +139,15 @@ class VerifyAccount extends Component
         /** @var User $user */
         $user = Auth::user();
 
+        // Rate limit: max 3 phone changes per hour
+        $changeLimitKey = "phone_change_limit:{$user->id}";
+        if (RateLimiter::tooManyAttempts($changeLimitKey, 3)) {
+            $seconds = RateLimiter::availableIn($changeLimitKey);
+            $this->phoneErrorMessage = "Terlalu banyak perubahan nomor. Silakan tunggu {$seconds} detik lagi.";
+
+            return;
+        }
+
         $this->validate([
             'newPhoneNumber' => ['required', 'regex:/^08[0-9]{8,13}$/', 'unique:users,phone_number,'.$user->id],
         ], [
@@ -151,8 +160,7 @@ class VerifyAccount extends Component
         $user->phone_verified_at = null;
         $user->save();
 
-        // Clear previous limit so new number gets fresh OTP immediately
-        RateLimiter::clear("phone_otp_limit:{$user->id}");
+        RateLimiter::hit($changeLimitKey, 3600);
 
         $result = $whatsapp->sendOtp($user);
 
@@ -176,6 +184,15 @@ class VerifyAccount extends Component
         /** @var User $user */
         $user = Auth::user();
 
+        // Rate limit: max 3 email changes per hour
+        $changeLimitKey = "email_change_limit:{$user->id}";
+        if (RateLimiter::tooManyAttempts($changeLimitKey, 3)) {
+            $seconds = RateLimiter::availableIn($changeLimitKey);
+            $this->emailErrorMessage = "Terlalu banyak perubahan email. Silakan tunggu {$seconds} detik lagi.";
+
+            return;
+        }
+
         $this->validate([
             'newEmail' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
         ], [
@@ -187,6 +204,8 @@ class VerifyAccount extends Component
         $user->email = $this->newEmail;
         $user->email_verified_at = null;
         $user->save();
+
+        RateLimiter::hit($changeLimitKey, 3600);
 
         $user->sendEmailVerificationNotification();
 
@@ -200,6 +219,15 @@ class VerifyAccount extends Component
         /** @var User $user */
         $user = Auth::user();
 
+        // Rate limit: max 3 resend requests per hour
+        $resendLimitKey = "email_resend_limit:{$user->id}";
+        if (RateLimiter::tooManyAttempts($resendLimitKey, 3)) {
+            $seconds = RateLimiter::availableIn($resendLimitKey);
+            $this->emailStatusMessage = "Terlalu banyak permintaan. Silakan tunggu {$seconds} detik lagi.";
+
+            return;
+        }
+
         if ($user->hasVerifiedEmail()) {
             if ($user->isFullyVerified()) {
                 $this->redirectAfterVerification($user);
@@ -207,6 +235,7 @@ class VerifyAccount extends Component
                 return;
             }
         } else {
+            RateLimiter::hit($resendLimitKey, 3600);
             $user->sendEmailVerificationNotification();
         }
 

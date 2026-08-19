@@ -50,12 +50,12 @@
             <div>
                 <label for="password" class="block text-xs font-black uppercase text-black dark:text-white mb-1.5">
                     {{ $this->hasPassword ? 'Kata Sandi Baru' : 'Kata Sandi' }}
-                    <span class="normal-case font-bold text-zinc-500 ml-1 dark:text-zinc-400">(8 - 32 karakter, huruf + angka)</span>
+                    <span class="normal-case font-bold text-zinc-500 ml-1 dark:text-zinc-400">(8 - 32 karakter, huruf besar & kecil + angka)</span>
                 </label>
                 <div class="relative flex items-center">
                     <input :type="showNew ? 'text' : 'password'" id="password" wire:model="password" autocomplete="new-password" maxlength="32"
                         class="block w-full px-4 pr-12 py-3 text-sm bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-lg text-black dark:text-white font-bold placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all"
-                        placeholder="8 - 32 karakter, huruf & angka">
+                        placeholder="8 - 32 karakter, huruf besar, huruf kecil & angka">
                     <button type="button" @click="showNew = !showNew" :aria-label="showNew ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'"
                         class="absolute inset-y-0 right-1 flex items-center px-3 text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white transition-colors cursor-pointer focus:outline-none"
                         tabindex="-1">

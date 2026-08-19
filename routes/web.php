@@ -72,7 +72,13 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
     Route::get('/admin/whatsapp-qr-data', function () {
         try {
-            $response = \Illuminate\Support\Facades\Http::timeout(5)->withHeaders(['Accept' => 'application/json'])->get('http://127.0.0.1:3001/qr');
+            $secret = config('services.whatsapp.secret');
+            $request = \Illuminate\Support\Facades\Http::timeout(5)->withHeaders(['Accept' => 'application/json']);
+            if (! empty($secret)) {
+                $request = $request->withToken($secret);
+            }
+            $response = $request->get('http://127.0.0.1:3001/qr');
+
             return $response->json();
         } catch (\Throwable $e) {
             return response()->json(['success' => false, 'error' => $e->getMessage()]);

@@ -43,8 +43,8 @@ test('sensitive action requires password confirmation when not confirmed', funct
 
     $component = Livewire::test(Security::class)
         ->set('current_password', 'password')
-        ->set('password', 'new-password')
-        ->set('password_confirmation', 'new-password')
+        ->set('password', 'NewPassword123')
+        ->set('password_confirmation', 'NewPassword123')
         ->call('updatePassword');
 
     $component->assertRedirect(route('password.confirm'));
@@ -57,8 +57,8 @@ test('sensitive action stores intended profile url before redirecting to passwor
 
     $component = Livewire::test(Security::class)
         ->set('current_password', 'password')
-        ->set('password', 'new-password')
-        ->set('password_confirmation', 'new-password')
+        ->set('password', 'NewPassword123')
+        ->set('password_confirmation', 'NewPassword123')
         ->call('updatePassword');
 
     $component->assertRedirect(route('password.confirm'));
@@ -111,13 +111,13 @@ test('password can be updated when password confirmed', function () {
 
     $response = Livewire::test(Security::class)
         ->set('current_password', 'password')
-        ->set('password', 'new-password123')
-        ->set('password_confirmation', 'new-password123')
+        ->set('password', 'NewPassword123')
+        ->set('password_confirmation', 'NewPassword123')
         ->call('updatePassword');
 
     $response->assertHasNoErrors();
 
-    expect(Hash::check('new-password123', $user->refresh()->password))->toBeTrue();
+    expect(Hash::check('NewPassword123', $user->refresh()->password))->toBeTrue();
 });
 
 test('current password must be valid when updating password', function () {
@@ -130,8 +130,8 @@ test('current password must be valid when updating password', function () {
 
     $response = Livewire::test(Security::class)
         ->set('current_password', 'wrong-password')
-        ->set('password', 'new-password123')
-        ->set('password_confirmation', 'new-password123')
+        ->set('password', 'NewPassword123')
+        ->set('password_confirmation', 'NewPassword123')
         ->call('updatePassword');
 
     $response->assertHasErrors(['current_password']);
@@ -278,13 +278,13 @@ test('oauth user without password can set a password directly', function () {
 
     Livewire::actingAs($oauthUser)
         ->test(Security::class)
-        ->set('password', 'new-password-123')
-        ->set('password_confirmation', 'new-password-123')
+        ->set('password', 'NewPassword123')
+        ->set('password_confirmation', 'NewPassword123')
         ->call('updatePassword')
         ->assertHasNoErrors()
         ->assertDispatched('show-toast', message: 'Kata sandi berhasil dibuat. Anda sekarang bisa login dengan email dan kata sandi.');
 
-    expect(Hash::check('new-password-123', $oauthUser->fresh()->password))->toBeTrue();
+    expect(Hash::check('NewPassword123', $oauthUser->fresh()->password))->toBeTrue();
 });
 
 test('profile page shows create password heading for oauth user without password', function () {

@@ -84,6 +84,7 @@ class Register extends Component
         'password.max' => 'Kata sandi maksimal 32 karakter.',
         'password.letters' => 'Kata sandi harus mengandung huruf.',
         'password.numbers' => 'Kata sandi harus mengandung angka.',
+        'password.mixed' => 'Kata sandi harus mengandung huruf besar dan huruf kecil.',
         'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
         'role.required' => 'Tipe akun wajib dipilih.',
         'role.in' => 'Tipe akun tidak valid.',

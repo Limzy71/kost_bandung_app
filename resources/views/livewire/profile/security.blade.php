@@ -32,16 +32,15 @@
             @if ($this->hasPassword)
                 <div>
                     <label for="current_password" class="block text-xs font-black uppercase text-black dark:text-white mb-1.5">Kata Sandi Saat Ini</label>
-                    <div class="relative">
+                    <div class="relative flex items-center">
                         <input :type="showCurrent ? 'text' : 'password'" id="current_password" wire:model="current_password" autocomplete="current-password"
-                            class="w-full px-4 py-3 pr-12 text-sm bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-lg text-black dark:text-white font-bold placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all"
+                            class="block w-full px-4 pr-12 py-3 text-sm bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-lg text-black dark:text-white font-bold placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all"
                             placeholder="••••••••">
-                        <button type="button" @click="showCurrent = !showCurrent"
-                            class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white cursor-pointer focus:outline-none"
-                            tabindex="-1"
-                            aria-label="Lihat kata sandi saat ini">
-                            <x-icon x-show="!showCurrent" name="lucide-eye" class="w-5 h-5 stroke-[2.5]" />
-                            <x-icon x-cloak x-show="showCurrent" name="lucide-eye-off" class="w-5 h-5 stroke-[2.5]" />
+                        <button type="button" @click="showCurrent = !showCurrent" :aria-label="showCurrent ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'"
+                            class="absolute inset-y-0 right-1 flex items-center px-3 text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white transition-colors cursor-pointer focus:outline-none"
+                            tabindex="-1">
+                            <x-icon x-show="!showCurrent" name="lucide-eye" class="w-5 h-5 stroke-[2]" />
+                            <x-icon x-cloak x-show="showCurrent" name="lucide-eye-off" class="w-5 h-5 stroke-[2]" />
                         </button>
                     </div>
                     @error('current_password') <p class="text-xs font-black text-rose-500 mt-1 uppercase">{{ $message }}</p> @enderror
@@ -52,16 +51,15 @@
                 <label for="password" class="block text-xs font-black uppercase text-black dark:text-white mb-1.5">
                     {{ $this->hasPassword ? 'Kata Sandi Baru' : 'Kata Sandi' }}
                 </label>
-                <div class="relative">
+                <div class="relative flex items-center">
                     <input :type="showNew ? 'text' : 'password'" id="password" wire:model="password" autocomplete="new-password"
-                        class="w-full px-4 py-3 pr-12 text-sm bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-lg text-black dark:text-white font-bold placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all"
+                        class="block w-full px-4 pr-12 py-3 text-sm bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-lg text-black dark:text-white font-bold placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all"
                         placeholder="Minimal 8 karakter">
-                    <button type="button" @click="showNew = !showNew"
-                        class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white cursor-pointer focus:outline-none"
-                        tabindex="-1"
-                        aria-label="Lihat kata sandi baru">
-                        <x-icon x-show="!showNew" name="lucide-eye" class="w-5 h-5 stroke-[2.5]" />
-                        <x-icon x-cloak x-show="showNew" name="lucide-eye-off" class="w-5 h-5 stroke-[2.5]" />
+                    <button type="button" @click="showNew = !showNew" :aria-label="showNew ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'"
+                        class="absolute inset-y-0 right-1 flex items-center px-3 text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white transition-colors cursor-pointer focus:outline-none"
+                        tabindex="-1">
+                        <x-icon x-show="!showNew" name="lucide-eye" class="w-5 h-5 stroke-[2]" />
+                        <x-icon x-cloak x-show="showNew" name="lucide-eye-off" class="w-5 h-5 stroke-[2]" />
                     </button>
                 </div>
                 @error('password') <p class="text-xs font-black text-rose-500 mt-1 uppercase">{{ $message }}</p> @enderror
@@ -69,16 +67,15 @@
 
             <div>
                 <label for="password_confirmation" class="block text-xs font-black uppercase text-black dark:text-white mb-1.5">Konfirmasi Kata Sandi</label>
-                <div class="relative">
+                <div class="relative flex items-center">
                     <input :type="showConfirm ? 'text' : 'password'" id="password_confirmation" wire:model="password_confirmation" autocomplete="new-password"
-                        class="w-full px-4 py-3 pr-12 text-sm bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-lg text-black dark:text-white font-bold placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all"
+                        class="block w-full px-4 pr-12 py-3 text-sm bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-lg text-black dark:text-white font-bold placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all"
                         placeholder="Ulangi kata sandi baru">
-                    <button type="button" @click="showConfirm = !showConfirm"
-                        class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white cursor-pointer focus:outline-none"
-                        tabindex="-1"
-                        aria-label="Lihat konfirmasi kata sandi">
-                        <x-icon x-show="!showConfirm" name="lucide-eye" class="w-5 h-5 stroke-[2.5]" />
-                        <x-icon x-cloak x-show="showConfirm" name="lucide-eye-off" class="w-5 h-5 stroke-[2.5]" />
+                    <button type="button" @click="showConfirm = !showConfirm" :aria-label="showConfirm ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'"
+                        class="absolute inset-y-0 right-1 flex items-center px-3 text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white transition-colors cursor-pointer focus:outline-none"
+                        tabindex="-1">
+                        <x-icon x-show="!showConfirm" name="lucide-eye" class="w-5 h-5 stroke-[2]" />
+                        <x-icon x-cloak x-show="showConfirm" name="lucide-eye-off" class="w-5 h-5 stroke-[2]" />
                     </button>
                 </div>
                 @error('password_confirmation') <p class="text-xs font-black text-rose-500 mt-1 uppercase">{{ $message }}</p> @enderror

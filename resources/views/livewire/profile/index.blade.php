@@ -301,16 +301,15 @@
                     @if ($user->password)
                         <div class="mt-4">
                             <label for="deletePassword" class="block text-xs font-black uppercase text-black dark:text-white mb-1.5">Password</label>
-                            <div class="relative">
+                            <div class="relative flex items-center">
                                 <input :type="showPassword ? 'text' : 'password'" id="deletePassword" wire:model="deletePassword" autocomplete="current-password"
-                                    class="w-full px-4 py-3 pr-12 text-sm bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-lg text-black dark:text-white font-bold placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all"
+                                    class="block w-full px-4 pr-12 py-3 text-sm bg-white dark:bg-zinc-900 border-3 border-black dark:border-zinc-700 rounded-lg text-black dark:text-white font-bold placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-0 focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.25)] transition-all"
                                     placeholder="Masukkan password Anda">
-                                <button type="button" @click="showPassword = !showPassword"
-                                    class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white cursor-pointer focus:outline-none"
-                                    tabindex="-1"
-                                    aria-label="Lihat kata sandi">
-                                    <x-icon x-show="!showPassword" name="lucide-eye" class="w-5 h-5 stroke-[2.5]" />
-                                    <x-icon x-cloak x-show="showPassword" name="lucide-eye-off" class="w-5 h-5 stroke-[2.5]" />
+                                <button type="button" @click="showPassword = !showPassword" :aria-label="showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'"
+                                    class="absolute inset-y-0 right-1 flex items-center px-3 text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white transition-colors cursor-pointer focus:outline-none"
+                                    tabindex="-1">
+                                    <x-icon x-show="!showPassword" name="lucide-eye" class="w-5 h-5 stroke-[2]" />
+                                    <x-icon x-cloak x-show="showPassword" name="lucide-eye-off" class="w-5 h-5 stroke-[2]" />
                                 </button>
                             </div>
                             @error('deletePassword') <p class="text-xs font-black text-rose-500 mt-1 uppercase">{{ $message }}</p> @enderror
